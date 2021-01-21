@@ -1,0 +1,46 @@
+{
+  "name": "Morphext",
+  "version": "2.4.4",
+  "description": "A simple, high-performance and cross-browser jQuery rotating / carousel plugin for text phrases powered by Animate.css.",
+  "authors": [
+    "Ian Lai <ian@fyianlai.com>"
+  ],
+  "main": [
+    "dist/morphext.min.js",
+    "dist/morphext.css"
+  ],
+  "keywords": [
+    "jquery",
+    "text rotator",
+    "rotating text",
+    "ticker",
+    "cycle",
+    "animate.css",
+    "text animation",
+    "carousel",
+    "inline"
+  ],
+  "license": "http://ian.mit-license.org/",
+  "private": false,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "animate.css": "~3.2.5",
+    "jquery": "~2.1.4"
+  },
+  "homepage": "https://github.com/MrSaints/Morphext",
+  "_release": "2.4.4",
+  "_resolution": {
+    "type": "version",
+    "tag": "2.4.4",
+    "commit": "5e534f48aaadfc7cc8ce415c472e56b9badf7c15"
+  },
+  "_source": "https://github.com/MrSaints/Morphext.git",
+  "_target": "^2.4.4",
+  "_originalSource": "Morphext"
+}

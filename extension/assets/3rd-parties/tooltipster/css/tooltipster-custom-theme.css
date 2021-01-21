@@ -1,0 +1,26 @@
+.tooltipster-custom-theme {
+	border-radius: 5px; 
+	border: 1px solid #00B16A;
+	background: #00B16A;
+	color: #000;
+}
+.tooltipster-custom-theme .tooltipster-content {
+	font-family: 'Lato', Arial, sans-serif;
+	font-size: 12px;
+	line-height: 16px;
+	padding: 8px;
+}
+.tooltipster-custom-theme .tooltipster-content ul {
+	margin: 0px;
+	margin-left: 20px;
+	padding: 0px;
+}
+.tooltipster-custom-theme .tooltipster-content ul li {
+	margin: 0px;
+	padding: 0px;
+}
+.tooltipster-custom-theme .tooltipster-content ul li a {
+	font-weight: bold;
+	text-decoration: none;
+	color: #00B16A;
+}

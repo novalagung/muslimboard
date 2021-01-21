@@ -1,0 +1,23 @@
+{
+  "name": "muslimboardindo-page",
+  "description": "",
+  "main": "src/main.js",
+  "authors": [
+    "Noval Agung Prayogo"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^3.1.0",
+    "slippry": "^1.3.1",
+    "Morphext": "^2.4.4",
+    "jquery-unveil": "unveil#^1.3.0"
+  }
+}
