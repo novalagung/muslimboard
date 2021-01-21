@@ -1,4 +1,4 @@
-# Muslim Board v2
+# Muslim Board
 
 Personal Dashboard for Muslim in Indonesia
 
