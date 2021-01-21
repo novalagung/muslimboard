@@ -5,7 +5,7 @@
   "version": "2.3.6.0",
   "description": "Personal Dashboard for Muslim",
   "chrome_url_overrides" : {
-    "newtab": "content.html"
+    "newtab": "extension.html"
   },
   "icons": {
     "16": "assets/images/logo-16.jpg",
