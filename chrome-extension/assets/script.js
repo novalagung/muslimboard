@@ -64,7 +64,7 @@
                         localStorage.setItem('coordinate-cache', JSON.stringify(coordinate))
                         resolve(coordinate)
                     }, 
-                    () => useCoordinateCache,
+                    useCoordinateCache,
                     {
                         enableHighAccuracy: true,
                         maximumAge: Infinity,
