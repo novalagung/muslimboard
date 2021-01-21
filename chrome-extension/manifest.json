@@ -8,9 +8,9 @@
     "newtab": "extension.html"
   },
   "icons": {
-    "16": "assets/images/logo-16.jpg",
-    "48": "assets/images/logo-48.jpg",
-    "128": "assets/images/logo-128.jpg"
+    "16": "assets/internal/images/logo-16.jpg",
+    "48": "assets/internal/images/logo-48.jpg",
+    "128": "assets/internal/images/logo-128.jpg"
   },
   "permissions": [
     "geolocation",
