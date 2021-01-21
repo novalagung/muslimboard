@@ -940,7 +940,6 @@
 
         async ensureTodoListBoxVisibility() {
             const value = localStorage.getItem('todo-list-status') || 'false'
-            console.log('valuevaluevaluevaluevalue',value)
             if (value === 'true') {
                 $('body').addClass('show-todo-list')
             } else {
