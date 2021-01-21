@@ -18,6 +18,6 @@
     "notifications",
     "storage"
   ],
-  "content_security_policy": "script-src 'self' https://ip-api.io https://bimasislam.kemenag.go.id https://unsplash.com https://openlayers.org; object-src 'self'"
+  "content_security_policy": "script-src 'self' https://bimasislam.kemenag.go.id https://unsplash.com; object-src 'self'"
 }
   
