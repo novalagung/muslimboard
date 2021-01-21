@@ -1,0 +1,158 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Muslim Board Indonesia</title>
+
+    <link rel="stylesheet" href="assets/3rd-parties/sweetalert2/sweetalert2.min.css">
+    <link rel="stylesheet" href="assets/3rd-parties/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/3rd-parties/tooltipster/css/tooltipster.css" />
+    <link rel="stylesheet" href="assets/3rd-parties/tooltipster/css/tooltipster-val.css" />
+    <link rel="stylesheet" href="assets/font.css?v=1">
+    <link rel="stylesheet" href="assets/style.css?v=1">
+</head>
+
+<body>
+    <div id="transitioner">
+        <div class="content"></div>
+    </div>
+    <div id="background">
+        <div class="content"></div>
+    </div>
+    <div id="background-blur"></div>
+
+    <div id="sidebar-blur"></div>
+    <div id="sidebar">
+        <section class="date-time">
+            <p class="time">
+                <span class="hour">00</span>
+                <span class="separator"></span>
+                <span class="minute">00</span>
+            </p>
+            <p class="date">
+                <i class="fa fa-calendar"></i>
+                <span class="text">Loading ...</span>
+            </p>
+            <p class="location">
+                <i class="fa fa-map-marker"></i>
+                <span class="text">Loading ...</span>
+            </p>
+        </section>
+
+        <section class="prayer-time">
+            <div class="content">
+                <p class="title">
+                    <span>Jadwal sholat untuk hari ini:</span>
+                    <span class="date-time"></span>
+                </p>
+                <table>
+                    <colgroup>
+                        <col style="text-align: right;" />
+                        <col style="text-align: right;" />
+                        <col />
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <td>Subuh</td>
+                            <td data-when='subuh'>04:18</td>
+                            <td>WIB</td>
+                        </tr>
+                        <tr>
+                            <td>Dhuha</td>
+                            <td data-when='dhuha'>05:58</td>
+                            <td>WIB</td>
+                        </tr>
+                        <tr>
+                            <td>Dzuhur</td>
+                            <td data-when='dzuhur'>11:43</td>
+                            <td>WIB</td>
+                        </tr>
+                        <tr>
+                            <td>Ashar</td>
+                            <td data-when='ashar'>14:47</td>
+                            <td>WIB</td>
+                        </tr>
+                        <tr>
+                            <td>Maghrib</td>
+                            <td data-when='maghrib'>17:49</td>
+                            <td>WIB</td>
+                        </tr>
+                        <tr>
+                            <td>Isya'</td>
+                            <td data-when='isya'>18:58</td>
+                            <td>WIB</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <div id="wise-word">
+        <div class="wrapper">
+            <div class="vertical">
+                <p class="matan"></p>
+                <p class="translation"></p>
+                <p class="reference"></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="todo-list">
+        <div class="wrapper">
+            <div class="toggler">
+                <i class="fa fa-eye"></i> Klik untuk <span class="true">menampilkan</span><span class="false">menyembunyikan</span> TODO list
+            </div>
+            <div class="items">
+                <button class="add">
+                    <i class="fa fa-plus"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer">
+        <div class="wrapper">
+            <div class="menu left">
+                <div>
+                    <a class="detect-data-automatically" title="Klik untuk menjalankan deteksi lokasi otomatis">
+                        <i class="fa fa-location-arrow"></i>
+                        Auto deteksi jadwal
+                    </a>
+                    <a class="set-data-manually" title="Klik untuk set jadwal secara manual">
+                        <i class="fa fa-location-arrow"></i>
+                        Set jadwal secara manual
+                    </a>
+                    <a class="just-text">
+                        <i class="fa fa-wifi"></i>
+                        Status internet: <span class="connection-status sad">offline</span>
+                    </a>
+                    <a class="photo-ownership" target="_blank">
+                        <i class="fa fa-camera"></i>
+                        <span class="label">Foto dari</span>
+                        <span class="photographer"></span>
+                    </a>
+                    <a class="share">
+                        <i class="fa fa-share-square"></i>
+                        Share
+                    </a>
+                    <a class="info">
+                        <i class="fa fa-info-circle"></i>
+                        Info
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/3rd-parties/jquery/jquery-3.3.1.min.js"></script>
+    <script src="assets/3rd-parties/moment/moment.min.js"></script>
+    <script src="assets/3rd-parties/open-layers/OpenLayers.js"></script>
+    <script src="assets/3rd-parties/sweetalert2/sweetalert2.all.min.js"></script>
+    <script src="assets/3rd-parties/tooltipster/js/jquery.tooltipster.min.js"></script>
+    <script src="assets/script.js?v=1"></script>
+</body>
+</html>

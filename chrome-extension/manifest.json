@@ -1,0 +1,23 @@
+{
+  "manifest_version": 2,
+  "name": "Muslim Board",
+  "short_name": "muslimboard",
+  "version": "2.3.6.0",
+  "description": "Personal Dashboard for Muslim",
+  "chrome_url_overrides" : {
+    "newtab": "content.html"
+  },
+  "icons": {
+    "16": "assets/images/logo-16.jpg",
+    "48": "assets/images/logo-48.jpg",
+    "128": "assets/images/logo-128.jpg"
+  },
+  "permissions": [
+    "geolocation",
+    "alarms",
+    "notifications",
+    "storage"
+  ],
+  "content_security_policy": "script-src 'self' https://ip-api.io https://bimasislam.kemenag.go.id https://unsplash.com https://openlayers.org; object-src 'self'"
+}
+  
