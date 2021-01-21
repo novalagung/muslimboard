@@ -18,7 +18,10 @@ But, before you start doing anything, please keep in mind:
 
 - That first you need to understand about how Chrome Extension work.
 - Google has strict rules over anything! Not every approach is allowed, especially if it potentially bring any risk from security prespective.
-- This extension need to work well across any computers on any condition: slow internet, low-spec computer, etc.
+- This extension need to work well across any computers on any condition: slow internet, offline mode, low-spec computer, etc.
+
+    - Certain images are loaded locally. These images will boost the performance during first installation and also will work fine on offline mode.
+
 - Performance is one of few key points on development of this extension.
 - External request are strictly monitored and controlled.
 
