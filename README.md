@@ -27,7 +27,8 @@ But, before you start doing anything, please keep in mind:
     - This is one reason why lot of libraries like `jQuery`, `font-awesome` are physically copied to the project directory.
     - Whitelisting any domains will result rejection on Chrome Webstore (been there).
 
-- I control the direction of where this extension is going. I will review any PRs.
+- I control the direction of where this extension is going. But I'm open to any constructive feedback or idea.
+- To contribute, simply fork -> commit your changes -> submit PR
 
 ## Webstore URL
 
