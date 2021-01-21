@@ -1,31 +1,8 @@
 # Muslim Board
 
-Personal Dashboard for Muslim in Indonesia
-
-## Description
+Personal Dashboard for Muslim in Indonesia.
 
 Muslim Board is a personal dashboard specifically for Muslims who understand Bahasa Indonesia. This plugin is inspired by Momentum.
-
-To use this extension:
-- simply create a new tab on the chrome browser, just that! then the newly created tab will show the extension content.
-
-By adding this extension, you'll get the benefits below:
-- On the top left pane, the prayer schedule information by location is displayed automatically depending on which location the user currently active in.
-- In the middle, there will be positive motivational quotes randomly displayed, and shuffled automatically every few seconds.
-- On the right pane, there is a TODO list section. Users will be able to write or check certain items. It's very useful for the user to track few things so the particular user will not forget them.
-- Also on the bottom, the internet availability status is displayed.
-
----
-
-Muslim Board adalah laman personal dashboard khusus untuk muslim yang berbahasa Indonesia. Plugin ini terinspirasi dari Momentum.
-
-Fitur:
-- Menampilkan informasi jadwal sholat sesuai lokasi (deteksi lokasi otomatis)
-- Menampilkan informasi jadwal sholat sesuai pilihan lokasi
-- Menampilkan quote2 bermanfaat
-- Fasilitas untuk TODO list, bisa dimanfaatkan untuk mencatat sesuatu agar tidak 
-lupa
-- Indikator penanda internet sedang offline/online
 
 ## Table of Content
 
@@ -33,37 +10,24 @@ lupa
 - Folder `website` contains the source code web/landing page, https://muslimboard.novalagung.com/.
 - Folder `resources` contains few resource files that are not used by the extension or website directly.
 
-## Extension Permissions
+## Contribution
 
-1. Single purpose description
+Anyone should be able to contribute to this project. Bug fixes, improvements, feature requests, you name it! Let's maintain this project.
 
-    To show Islamic prayer time information and some Islamic quotes. In general, this extension is used to improve the productivity of muslim.
+But, before you start doing anything, please keep in mind:
 
-2. Geolocation
+- That first you need to understand about how Chrome Extension work.
+- Google has strict rules over anything! Not every approach is allowed, especially if it potentially bring any risk from security prespective.
+- It would be nice to have some cutting-edge technology applied here, but if it's resulting a rejection during submission then I will not approve it. 
+- This extension need to work well across any computers on any condition: slow internet, low-spec computer, etc.
+- Performance is one of few key points on development of this extension.
+- External request are strictly monitored and controlled.
 
-    The geolocation data is required for getting the prayer time schedule based on location coordinate. because prayer time calculation in Islam depend to coordinate information
+    - See on `manifest.json` on the `content_security_policy`.
+    - This is one reason why lot of libraries like `jQuery`, `font-awesome` are physically copied to the project directory.
+    - Whitelisting any domains will result rejection on Chrome Webstore (been there).
 
-3. Alarms
-
-    This extension provides prayer schedule information. the alarm feature will help the user to get notified when the prayer time is coming in few minutes
-
-4. Notifications
-
-    This extension provides prayer schedule information. the notification feature will help the user to get notified when the prayer time is coming in few minutes
-
-5. Storage
-
-    The storage is used to store cached information such as todo list data in the right sidebar
-
-6. Background (optional)
-
-    The background will help the geolocation tracker to keep running in the background
-
-7. Remote Codes
-
-    I am using the 3rd party OpenLayers.js and inside the file there is eval statement, but I'm not sure wheter it's executed or not. This openlayer is required for performing the geolocation-related operations.
-
-    Other than that there are few jsons file fetched from external urls.
+- I control the direction of where this extension is going. I will review any PRs.
 
 ## Webstore URL
 
