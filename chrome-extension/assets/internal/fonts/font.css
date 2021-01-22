@@ -1,9 +1,14 @@
+/* fonts data is stored locally, it's part of this extension requirement to work on offline mode */
+
+/* load open sans font */
 @font-face { font-family: 'Open Sans'; src: url('OpenSans-Regular.ttf'); font-weight: normal; font-style: normal; }
 @font-face { font-family: 'Open Sans'; src: url('OpenSans-Italic.ttf'); font-weight: normal; font-style: italic; }
 @font-face { font-family: 'Open Sans'; src: url('OpenSans-Bold.ttf'); font-weight: bold; font-style: normal; }
 
+/* load lato fonts */
 @font-face { font-family: 'Lato'; src: url('Lato-Regular.ttf'); font-weight: normal; font-style: normal; }
 @font-face { font-family: 'Lato'; src: url('Lato-Italic.ttf'); font-weight: normal; font-style: italic; }
 @font-face { font-family: 'Lato'; src: url('Lato-Bold.ttf'); font-weight: bold; font-style: normal; }
 
+/* load arabic fonts */
 @font-face { font-family: 'KFGQPC Uthman Taha Naskh'; src: url('UthmanTN1 Ver10.otf'); font-weight: normal; font-style: normal; }
