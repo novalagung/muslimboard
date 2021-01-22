@@ -166,6 +166,8 @@
             debug: (() => !('update_url' in chrome.runtime.getManifest()))(),
             googleMapApiKey: "{{YOUR_API_KEY_HERE}}",
             timeoutDuration: Utility.seconds(5),
+            updateBackgroundDelayDuration: Utility.seconds(40),
+            updateContentDelayDuration: Utility.seconds(60),
             changelogs: [
                 'Bug fix pada TODO list storage',
                 'Improvement pada error message ketika backend kemenag jadwal sholat sedang tidak bisa diakses'
@@ -177,6 +179,7 @@
     
         // =========== CLOCK
     
+        // render time to screen at start and every seconds
         renderTime() {
             const doRenderTime = () => {
                 const hour = moment().format('HH')
@@ -227,7 +230,11 @@
     
         // =========== LOCATION
 
+        // global geolocation watch object
         geoLocationWatchObject: null,
+
+        // get master location data.
+        // if location data ever been loaded once, then the cache will be used on next call
         async getDataMasterLocation() {
             const key = `data-location-static-${Constant.meta.version}`
             const data = await Utility.getData(key, async (resolve) => {
@@ -238,6 +245,10 @@
             })
             return Promise.resolve(data)
         },
+
+        // perform reverse geolocation to google map api to get location details.
+        // print the result to screen.
+        // if geolocation data ever been loaded once, then the cache will be used on next call
         async getAutomaticLocationDataThenRender(latitude, longitude) {
             const key = `data-location-${Constant.meta.version}`
             const data = await Utility.getData(key, async (resolve) => {
@@ -253,11 +264,15 @@
             const locationName = (data.content.results || []).reverse()[0].formatted_address
             $('.location .text').text(locationName)
         },
+
+        // watch location data changes.
+        // if there is any movement then reload the prayer times info on screen
         async watchAutomaticLocationDataChanges(latitude, longitude) {
             await Utility.sleep(5)
 
             navigator.geolocation.clearWatch(this.geoLocationWatchObject)
             this.geoLocationWatchObject = navigator.geolocation.watchPosition((position) => {
+                // if automatic location is NOT currently active, then skip it
                 if (!this.isUsingAutomaticLocation.call(this)) {
                     return
                 }
@@ -265,6 +280,7 @@
                 const updatedLatitude = position.coords.latitude
                 const updatedLongitude = position.coords.longitude
                 
+                // refresh prayer time on movement
                 const distance = Utility.distanceBetween(latitude, longitude, updatedLatitude, updatedLongitude)
                 if (distance > 0) {
                     Utility.log('watch!', distance, position)
@@ -274,6 +290,9 @@
                 Utility.log(error)
             })
         },
+
+        // return manual location data
+        // if automatic location is currently active, then skip it
         getManualLocationData() {
             if (this.isUsingAutomaticLocation.call(this)) {
                 return { province: '', kabko: '' }
@@ -283,6 +302,8 @@
             const parts = text.split('|')
             return { province: parts[0], kabko: parts[1], id: parts[2] }
         },
+
+        // detect whether automatic location is currently active, or not
         isUsingAutomaticLocation() {
             if (localStorage.getItem('manual-location')) {
                 return false
@@ -293,6 +314,8 @@
     
         // =========== PRAYER TIME
 
+        // render player time placeholder.
+        // used on the screen during loading data process
         renderPrayerTimePlaceholder() {
             $('.location .text').text('Loading ...')
             $(`.prayer-time tbody`).css('visibility', 'hidden')
@@ -308,6 +331,9 @@
             $(`.prayer-time tbody tr:eq(0) td:eq(0)`).html('<span class="placeholder">Loading ...</span>')
         },
         
+        // get automatic player time, then render it to screen.
+        // alathan api is used to calculate prayer time on automatic mode.
+        // if prayer time data ever been loaded once, then the cache will be used on next call
         async getAutomaticPrayerTimesThenRender(latitude, longitude, silent = false) {
             const key = `data-prayer-time-${Constant.meta.version}`
             const data = await Utility.getData(key, async (resolve) => {
@@ -332,6 +358,10 @@
             const schedule = prayerTime.timings
             this.renderPrayerTime.call(this, schedule)
         },
+        
+        // get automatic player time, then render it to screen.
+        // kemenag bimaislam website is used to get the prayer time on manual mode.
+        // if prayer time data ever been loaded once, then the cache will be used on next call
         async getManualPrayerTimesThenRender(id) {
             const key = `data-manual-prayer-time-${id}-${moment().format('YYYY-MM-DD')}`
             const data = await Utility.getData(key, async (resolve) => {
@@ -366,6 +396,8 @@
             
             this.renderPrayerTime.call(this, data.content)
         },
+
+        // render prayer time to screen
         renderPrayerTime(schedule) {
             const timeZoneAbbr = Utility.getCurrentTimezoneAbbreviation()
             
@@ -384,8 +416,8 @@
                 $(`.prayer-time tbody tr:eq(${i}) td:eq(2)`).html(timeZoneAbbr)
             })
             
+            // set alaram once loaded
             let isAlarmEverSet = false
-            
             setInterval(() => {
                 const nowHM = parseInt(moment().add(-10, 'minutes').format('HHmm'), 10)
                 const fajrHM = parseInt(schedule.Fajr.slice(0, 5).replace(':', ''), 10)
@@ -467,9 +499,14 @@
     
         // =========== BACKGROUND
         
+        // store selected background image
         selectedBackground: false,
+
+        // store next background image
         nextSelectedBackground: false,
-        updateBackgroundDelayDuration: Utility.seconds(40),
+
+        // get background image data then render it to screen.
+        // if background image data ever been loaded once, then the cache will be used on next call
         async getDataBackgroundThenRender() {
             const key = `data-background-${Constant.meta.version}`
             const data = await Utility.getData(key, async (resolve) => {
@@ -481,7 +518,11 @@
     
             this.updateBackground.call(this, data)
         },
+
+        // update background images randomly on every X interval
         async updateBackground(data) {
+
+            // the doUpdateBackground below is used to manage the image and text transition
             const doUpdateBackground = () => {
                 const preloader = new Image()
                 preloader.src = this.nextSelectedBackground.url
@@ -498,7 +539,7 @@
     
                     setTimeout(() => {
                         this.updateBackground.call(this, data)
-                    }, this.updateBackgroundDelayDuration)
+                    }, Constant.app.updateBackgroundDelayDuration)
                 }
                 preloader.onerror = (err) => {
                     this.nextSelectedBackground = Utility.randomFromArray(data.content.content, this.selectedBackground)
@@ -506,6 +547,9 @@
                 }
             }
     
+            // if certain image is currently appearing on screen,
+            // then the transition need to be smooth.
+            // meanwhile at first load, local image will be used to make the image loading process faster
             if (this.selectedBackground) {
                 this.selectedBackground = this.nextSelectedBackground
                 this.nextSelectedBackground = Utility.randomFromArray(data.content.content, this.selectedBackground)
@@ -553,6 +597,11 @@
                     this.selectedBackground
                 )
 
+                // right after certain image loaded, trigger preload for next image,
+                // this approach is to ensure when the next image transition is happening,
+                // it's need to happen smoothly.
+                // on rare occasion the preload might failing due to various reason such slow internet,
+                // and if that situation is happening, use the local image
                 const preloader = new Image()
                 preloader.src = this.selectedBackground.url
                 preloader.onload = () => {
@@ -571,8 +620,11 @@
     
         // =========== CONTENT
         
+        // store selected content
         selectedContent: false,
-        updateContentDelayDuration: Utility.seconds(60),
+
+        // get data content then render it on screen.
+        // if background image data ever been loaded once, then the cache will be used on next call
         async getDataContentThenRender() {
             const key = `data-content-${Constant.meta.version}`
             const data = await Utility.getData(key, async (resolve) => {
@@ -584,6 +636,8 @@
             
             this.updateContent.call(this, data)
         },
+
+        // update content. it's the quote and other text related to it.
         updateContent(data) {
             this.selectedContent = Utility.randomFromArray(data.content.content, this.selectedContent)
             const content = this.selectedContent
@@ -622,20 +676,31 @@
     
             setTimeout(() => {
                 this.updateContent.call(this, data)
-            }, this.updateContentDelayDuration)
+            }, Constant.app.updateContentDelayDuration)
         },
     
         // =========== LOAD DATA
     
+        // load data. it's include the prayer time, background image, and content
         async loadData() {
+
+            // first render prayer time placeholder
             this.renderPrayerTimePlaceholder.call(this)
 
+            // 2nd, render the time
             this.renderTime.call(this)
+
+            // 3rd, get and render the background image
             this.getDataBackgroundThenRender.call(this)
+
+            // 4th, get and render the content
             this.getDataContentThenRender.call(this)
 
+            // lastly, load the location and prayer information
             this.loadLocationAndPrayerTimeThenRender.call(this)
         },
+
+        // load the location and prayer information whether on manual mode or automatic
         async loadLocationAndPrayerTimeThenRender() {
             const isDetectModeAutomatic = this.isUsingAutomaticLocation.call(this)
             this.renderPrayerTimePlaceholder.call(this)
@@ -643,17 +708,27 @@
             try {
                 if (isDetectModeAutomatic) {
                     Utility.log('load location automatically, then render prayer times')
+
+                    // on automatic mode, first get the current coordinate
                     const location = await Utility.getCurrentPosition()
                     const { latitude, longitude } = location.coords
 
+                    // then get the location data based the coordinate
                     await this.getAutomaticLocationDataThenRender.call(this, latitude, longitude)
+
+                    // and then proceed with getting the prayer times
                     await this.getAutomaticPrayerTimesThenRender.call(this, latitude, longitude)
+
+                    // also monitor the possible movement.
                     this.watchAutomaticLocationDataChanges.call(this, latitude, longitude)
                 } else {
                     Utility.log('load location manually, then render prayer times')
+
+                    // on manual mode, get the data from selected province and citym, then render it
                     const { province, kabko, id } = this.getManualLocationData.call(this)
-    
                     $('.location .text').text(`${Utility.toTitleCase(kabko)}, Prov. ${Utility.toTitleCase(province)}`)
+
+                    // next get manual prayer times then render it
                     await this.getManualPrayerTimesThenRender.call(this, id)
                 }
             } catch (err) {
@@ -668,10 +743,16 @@
                 });
             }
         },
+
+        // this function containt many event definition for any location and prayer time related operation
+        // for both manual mode and automatic mode
         async registerEventForForceLoadLocationAndPrayerTimes() {
+
+            // get master location data
             const locationData = await this.getDataMasterLocation.call(this)
             const locations = locationData.content
 
+            // function to render dropdown options
             const renderDropdownOption = (collections, keyValue, keyText, placeholder) => {
                 const contentOptions = JSON.parse(JSON.stringify(collections))
                 contentOptions.sort((a, b) => {
@@ -692,6 +773,7 @@
                     .join('')
             };
 
+            // register event handler for applying automatic location
             $('.detect-data-automatically').on('click', async () => {
                 Utility.log('force load location & prayer times')
 
@@ -721,6 +803,7 @@
                 })
             })
             
+            // register event handler for applying manual location
             $('.set-data-manually').on('click', async () => {
                 Utility.log('set location of prayer times manually')
 
@@ -746,6 +829,7 @@
                 let kabko = ''
                 let locationID = ''
 
+                // show the manual location picker
                 Swal.fire({
                     type: 'info',
                     title: `Set lokasi manual`,
@@ -774,16 +858,18 @@
                         return
                     }
 
-                    // delete cached manual location
+                    // delete previously cached selected location data.
+                    // replace it with the newly selected location
                     const key = `data-manual-prayer-time-${locationID}-${moment().format('YYYY-MM-DD')}`
                     localStorage.removeItem(key)
-
                     localStorage.setItem('manual-location', `${province}|${kabko}|${locationID}`)
+
+                    // reload prayer time then render
                     this.loadLocationAndPrayerTimeThenRender.call(this)
                 })
 
+                // get manual location data then show it on modal
                 const savedLocation = this.getManualLocationData.call(this)
-
 				$('.dropdown-province').val(savedLocation.province);
 				$('.dropdown-province').trigger('change');
 				setTimeout(() => {
@@ -791,6 +877,8 @@
 				}, 300);
             })
             
+            // on manual popup/modal, when user select a province,
+            // then proceed with showing cities under the particular province
             $('body').on('change', '.dropdown-province', async (e) => {
                 const value = e.currentTarget.value
                 if (!value) {
@@ -810,6 +898,7 @@
     
         // =========== FOOTER
     
+        // perform detection on internet status, whether it's online or not
         registerEventForInternetAvailabilityStatus() {
             const internetStatus = (status) => () => {
                 if (status == 'online') {
@@ -841,7 +930,11 @@
                 timeout: Constant.app.timeoutDuration
               });
         },
+
+        // apply event handler for any clickable stuff on footer
         registerEventForFooter() {
+
+            // on info button click, show the info modal
             $(".info").on("click", (e) => {
                 e.preventDefault();
     
@@ -878,6 +971,7 @@
                 });
             });
     
+            // on share button click, show the share modal
             $(".share").on("click", () => {
                 const title = `Chrome Extension - ${Constant.meta.appName}`;
                 const text = `
@@ -914,9 +1008,11 @@
 
         // =========== NOTIFICATION
 
+        // manage notifications and alarms
         registerEventForAlarm() {
             Utility.log('clearing old alarms info')
 
+            // clear any existing notifications data
             if (chrome.notifications) {
                 chrome.notifications.getAll((notification) => {
                     Object.keys(notification).forEach((each) => {
@@ -925,6 +1021,8 @@
                 })
             }
 
+            // clear any existing alarms data then create new one.
+            // also dispatch the notification on alarm
             if (chrome.alarms) {
                 chrome.alarms.clearAll()
                 chrome.alarms.onAlarm.addListener((alarm) => {
@@ -945,6 +1043,7 @@
 
         // =========== TODO LIST
 
+        // toggle TODO list visibility based on previously cached state
         async ensureTodoListBoxVisibility() {
             const value = localStorage.getItem('todo-list-status') || 'false'
             if (value === 'true') {
@@ -953,6 +1052,11 @@
                 $('body').removeClass('show-todo-list')
             }
         },
+
+        // this function contains several things:
+        // setup default TODO items data.
+        // ensure TODO list visibility baseed on previously cached state.
+        // and render TODO items
         async ensureTodoListBoxVisibilityOnPageActive() {
 
             // migrate chrome.storage.sync storage data to localStorage
@@ -987,6 +1091,8 @@
                 this.ensureTodoListItemsAppear.call(this)
             })
         },
+
+        // render TODO list items
         async ensureTodoListItemsAppear() {
             $('#todo-list .items .item').remove()
 
@@ -1008,6 +1114,8 @@
                 `))
             })
         },
+
+        // ensure the TODO list items is always stored on cache
         async ensureTodoListItemsStored() {
             const items = $('#todo-list .items .item').toArray().reverse().map((each) => ({
                 text: $(each).find('span[contenteditable]')[0].innerText,
@@ -1016,6 +1124,8 @@
             localStorage.setItem('todo-list-items', JSON.stringify(items))
             await Utility.syncStorage.set('todo-list-items', JSON.stringify(items))
         },
+
+        // insert new TODO utem
         async insertTodoListItem() {
             let items = JSON.parse(localStorage.getItem('todo-list-items') || '[]')
             if (items.length > 0) {
@@ -1030,7 +1140,11 @@
             
             this.ensureTodoListItemsAppear.call(this)
         },
+
+        // contains event declarations for many TODO list operation
         async registerEventTodoList() {
+
+            // event for hiding or showing the TODO list pane
             $('#todo-list .toggler').on('click', async () => {
                 const value = localStorage.getItem('todo-list-status') || 'false'
                 if (value === 'true') {
@@ -1042,32 +1156,35 @@
                 this.ensureTodoListBoxVisibility.call(this)
             })
 
+            // event for clicking add button
             $('#todo-list .add').on('click', () => {
                 this.insertTodoListItem.call(this)
                 $('#search').addClass('search-started')
                 $('#todo-list .items .item:eq(0) span[contenteditable]').focus()
             })
             
+            // calculate TODO list item based on screen size
             $('#todo-list .items').height($(window).height() - 97 - 37)
             $('#todo-list .items').on('keyup', '.item span[contenteditable]', Utility.debounce(() => {
                 this.ensureTodoListItemsStored.call(this)
             }, 300))
             
-            
+            // event for deleting TODO item
             $('#todo-list .items').on('click', '.item button', (event) => {
                 $(event.currentTarget).closest('.item').remove()
                 this.ensureTodoListItemsStored.call(this)
             })
             
+            // event for auto highlight/select text on TODO item click 
             // $('#todo-list .items').on('click', '.item span[contenteditable]', (event) => {
             //     Utility.selectElementContents(event.currentTarget)
             // })
 
+            // event handler for checking/unchecking TODO item
             const animateCheckedItem = ($item) => {
                 // for now, apply no animations
                 this.ensureTodoListItemsStored.call(this)
             }
-
             $('#todo-list .items').on('click', '.item input[type="checkbox"]', (event) => {
                 animateCheckedItem($(event.currentTarget).closest('.item'))
             })
@@ -1085,6 +1202,7 @@
 
         // =========== UPDATE MESSAGE
     
+        // show update message on extension update
         showUpdateMessage() {
             const keyOfUpdateMessage = `changelogs-message-${Constant.meta.version}`
             if (localStorage.getItem(keyOfUpdateMessage)) {
@@ -1118,6 +1236,7 @@
     
         // =========== INIT
         
+        // orchestrate everything
         init() {
             this.loadData.call(this)
             this.registerEventForForceLoadLocationAndPrayerTimes.call(this)
