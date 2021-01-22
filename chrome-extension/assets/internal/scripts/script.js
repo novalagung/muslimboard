@@ -1,9 +1,4 @@
 (() => {
-    const Changelogs = [
-        'Bug fix pada TODO list storage',
-        'Improvement pada error message ketika backend kemenag jadwal sholat sedang tidak bisa diakses'
-    ]
-
     const Utility = {
         syncStorage: {
             set: (key, value) => new Promise((resolve) => {
@@ -68,7 +63,7 @@
                     {
                         enableHighAccuracy: true,
                         maximumAge: Infinity,
-                        timeout: Utility.requestTimeoutDuration()
+                        timeout: Constant.app.timeoutDuration
                     }
                 )
             } else {
@@ -119,10 +114,8 @@
                 resolve()
             }, Utility.seconds(n))
         }),
-        googleMapApiKey: () => "{{YOUR_API_KEY_HERE}}",
         seconds: (n) => n * 1000,
-        requestTimeoutDuration: () => Utility.seconds(5),
-        log: (...args) => (App.debug) ? console.log(...args) : $.noop(),
+        log: (...args) => (Constant.app.debug) ? console.log(...args) : $.noop(),
         toTitleCase: (str) => str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()),
         getCurrentTimezoneAbbreviation: () => {
             switch (new Date().toString().match(/([-\+][0-9]+)\s/)[1]) {
@@ -150,7 +143,7 @@
         },
         fetch: (url) => {
             const controller = new AbortController()
-            const timeoutId = setTimeout(() => controller.abort(), Utility.requestTimeoutDuration())
+            const timeoutId = setTimeout(() => controller.abort(), Constant.app.timeoutDuration)
 
             return fetch(url, { signal: controller.signal })
             
@@ -159,14 +152,28 @@
         }
     }
     
+    const Constant = {
+        meta: {
+            version: (() => `v${chrome.runtime.getManifest().version}`)(),
+            appName: "Muslim Board",
+            homepageLink: "https://muslimboard.novalagung.com",
+        },
+        maintainer: {
+            name: "Noval Agung Prayogo",
+            email: "caknopal@gmail.com",
+        },
+        app: {
+            debug: (() => !('update_url' in chrome.runtime.getManifest()))(),
+            googleMapApiKey: "{{YOUR_API_KEY_HERE}}",
+            timeoutDuration: Utility.seconds(5),
+            changelogs: [
+                'Bug fix pada TODO list storage',
+                'Improvement pada error message ketika backend kemenag jadwal sholat sedang tidak bisa diakses'
+            ],
+        },
+    }
+
     const App = {
-        version: (() => `v${chrome.runtime.getManifest().version}`)(),
-        debug: (() => !('update_url' in chrome.runtime.getManifest()))(),
-        appName: "Muslim Board",
-        appLink: "https://muslimboard.novalagung.com",
-        creatorName: "Noval Agung Prayogo",
-        creatorEmail: "caknopal@gmail.com",
-        changelogs: Changelogs,
     
         // =========== CLOCK
     
@@ -222,7 +229,7 @@
 
         geoLocationWatchObject: null,
         async getDataMasterLocation() {
-            const key = `data-location-static-${this.version}`
+            const key = `data-location-static-${Constant.meta.version}`
             const data = await Utility.getData(key, async (resolve) => {
                 const url = `data/data-location.json`
                 const response = await Utility.fetch(url)
@@ -232,9 +239,9 @@
             return Promise.resolve(data)
         },
         async getAutomaticLocationDataThenRender(latitude, longitude) {
-            const key = `data-location-${this.version}`
+            const key = `data-location-${Constant.meta.version}`
             const data = await Utility.getData(key, async (resolve) => {
-                const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${Utility.googleMapApiKey()}`
+                const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${Constant.app.googleMapApiKey}`
                 const response = await Utility.fetch(url)
                 const result = await response.json()
                 resolve(result)
@@ -302,7 +309,7 @@
         },
         
         async getAutomaticPrayerTimesThenRender(latitude, longitude, silent = false) {
-            const key = `data-prayer-time-${this.version}`
+            const key = `data-prayer-time-${Constant.meta.version}`
             const data = await Utility.getData(key, async (resolve) => {
                 const method = 1
                 const month = parseInt(moment().format('MM'), 10)
@@ -464,7 +471,7 @@
         nextSelectedBackground: false,
         updateBackgroundDelayDuration: Utility.seconds(40),
         async getDataBackgroundThenRender() {
-            const key = `data-background-${this.version}`
+            const key = `data-background-${Constant.meta.version}`
             const data = await Utility.getData(key, async (resolve) => {
                 const url = `data/data-background.json`
                 const response = await Utility.fetch(url)
@@ -567,7 +574,7 @@
         selectedContent: false,
         updateContentDelayDuration: Utility.seconds(60),
         async getDataContentThenRender() {
-            const key = `data-content-${this.version}`
+            const key = `data-content-${Constant.meta.version}`
             const data = await Utility.getData(key, async (resolve) => {
                 const url = `data/data-content.json`
                 const response = await Utility.fetch(url)
@@ -820,7 +827,7 @@
             
             $.ajax({
                 type: 'GET',
-                url: `https://maps.googleapis.com/maps/api/geocode/json?latlng=0,0&key=${Utility.googleMapApiKey()}`,
+                url: `https://maps.googleapis.com/maps/api/geocode/json?latlng=0,0&key=${Constant.app.googleMapApiKey}`,
                 success: () => {
                     internetStatus(navigator.onLine ? 'online' : 'offline')()
                     window.addEventListener('online', internetStatus('online'))
@@ -831,7 +838,7 @@
                         internetStatus('offline')()
                     }
                 },
-                timeout: Utility.requestTimeoutDuration()
+                timeout: Constant.app.timeoutDuration
               });
         },
         registerEventForFooter() {
@@ -841,22 +848,22 @@
                 const text = `
                     <div class='modal-info'>
                         <p>
-                            <a href='${this.appLink}' target='_blank'>${this.appName}</a> adalah laman personal dashboard khusus untuk muslim yang berdomisili di Indonesia. Plugin ini terinspirasi dari Momentum.
+                            <a href='${Constant.meta.homepageLink}' target='_blank'>${Constant.meta.appName}</a> adalah laman personal dashboard khusus untuk muslim yang berdomisili di Indonesia. Plugin ini terinspirasi dari Momentum.
                         </p>
                         <p>
                             Informasi jadwal sholat dimunculkan sesuai dengan lokasi pengguna.
                         </p>
                         <p>
-                            Untuk pertanyaan, kritik & saran, maupun jika ingin berkontribusi foto atau quote, silakan kirim email ke <a href='mailto:${this.creatorEmail}?subject=${this.appName} - Pertanyaan, kritik, dan saran'>${this.creatorEmail}</a>.
+                            Untuk pertanyaan, kritik & saran, maupun jika ingin berkontribusi foto atau quote, silakan kirim email ke <a href='mailto:${Constant.maintainer.email}?subject=${Constant.meta.appName} - Pertanyaan, kritik, dan saran'>${Constant.maintainer.email}</a>.
                         </p>
                         <hr class='separator'>
                         <p class='copyright text-center'>
-                            Created by <a href='https://www.linkedin.com/in/novalagung' target='_blank'>${this.creatorName}</a>
+                            Created by <a href='https://www.linkedin.com/in/novalagung' target='_blank'>${Constant.maintainer.name}</a>
                             <br>
                             Ideas from <a href='https://www.linkedin.com/in/rahadianardya' target='_blank'><b>Rahadian Ardya</b></a> & <a href='https://www.linkedin.com/in/eky-pradhana-a7aa6143' target='_blank'><b>Eky Pradhana</b></a>
                             <br>
                             <br>
-                            <i class='fa fa-copyright'></i> ${moment().format("YYYY")} - <a href='${this.appLink}' target='_blank'>${this.appLink}</a>
+                            <i class='fa fa-copyright'></i> ${moment().format("YYYY")} - <a href='${Constant.meta.homepageLink}' target='_blank'>${Constant.meta.homepageLink}</a>
                             <br>
                         </p>
                     </div>
@@ -864,7 +871,7 @@
                 
                 Swal.fire({
                     type: 'info',
-                    title: [this.appName, this.version].join(" "),
+                    title: [Constant.meta.appName, Constant.meta.version].join(" "),
                     html: text,
                     showConfirmButton: false,
                     allowOutsideClick: true
@@ -872,14 +879,14 @@
             });
     
             $(".share").on("click", () => {
-                const title = `Chrome Extension - ${this.appName}`;
+                const title = `Chrome Extension - ${Constant.meta.appName}`;
                 const text = `
                     <p>Bagikan extension ini ke sosial media,<br />agar yang lain juga bisa mendapat manfaat.</p>
                     <div class="space-top">
                         <a 
                             class="btn-share facebook" 
                             target="_blank" 
-                            href="https://www.facebook.com/sharer/sharer.php?u=${encodeURI(this.appLink)}&title=${encodeURI(title)}" 
+                            href="https://www.facebook.com/sharer/sharer.php?u=${encodeURI(Constant.meta.homepageLink)}&title=${encodeURI(title)}" 
                             title="Share ke facebook"
                         >
                             <i class="fa fa-facebook-square"></i>
@@ -887,7 +894,7 @@
                         <a 
                             class="btn-share twitter" 
                             target="_blank" 
-                            href="https://twitter.com/home?status=${encodeURI([title, this.appLink].join(" "))}" 
+                            href="https://twitter.com/home?status=${encodeURI([title, Constant.meta.homepageLink].join(" "))}" 
                             title="Share ke twitter"
                         >
                             <i class="fa fa-twitter"></i>
@@ -1079,21 +1086,21 @@
         // =========== UPDATE MESSAGE
     
         showUpdateMessage() {
-            const keyOfUpdateMessage = `changelogs-message-${this.version}`
+            const keyOfUpdateMessage = `changelogs-message-${Constant.meta.version}`
             if (localStorage.getItem(keyOfUpdateMessage)) {
                 return
             }
 
             const isUpdate = Object.keys(localStorage).filter((d) => d.indexOf('changelogs-message') > -1).length > 0
             const openingMessage = isUpdate
-                ? `${this.appName} anda telah di update ke versi ${this.version}.`
-                : `${this.appName} ${this.version} berhasil di-install.`
+                ? `${Constant.meta.appName} anda telah di update ke versi ${Constant.meta.version}.`
+                : `${Constant.meta.appName} ${Constant.meta.version} berhasil di-install.`
 
             const text = `
                 <div class="modal-info">
                     <p>${openingMessage} Changelogs:</p>
                     <ul>
-                        ${this.changelogs.map((d) => `<li>${d}</li>`).join('')}
+                        ${Constant.app.changelogs.map((d) => `<li>${d}</li>`).join('')}
                     </ul>
                 </div>
             `
