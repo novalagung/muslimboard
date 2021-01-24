@@ -255,10 +255,15 @@
                 const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${Constant.app.googleMapApiKey}`
                 const response = await Utility.fetch(url)
                 const result = await response.json()
+                if (result.status === "OK") {
                 resolve(result)
+                }
             })
             if (!data) {
                 throw new Error('Gagal mengambil koordinat lokasi sekarang. Pastikan fitur location pada browser aktif untuk extension ini')
+            }
+            if (data.content.error_message) {
+                throw new Error(data.content.error_message)
             }
 
             const locationName = (data.content.results || []).reverse()[0].formatted_address
