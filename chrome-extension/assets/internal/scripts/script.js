@@ -169,8 +169,7 @@
             updateBackgroundDelayDuration: Utility.seconds(40),
             updateContentDelayDuration: Utility.seconds(60),
             changelogs: [
-                'Bug fix pada TODO list storage',
-                'Improvement pada error message ketika backend kemenag jadwal sholat sedang tidak bisa diakses'
+                'Optimasi deteksi internet aktif/nonaktif'
             ],
         },
     }
@@ -921,7 +920,7 @@
             
             $.ajax({
                 type: 'GET',
-                url: `https://maps.googleapis.com/maps/api/geocode/json?latlng=0,0&key=${Constant.app.googleMapApiKey}`,
+                url: `https://httpsproxy2http.novalagung.com`,
                 success: () => {
                     internetStatus(navigator.onLine ? 'online' : 'offline')()
                     window.addEventListener('online', internetStatus('online'))
