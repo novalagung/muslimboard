@@ -86,7 +86,11 @@
             const isNotToday = data.lastUpdated != nowYYYYMMDD
             if (isFirstTime || isNotToday) {
                 try {
-                    await updateCallback((result) => {
+                    await updateCallback((result, error) => {
+                        if (error) {
+                            resolve(false)
+                        }
+
                         data.lastUpdated = nowYYYYMMDD
                         data.content = result
                         localStorage.setItem(cacheKey, JSON.stringify(data))
@@ -164,12 +168,12 @@
         },
         app: {
             debug: (() => !('update_url' in chrome.runtime.getManifest()))(),
-            googleMapApiKey: "{{YOUR_API_KEY_HERE}}",
             timeoutDuration: Utility.seconds(5),
             updateBackgroundDelayDuration: Utility.seconds(40),
             updateContentDelayDuration: Utility.seconds(60),
             changelogs: [
-                'Optimasi deteksi internet aktif/nonaktif'
+                'Perbaikan bug fatal pada deteksi lokasi',
+                'Integrasi backend baru untuk mempermudah bugfix deteksi lokasi di masa depan'
             ],
         },
     }
@@ -250,23 +254,20 @@
         // if geolocation data ever been loaded once, then the cache will be used on next call
         async getAutomaticLocationDataThenRender(latitude, longitude) {
             const key = `data-location-${Constant.meta.version}`
-            const data = await Utility.getData(key, async (resolve) => {
-                const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${Constant.app.googleMapApiKey}`
+            const data = await Utility.getData(key, async (resolve, reject) => {
+                const url = `https://asia-southeast2-muslim-board-ind-1472876095243.cloudfunctions.net/location-by-coordinate?lat=${latitude}&lon=${longitude}`
                 const response = await Utility.fetch(url)
                 const result = await response.json()
-                if (result.status === "OK") {
                 resolve(result)
-                }
             })
             if (!data) {
                 throw new Error('Gagal mengambil koordinat lokasi sekarang. Pastikan fitur location pada browser aktif untuk extension ini')
             }
-            if (data.content.error_message) {
+            if (data.content.status_code != 200) {
                 throw new Error(data.content.error_message)
             }
 
-            const locationName = (data.content.results || []).reverse()[0].formatted_address
-            $('.location .text').text(locationName)
+            $('.location .text').text(data.content.data.address)
         },
 
         // watch location data changes.
@@ -391,13 +392,34 @@
                 }
                 resolve(schedule)
             })
+
+            let isFailingToGetPrayerTimesFromKemenag = false
             if (!data) {
-                throw new Error('Gagal mengambil jadwal waktu sholat secara manual dari situs KEMENAG. Coba refresh halaman, atau gunakan fitur auto deteksi jadwal')
+                isFailingToGetPrayerTimesFromKemenag = true
             }
             if (!data.content.Fajr) {
-                throw new Error('Gagal mengambil jadwal waktu sholat secara manual dari situs KEMENAG. Coba refresh halaman, atau gunakan fitur auto deteksi jadwal')
+                isFailingToGetPrayerTimesFromKemenag = true
             }
-            
+            if (isFailingToGetPrayerTimesFromKemenag) {
+                throw new Error('Gagal mengambil jadwal waktu sholat secara manual dari situs KEMENAG. Coba refresh halaman, atau gunakan fitur auto deteksi jadwal')
+
+                // const key = `data-location-${Constant.meta.version}`
+                // const data = await Utility.getData(key, async (resolve) => {
+                //     const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${Constant.app.googleMapApiKey}`
+                //     const response = await Utility.fetch(url)
+                //     const result = await response.json()
+                //     if (result.status === "OK") {
+                //         resolve(result)
+                //     }
+                // })
+                // if (!data) {
+                //     throw new Error('Gagal mengambil koordinat lokasi sekarang. Pastikan fitur location pada browser aktif untuk extension ini')
+                // }
+                // if (data.content.error_message) {
+                //     throw new Error(data.content.error_message)
+                // }
+            }
+
             this.renderPrayerTime.call(this, data.content)
         },
 
@@ -920,7 +942,7 @@
             
             $.ajax({
                 type: 'GET',
-                url: `https://httpsproxy2http.novalagung.com`,
+                url: `https://asia-southeast2-muslim-board-ind-1472876095243.cloudfunctions.net/location-by-coordinate?lat=0&lon=0`,
                 success: () => {
                     internetStatus(navigator.onLine ? 'online' : 'offline')()
                     window.addEventListener('online', internetStatus('online'))
@@ -932,7 +954,7 @@
                     }
                 },
                 timeout: Constant.app.timeoutDuration
-              });
+            });
         },
 
         // apply event handler for any clickable stuff on footer
