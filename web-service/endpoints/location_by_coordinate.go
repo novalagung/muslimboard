@@ -12,21 +12,35 @@ import (
 
 // GetLocationByCoordinate do get location details by coordinate
 func GetLocationByCoordinate(w http.ResponseWriter, r *http.Request) {
+
+	// cors configuration
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "OPTIONS, GET")
 	w.Header().Set("Access-Control-Allow-Headers", "*")
 
+	if cache := r.URL.Query().Get("cache"); cache == "0" {
+		// disable cache control if param `cache` is set to `0`
+		w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
+		w.Header().Set("Pragma", "no-cache")
+		w.Header().Set("Expires", "0")
+	} else {
+		// by default enable cache control
+		w.Header().Set("Cache-Control", "max-age=31536000")
+	}
+
+	// parse lat long
 	latitude := r.URL.Query().Get("lat")
 	latInt, _ := strconv.ParseFloat(latitude, 64)
-
 	longitude := r.URL.Query().Get("lon")
 	lonInt, _ := strconv.ParseFloat(longitude, 64)
 
+	// if lat long is invalid, then simply return true
 	if latInt == 0 && lonInt == 0 {
 		writeRespose(w, http.StatusOK, true, "")
 		return
 	}
 
+	// dispatch query to open street map geocoding api
 	resp, err := resty.New().R().
 		SetQueryParams(map[string]string{
 			"format": "json",
@@ -43,6 +57,7 @@ func GetLocationByCoordinate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// parse geocoding response
 	location := struct {
 		PlaceID     int    `json:"place_id"`
 		Licence     string `json:"licence"`
@@ -64,13 +79,13 @@ func GetLocationByCoordinate(w http.ResponseWriter, r *http.Request) {
 		} `json:"address"`
 		Boundingbox []string `json:"boundingbox"`
 	}{}
-
 	err = json.Unmarshal(resp.Body(), &location)
 	if err != nil {
 		writeRespose(w, http.StatusBadRequest, nil, err.Error())
 		return
 	}
 
+	// construct readable address as output
 	address := make([]string, 0)
 	if p := location.Address.Amenity; p != "" {
 		address = append(address, p)
@@ -88,12 +103,12 @@ func GetLocationByCoordinate(w http.ResponseWriter, r *http.Request) {
 		address = append(address, p)
 	}
 
+	// write response
 	data := map[string]interface{}{
 		"lat":     location.Lat,
 		"lon":     location.Lon,
 		"address": strings.Join(address, ", "),
 	}
-
 	writeRespose(w, http.StatusOK, data, "")
 }
 
