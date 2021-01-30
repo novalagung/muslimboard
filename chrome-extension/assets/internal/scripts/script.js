@@ -55,7 +55,7 @@
                                 longitude: result.coords.longitude,
                             }
                         }
-                        Utility.log('coordinate', coordinate)
+                        Utility.log('current coordinate found at', coordinate.coords)
                         localStorage.setItem('coordinate-cache', JSON.stringify(coordinate))
                         resolve(coordinate)
                     }, 
@@ -176,7 +176,8 @@
             updateContentDelayDuration: Utility.seconds(60),
             changelogs: [
                 'Perbaikan bug fatal pada deteksi lokasi otomatis',
-                'Penambahan backup backend jika website kemenag down'
+                'Integrasi backend baru untuk mempermudah bugfix deteksi lokasi di masa depan',
+                'Penambahan situs cadangan untuk ambil jadwal shalat jika website kemenag down'
             ],
         },
     }
@@ -252,17 +253,33 @@
             return Promise.resolve(data)
         },
 
-        // perform reverse geolocation to google map api to get location details.
-        // print the result to screen.
-        // if geolocation data ever been loaded once, then the cache will be used on next call
-        async getAutomaticLocationDataThenRender(latitude, longitude) {
-            const key = `data-automatic-location-${Constant.meta.version}`
-            const data = await Utility.getData(key, async (resolve, reject) => {
+        // get location by coordinate
+        getLocationByCoordinate(latitude, longitude) {
+            const key = `data-automatic-location-details-${Constant.meta.version}`
+            return Utility.getData(key, async (resolve, reject) => {
                 const url = `https://asia-southeast2-muslim-board-ind-1472876095243.cloudfunctions.net/location-by-coordinate?lat=${latitude}&lon=${longitude}`
                 const response = await Utility.fetch(url)
                 const result = await response.json()
                 resolve(result)
             })
+        },
+        
+        // get coordinate by province & city
+        getCoordinateByProvinceCity(province, kabko) {
+            const key = `data-manual-location-coordinate-${province}-${kabko}-${Constant.meta.version}`
+            return Utility.getData(key, async (resolve, reject) => {
+                const url = `https://asia-southeast2-muslim-board-ind-1472876095243.cloudfunctions.net/coordinate-by-location?location=${kabko},${province},Indonesia`
+                const response = await Utility.fetch(url)
+                const result = await response.json()
+                resolve(result)
+            })
+        },
+
+        // perform reverse geolocation to google map api to get location details.
+        // print the result to screen.
+        // if geolocation data ever been loaded once, then the cache will be used on next call
+        async getAutomaticLocationDataThenRender(latitude, longitude) {
+            const data = await this.getLocationByCoordinate.call(this, latitude, longitude)
             if (!data) {
                 throw new Error('Gagal mengambil koordinat lokasi sekarang. Pastikan fitur location pada browser aktif untuk extension ini')
             }
@@ -338,13 +355,11 @@
             $(`.prayer-time tbody tr:eq(0)`).css('visibility', 'visible')
             $(`.prayer-time tbody tr:eq(0) td:eq(0)`).html('<span class="placeholder">Loading ...</span>')
         },
-        
-        // get automatic player time, then render it to screen.
-        // alathan api is used to calculate prayer time on automatic mode.
-        // if prayer time data ever been loaded once, then the cache will be used on next call
-        async getAutomaticPrayerTimesThenRender(latitude, longitude, silent = false) {
-            const key = `data-prayer-time-${Constant.meta.version}`
-            const data = await Utility.getData(key, async (resolve) => {
+
+        // aget automatic prayer time
+        getAutomaticPrayerTime(latitude, longitude) {
+            const key = `data-prayer-time-${latitude}-${longitude}-${Constant.meta.version}`
+            return Utility.getData(key, async (resolve) => {
                 const method = 1
                 const month = parseInt(moment().format('MM'), 10)
                 const year = moment().year()
@@ -354,6 +369,13 @@
         
                 resolve(result)
             })
+        },
+        
+        // get automatic prayer time, then render it to screen.
+        // alathan api is used to calculate prayer time on automatic mode.
+        // if prayer time data ever been loaded once, then the cache will be used on next call
+        async getAutomaticPrayerTimesThenRender(latitude, longitude, silent = false) {
+            const data = await this.getAutomaticPrayerTime.call(this, latitude, longitude)
             if (!data) {
                 if (silent) {
                     return
@@ -370,7 +392,7 @@
         // get automatic player time, then render it to screen.
         // kemenag bimaislam website is used to get the prayer time on manual mode.
         // if prayer time data ever been loaded once, then the cache will be used on next call
-        async getManualPrayerTimesThenRender(id) {
+        async getManualPrayerTimesThenRender(province, kabko, id) {
             const key = `data-manual-prayer-time-${id}-${moment().format('YYYY-MM-DD')}`
             const data = await Utility.getData(key, async (resolve) => {
                 const url = `https://bimasislam.kemenag.go.id/widget/jadwalshalat/${id}`
@@ -396,35 +418,55 @@
                 resolve(schedule)
             })
 
-            let isFailingToGetPrayerTimesFromKemenag = false
-            if (!data) {
-                isFailingToGetPrayerTimesFromKemenag = true
+            let isSuccessGettingPrayerTimesFromKemenag = false
+            if (data) {
+                if (data.content) {
+                    if (data.content.Fajr) {
+                        isSuccessGettingPrayerTimesFromKemenag = true
+                    }
+                }
             }
-            if (!data.content.Fajr) {
-                isFailingToGetPrayerTimesFromKemenag = true
-            }
-            if (isFailingToGetPrayerTimesFromKemenag) {
-                throw new Error('Gagal mengambil jadwal waktu sholat secara manual dari situs KEMENAG. Coba refresh halaman, atau gunakan fitur auto deteksi jadwal')
-
-                // url = `https://asia-southeast2-muslim-board-ind-1472876095243.cloudfunctions.net/coordinate-by-location?location=${location}`
-                // const key = `data-automatic-location-${Constant.meta.version}`
-                // const data = await Utility.getData(key, async (resolve) => {
-                //     const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${Constant.app.googleMapApiKey}`
-                //     const response = await Utility.fetch(url)
-                //     const result = await response.json()
-                //     if (result.status === "OK") {
-                //         resolve(result)
-                //     }
-                // })
-                // if (!data) {
-                //     throw new Error('Gagal mengambil koordinat lokasi sekarang. Pastikan fitur location pada browser aktif untuk extension ini')
-                // }
-                // if (data.content.error_message) {
-                //     throw new Error(data.content.error_message)
-                // }
+            if (isSuccessGettingPrayerTimesFromKemenag) {
+                this.renderPrayerTime.call(this, data.content)
             }
 
-            this.renderPrayerTime.call(this, data.content)
+            // throw new Error('Gagal mengambil jadwal dari situs KEMENAG. Coba refresh halaman, atau gunakan fitur auto deteksi jadwal')
+            Swal.fire({
+                type: 'error',
+                title: `Gagal mengambil jadwal dari situs KEMENAG`,
+                html: 'Klik OK untuk ambil data jadwal dari situs cadangan/backup',
+                showConfirmButton: true,
+                showCancelButton: true,
+                confirmButtonText: "Ambil jadwal dari situs backup",
+                cancelButtonText: "Batal"
+            }).then(async (e) => {
+                if (e.dismiss == 'cancel') {
+                    return
+                }
+                
+                // get coordinate by selected province and city
+                const { content: { data } } = await this.getCoordinateByProvinceCity.call(this, province, kabko)
+                console.log('coordinate of manual location found at', data)
+
+                // use the coordinate to get automatic prayer times
+                const dataPrayerTime = await this.getAutomaticPrayerTime(data.lat, data.lon)
+                let isSuccessGettingPrayerTimesFromBackup = false
+                if (dataPrayerTime) {
+                    if (dataPrayerTime.content) {
+                        if (dataPrayerTime.content.code === 200) {
+                            isSuccessGettingPrayerTimesFromBackup = true
+                        }
+                    }
+                }
+                if (!isSuccessGettingPrayerTimesFromBackup) {
+                    throw new Error('Gagal mengambil jadwal dari situs cadangan/backup. Coba refresh halaman, atau gunakan fitur auto deteksi jadwal')
+                }
+
+                // construct prayer time data then render
+                const prayerTime = dataPrayerTime.content.data.find((d) => d.date.gregorian.date == moment().format('DD-MM-YYYY'))
+                const schedule = prayerTime.timings
+                this.renderPrayerTime.call(this, schedule)
+            })
         },
 
         // render prayer time to screen
@@ -759,7 +801,7 @@
                     $('.location .text').text(`${Utility.toTitleCase(kabko)}, Prov. ${Utility.toTitleCase(province)}`)
 
                     // next get manual prayer times then render it
-                    await this.getManualPrayerTimesThenRender.call(this, id)
+                    await this.getManualPrayerTimesThenRender.call(this, province, kabko, id)
                 }
             } catch (err) {
                 Utility.log('error', err)
@@ -829,7 +871,7 @@
                     }
 
                     Utility.deleteCachedData('data-manual-location')
-                    Utility.deleteCachedData(`data-automatic-location-${Constant.meta.version}`)
+                    Utility.deleteCachedData(`data-automatic-location-details-${Constant.meta.version}`)
                     this.loadLocationAndPrayerTimeThenRender.call(this)
                 })
             })
