@@ -28,6 +28,15 @@ func GetLocationByCoordinate(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Cache-Control", "max-age=31536000")
 	}
 
+	writeRespose := func(w http.ResponseWriter, statusCode int, resp interface{}, errMessage string) {
+		w.Header().Set("Content-type", "application/json")
+		json.NewEncoder(w).Encode(map[string]interface{}{
+			"status_code":   statusCode,
+			"data":          resp,
+			"error_message": errMessage,
+		})
+	}
+
 	// parse lat long
 	latitude := r.URL.Query().Get("lat")
 	latInt, _ := strconv.ParseFloat(latitude, 64)
@@ -81,7 +90,7 @@ func GetLocationByCoordinate(w http.ResponseWriter, r *http.Request) {
 	}{}
 	err = json.Unmarshal(resp.Body(), &location)
 	if err != nil {
-		writeRespose(w, http.StatusBadRequest, nil, err.Error())
+		writeRespose(w, http.StatusInternalServerError, nil, err.Error())
 		return
 	}
 
@@ -110,13 +119,4 @@ func GetLocationByCoordinate(w http.ResponseWriter, r *http.Request) {
 		"address": strings.Join(address, ", "),
 	}
 	writeRespose(w, http.StatusOK, data, "")
-}
-
-func writeRespose(w http.ResponseWriter, statusCode int, resp interface{}, errMessage string) {
-	w.Header().Set("Content-type", "application/json")
-	json.NewEncoder(w).Encode(map[string]interface{}{
-		"status_code":   statusCode,
-		"data":          resp,
-		"error_message": errMessage,
-	})
 }

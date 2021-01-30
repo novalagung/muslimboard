@@ -7,6 +7,7 @@ import (
 )
 
 func main() {
+	http.HandleFunc("/coordinate-by-location", endpoints.GetCoordinateByLocation)
 	http.HandleFunc("/location-by-coordinate", endpoints.GetLocationByCoordinate)
 
 	port := ":8080"
