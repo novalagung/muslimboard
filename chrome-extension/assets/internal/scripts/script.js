@@ -175,9 +175,8 @@
             updateBackgroundDelayDuration: Utility.seconds(40),
             updateContentDelayDuration: Utility.seconds(60),
             changelogs: [
-                'Perbaikan bug fatal pada deteksi lokasi otomatis',
-                'Integrasi backend baru untuk mempermudah bugfix deteksi lokasi di masa depan',
-                'Penambahan situs cadangan untuk ambil jadwal shalat jika website kemenag down'
+                'Hilangkan alert keterangan gagal ambil lokasi manual. load data secara seamless',
+                'Update info'
             ],
         },
     }
@@ -431,42 +430,47 @@
             }
 
             // throw new Error('Gagal mengambil jadwal dari situs KEMENAG. Coba refresh halaman, atau gunakan fitur auto deteksi jadwal')
-            Swal.fire({
-                type: 'error',
-                title: `Gagal mengambil jadwal dari situs KEMENAG`,
-                html: 'Klik OK untuk ambil data jadwal dari situs cadangan/backup',
-                showConfirmButton: true,
-                showCancelButton: true,
-                confirmButtonText: "Ambil jadwal dari situs backup",
-                cancelButtonText: "Batal"
-            }).then(async (e) => {
-                if (e.dismiss == 'cancel') {
-                    return
-                }
-                
-                // get coordinate by selected province and city
-                const { content: { data } } = await this.getCoordinateByProvinceCity.call(this, province, kabko)
-                console.log('coordinate of manual location found at', data)
+            // Swal.fire({
+            //     type: 'error',
+            //     title: `Gagal mengambil jadwal dari situs KEMENAG`,
+            //     html: 'Klik OK untuk ambil data jadwal dari situs cadangan/backup',
+            //     showConfirmButton: true,
+            //     showCancelButton: true,
+            //     confirmButtonText: "Ambil jadwal dari situs backup",
+            //     cancelButtonText: "Batal"
+            // }).then(async (e) => {
+            //     if (e.dismiss == 'cancel') {
+            //         return
+            //     }
 
-                // use the coordinate to get automatic prayer times
-                const dataPrayerTime = await this.getAutomaticPrayerTime(data.lat, data.lon)
-                let isSuccessGettingPrayerTimesFromBackup = false
-                if (dataPrayerTime) {
-                    if (dataPrayerTime.content) {
-                        if (dataPrayerTime.content.code === 200) {
-                            isSuccessGettingPrayerTimesFromBackup = true
+                const dataLvl2 = await Utility.getData(key, async (resolve) => {
+                    // get coordinate by selected province and city
+                    const { content: { data } } = await this.getCoordinateByProvinceCity.call(this, province, kabko)
+                    console.log('coordinate of manual location found at', data)
+    
+                    // use the coordinate to get automatic prayer times
+                    const dataPrayerTime = await this.getAutomaticPrayerTime(data.lat, data.lon)
+                    let isSuccessGettingPrayerTimesFromBackup = false
+                    if (dataPrayerTime) {
+                        if (dataPrayerTime.content) {
+                            if (dataPrayerTime.content.code === 200) {
+                                isSuccessGettingPrayerTimesFromBackup = true
+                            }
                         }
                     }
-                }
-                if (!isSuccessGettingPrayerTimesFromBackup) {
-                    throw new Error('Gagal mengambil jadwal dari situs cadangan/backup. Coba refresh halaman, atau gunakan fitur auto deteksi jadwal')
-                }
+                    if (!isSuccessGettingPrayerTimesFromBackup) {
+                        throw new Error('Gagal mengambil jadwal dari situs cadangan/backup. Coba refresh halaman, atau gunakan fitur auto deteksi jadwal')
+                    }
+    
+                    // construct prayer time data then render
+                    const prayerTime = dataPrayerTime.content.data.find((d) => d.date.gregorian.date == moment().format('DD-MM-YYYY'))
+                    const schedule = prayerTime.timings
 
-                // construct prayer time data then render
-                const prayerTime = dataPrayerTime.content.data.find((d) => d.date.gregorian.date == moment().format('DD-MM-YYYY'))
-                const schedule = prayerTime.timings
-                this.renderPrayerTime.call(this, schedule)
-            })
+                    resolve(schedule)
+                })
+                
+                this.renderPrayerTime.call(this, dataLvl2.content)
+            // })
         },
 
         // render prayer time to screen
