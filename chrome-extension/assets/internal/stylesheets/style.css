@@ -50,8 +50,14 @@ html {
     height: 430px;
     background-color: rgba(0, 0, 0, 0.3);
     -webkit-filter: blur(40px);
+    -moz-filter: blur(40px);
+    -ms-filter: blur(40px);
+    -o-filter: blur(40px);
     filter: blur(40px);
     -webkit-transform: translate3d(0, 0, 0);
+    -moz-transform: translate3d(0, 0, 0);
+    -ms-transform: translate3d(0, 0, 0);
+    -o-transform: translate3d(0, 0, 0);
     transform: translate3d(0, 0, 0);
 }
 #sidebar {
@@ -67,7 +73,7 @@ html {
 #sidebar .date-time p {
     padding: 0px;
     margin: 0px;
-    margin-bottom: 4px;
+    margin-bottom: 5px;
     position: relative;
 }
 #sidebar .date-time p .fa {
@@ -79,8 +85,7 @@ html {
     font-weight: bold;
     margin-left: -2px;
     margin-right: -18px;
-    margin-top: -10px;
-    margin-bottom: -5px;
+    margin-top: 0;
 }
 #sidebar .date-time .time .separator:before {
     content: ":";
@@ -110,13 +115,14 @@ html {
     position: absolute;
     left: 19px;
     right: 0px;
+    margin-top: 3px;
 }
 #sidebar .date-time .location .not-found {
     cursor: pointer;
 }
 
 #sidebar .prayer-time {
-    margin-top: 23px;
+    margin-top: 15px;
     height: 175px;
 }
 #sidebar .prayer-time p.title {
@@ -271,8 +277,14 @@ body.show-todo-list #wise-word {
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.7);
     -webkit-filter: blur(25px);
+    -moz-filter: blur(25px);
+    -ms-filter: blur(25px);
+    -o-filter: blur(25px);
     filter: blur(25px);
     -webkit-transform: translate3d(0, 0, 0);
+    -moz-transform: translate3d(0, 0, 0);
+    -ms-transform: translate3d(0, 0, 0);
+    -o-transform: translate3d(0, 0, 0);
     transform: translate3d(0, 0, 0);
 } */
 
@@ -333,6 +345,7 @@ body.show-todo-list #wise-word {
     padding-right: 30px;
     padding-bottom: 10px;
     z-index: 4;
+    font-size: 12px;
 }
 #footer .wrapper {
     position: relative;
@@ -375,8 +388,14 @@ body.show-todo-list #wise-word {
     bottom: -7px;
     background-color: rgba(0, 0, 0, 0.3);
     -webkit-filter: blur(10px);
+    -moz-filter: blur(10px);
+    -ms-filter: blur(10px);
+    -o-filter: blur(10px);
     filter: blur(10px);
     -webkit-transform: translate3d(0, 0, 0);
+    -moz-transform: translate3d(0, 0, 0);
+    -ms-transform: translate3d(0, 0, 0);
+    -o-transform: translate3d(0, 0, 0);
     transform: translate3d(0, 0, 0);
 }
 #footer .menu.left > div * {
@@ -398,7 +417,6 @@ body.show-todo-list #wise-word {
     height: 37px;
 }
 body.show-todo-list #todo-list {
-    /* top: 30px; */
     top: 30px;
     bottom: 30px;
     height: auto;
@@ -414,6 +432,7 @@ body.show-todo-list #todo-list {
     text-transform: uppercase;
     cursor: pointer;
     color: #404040;
+    font-size: 12px;
 }
 #todo-list .wrapper .toggler .true {
     display: inline;
@@ -470,15 +489,11 @@ body.show-todo-list #todo-list .wrapper .items .item {
 #todo-list .wrapper .items .item:hover {
     background-color: #f9f9f9;
 }
-#todo-list .wrapper .items .item input[type="checkbox"] {
+#todo-list .wrapper .items .item input[type=checkbox] {
     position: absolute;
     margin-top: -6.5px;
     top: 50%;
-}
-#todo-list .wrapper .items .item input[type=checkbox] {
     transform: scale(1.5);
-}
-#todo-list .wrapper .items .item input[type=checkbox] {
     width: 30px;
     height: 30px;
     cursor: pointer;
@@ -502,6 +517,12 @@ body.show-todo-list #todo-list .wrapper .items .item {
     content: "\2714";
     padding: -5px;
     font-weight: bold;
+}
+@-moz-document url-prefix() {
+    #todo-list .wrapper .items .item input[type=checkbox] {
+        margin-top: -15px;
+        visibility: visible;
+    }
 }
 #todo-list .wrapper .items .item span[contentEditable=true] {
     margin-left: 40px;
@@ -678,8 +699,12 @@ body.show-todo-list #search-box.active {
 #swal2-content .btn-share.twitter {
     background-color: #1DA1F2;
 }
+#swal2-content .manual-geolocation div.row {
+    margin-bottom: 5px;
+}
 #swal2-content .manual-geolocation select {
     width: 300px;
+    font-size: 15px;
 }
 #swal2-content .manual-geolocation label {
     width: 66px;

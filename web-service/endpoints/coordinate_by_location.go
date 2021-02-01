@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/go-resty/resty/v2"
 )
@@ -37,7 +38,11 @@ func GetCoordinateByLocation(w http.ResponseWriter, r *http.Request) {
 
 	// parse and verify location
 	location := r.URL.Query().Get("location")
-	fmt.Println("location", location)
+	location = strings.ToLower(location)
+	location = strings.Replace(location, "d.i. ", "", -1)
+	location = strings.Replace(location, "kab. ", "", -1)
+	location = strings.Replace(location, "kota ", "", -1)
+
 	if location == "" {
 		writeRespose(w, http.StatusOK, map[string]interface{}{"lat": 0, "lon": 0}, "")
 		return

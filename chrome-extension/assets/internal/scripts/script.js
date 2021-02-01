@@ -175,8 +175,8 @@
             updateBackgroundDelayDuration: Utility.seconds(40),
             updateContentDelayDuration: Utility.seconds(60),
             changelogs: [
-                'Hilangkan alert keterangan gagal ambil lokasi manual. load data secara seamless',
-                'Update info'
+                'Improvement tampilan',
+                'Penambahan support untuk browser firefox'
             ],
         },
     }
@@ -274,19 +274,30 @@
             })
         },
 
+        // print location
+        renderLocation(text) {
+            if (text.length > 80) {
+                $('.location .text').text(text.slice(0, 80) + "...")
+                $('.location .text').attr("title", text)
+            } else {
+                $('.location .text').text(text)
+                $('.location .text').removeAttr("title")
+            }
+        },
+
         // perform reverse geolocation to google map api to get location details.
         // print the result to screen.
         // if geolocation data ever been loaded once, then the cache will be used on next call
         async getAutomaticLocationDataThenRender(latitude, longitude) {
             const data = await this.getLocationByCoordinate.call(this, latitude, longitude)
             if (!data) {
-                throw new Error('Gagal mengambil koordinat lokasi sekarang. Pastikan fitur location pada browser aktif untuk extension ini')
+                throw new Error('Gagal mengambil koordinat lokasi sekarang. Pastikan fitur location pada browser aktif untuk extension/plugin ini')
             }
             if (data.content.status_code != 200) {
                 throw new Error(data.content.error_message)
             }
 
-            $('.location .text').text(data.content.data.address)
+            this.renderLocation.call(this, data.content.data.address)
         },
 
         // watch location data changes.
@@ -802,7 +813,8 @@
 
                     // on manual mode, get the data from selected province and citym, then render it
                     const { province, kabko, id } = this.getManualLocationData.call(this)
-                    $('.location .text').text(`${Utility.toTitleCase(kabko)}, Prov. ${Utility.toTitleCase(province)}`)
+                    const locationText = ` ${Utility.toTitleCase(kabko)}, Prov. ${Utility.toTitleCase(province)}`
+                    this.renderLocation.call(this, locationText)
 
                     // next get manual prayer times then render it
                     await this.getManualPrayerTimesThenRender.call(this, province, kabko, id)
@@ -1018,10 +1030,10 @@
                 const text = `
                     <div class='modal-info'>
                         <p>
-                            <a href='${Constant.meta.homepageLink}' target='_blank'>${Constant.meta.appName}</a> adalah laman personal dashboard khusus untuk muslim yang berdomisili di Indonesia. Plugin ini terinspirasi dari Momentum.
+                            <a href='${Constant.meta.homepageLink}' target='_blank'>${Constant.meta.appName}</a> adalah laman personal dashboard khusus untuk muslim yang berdomisili di Indonesia. Plugin ini terinspirasi dari Momentum, tersedia untuk browser Chrome & Firefox.
                         </p>
                         <p>
-                            Informasi jadwal sholat dimunculkan sesuai dengan lokasi pengguna.
+                            Informasi jadwal sholat dimunculkan sesuai lokasi pengguna.
                         </p>
                         <p>
                             Untuk pertanyaan, kritik & saran, maupun jika ingin berkontribusi foto atau quote, silakan kirim email ke <a href='mailto:${Constant.maintainer.email}?subject=${Constant.meta.appName} - Pertanyaan, kritik, dan saran'>${Constant.maintainer.email}</a>.
@@ -1050,9 +1062,9 @@
     
             // on share button click, show the share modal
             $(".share").on("click", () => {
-                const title = `Chrome Extension - ${Constant.meta.appName}`;
+                const title = `${Constant.meta.appName} Browser Extension/Plugin`;
                 const text = `
-                    <p>Bagikan extension ini ke sosial media,<br />agar yang lain juga bisa mendapat manfaat.</p>
+                    <p>Bagikan extension/plugin ini ke sosial media,<br />agar yang lain juga bisa mendapat manfaat.</p>
                     <div class="space-top">
                         <a 
                             class="btn-share facebook" 
@@ -1279,7 +1291,7 @@
 
         // =========== UPDATE MESSAGE
     
-        // show update message on extension update
+        // show update message on extension/plugin update
         showUpdateMessage() {
             const keyOfUpdateMessage = `changelogs-message-${Constant.meta.version}`
             if (localStorage.getItem(keyOfUpdateMessage)) {
