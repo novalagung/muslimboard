@@ -1175,10 +1175,12 @@
             this.ensureTodoListBoxVisibility.call(this)
             this.ensureTodoListItemsAppear.call(this)
 
-            chrome.tabs.onActivated.addListener(() => {
-                this.ensureTodoListBoxVisibility.call(this)
-                this.ensureTodoListItemsAppear.call(this)
-            })
+            if (chrome.tabs) {
+                chrome.tabs.onActivated.addListener(() => {
+                    this.ensureTodoListBoxVisibility.call(this)
+                    this.ensureTodoListItemsAppear.call(this)
+                })
+            }
         },
 
         // render TODO list items

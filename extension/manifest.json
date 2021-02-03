@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Muslim Board",
   "short_name": "muslimboard",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "description": "Personal Dashboard for Muslim",
   "chrome_url_overrides" : {
     "newtab": "index.html"
@@ -16,7 +16,8 @@
     "geolocation",
     "alarms",
     "notifications",
-    "storage"
+    "storage",
+    "activeTab"
   ],
   "content_security_policy": "script-src 'self' https://bimasislam.kemenag.go.id https://unsplash.com; object-src 'self'"
 }
