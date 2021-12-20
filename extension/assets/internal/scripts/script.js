@@ -175,8 +175,8 @@
             updateBackgroundDelayDuration: Utility.seconds(40),
             updateContentDelayDuration: Utility.seconds(60),
             changelogs: [
-                'Improvement tampilan',
-                'Penambahan support untuk browser firefox'
+                'Refactor the backend architecture of shalah schedule',
+                'Bug fix on the shalah schedule api'
             ],
         },
     }
@@ -373,7 +373,7 @@
                 const method = 1
                 const month = parseInt(moment().format('MM'), 10)
                 const year = moment().year()
-                const url = `http://api.aladhan.com/v1/calendar?latitude=${latitude}&longitude=${longitude}&method=${method}&month=${month}&year=${year}`
+                const url = `https://asia-southeast2-muslim-board-ind-1472876095243.cloudfunctions.net/shalat-schedule-by-coordinate?latitude=${latitude}&longitude=${longitude}&method=${method}&month=${month}&year=${year}`
                 const response = await Utility.fetch(url)
                 const result = await response.json()
         
