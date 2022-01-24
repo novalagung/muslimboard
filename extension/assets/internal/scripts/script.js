@@ -256,7 +256,7 @@
         getLocationByCoordinate(latitude, longitude) {
             const key = `data-automatic-location-details-${Constant.meta.version}`
             return Utility.getData(key, async (resolve, reject) => {
-                const url = `https://asia-southeast2-muslim-board-ind-1472876095243.cloudfunctions.net/location-by-coordinate?lat=${latitude}&lon=${longitude}`
+                const url = `https://asia-southeast2-muslim-board-ind-1472876095243.cloudfunctions.net/muslimboard-api?op=location-by-coordinate&lat=${latitude}&lon=${longitude}`
                 const response = await Utility.fetch(url)
                 const result = await response.json()
                 resolve(result)
@@ -267,7 +267,7 @@
         getCoordinateByProvinceCity(province, kabko) {
             const key = `data-manual-location-coordinate-${province}-${kabko}-${Constant.meta.version}`
             return Utility.getData(key, async (resolve, reject) => {
-                const url = `https://asia-southeast2-muslim-board-ind-1472876095243.cloudfunctions.net/coordinate-by-location?location=${kabko},${province},Indonesia`
+                const url = `https://asia-southeast2-muslim-board-ind-1472876095243.cloudfunctions.net/muslimboard-api?op=coordinate-by-location&location=${kabko},${province},Indonesia`
                 const response = await Utility.fetch(url)
                 const result = await response.json()
                 resolve(result)
@@ -373,7 +373,7 @@
                 const method = 1
                 const month = parseInt(moment().format('MM'), 10)
                 const year = moment().year()
-                const url = `https://asia-southeast2-muslim-board-ind-1472876095243.cloudfunctions.net/shalat-schedule-by-coordinate?latitude=${latitude}&longitude=${longitude}&method=${method}&month=${month}&year=${year}`
+                const url = `https://asia-southeast2-muslim-board-ind-1472876095243.cloudfunctions.net/muslimboard-api?op=shalat-schedule-by-coordinate&latitude=${latitude}&longitude=${longitude}&method=${method}&month=${month}&year=${year}`
                 const response = await Utility.fetch(url)
                 const result = await response.json()
         
@@ -404,8 +404,8 @@
         // if prayer time data ever been loaded once, then the cache will be used on next call
         async getManualPrayerTimesThenRender(province, kabko, id) {
             const key = `data-manual-prayer-time-${id}-${moment().format('YYYY-MM-DD')}`
-            const data = await Utility.getData(key, async (resolve) => {
-                const url = `https://bimasislam.kemenag.go.id/widget/jadwalshalat/${id}`
+            const dataLvl1 = await Utility.getData(key, async (resolve) => {
+                const url = `https://asia-southeast2-muslim-board-ind-1472876095243.cloudfunctions.net/muslimboard-api?op=shalat-schedule-by-location&id=${id}`
                 const response = await Utility.fetch(url)
                 const result = await response.text()
                 const $doc = $(result)
@@ -429,59 +429,45 @@
             })
 
             let isSuccessGettingPrayerTimesFromKemenag = false
-            if (data) {
-                if (data.content) {
-                    if (data.content.Fajr) {
+            if (dataLvl1) {
+                if (dataLvl1.content) {
+                    if (dataLvl1.content.Fajr) {
                         isSuccessGettingPrayerTimesFromKemenag = true
                     }
                 }
             }
             if (isSuccessGettingPrayerTimesFromKemenag) {
-                this.renderPrayerTime.call(this, data.content)
+                this.renderPrayerTime.call(this, dataLvl1.content)
+                return
             }
 
-            // throw new Error('Gagal mengambil jadwal dari situs KEMENAG. Coba refresh halaman, atau gunakan fitur auto deteksi jadwal')
-            // Swal.fire({
-            //     type: 'error',
-            //     title: `Gagal mengambil jadwal dari situs KEMENAG`,
-            //     html: 'Klik OK untuk ambil data jadwal dari situs cadangan/backup',
-            //     showConfirmButton: true,
-            //     showCancelButton: true,
-            //     confirmButtonText: "Ambil jadwal dari situs backup",
-            //     cancelButtonText: "Batal"
-            // }).then(async (e) => {
-            //     if (e.dismiss == 'cancel') {
-            //         return
-            //     }
+            const dataLvl2 = await Utility.getData(key, async (resolve) => {
+                // get coordinate by selected province and city
+                const { content: { data } } = await this.getCoordinateByProvinceCity.call(this, province, kabko)
+                console.log('coordinate of manual location found at', data)
 
-                const dataLvl2 = await Utility.getData(key, async (resolve) => {
-                    // get coordinate by selected province and city
-                    const { content: { data } } = await this.getCoordinateByProvinceCity.call(this, province, kabko)
-                    console.log('coordinate of manual location found at', data)
-    
-                    // use the coordinate to get automatic prayer times
-                    const dataPrayerTime = await this.getAutomaticPrayerTime(data.lat, data.lon)
-                    let isSuccessGettingPrayerTimesFromBackup = false
-                    if (dataPrayerTime) {
-                        if (dataPrayerTime.content) {
-                            if (dataPrayerTime.content.code === 200) {
-                                isSuccessGettingPrayerTimesFromBackup = true
-                            }
+                // use the coordinate to get automatic prayer times
+                const dataPrayerTime = await this.getAutomaticPrayerTime(data.lat, data.lon)
+                let isSuccessGettingPrayerTimesFromBackup = false
+                if (dataPrayerTime) {
+                    if (dataPrayerTime.content) {
+                        if (dataPrayerTime.content.code === 200) {
+                            isSuccessGettingPrayerTimesFromBackup = true
                         }
                     }
-                    if (!isSuccessGettingPrayerTimesFromBackup) {
-                        throw new Error('Gagal mengambil jadwal dari situs cadangan/backup. Coba refresh halaman, atau gunakan fitur auto deteksi jadwal')
-                    }
-    
-                    // construct prayer time data then render
-                    const prayerTime = dataPrayerTime.content.data.find((d) => d.date.gregorian.date == moment().format('DD-MM-YYYY'))
-                    const schedule = prayerTime.timings
+                }
+                if (!isSuccessGettingPrayerTimesFromBackup) {
+                    throw new Error('Gagal mengambil jadwal dari situs cadangan/backup. Coba refresh halaman, atau gunakan fitur auto deteksi jadwal')
+                }
 
-                    resolve(schedule)
-                })
-                
-                this.renderPrayerTime.call(this, dataLvl2.content)
-            // })
+                // construct prayer time data then render
+                const prayerTime = dataPrayerTime.content.data.find((d) => d.date.gregorian.date == moment().format('DD-MM-YYYY'))
+                const schedule = prayerTime.timings
+
+                resolve(schedule)
+            })
+            
+            this.renderPrayerTime.call(this, dataLvl2.content)
         },
 
         // render prayer time to screen
@@ -1005,7 +991,7 @@
             
             $.ajax({
                 type: 'GET',
-                url: `https://asia-southeast2-muslim-board-ind-1472876095243.cloudfunctions.net/location-by-coordinate?lat=0&lon=0`,
+                url: `https://asia-southeast2-muslim-board-ind-1472876095243.cloudfunctions.net/muslimboard-api?op=location-by-coordinate&lat=0&lon=0`,
                 success: () => {
                     internetStatus(navigator.onLine ? 'online' : 'offline')()
                     window.addEventListener('online', internetStatus('online'))
