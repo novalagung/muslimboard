@@ -13,21 +13,6 @@ import (
 // MuslimboardApi do get coordinate by location details
 func MuslimboardApi(w http.ResponseWriter, r *http.Request) {
 
-	// cors configuration
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "OPTIONS, GET")
-	w.Header().Set("Access-Control-Allow-Headers", "*")
-
-	if cache := r.URL.Query().Get("cache"); cache == "0" {
-		// disable cache control if param `cache` is set to `0`
-		w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
-		w.Header().Set("Pragma", "no-cache")
-		w.Header().Set("Expires", "0")
-	} else {
-		// by default enable cache control
-		w.Header().Set("Cache-Control", "max-age=31536000")
-	}
-
 	if r.Method == "GET" {
 		switch r.URL.Query().Get("op") {
 		case "coordinate-by-location":
@@ -46,7 +31,27 @@ func MuslimboardApi(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func writeRespose(w http.ResponseWriter, statusCode int, resp interface{}, errMessage string) {
+// writeResponse definition
+func writeRespose(w http.ResponseWriter, r *http.Request, statusCode int, resp interface{}, errMessage string) {
+
+	if statusCode == http.StatusOK {
+
+		// cors configuration
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "OPTIONS, GET")
+		w.Header().Set("Access-Control-Allow-Headers", "*")
+
+		if cache := r.URL.Query().Get("cache"); cache == "0" {
+			// disable cache control if param `cache` is set to `0`
+			w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
+			w.Header().Set("Pragma", "no-cache")
+			w.Header().Set("Expires", "0")
+		} else {
+			// by default enable cache control
+			w.Header().Set("Cache-Control", "max-age=31536000")
+		}
+	}
+
 	w.Header().Set("Content-type", "application/json")
 	json.NewEncoder(w).Encode(map[string]interface{}{
 		"status_code":   statusCode,
@@ -66,7 +71,7 @@ func getCoordinateByLocation(w http.ResponseWriter, r *http.Request) {
 	location = strings.Replace(location, "kota ", "", -1)
 
 	if location == "" {
-		writeRespose(w, http.StatusOK, map[string]interface{}{"lat": 0, "lon": 0}, "")
+		writeRespose(w, r, http.StatusOK, map[string]interface{}{"lat": 0, "lon": 0}, "")
 		return
 	}
 
@@ -79,11 +84,11 @@ func getCoordinateByLocation(w http.ResponseWriter, r *http.Request) {
 		}).
 		Get("https://nominatim.openstreetmap.org/")
 	if err != nil {
-		writeRespose(w, http.StatusInternalServerError, nil, err.Error())
+		writeRespose(w, r, http.StatusInternalServerError, nil, err.Error())
 		return
 	}
 	if resp.IsError() {
-		writeRespose(w, http.StatusInternalServerError, nil, fmt.Sprintf("%v", resp.Error()))
+		writeRespose(w, r, http.StatusInternalServerError, nil, fmt.Sprintf("%v", resp.Error()))
 		return
 	}
 
@@ -104,16 +109,16 @@ func getCoordinateByLocation(w http.ResponseWriter, r *http.Request) {
 	}{}
 	err = json.Unmarshal(resp.Body(), &coordinates)
 	if err != nil {
-		writeRespose(w, http.StatusInternalServerError, nil, err.Error())
+		writeRespose(w, r, http.StatusInternalServerError, nil, err.Error())
 		return
 	}
 
 	if coordinates == nil {
-		writeRespose(w, http.StatusInternalServerError, nil, "coordinates not found")
+		writeRespose(w, r, http.StatusInternalServerError, nil, "coordinates not found")
 		return
 	}
 	if len(coordinates) == 0 {
-		writeRespose(w, http.StatusInternalServerError, nil, "coordinates not found")
+		writeRespose(w, r, http.StatusInternalServerError, nil, "coordinates not found")
 		return
 	}
 
@@ -123,7 +128,7 @@ func getCoordinateByLocation(w http.ResponseWriter, r *http.Request) {
 		"lon":      coordinates[0].Lon,
 		"location": location,
 	}
-	writeRespose(w, http.StatusOK, data, "")
+	writeRespose(w, r, http.StatusOK, data, "")
 }
 
 // getLocationByCoordinate do get location details by coordinate
@@ -137,7 +142,7 @@ func getLocationByCoordinate(w http.ResponseWriter, r *http.Request) {
 
 	// if lat long is invalid, then simply return true
 	if latInt == 0 && lonInt == 0 {
-		writeRespose(w, http.StatusOK, true, "")
+		writeRespose(w, r, http.StatusOK, true, "")
 		return
 	}
 
@@ -150,11 +155,11 @@ func getLocationByCoordinate(w http.ResponseWriter, r *http.Request) {
 		}).
 		Get("https://nominatim.openstreetmap.org/reverse")
 	if err != nil {
-		writeRespose(w, http.StatusInternalServerError, nil, err.Error())
+		writeRespose(w, r, http.StatusInternalServerError, nil, err.Error())
 		return
 	}
 	if resp.IsError() {
-		writeRespose(w, http.StatusInternalServerError, nil, fmt.Sprintf("%v", resp.Error()))
+		writeRespose(w, r, http.StatusInternalServerError, nil, fmt.Sprintf("%v", resp.Error()))
 		return
 	}
 
@@ -182,7 +187,7 @@ func getLocationByCoordinate(w http.ResponseWriter, r *http.Request) {
 	}{}
 	err = json.Unmarshal(resp.Body(), &location)
 	if err != nil {
-		writeRespose(w, http.StatusInternalServerError, nil, err.Error())
+		writeRespose(w, r, http.StatusInternalServerError, nil, err.Error())
 		return
 	}
 
@@ -210,7 +215,7 @@ func getLocationByCoordinate(w http.ResponseWriter, r *http.Request) {
 		"lon":     location.Lon,
 		"address": strings.Join(address, ", "),
 	}
-	writeRespose(w, http.StatusOK, data, "")
+	writeRespose(w, r, http.StatusOK, data, "")
 }
 
 // getShalatScheduleByCoordinate do get location details by coordinate
@@ -225,7 +230,7 @@ func getShalatScheduleByCoordinate(w http.ResponseWriter, r *http.Request) {
 
 	// if lat long is invalid, then simply return true
 	if latitude == 0 && longitude == 0 {
-		writeRespose(w, http.StatusOK, true, "")
+		writeRespose(w, r, http.StatusOK, true, "")
 		return
 	}
 
@@ -240,11 +245,11 @@ func getShalatScheduleByCoordinate(w http.ResponseWriter, r *http.Request) {
 		}).
 		Get("http://api.aladhan.com/v1/calendar")
 	if err != nil {
-		writeRespose(w, http.StatusInternalServerError, nil, err.Error())
+		writeRespose(w, r, http.StatusInternalServerError, nil, err.Error())
 		return
 	}
 	if resp.IsError() {
-		writeRespose(w, http.StatusInternalServerError, nil, fmt.Sprintf("%v", resp.Error()))
+		writeRespose(w, r, http.StatusInternalServerError, nil, fmt.Sprintf("%v", resp.Error()))
 		return
 	}
 
@@ -256,19 +261,19 @@ func getShalatScheduleByCoordinate(w http.ResponseWriter, r *http.Request) {
 	}{}
 	err = json.Unmarshal(resp.Body(), &res)
 	if err != nil {
-		writeRespose(w, http.StatusInternalServerError, nil, err.Error())
+		writeRespose(w, r, http.StatusInternalServerError, nil, err.Error())
 		return
 	}
 	if res.Code != 200 {
-		writeRespose(w, http.StatusInternalServerError, nil, fmt.Sprintf("%v", res.Status))
+		writeRespose(w, r, http.StatusInternalServerError, nil, fmt.Sprintf("%v", res.Status))
 		return
 	}
 
-	writeRespose(w, http.StatusOK, res.Data, "")
+	writeRespose(w, r, http.StatusOK, res.Data, "")
 }
 
 // getShalatScheduleByLocation do get location details by coordinate
 func getShalatScheduleByLocation(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("under development"))
-	w.WriteHeader(http.StatusNotImplemented)
+
+	writeRespose(w, r, http.StatusNotImplemented, nil, "under development")
 }
