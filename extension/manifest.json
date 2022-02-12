@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Muslim Board",
   "short_name": "muslimboard",
-  "version": "2.4.0",
+  "version": "2.4.2",
   "description": "Personal Dashboard for Muslim",
   "chrome_url_overrides" : {
     "newtab": "index.html"
@@ -21,4 +21,3 @@
   ],
   "content_security_policy": "script-src 'self' https://asia-southeast2-muslim-board-ind-1472876095243.cloudfunctions.net https://unsplash.com; object-src 'self'"
 }
-  
