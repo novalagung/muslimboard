@@ -1,6 +1,6 @@
 (() => {
     const Utility = {
-        syncStorage: {
+        chromeStorage: {
             set: (key, value) => new Promise((resolve) => {
                 var item = {}
                 item[key] = value
@@ -37,7 +37,7 @@
         },
         getCurrentPosition: () => new Promise((resolve) => {
             const useCoordinateCache = () => {
-                const coordinateCache = JSON.parse(localStorage.getItem('coordinate-cache') || '{}')
+                const coordinateCache = JSON.parse(localStorage.getItem('data-coordinate-cache') || '{}')
                 Utility.log('timeout. use last cached location', coordinateCache)
                 if (Object.keys(coordinateCache).length > 0) {
                     resolve(coordinateCache)
@@ -56,7 +56,7 @@
                             }
                         }
                         Utility.log('current coordinate found at', coordinate.coords)
-                        localStorage.setItem('coordinate-cache', JSON.stringify(coordinate))
+                        localStorage.setItem('data-coordinate-cache', JSON.stringify(coordinate))
                         resolve(coordinate)
                     }, 
                     useCoordinateCache,
@@ -70,9 +70,6 @@
                 useCoordinateCache()
             }
         }),
-        deleteCachedData: (key) => {
-            localStorage.removeItem(key)
-        },
         getData: (key, updateCallback) => new Promise(async (resolve) => {
             const cacheKey = key
             const cacheData = localStorage.getItem(cacheKey)
@@ -178,6 +175,7 @@
                 'Refactor the backend architecture of shalah schedule',
                 'Bug fix on the shalah schedule api'
             ],
+            baseUrl: 'https://asia-southeast2-muslim-board-ind-1472876095243.cloudfunctions.net'
         },
     }
 
@@ -252,22 +250,15 @@
             return Promise.resolve(data)
         },
 
-        // get location by coordinate
-        getLocationByCoordinate(latitude, longitude) {
-            const key = `data-automatic-location-details-${Constant.meta.version}`
-            return Utility.getData(key, async (resolve, reject) => {
-                const url = `https://asia-southeast2-muslim-board-ind-1472876095243.cloudfunctions.net/muslimboard-api?op=location-by-coordinate&lat=${latitude}&lon=${longitude}`
-                const response = await Utility.fetch(url)
-                const result = await response.json()
-                resolve(result)
-            })
-        },
-        
         // get coordinate by province & city
         getCoordinateByProvinceCity(province, kabko) {
-            const key = `data-manual-location-coordinate-${province}-${kabko}-${Constant.meta.version}`
+            const key = `data-coordinate-by-province-city-${province}-${kabko}-${Constant.meta.version}`
+            if (!province && !kabko) {
+                localStorage.removeItem(key)
+            }
+
             return Utility.getData(key, async (resolve, reject) => {
-                const url = `https://asia-southeast2-muslim-board-ind-1472876095243.cloudfunctions.net/muslimboard-api?op=coordinate-by-location&location=${kabko},${province},Indonesia`
+                const url = `${Constant.app.baseUrl}/muslimboard-api?v=${Constant.meta.version}&op=coordinate-by-location&location=${kabko},${province}`
                 const response = await Utility.fetch(url)
                 const result = await response.json()
                 resolve(result)
@@ -275,7 +266,7 @@
         },
 
         // print location
-        renderLocation(text) {
+        renderLocationText(text) {
             if (text.length > 80) {
                 $('.location .text').text(text.slice(0, 80) + "...")
                 $('.location .text').attr("title", text)
@@ -283,21 +274,6 @@
                 $('.location .text').text(text)
                 $('.location .text').removeAttr("title")
             }
-        },
-
-        // perform reverse geolocation to google map api to get location details.
-        // print the result to screen.
-        // if geolocation data ever been loaded once, then the cache will be used on next call
-        async getAutomaticLocationDataThenRender(latitude, longitude) {
-            const data = await this.getLocationByCoordinate.call(this, latitude, longitude)
-            if (!data) {
-                throw new Error('Gagal mengambil koordinat lokasi sekarang. Pastikan fitur location pada browser aktif untuk extension/plugin ini')
-            }
-            if (data.content.status_code != 200) {
-                throw new Error(data.content.error_message)
-            }
-
-            this.renderLocation.call(this, data.content.data.address)
         },
 
         // watch location data changes.
@@ -319,7 +295,7 @@
                 const distance = Utility.distanceBetween(latitude, longitude, updatedLatitude, updatedLongitude)
                 if (distance > 0) {
                     Utility.log('watch!', distance, position)
-                    this.getAutomaticPrayerTimesThenRender.call(this, updatedLatitude, updatedLongitude, true)
+                    this.getPrayerTimesByCoordinateThenRender.call(this, updatedLatitude, updatedLongitude, true)
                 }
             }, (error) => {
                 Utility.log(error)
@@ -366,26 +342,49 @@
             $(`.prayer-time tbody tr:eq(0) td:eq(0)`).html('<span class="placeholder">Loading ...</span>')
         },
 
-        // aget automatic prayer time
-        getAutomaticPrayerTime(latitude, longitude) {
-            const key = `data-prayer-time-${latitude}-${longitude}-${Constant.meta.version}`
+        // get automatic prayer time
+        getPrayerTimesByCoordinate(latitude, longitude) {
+            const key = `data-prayer-time-by-coordinate-${latitude}-${longitude}-${moment().format('YYYY-MM-DD')}`
+            if (latitude == 0 && longitude == 0) {
+                localStorage.removeItem(key)
+            }
+
             return Utility.getData(key, async (resolve) => {
                 const method = 1
                 const month = parseInt(moment().format('MM'), 10)
                 const year = moment().year()
-                const url = `https://asia-southeast2-muslim-board-ind-1472876095243.cloudfunctions.net/muslimboard-api?op=shalat-schedule-by-coordinate&latitude=${latitude}&longitude=${longitude}&method=${method}&month=${month}&year=${year}`
+                const url = `${Constant.app.baseUrl}/muslimboard-api?v=${Constant.meta.version}&op=shalat-schedule-by-coordinate&latitude=${latitude}&longitude=${longitude}&method=${method}&month=${month}&year=${year}`
                 const response = await Utility.fetch(url)
                 const result = await response.json()
         
                 resolve(result)
             })
         },
+
+        // get prayer time by location id
+        getPrayerTimesByLocationID(province, kabko, locationID) {
+            const key = `data-prayer-time-by-location-${locationID}-${moment().format('YYYY-MM-DD')}`
+            if (!province && !kabko) {
+                localStorage.removeItem(key)
+            }
+
+            return Utility.getData(key, async (resolve) => {
+                const method = 1
+                const month = parseInt(moment().format('MM'), 10)
+                const year = moment().year()
+                const url = `${Constant.app.baseUrl}/muslimboard-api?v=${Constant.meta.version}&op=shalat-schedule-by-location&locationID=${locationID}&province=${province}&city=${kabko}&method=${method}&month=${month}&year=${year}`
+                const response = await Utility.fetch(url)
+                const result = await response.json()
         
+                resolve(result)
+            })
+        },
+
         // get automatic prayer time, then render it to screen.
         // alathan api is used to calculate prayer time on automatic mode.
         // if prayer time data ever been loaded once, then the cache will be used on next call
-        async getAutomaticPrayerTimesThenRender(latitude, longitude, silent = false) {
-            const data = await this.getAutomaticPrayerTime.call(this, latitude, longitude)
+        async getPrayerTimesByCoordinateThenRender(latitude, longitude, silent = false) {
+            const data = await this.getPrayerTimesByCoordinate.call(this, latitude, longitude)
             if (!data) {
                 if (silent) {
                     return
@@ -394,64 +393,59 @@
                 }
             }
     
-            const prayerTime = data.content.data.find((d) => d.date.gregorian.date == moment().format('DD-MM-YYYY'))
+            const address = data.content.data.address
+            this.renderLocationText.call(this, address)
+
+            const prayerTime = data.content.data.schedules.find((d) => d.date.gregorian.date == moment().format('DD-MM-YYYY'))
             const schedule = prayerTime.timings
             this.renderPrayerTime.call(this, schedule)
         },
-        
+
         // get automatic player time, then render it to screen.
-        // kemenag bimaislam website is used to get the prayer time on manual mode.
+        // kemenag bimaislam website (proxied by our serverless backend) is used to get the prayer time on manual mode.
         // if prayer time data ever been loaded once, then the cache will be used on next call
-        async getManualPrayerTimesThenRender(province, kabko, id) {
-            const key = `data-manual-prayer-time-${id}-${moment().format('YYYY-MM-DD')}`
+        async getPrayerTimesByLocationThenRender(province, kabko, locationID) {
+            const key = `data-prayer-time-by-location-${locationID}-${moment().format('YYYY-MM-DD')}`
+
+            console.log('loading prayer time lvl1 (by province / city)')
             const dataLvl1 = await Utility.getData(key, async (resolve) => {
-                const url = `https://asia-southeast2-muslim-board-ind-1472876095243.cloudfunctions.net/muslimboard-api?op=shalat-schedule-by-location&id=${id}`
-                const response = await Utility.fetch(url)
-                const result = await response.text()
-                const $doc = $(result)
-        
-                const fajr = $.trim($doc.find('.waktu-container > .waktu:eq(1) .pukul').text())
-                const sunrise = $.trim($doc.find('.waktu-container > .waktu:eq(3) .pukul').text())
-                const dhuhr = $.trim($doc.find('.waktu-container > .waktu:eq(4) .pukul').text())
-                const asr = $.trim($doc.find('.waktu-container > .waktu:eq(5) .pukul').text())
-                const maghrib = $.trim($doc.find('.waktu-container > .waktu:eq(6) .pukul').text())
-                const isha = $.trim($doc.find('.waktu-container > .waktu:eq(7) .pukul').text())
-
-                const schedule = {
-                    Fajr: fajr,
-                    Sunrise: sunrise,
-                    Dhuhr: dhuhr,
-                    Asr: asr,
-                    Maghrib: maghrib,
-                    Isha: isha,
-                }
-                resolve(schedule)
-            })
-
-            let isSuccessGettingPrayerTimesFromKemenag = false
-            if (dataLvl1) {
-                if (dataLvl1.content) {
-                    if (dataLvl1.content.Fajr) {
-                        isSuccessGettingPrayerTimesFromKemenag = true
+                const dataPrayerTime =  await this.getPrayerTimesByLocationID(province, kabko, locationID)
+                let isSuccessGettingPrayerTimesFromBackup = false
+                if (dataPrayerTime) {
+                    if (dataPrayerTime.content) {
+                        if (dataPrayerTime.content.status_code === 200) {
+                            isSuccessGettingPrayerTimesFromBackup = true
+                        }
                     }
                 }
-            }
-            if (isSuccessGettingPrayerTimesFromKemenag) {
+                if (!isSuccessGettingPrayerTimesFromBackup) {
+                    throw new Error('Gagal mengambil jadwal yang disediakan kemenag. Mencoba mengabil jadwal dari sumber cadangan (https://aladhan.com)')
+                }
+
+                // construct prayer time data then render
+                const prayerTime = dataPrayerTime.content.data.schedules.find((d) => d.date.gregorian.date == moment().format('DD-MM-YYYY'))
+                const schedule = prayerTime.timings
+
+                resolve(schedule)
+            })
+            if (((dataLvl1 || {}).content)) {
                 this.renderPrayerTime.call(this, dataLvl1.content)
                 return
             }
 
+            localStorage.removeItem(key)
+            console.log('loading prayer time lvl2 (by coordinate)')
             const dataLvl2 = await Utility.getData(key, async (resolve) => {
                 // get coordinate by selected province and city
                 const { content: { data } } = await this.getCoordinateByProvinceCity.call(this, province, kabko)
                 console.log('coordinate of manual location found at', data)
 
                 // use the coordinate to get automatic prayer times
-                const dataPrayerTime = await this.getAutomaticPrayerTime(data.lat, data.lon)
+                const dataPrayerTime = await this.getPrayerTimesByCoordinate.call(this, data.lat, data.lon)
                 let isSuccessGettingPrayerTimesFromBackup = false
                 if (dataPrayerTime) {
                     if (dataPrayerTime.content) {
-                        if (dataPrayerTime.content.code === 200) {
+                        if (dataPrayerTime.content.status_code === 200) {
                             isSuccessGettingPrayerTimesFromBackup = true
                         }
                     }
@@ -461,7 +455,7 @@
                 }
 
                 // construct prayer time data then render
-                const prayerTime = dataPrayerTime.content.data.find((d) => d.date.gregorian.date == moment().format('DD-MM-YYYY'))
+                const prayerTime = dataPrayerTime.content.data.schedules.find((d) => d.date.gregorian.date == moment().format('DD-MM-YYYY'))
                 const schedule = prayerTime.timings
 
                 resolve(schedule)
@@ -786,11 +780,8 @@
                     const location = await Utility.getCurrentPosition()
                     const { latitude, longitude } = location.coords
 
-                    // then get the location data based the coordinate
-                    await this.getAutomaticLocationDataThenRender.call(this, latitude, longitude)
-
                     // and then proceed with getting the prayer times
-                    await this.getAutomaticPrayerTimesThenRender.call(this, latitude, longitude)
+                    await this.getPrayerTimesByCoordinateThenRender.call(this, latitude, longitude)
 
                     // also monitor the possible movement.
                     this.watchAutomaticLocationDataChanges.call(this, latitude, longitude)
@@ -799,11 +790,11 @@
 
                     // on manual mode, get the data from selected province and citym, then render it
                     const { province, kabko, id } = this.getManualLocationData.call(this)
-                    const locationText = ` ${Utility.toTitleCase(kabko)}, Prov. ${Utility.toTitleCase(province)}`
-                    this.renderLocation.call(this, locationText)
+                    const locationText = `${Utility.toTitleCase(kabko)}, ${Utility.toTitleCase(province)}`
+                    this.renderLocationText.call(this, locationText)
 
                     // next get manual prayer times then render it
-                    await this.getManualPrayerTimesThenRender.call(this, province, kabko, id)
+                    await this.getPrayerTimesByLocationThenRender.call(this, province, kabko, id)
                 }
             } catch (err) {
                 Utility.log('error', err)
@@ -872,8 +863,7 @@
                         return
                     }
 
-                    Utility.deleteCachedData('data-manual-location')
-                    Utility.deleteCachedData(`data-automatic-location-details-${Constant.meta.version}`)
+                    localStorage.removeItem('data-manual-location')
                     this.loadLocationAndPrayerTimeThenRender.call(this)
                 })
             })
@@ -907,7 +897,7 @@
                 // show the manual location picker
                 Swal.fire({
                     type: 'info',
-                    title: `Set lokasi manual`,
+                    title: `Atur pilihan lokasi (manual)`,
                     html: text,
 					showConfirmButton: true,
 					showCancelButton: true,
@@ -926,17 +916,17 @@
                     }
 
                     if (!province) {
-                        alert('Tidak bisa set lokasi manual karena provinsi kosong. Sementara diaktifkan kembali deteksi jadwal otomatis')
+                        alert('Tidak bisa menyimpan perubahan karena provinsi kosong. Sementara diaktifkan kembali deteksi jadwal otomatis')
                         return
-                    } else if (!kabko) {
-                        alert('Tidak bisa set lokasi manual karena kabupaten/kota kosong. Sementara diaktifkan kembali deteksi jadwal otomatis')
+                    } else if (!kabko || (kabko || '').includes('----')) {
+                        alert('Tidak bisa menyimpan perubahan karena kabupaten/kota kosong. Sementara diaktifkan kembali deteksi jadwal otomatis')
                         return
                     }
 
                     // delete previously cached selected location data.
                     // replace it with the newly selected location
-                    const key = `data-manual-prayer-time-${locationID}-${moment().format('YYYY-MM-DD')}`
-                    Utility.deleteCachedData(key)
+                    const key = `data-prayer-time-by-location-${locationID}-${moment().format('YYYY-MM-DD')}`
+                    localStorage.removeItem(key)
                     localStorage.setItem('data-manual-location', `${province}|${kabko}|${locationID}`)
 
                     // reload prayer time then render
@@ -991,7 +981,7 @@
             
             $.ajax({
                 type: 'GET',
-                url: `https://asia-southeast2-muslim-board-ind-1472876095243.cloudfunctions.net/muslimboard-api?op=location-by-coordinate&lat=0&lon=0`,
+                url: `${Constant.app.baseUrl}/muslimboard-api?v=${Constant.meta.version}&op=location-by-coordinate&lat=0&lon=0`,
                 success: () => {
                     internetStatus(navigator.onLine ? 'online' : 'offline')()
                     window.addEventListener('online', internetStatus('online'))
@@ -1139,7 +1129,11 @@
             Utility.log('local storage used', localStorageUsed)
 
             if (localStorageUsed === 'false') {
-                const items = JSON.parse((await Utility.syncStorage.get('todo-list-items')) || '[]').filter((d) => d.text)
+                // disabling chrome storage. refer to https://stackoverflow.com/questions/28465384/how-is-chrome-storage-affected-when-an-extension-is-updated
+                // const rawItems = JSON.parse((await Utility.chromeStorage.get('todo-list-items')) || '[]')
+                
+                const rawItems = JSON.parse(localStorage.getItem('todo-list-items') || '[]')
+                const items = rawItems.filter((d) => d.text)
                 Utility.log('found cached sync storage todo list items', items)
 
                 if (items.length > 0) {
@@ -1174,7 +1168,6 @@
             $('#todo-list .items .item').remove()
 
             const items = JSON.parse(localStorage.getItem('todo-list-items') || '[]')
-            Utility.log('items', items)
             if (items.length == 0) {
                 this.insertTodoListItem.call(this)
                 this.ensureTodoListItemsAppear.call(this)
@@ -1199,7 +1192,9 @@
                 checked: $(each).find('input[type=checkbox]').prop('checked')
             }))
             localStorage.setItem('todo-list-items', JSON.stringify(items))
-            await Utility.syncStorage.set('todo-list-items', JSON.stringify(items))
+
+            // disabling chrome storage. refer to https://stackoverflow.com/questions/28465384/how-is-chrome-storage-affected-when-an-extension-is-updated
+            // await Utility.chromeStorage.set('todo-list-items', JSON.stringify(items))
         },
 
         // insert new TODO utem
@@ -1213,7 +1208,9 @@
 
             items.push({ checked: false, text: '' })
             localStorage.setItem('todo-list-items', JSON.stringify(items))
-            await Utility.syncStorage.set('todo-list-items', JSON.stringify(items))
+
+            // disabling chrome storage. refer to https://stackoverflow.com/questions/28465384/how-is-chrome-storage-affected-when-an-extension-is-updated
+            // await Utility.chromeStorage.set('todo-list-items', JSON.stringify(items))
             
             this.ensureTodoListItemsAppear.call(this)
         },
@@ -1315,6 +1312,8 @@
         
         // orchestrate everything
         init() {
+            console.log(`${Constant.meta.appName} ${Constant.meta.version}`)
+
             this.loadData.call(this)
             this.registerEventForForceLoadLocationAndPrayerTimes.call(this)
             this.registerEventForInternetAvailabilityStatus.call(this)
