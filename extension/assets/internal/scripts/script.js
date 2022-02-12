@@ -172,8 +172,9 @@
             updateBackgroundDelayDuration: Utility.seconds(40),
             updateContentDelayDuration: Utility.seconds(60),
             changelogs: [
-                'Refactor the backend architecture of shalah schedule',
-                'Bug fix on the shalah schedule api'
+                'Refactor the entire backend architecture of getting prayer time',
+                'Improve loading data performance',
+                'Fix data location/prayertime not found bugs'
             ],
             baseUrl: 'https://asia-southeast2-muslim-board-ind-1472876095243.cloudfunctions.net'
         },
