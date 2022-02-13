@@ -1,7 +1,7 @@
 let vm = {}
 
 vm.second = 1000
-vm.urlContent = 'website/data/data-content.json'
+vm.urlContent = 'extension/data/data-content.json'
 
 vm.getContent = (callback = $.noop) => {
     $.getJSON(vm.urlContent, (res) => {
