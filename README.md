@@ -7,8 +7,8 @@ Muslim Board is a personal dashboard for Muslims. This plugin is inspired by Mom
 ## Table of Content
 
 - Folder `extension` is where the chrome extension source code lies.
-- Folder `webservices` contains the backend serverless code.
 - Folder `resources` contains few resource files (it's used by the extension or website directly).
+- Folder `webservices` contains the backend serverless code.
 - Folder `website` contains the source code web/landing page, https://muslimboard.novalagung.com.
 
 ## Contribution
