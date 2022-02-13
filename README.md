@@ -6,15 +6,16 @@ Muslim Board is a personal dashboard for Muslims. This plugin is inspired by Mom
 
 ## Table of Content
 
-- Folder `chrome-extension` is where the chrome extension source code lies.
-- Folder `website` contains the source code web/landing page, https://muslimboard.novalagung.com.
+- Folder `extension` is where the chrome extension source code lies.
+- Folder `webservices` contains the backend serverless code.
 - Folder `resources` contains few resource files (it's used by the extension or website directly).
+- Folder `website` contains the source code web/landing page, https://muslimboard.novalagung.com.
 
 ## Contribution
 
 Anyone should be able to contribute to this project. Bug fixes, improvements, feature requests, you name it! Let's maintain this project.
 
-However, before you start doing anything, please keep in mind:
+However, before you start doing anything especially on anything within the `extension` folder, please keep in mind:
 
 - First thing, you need to understand how browser extension work.
 - Any browser addons marketplace has strict rules over a lot of things! especially Google. Not every approach is allowed, especially if it is risky from the security perspective.
@@ -38,7 +39,7 @@ However, before you start doing anything, please keep in mind:
 
 ## Local Installation
 
-Use chrome → open up extension menu → click **Load unpacked** and navigate to the `chrome-extension` directory. Other browser has similar way to onload unpacked extension.
+Use chrome → open up extension menu → click **Load unpacked** and navigate to the `extension` directory. Other browser has similar way to onload unpacked extension.
 
 ## Author
 
