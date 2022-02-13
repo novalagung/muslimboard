@@ -21,7 +21,7 @@ However, before you start doing anything especially on anything within the `exte
 - Any browser addons marketplace has strict rules over a lot of things! especially Google. Not every approach is allowed, especially if it is risky from the security perspective.
 - Muslim Board extension needs to work well across any computers, any browsers, on any condition: slow internet, offline mode, low-spec computer, etc.
 
-    - Certain images are loaded locally. These images will boost the performance during the first installation and it'll be useful when there is no internet (offline mode).
+    - Certain images are loaded locally. These images will boost the performance during the first load and it's very useful when it's offline mode (no internet).
 
 - Performance is one of few key points in the development of Muslim Board.
 - External requests are strictly monitored and controlled.
