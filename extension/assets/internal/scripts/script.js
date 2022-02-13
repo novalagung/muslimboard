@@ -35,12 +35,14 @@
                 if (callNow) func.apply(context, args);
             };
         },
-        getCurrentPosition: () => new Promise((resolve) => {
+        getCurrentPosition: () => new Promise((resolve, reject) => {
             const useCoordinateCache = () => {
                 const coordinateCache = JSON.parse(localStorage.getItem('data-coordinate-cache') || '{}')
                 Utility.log('timeout. use last cached location', coordinateCache)
                 if (Object.keys(coordinateCache).length > 0) {
                     resolve(coordinateCache)
+                } else {
+                    reject(new Error('<br />Gagal mendeteksi lokasi user secara otomatis.<br /><br />Pastikan "location permission" untuk ekstensi<br />Muslim Board adalah "allowed".<br /><br />Atau silakan gunakan fitur atur manual pilihan lokasi.'))
                 }
             }
 
@@ -172,9 +174,7 @@
             updateBackgroundDelayDuration: Utility.seconds(40),
             updateContentDelayDuration: Utility.seconds(60),
             changelogs: [
-                'Refactor the entire backend architecture of getting prayer time',
-                'Improve loading data performance',
-                'Fix data location/prayertime not found bugs'
+                'Improve location detection error when location permission is not allowed'
             ],
             baseUrl: 'https://asia-southeast2-muslim-board-ind-1472876095243.cloudfunctions.net'
         },
@@ -249,21 +249,6 @@
                 resolve(result)
             })
             return Promise.resolve(data)
-        },
-
-        // get coordinate by province & city
-        getCoordinateByProvinceCity(province, kabko) {
-            const key = `data-coordinate-by-province-city-${province}-${kabko}-${Constant.meta.version}`
-            if (!province && !kabko) {
-                localStorage.removeItem(key)
-            }
-
-            return Utility.getData(key, async (resolve, reject) => {
-                const url = `${Constant.app.baseUrl}/muslimboard-api?v=${Constant.meta.version}&op=coordinate-by-location&location=${kabko},${province}`
-                const response = await Utility.fetch(url)
-                const result = await response.json()
-                resolve(result)
-            })
         },
 
         // print location
@@ -408,8 +393,8 @@
         async getPrayerTimesByLocationThenRender(province, kabko, locationID) {
             const key = `data-prayer-time-by-location-${locationID}-${moment().format('YYYY-MM-DD')}`
 
-            console.log('loading prayer time lvl1 (by province / city)')
-            const dataLvl1 = await Utility.getData(key, async (resolve) => {
+            console.log('loading prayer time')
+            const data = await Utility.getData(key, async (resolve) => {
                 const dataPrayerTime =  await this.getPrayerTimesByLocationID(province, kabko, locationID)
                 let isSuccessGettingPrayerTimesFromBackup = false
                 if (dataPrayerTime) {
@@ -420,6 +405,7 @@
                     }
                 }
                 if (!isSuccessGettingPrayerTimesFromBackup) {
+                    localStorage.removeItem(key)
                     throw new Error('Gagal mengambil jadwal yang disediakan kemenag. Mencoba mengabil jadwal dari sumber cadangan (https://aladhan.com)')
                 }
 
@@ -429,40 +415,12 @@
 
                 resolve(schedule)
             })
-            if (((dataLvl1 || {}).content)) {
-                this.renderPrayerTime.call(this, dataLvl1.content)
-                return
+            if (!((data || {}).content)) {
+                localStorage.removeItem(key)
+                throw new Error('Gagal mengambil jadwal yang disediakan kemenag. Mencoba mengabil jadwal dari sumber cadangan (https://aladhan.com)')
             }
-
-            localStorage.removeItem(key)
-            console.log('loading prayer time lvl2 (by coordinate)')
-            const dataLvl2 = await Utility.getData(key, async (resolve) => {
-                // get coordinate by selected province and city
-                const { content: { data } } = await this.getCoordinateByProvinceCity.call(this, province, kabko)
-                console.log('coordinate of manual location found at', data)
-
-                // use the coordinate to get automatic prayer times
-                const dataPrayerTime = await this.getPrayerTimesByCoordinate.call(this, data.lat, data.lon)
-                let isSuccessGettingPrayerTimesFromBackup = false
-                if (dataPrayerTime) {
-                    if (dataPrayerTime.content) {
-                        if (dataPrayerTime.content.status_code === 200) {
-                            isSuccessGettingPrayerTimesFromBackup = true
-                        }
-                    }
-                }
-                if (!isSuccessGettingPrayerTimesFromBackup) {
-                    throw new Error('Gagal mengambil jadwal dari situs cadangan/backup. Coba refresh halaman, atau gunakan fitur auto deteksi jadwal')
-                }
-
-                // construct prayer time data then render
-                const prayerTime = dataPrayerTime.content.data.schedules.find((d) => d.date.gregorian.date == moment().format('DD-MM-YYYY'))
-                const schedule = prayerTime.timings
-
-                resolve(schedule)
-            })
             
-            this.renderPrayerTime.call(this, dataLvl2.content)
+            this.renderPrayerTime.call(this, data.content)
         },
 
         // render prayer time to screen
