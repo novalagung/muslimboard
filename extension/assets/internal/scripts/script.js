@@ -42,6 +42,7 @@
                 if (Object.keys(coordinateCache).length > 0) {
                     resolve(coordinateCache)
                 } else {
+                    localStorage.removeItem('data-coordinate-cache')
                     reject(new Error('<br />Gagal mendeteksi lokasi user secara otomatis.<br /><br />Pastikan "location permission" untuk ekstensi<br />Muslim Board adalah "allowed".<br /><br />Atau silakan gunakan fitur atur manual pilihan lokasi.'))
                 }
             }
@@ -804,7 +805,8 @@
                 let text = 'Anda yakin ingin mengaktifkan?'
                 let buttonText = 'Ya, aktifkan'
 
-                if (this.isUsingAutomaticLocation.call(this)) {
+                const isCachedCoordinateExists = localStorage.getItem('data-coordinate-cache') ? true : false
+                if (this.isUsingAutomaticLocation.call(this) && isCachedCoordinateExists) {
                     text = 'Deteksi lokasi otomatis sudah aktif. Apakah anda ingin me-refresh lokasi?'
                     buttonText = 'Ya, refresh lokasi'
                 }
@@ -822,7 +824,13 @@
                         return
                     }
 
+                    // force to not use cached coordinate when refreshing finding coordinate.
+                    // not really sure whether this one is good approach
+                    localStorage.removeItem('data-coordinate-cache')
+
+                    // remove data-manual-location to enable automatic detection on location
                     localStorage.removeItem('data-manual-location')
+
                     this.loadLocationAndPrayerTimeThenRender.call(this)
                 })
             })
