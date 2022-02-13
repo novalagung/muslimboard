@@ -985,7 +985,7 @@
                         <p class='copyright text-center'>
                             Created by <a href='https://www.linkedin.com/in/novalagung' target='_blank'>${Constant.maintainer.name}</a>
                             <br>
-                            Ideas from <a href='https://www.linkedin.com/in/rahadianardya' target='_blank'><b>Rahadian Ardya</b></a> & <a href='https://www.linkedin.com/in/eky-pradhana-a7aa6143' target='_blank'><b>Eky Pradhana</b></a>
+                            Ideas from <a href='https://www.linkedin.com/in/rahadianardya' target='_blank'><b>Rahadian Ardya</b></a> & <a href='https://www.linkedin.com/in/ekypradhana' target='_blank'><b>Eky Pradhana</b></a>
                             <br>
                             <br>
                             <i class='fa fa-copyright'></i> ${moment().format("YYYY")} - <a href='${Constant.meta.homepageLink}' target='_blank'>${Constant.meta.homepageLink}</a>
