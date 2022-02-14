@@ -38,6 +38,10 @@ However, before we start doing anything especially on stuff within the `extensio
 
 Use chrome → open up extension menu → click **Load unpacked** and navigate to the `extension` directory. Another browser has a similar way to load unpacked extensions.
 
+## Web Service
+
+We use GCP Function to host our serverless backend, it's publicly accessible on https://asia-southeast2-muslim-board-ind-1472876095243.cloudfunctions.net.
+
 ## Author
 
 Noval Agung Prayogo
