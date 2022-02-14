@@ -40,6 +40,9 @@ func MuslimboardApi(w http.ResponseWriter, r *http.Request) {
 		case "location-by-coordinate":
 			res, err = HandleLocationByCoordinate(w, r)
 
+		case "ping":
+			res = true
+
 		case "shalat-schedule-by-coordinate":
 			res, err = HandleShalatScheduleByCoordinate(w, r)
 

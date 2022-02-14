@@ -948,7 +948,7 @@
             
             $.ajax({
                 type: 'GET',
-                url: `${Constant.app.baseUrl}/muslimboard-api?v=${Constant.meta.version}&op=location-by-coordinate&lat=0&lon=0`,
+                url: `${Constant.app.baseUrl}/muslimboard-api?v=${Constant.meta.version}&op=ping`,
                 success: () => {
                     internetStatus(navigator.onLine ? 'online' : 'offline')()
                     window.addEventListener('online', internetStatus('online'))
