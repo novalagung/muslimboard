@@ -256,8 +256,7 @@ func getLocationByCoordinate(latitude, longitude string) (map[string]interface{}
 
 	// dispatch query to open street map geocoding api
 	resp, err := resty.New().
-		SetDebug(true).
-		// SetDebug(restyDebug).
+		SetDebug(restyDebug).
 		R().
 		SetQueryParams(map[string]string{
 			"format": "json",
