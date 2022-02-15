@@ -19,8 +19,7 @@
     "geolocation",
     "alarms",
     "notifications",
-    "storage",
-    "activeTab"
+    "storage"
   ],
   "content_security_policy": "script-src 'self' https://asia-southeast2-muslim-board-ind-1472876095243.cloudfunctions.net https://unsplash.com; object-src 'self'"
 }

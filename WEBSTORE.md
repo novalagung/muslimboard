@@ -66,7 +66,7 @@ Fitur:
 
     Muslim Board is using a 3rd party called OpenLayers.js. Inside the lib, there is an eval statement. We can't be sure whether it's actually executed or not, because on Muslim Board we only use its geolocation detection feature.
 
-    Another thing, is there are several JSON files that are loaded through AJAX.
+    Other than that, there are several JSON files that are loaded through AJAX.
 
 ## Links
 
