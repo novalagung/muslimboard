@@ -184,7 +184,7 @@ html {
 #sidebar .prayer-time table tr td:nth-child(3) {
     padding-right: 5px;
     text-align: right;
-    width: 55px;
+    /* width: 55px; */
 }
 #sidebar .prayer-time table tr span.placeholder {
     font-weight: normal;
@@ -503,10 +503,10 @@ body.show-todo-list #todo-list .wrapper .items .item {
 #todo-list .wrapper .items .item input[type=checkbox]:after {
     content: " ";
     background-color: #fff;
-    display: inline-block;
+    display: block;
     color: #00b16a;
     width: 22px;
-    height: 25px;
+    height: 23px;
     visibility: visible;
     border: 1px solid #e0e0e0;
     padding-left: 3px;

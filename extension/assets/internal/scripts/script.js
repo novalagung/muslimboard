@@ -21,6 +21,15 @@
             sel.removeAllRanges();
             sel.addRange(range);
         },
+        getSelectedText: () => {
+            var text = "";
+            if (typeof window.getSelection != "undefined") {
+                text = window.getSelection().toString();
+            } else if (typeof document.selection != "undefined" && document.selection.type == "Text") {
+                text = document.selection.createRange().text;
+            }
+            return text;
+        },
         debounce: function (func, wait, immediate) {
             var timeout;
             return function() {
@@ -126,10 +135,14 @@
         toTitleCase: (str) => str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()),
         getCurrentTimezoneAbbreviation: () => {
             switch (new Date().toString().match(/([-\+][0-9]+)\s/)[1]) {
-                case "+0700": return "WIB"
-                case "+0800": return "WITA"
-                case "+0900": return "WIT"
-                default:  return /\((.*)\)/.exec(new Date().toString())[1]
+                case "+0700":
+                    return "WIB"
+                case "+0800":
+                    return "WITA"
+                case "+0900":
+                    return "WIT"
+                default:
+                    return moment.tz(moment.tz.guess()).zoneAbbr()
             }
         },
         distanceBetween(lat1, lon1, lat2, lon2) {
@@ -175,7 +188,8 @@
             updateBackgroundDelayDuration: Utility.seconds(40),
             updateContentDelayDuration: Utility.seconds(60),
             changelogs: [
-                'Improve location detection error when location permission is not allowed'
+                'Improve automatic location detection',
+                "Display correct timezone for user who use the app outside Indonesia's timezone"
             ],
             baseUrl: 'https://asia-southeast2-muslim-board-ind-1472876095243.cloudfunctions.net'
         },
@@ -819,10 +833,15 @@
 					showCancelButton: true,
                     confirmButtonText: buttonText,
                     cancelButtonText: "Batal"
-                }).then((e) => {
-                    if (e.dismiss == 'cancel') {
+                }).then(async (e) => {
+                    if (!e.value) {
                         return
                     }
+
+                    // remove automatic location cache
+                    const location = await Utility.getCurrentPosition()
+                    const { latitude, longitude } = location.coords
+                    localStorage.removeItem(`data-prayer-time-by-coordinate-${latitude}-${longitude}-${moment().format('YYYY-MM-DD')}`)
 
                     // force to not use cached coordinate when refreshing finding coordinate.
                     // not really sure whether this one is good approach
@@ -831,6 +850,7 @@
                     // remove data-manual-location to enable automatic detection on location
                     localStorage.removeItem('data-manual-location')
 
+                    // reload prayer time
                     this.loadLocationAndPrayerTimeThenRender.call(this)
                 })
             })
@@ -1145,7 +1165,7 @@
                 $('#todo-list .items').prepend($(`
                     <div class="item ${each.checked ? 'checked' : ''}">
                         <input type="checkbox" class="item-checkbox" ${each.checked ? 'checked' : ''}>
-                        <span contenteditable="true" data-placeholder="Tulis sesuatu">${each.text.replace(/\n/gi, '<br>')}</span>
+                        <span class="item-textbox" contenteditable="true" data-placeholder="Tulis sesuatu">${each.text.replace(/\n/gi, '<br>')}</span>
                         <button class="delete"><i class="fa fa-close"></i></button>
                     </div>
                 `))
@@ -1167,6 +1187,8 @@
         // insert new TODO utem
         async insertTodoListItem() {
             let items = JSON.parse(localStorage.getItem('todo-list-items') || '[]')
+
+            // ensure to have only one row of empty text on top
             if (items.length > 0) {
                 if (!items[items.length - 1].text) {
                     return
@@ -1198,10 +1220,10 @@
             })
 
             // event for clicking add button
-            $('#todo-list .add').on('click', () => {
+            $('#todo-list .add').on('click', (event) => {
                 this.insertTodoListItem.call(this)
-                $('#search').addClass('search-started')
                 $('#todo-list .items .item:eq(0) span[contenteditable]').focus()
+                console.log('event', event)
             })
             
             // calculate TODO list item based on screen size
@@ -1215,29 +1237,33 @@
                 $(event.currentTarget).closest('.item').remove()
                 this.ensureTodoListItemsStored.call(this)
             })
+
+            // event handler for textbox click
+            var lastClickedElement = null
+            $('#todo-list .items').on('click', '.item', (event) => {
+                var $textbox = $(event.target).find('span[contenteditable]')
+                if ($textbox.length) {
+                    $textbox.focus()
+                    lastClickedElement = $textbox[0]
+                } else {
+                    if (lastClickedElement !== event.target) {
+                        $(event.currentTarget).focus()
+                        Utility.selectElementContents(event.target)
+                    }
+                    lastClickedElement = event.target
+                }
+            })
             
-            // event for auto highlight/select text on TODO item click 
+            // // event for auto highlight/select text on TODO item click 
             // $('#todo-list .items').on('click', '.item span[contenteditable]', (event) => {
             //     Utility.selectElementContents(event.currentTarget)
             // })
 
             // event handler for checking/unchecking TODO item
-            const animateCheckedItem = ($item) => {
-                // for now, apply no animations
-                this.ensureTodoListItemsStored.call(this)
-            }
-            $('#todo-list .items').on('click', '.item input[type="checkbox"]', (event) => {
-                animateCheckedItem($(event.currentTarget).closest('.item'))
-            })
-            $('#todo-list').on('click', '.item', (event) => {
-                if (event.target !== event.currentTarget) {
-                    return
-                }
-
+            $('#todo-list .items').on('click', '.item-checkbox', (event) => {
                 const $checkbox = $(event.currentTarget).find('input[type="checkbox"]')
                 $checkbox.prop('checked', !$checkbox.prop('checked'))
-
-                animateCheckedItem($(event.currentTarget))
+                this.ensureTodoListItemsStored.call(this)
             })
         },
 
