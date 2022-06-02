@@ -188,8 +188,7 @@
             updateBackgroundDelayDuration: Utility.seconds(40),
             updateContentDelayDuration: Utility.seconds(60),
             changelogs: [
-                'Improve automatic location detection',
-                "Display correct timezone for user who use the app outside Indonesia's timezone"
+                'Fix bug: null address error'
             ],
             baseUrl: 'https://asia-southeast2-muslim-board-ind-1472876095243.cloudfunctions.net'
         },
@@ -386,7 +385,15 @@
         // if prayer time data ever been loaded once, then the cache will be used on next call
         async getPrayerTimesByCoordinateThenRender(latitude, longitude, silent = false) {
             const data = await this.getPrayerTimesByCoordinate.call(this, latitude, longitude)
+            let found = true
             if (!data) {
+                found = false
+            } else if (!data.content) {
+                found = false
+            } else if (!data.content.data) {
+                found = false
+            }
+            if (!found) {
                 if (silent) {
                     return
                 } else {

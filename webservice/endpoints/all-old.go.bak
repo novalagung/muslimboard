@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"net/url"
 	"strconv"
 	"strings"
 
@@ -17,54 +16,96 @@ var restyDebug = false
 
 // MuslimboardApi do get coordinate by location details
 func MuslimboardApi(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "OPTIONS, GET")
-	w.Header().Set("Access-Control-Allow-Headers", "*")
-	w.Header().Set("Access-Control-Max-Age", "3600")
-
 	if r.Method == http.MethodOptions {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "POST")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+		w.Header().Set("Access-Control-Max-Age", "3600")
 		w.WriteHeader(http.StatusNoContent)
 		return
 	}
 
-	if r.Method == http.MethodGet {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+
+	var res interface{}
+	var err error
+	if r.Method == "GET" {
 		switch r.URL.Query().Get("op") {
 
-		case "ping":
-			writeRespose(w, r, http.StatusOK, true, nil)
+		// will be deprecated later
+		case "coordinate-by-location":
+			res, err = HandleCoordinateByLocation(w, r)
 
-		case "image":
-			HandleImage(w, r)
+		// will be deprecated later
+		case "location-by-coordinate":
+			res, err = HandleLocationByCoordinate(w, r)
+
+		case "ping":
+			res = true
 
 		case "shalat-schedule-by-coordinate":
-			HandleShalatScheduleByCoordinate(w, r)
+			res, err = HandleShalatScheduleByCoordinate(w, r)
 
 		case "shalat-schedule-by-location":
-			HandleShalatScheduleByLocation(w, r)
+			res, err = HandleShalatScheduleByLocation(w, r)
 
 		default:
-			err := fmt.Errorf("bad request. unrecognized operation")
-			writeRespose(w, r, http.StatusBadRequest, nil, err)
+			err = fmt.Errorf("bad request. unrecognized operation")
 		}
 	} else {
-		err := fmt.Errorf("bad request. unrecognized method")
-		writeRespose(w, r, http.StatusBadRequest, nil, err)
+		err = fmt.Errorf("bad request. unrecognized method")
 	}
+
+	if err != nil {
+		writeRespose(w, r, http.StatusInternalServerError, nil, err)
+		return
+	}
+	writeRespose(w, r, http.StatusOK, res, err)
 }
 
 // =========================================================== HANDLER ===========================================================
 
-func HandleImage(w http.ResponseWriter, r *http.Request) {
-	imageUrl, _ := url.QueryUnescape(r.URL.Query().Get("image"))
-	if imageUrl == "" {
-		err := fmt.Errorf("missing image url")
-		writeRespose(w, r, http.StatusBadRequest, nil, err)
+// HandleCoordinateByLocation is handler of get coordinate by location details
+func HandleCoordinateByLocation(w http.ResponseWriter, r *http.Request) (interface{}, error) {
+
+	// parse params and verify location
+	location := r.URL.Query().Get("location")
+	location = strings.ToLower(location)
+	location = strings.Replace(location, "d.i. ", "", -1)
+	location = strings.Replace(location, "kab. ", "", -1)
+	location = strings.Replace(location, "kota ", "", -1)
+	location = strings.TrimSpace(location)
+
+	// validate location
+	if location == "" {
+		res := map[string]interface{}{"lat": 0, "lon": 0}
+		return res, nil
 	}
-	// todo
+
+	return getCoordinateByLocation(location)
+}
+
+// HandleLocationByCoordinate is handler of get location details by coordinate
+func HandleLocationByCoordinate(w http.ResponseWriter, r *http.Request) (interface{}, error) {
+
+	// parse params
+	latitude := r.URL.Query().Get("lat")
+	longitude := r.URL.Query().Get("lon")
+
+	// parse coordinate
+	latInt, _ := strconv.ParseFloat(latitude, 64)
+	lonInt, _ := strconv.ParseFloat(longitude, 64)
+
+	// if lat long is invalid, then simply return true
+	if latInt == 0 && lonInt == 0 {
+		return true, nil
+	}
+
+	return getLocationByCoordinate(latitude, longitude)
 }
 
 // HandleShalatScheduleByCoordinate is handler of get shalat schedule by coordinate
-func HandleShalatScheduleByCoordinate(w http.ResponseWriter, r *http.Request) {
+func HandleShalatScheduleByCoordinate(w http.ResponseWriter, r *http.Request) (interface{}, error) {
 
 	// parse params
 	method := r.URL.Query().Get("method")
@@ -80,12 +121,12 @@ func HandleShalatScheduleByCoordinate(w http.ResponseWriter, r *http.Request) {
 	latInt, _ := strconv.ParseFloat(latitude, 64)
 	lonInt, _ := strconv.ParseFloat(longitude, 64)
 	if latInt == 0 && lonInt == 0 {
-		writeRespose(w, r, http.StatusOK, true, nil)
+		return true, nil
 	}
 
 	schedules, err := getShalatScheduleByCoordinate(method, latInt, lonInt, month, year)
 	if err != nil {
-		writeRespose(w, r, http.StatusInternalServerError, nil, err)
+		return nil, err
 	}
 
 	res := map[string]interface{}{
@@ -95,16 +136,16 @@ func HandleShalatScheduleByCoordinate(w http.ResponseWriter, r *http.Request) {
 
 	locationRes, err := getLocationByCoordinate(latitude, longitude)
 	if err != nil {
-		writeRespose(w, r, http.StatusOK, res, nil)
+		return res, nil
 	}
 
 	res["address"] = locationRes["address"]
-	writeRespose(w, r, http.StatusOK, res, nil)
+	return res, nil
 }
 
 // HandleShalatScheduleByLocation is handler of get shalat schedule by location
 // for now, immediately use aladhan.com api coz kemenag backend still under development
-func HandleShalatScheduleByLocation(w http.ResponseWriter, r *http.Request) {
+func HandleShalatScheduleByLocation(w http.ResponseWriter, r *http.Request) (interface{}, error) {
 
 	province := r.URL.Query().Get("province")
 	city := r.URL.Query().Get("city")
@@ -119,7 +160,7 @@ func HandleShalatScheduleByLocation(w http.ResponseWriter, r *http.Request) {
 	// get coordinate by location
 	coordinate, err := getCoordinateByLocation(location)
 	if err != nil {
-		writeRespose(w, r, http.StatusInternalServerError, nil, err)
+		return nil, err
 	}
 
 	// parse params
@@ -137,7 +178,7 @@ func HandleShalatScheduleByLocation(w http.ResponseWriter, r *http.Request) {
 
 	schedules, err := getShalatScheduleByCoordinate(method, latitude, longitude, month, year)
 	if err != nil {
-		writeRespose(w, r, http.StatusInternalServerError, nil, err)
+		return nil, err
 	}
 
 	address := strings.Title(strings.ToLower(fmt.Sprintf("%s, %s", city, province)))
@@ -146,7 +187,7 @@ func HandleShalatScheduleByLocation(w http.ResponseWriter, r *http.Request) {
 		"address":   address,
 	}
 
-	writeRespose(w, r, http.StatusOK, res, nil)
+	return res, nil
 }
 
 // =========================================================== MODEL ===========================================================
@@ -332,7 +373,21 @@ func getShalatScheduleByCoordinate(method string, latitude, longitude float64, m
 func writeRespose(w http.ResponseWriter, r *http.Request, statusCode int, resp interface{}, err error) {
 
 	if statusCode == http.StatusOK {
-		renderCacheHeader(w, r)
+
+		// cors configuration
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "OPTIONS, GET")
+		w.Header().Set("Access-Control-Allow-Headers", "*")
+
+		if cache := r.URL.Query().Get("cache"); cache == "0" {
+			// disable cache control if param `cache` is set to `0`
+			w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
+			w.Header().Set("Pragma", "no-cache")
+			w.Header().Set("Expires", "0")
+		} else {
+			// by default enable cache control
+			w.Header().Set("Cache-Control", "max-age=31536000")
+		}
 	}
 
 	errMessage := ""
@@ -345,16 +400,4 @@ func writeRespose(w http.ResponseWriter, r *http.Request, statusCode int, resp i
 		"data":          resp,
 		"error_message": errMessage,
 	})
-}
-
-func renderCacheHeader(w http.ResponseWriter, r *http.Request) {
-	if cache := r.URL.Query().Get("cache"); cache == "0" {
-		// disable cache control if param `cache` is set to `0`
-		w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
-		w.Header().Set("Pragma", "no-cache")
-		w.Header().Set("Expires", "0")
-	} else {
-		// by default enable cache control
-		w.Header().Set("Cache-Control", "max-age=31536000")
-	}
 }
