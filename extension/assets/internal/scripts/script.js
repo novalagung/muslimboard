@@ -343,13 +343,13 @@
         },
 
         // get automatic prayer time
-        getPrayerTimesByCoordinate(latitude, longitude) {
+        async getPrayerTimesByCoordinate(latitude, longitude) {
             const key = `data-prayer-time-by-coordinate-${latitude}-${longitude}-${moment().format('YYYY-MM-DD')}`
             if (latitude == 0 && longitude == 0) {
                 localStorage.removeItem(key)
             }
 
-            return Utility.getData(key, async (resolve) => {
+            const result = await Utility.getData(key, async (resolve) => {
                 const method = 1
                 const month = parseInt(moment().format('MM'), 10)
                 const year = moment().year()
@@ -359,6 +359,21 @@
         
                 resolve(result)
             })
+
+            let found = true
+            if (!result) {
+                found = false
+            } else if (!result.content) {
+                found = false
+            } else if (!result.content.data) {
+                found = false
+            }
+            if (!found) {
+                localStorage.removeItem(key)
+                return false
+            }
+            
+            return result
         },
 
         // get prayer time by location id
@@ -385,15 +400,7 @@
         // if prayer time data ever been loaded once, then the cache will be used on next call
         async getPrayerTimesByCoordinateThenRender(latitude, longitude, silent = false) {
             const data = await this.getPrayerTimesByCoordinate.call(this, latitude, longitude)
-            let found = true
             if (!data) {
-                found = false
-            } else if (!data.content) {
-                found = false
-            } else if (!data.content.data) {
-                found = false
-            }
-            if (!found) {
                 if (silent) {
                     return
                 } else {
