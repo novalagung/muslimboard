@@ -8,7 +8,7 @@ Muslim Board is a personal dashboard for Muslims. This plugin is inspired by Mom
 
 - Folder `extension` is where the chrome extension source code lies.
 - Folder `resources` contains a few resource files (it's used by the extension or website directly).
-- Folder `webservices` contains the backend serverless code.
+- Folder `webservices` contains the backend serverless code (GCP function).
 - Folder `website` contains the source code web/landing page, https://muslimboard.novalagung.com.
 
 ## Contribution
@@ -21,8 +21,7 @@ However, before we start doing anything, especially on stuff within the `extensi
 - Browser addons marketplaces have strict rules over a lot of things! Not every cool tech or approach is allowed, especially if it could bring vulnerability risk (from a security perspective).
 
     - External requests are strictly monitored and controlled. See the `content_security_policy` field on `manifest.json`.
-    - This is one reason why libraries such as `jQuery` and `font-awesome` are physically copied to the project directory.
-    - Whitelisting any domains (`*`) will result in rejection during the submission to addons marketplace (been there).
+    - This is one reason why libraries such as `jQuery` and `font-awesome` are physically copied to the source code.
     - It would be nice to have some cutting-edge technology applied here, but if it's resulting in rejection during submission, well ... I will not approve it.
     - I suggest opening a discussion/issue first, before doing any PRs, except if it's about code refactoring or bug fixing.
 
