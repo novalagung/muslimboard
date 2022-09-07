@@ -4,6 +4,8 @@ Personal Dashboard for Muslims in Indonesia.
 
 Muslim Board is a personal dashboard for Muslims. This plugin is inspired by Momentum. For now, we only support Bahasa Indonesia.
 
+![preview](resources/guide/preview-1.jpg)
+
 ## Table of Content
 
 - Folder `extension` is where the chrome extension source code lies.
