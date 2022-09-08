@@ -196,8 +196,8 @@
             updateBackgroundDelayDuration: Utility.seconds(40),
             updateContentDelayDuration: Utility.seconds(60),
             changelogs: [
-                'Upgrade extension manifest version from v2 to v3',
-                'Automatically clear local cache on failure when fetching prayer times information'
+                'Seamlessly load background and quote data from GitHub, and use local data as failover',
+                'Cosmetic updates'
             ]
         },
     }
