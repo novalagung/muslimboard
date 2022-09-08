@@ -58,7 +58,7 @@
                         <br />Gagal mendeteksi lokasi user secara otomatis.
                         <br />
                         <br />Pastikan "location permission" untuk ekstensi
-                        <br />Muslim Board adalah "allowed".
+                        <br />Muslim Board adalah "allowed" dan ada akses internet.
                         <br />
                         <br />Atau silakan gunakan fitur atur manual pilihan lokasi.
                     `))
@@ -128,6 +128,10 @@
                 resolve(data)
             }
         }),
+        removeLocalStorageData: (cond) => {
+            Utility.log('remove local storage', cond)
+            Object.keys(localStorage).filter(cond).forEach((d) => { localStorage.removeItem(d) })
+        },
         randomFromArray(arr, exclusion) {
             const items = arr.filter((d) => exclusion ? (d != exclusion) : true)
             return items[Math.floor(Math.random()*items.length)]
@@ -424,9 +428,7 @@
             localStorage.removeItem('data-coordinate-cache')
 
             // remove prayer time cache
-            Object.keys(localStorage).filter((d) => d.indexOf('data-prayer-time') > -1).forEach((d) => {
-                localStorage.removeItem(d)
-            })
+            Utility.removeLocalStorageData((d) => d.indexOf('data-prayer-time') > -1)
         },
 
         // render prayer time to screen
@@ -543,14 +545,35 @@
         // get background image data then render it to screen.
         // if background image data ever been loaded once, then the cache will be used on next call
         async getDataBackgroundThenRender() {
-            const key = `data-background-${Constant.meta.version}`
-            const data = await Utility.getData(key, async (resolve) => {
-                const url = `data/data-background.json`
-                const response = await Utility.fetch(url)
-                const result = await response.json()
-                resolve(result)
-            })
-    
+            let data = {}
+
+            // load data from remote url
+            try {
+                Utility.log('fetching remote data background')
+                const key = `data-background-remote-${Constant.meta.version}-${moment().format('YYYYMMDD')}`
+                data = await Utility.getData(key, async (resolve) => {
+                    Utility.removeLocalStorageData((d) => d.indexOf('data-background-remote') > -1)
+                    const url = `https://raw.githubusercontent.com/novalagung/muslimboard/master/extension/data/data-background.json?v=${Constant.meta.version}.${moment().format('YYYYMMDD')}`
+                    const response = await Utility.fetch(url)
+                    const result = await response.json()
+                    resolve(result)
+                })
+            } catch (err) {
+                Utility.log('error', err)
+            }
+
+            // in case of failure, use local data
+            if (!data) {
+                Utility.log('fetching local data background')
+                const key = `data-background-local-${Constant.meta.version}`
+                data = await Utility.getData(key, async (resolve) => {
+                    const url = `data/data-background.json`
+                    const response = await Utility.fetch(url)
+                    const result = await response.json()
+                    resolve(result)
+                })
+            }
+
             this.updateBackground.call(this, data)
         },
 
@@ -661,13 +684,34 @@
         // get data content then render it on screen.
         // if background image data ever been loaded once, then the cache will be used on next call
         async getDataContentThenRender() {
-            const key = `data-content-${Constant.meta.version}`
-            const data = await Utility.getData(key, async (resolve) => {
-                const url = `data/data-content.json`
-                const response = await Utility.fetch(url)
-                const result = await response.json()
-                resolve(result)
-            })
+            let data = {}
+
+            // load data from remote url
+            try {
+                Utility.log('fetching remote data content')
+                const key = `data-content-remote-${Constant.meta.version}-${moment().format('YYYYMMDD')}`
+                data = await Utility.getData(key, async (resolve) => {
+                    Utility.removeLocalStorageData((d) => d.indexOf('data-content-remote') > -1)
+                    const url = `https://raw.githubusercontent.com/novalagung/muslimboard/master/extension/data/data-content.json?v=${Constant.meta.version}.${moment().format('YYYYMMDD')}`
+                    const response = await Utility.fetch(url)
+                    const result = await response.json()
+                    resolve(result)
+                })
+            } catch (err) {
+                Utility.log('error', err)
+            }
+
+            // in case of failure, use local data
+            if (!data) {
+                Utility.log('fetching local data content')
+                const key = `data-content-local-${Constant.meta.version}`
+                data = await Utility.getData(key, async (resolve) => {
+                    const url = `data/data-content.json`
+                    const response = await Utility.fetch(url)
+                    const result = await response.json()
+                    resolve(result)
+                })
+            }
             
             this.updateContent.call(this, data)
         },
@@ -733,7 +777,7 @@
                                 return
                             } else {
                                 this.clearPrayerTimesCache.call(this)
-                                throw new Error('Gagal mengambil jadwal waktu sholat. Coba refresh halaman')
+                                throw new Error('Gagal mengambil jadwal sholat. Pastikan terhubung dengan internet lalu refresh halaman')
                             }
                         }
 
@@ -794,7 +838,7 @@
                     const data =  await this.getPrayerTimesByLocationID(province, kabko, id)
                     if (!data) {
                         this.clearPrayerTimesCache.call(this)
-                        throw new Error('Gagal mengambil jadwal waktu sholat. Coba refresh halaman')
+                        throw new Error('Gagal mengambil jadwal sholat. Pastikan terhubung dengan internet lalu refresh halaman')
                     }
 
                     this.geoLocationCountryCode = (data.content.data.countryCode || 'id')
@@ -1030,7 +1074,7 @@
                             Informasi jadwal sholat dimunculkan sesuai lokasi pengguna.
                         </p>
                         <p>
-                            Untuk pertanyaan, kritik & saran, maupun jika ingin berkontribusi foto atau quote, silakan kirim email ke <a href='mailto:${Constant.maintainer.email}?subject=${Constant.meta.appName} - Pertanyaan, kritik, dan saran'>${Constant.maintainer.email}</a>.
+                            Untuk pertanyaan, kritik & saran, maupun jika ingin berkontribusi foto atau quote, silakan kirim email ke <a href='mailto:${Constant.maintainer.email}?subject=${Constant.meta.appName} - Pertanyaan, kritik, dan saran'>${Constant.maintainer.email}</a> atau via submit PR di <a href='https://github.com/novalagung/muslimboard' target='_blank'>GitHub</a>.
                         </p>
                         <hr class='separator'>
                         <p class='copyright text-center'>
