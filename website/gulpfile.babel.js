@@ -18,8 +18,8 @@ import uglify     from 'gulp-uglify'
 import gutil      from 'gulp-util'
 import webserver  from 'gulp-webserver'
 
-let src = './src'
-let dst = './res/assets/core'
+let src = './res/assets/ext/src'
+let dst = './res/assets/ext/dist'
 
 let compileJS = (watch) => {
     // watch only the main js file
