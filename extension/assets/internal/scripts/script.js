@@ -580,20 +580,24 @@
         // update background images randomly on every X interval
         async updateBackground(data) {
 
-            // the doUpdateBackground below is used to manage the image and text transition
-            const doUpdateBackground = () => {
+            // update author name
+            const updateBackgroundAthorName = (background) => {
+                if (background.hasOwnProperty('author')) {
+                    $('.photographer').html(background.author.name)
+                } else {
+                    $('.photographer').html(background.source.split('http://').reverse()[0])
+                }
+                $('.photographer').closest('a').attr('href', background.source)
+            }
+
+            // the doUpdateBackgroundAndPreloadNextImage below is used to manage the image and text transition
+            const doUpdateBackgroundAndPreloadNextImage = () => {
+                Utility.log('preparing next image')
+
                 const preloader = new Image()
                 preloader.src = this.nextSelectedBackground.url
                 preloader.onload = () => {
-                    Utility.log('image preloaded', preloader.src)
-    
-                    const background = this.nextSelectedBackground
-                    if (background.hasOwnProperty('author')) {
-                        $('.photographer').html(background.author.name)
-                    } else {
-                        $('.photographer').html(background.source.split('http://').reverse()[0])
-                    }
-                    $('.photographer').closest('a').attr('href', background.source)
+                    Utility.log('next image preloaded', preloader.src)
     
                     setTimeout(() => {
                         this.updateBackground.call(this, data)
@@ -633,7 +637,8 @@
     
                     $('#transitioner .content').css('opacity', '0')
     
-                    doUpdateBackground()
+                    doUpdateBackgroundAndPreloadNextImage()
+                    updateBackgroundAthorName(this.selectedBackground)
                 })
             } else {
                 const doUpdateBackgroundForTheFirstTime = () => {
@@ -645,15 +650,13 @@
                     } else {
                         $('#background .content').css('background-position', '')
                     }
-                    
-                    this.nextSelectedBackground = this.selectedBackground
-                    doUpdateBackground()
+
+                    doUpdateBackgroundAndPreloadNextImage()
+                    updateBackgroundAthorName(this.selectedBackground)
                 }
 
-                this.selectedBackground = Utility.randomFromArray(
-                    data.content.content,
-                    this.selectedBackground
-                )
+                this.selectedBackground = Utility.randomFromArray(data.content.content)
+                this.nextSelectedBackground = Utility.randomFromArray(data.content.content, this.selectedBackground)
 
                 // right after certain image loaded, trigger preload for next image,
                 // this approach is to ensure when the next image transition is happening,
@@ -663,7 +666,7 @@
                 const preloader = new Image()
                 preloader.src = this.selectedBackground.url
                 preloader.onload = () => {
-                    Utility.log('image preloaded', preloader.src)
+                    Utility.log('next image preloaded', preloader.src)
                     doUpdateBackgroundForTheFirstTime()
                 }
                 preloader.onerror = () => {
@@ -671,6 +674,7 @@
                         data.content.content.filter((d) => d.url.indexOf('http') == -1),
                         this.selectedBackground
                     )
+                    this.nextSelectedBackground = Utility.randomFromArray(data.content.content, this.selectedBackground)
                     doUpdateBackgroundForTheFirstTime()
                 }
             }
@@ -1040,7 +1044,7 @@
                         .addClass('sad')
                 }
             }
-            
+
             $.ajax({
                 type: 'GET',
                 url: `${Constant.app.baseUrl}/muslimboard-api?v=${Constant.meta.version}&op=ping`,
@@ -1064,7 +1068,7 @@
             // on info button click, show the info modal
             $('.info').on('click', (e) => {
                 e.preventDefault();
-    
+
                 const text = `
                     <div class='modal-info'>
                         <p>
@@ -1085,7 +1089,7 @@
                         </p>
                     </div>
                 `
-                
+
                 Swal.fire({
                     type: 'info',
                     title: [Constant.meta.appName, Constant.meta.version].join(" "),
@@ -1094,7 +1098,7 @@
                     allowOutsideClick: true
                 });
             });
-    
+
             // on share button click, show the share modal
             $('.share').on('click', () => {
                 const title = `${Constant.meta.appName} Browser Extension/Plugin`;
@@ -1119,7 +1123,7 @@
                         </a>
                     </div>
                 `
-    
+
                 Swal.fire({
                     type: 'info',
                     title: 'Share ke Sosial Media',
@@ -1151,9 +1155,9 @@
                 chrome.alarms.clearAll()
                 chrome.alarms.onAlarm.addListener((alarm) => {
                     Utility.log('retrieve alarm', alarm)
-    
+
                     chrome.alarms.clear(alarm.name, $.noop)
-    
+
                     const info = alarm.name.split('|')
                     chrome.notifications.create(info[0], {
                         type: 'basic',
@@ -1190,7 +1194,7 @@
             if (localStorageUsed === 'false') {
                 // disabling chrome storage. refer to https://stackoverflow.com/questions/28465384/how-is-chrome-storage-affected-when-an-extension-is-updated
                 // const rawItems = JSON.parse((await Utility.chromeStorage.get('todo-list-items')) || '[]')
-                
+
                 const rawItems = JSON.parse(localStorage.getItem('todo-list-items') || '[]')
                 const items = rawItems.filter((d) => d.text)
                 Utility.log('found cached sync storage todo list items', items)
@@ -1210,7 +1214,7 @@
                 localStorage.setItem('todo-list-status', 'true')
                 localStorage.setItem('todo-list-box-ever-loaded', 'true')
             }
-                
+   
             this.ensureTodoListBoxVisibility.call(this)
             this.ensureTodoListItemsAppear.call(this)
 
@@ -1272,7 +1276,7 @@
 
             // disabling chrome storage. refer to https://stackoverflow.com/questions/28465384/how-is-chrome-storage-affected-when-an-extension-is-updated
             // await Utility.chromeStorage.set('todo-list-items', JSON.stringify(items))
-            
+
             this.ensureTodoListItemsAppear.call(this)
         },
 
@@ -1287,7 +1291,7 @@
                 } else {
                     localStorage.setItem('todo-list-status', 'true')
                 }
-                
+
                 this.ensureTodoListBoxVisibility.call(this)
             })
 
@@ -1297,13 +1301,13 @@
                 $('#todo-list .items .item:eq(0) span[contenteditable]').focus()
                 console.log('event', event)
             })
-            
+
             // calculate TODO list item based on screen size
             $('#todo-list .items').height($(window).height() - 97 - 37)
             $('#todo-list .items').on('keyup', '.item span[contenteditable]', Utility.debounce(() => {
                 this.ensureTodoListItemsStored.call(this)
             }, 300))
-            
+
             // event for deleting TODO item
             $('#todo-list .items').on('click', '.item button', (event) => {
                 $(event.currentTarget).closest('.item').remove()
@@ -1325,7 +1329,7 @@
                     lastClickedElement = event.target
                 }
             })
-            
+
             // // event for auto highlight/select text on TODO item click 
             // $('#todo-list .items').on('click', '.item span[contenteditable]', (event) => {
             //     Utility.selectElementContents(event.currentTarget)
@@ -1340,7 +1344,7 @@
         },
 
         // =========== UPDATE MESSAGE
-    
+
         // show update message on extension/plugin update
         showExtensionUpdateAndChangelogsModal() {
             const keyOfUpdateMessage = `changelogs-message-${Constant.meta.version}`
@@ -1361,7 +1365,7 @@
                     </ul>
                 </div>
             `
-    
+
             Swal.fire({
                 type: 'info',
                 title: `Version Update ${Constant.meta.version}`,
@@ -1372,9 +1376,9 @@
     
             localStorage.setItem(keyOfUpdateMessage, true)
         },
-    
+
         // =========== INIT
-        
+
         // orchestrate everything
         init() {
             console.log(`${Constant.meta.appName} ${Constant.meta.version}`)
@@ -1394,7 +1398,7 @@
             this.showExtensionUpdateAndChangelogsModal.call(this)
         }
     }
-    
+
     window.onload = function () {
         App.init()
     }
