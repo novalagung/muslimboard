@@ -15,7 +15,7 @@
     "babelify": "^7.3.0",
     "browserify": "^13.0.1",
     "gulp": "^4.0.2",
-    "gulp-autoprefixer": "^3.1.1",
+    "gulp-autoprefixer": "^8.0.0",
     "gulp-babel": "^6.1.2",
     "gulp-concat": "^2.6.0",
     "gulp-cssmin": "^0.1.7",
