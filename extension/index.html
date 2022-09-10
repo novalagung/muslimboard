@@ -46,7 +46,7 @@
         <section class="prayer-time">
             <div class="content">
                 <p class="title">
-                    <span>Jadwal sholat untuk hari ini:</span>
+                    <span data-i18n="prayerTimeTodaySchedule">Jadwal sholat untuk hari ini:</span>
                     <span class="date-time"></span>
                 </p>
                 <table>
@@ -57,32 +57,38 @@
                     </colgroup>
                     <tbody>
                         <tr>
-                            <td>Subuh</td>
+                            <!-- Subuh -->
+                            <td></td>
                             <td data-when='subuh'>04:18</td>
                             <td>WIB</td>
                         </tr>
                         <tr>
-                            <td>Dhuha</td>
+                            <!-- Dhuha -->
+                            <td></td>
                             <td data-when='dhuha'>05:58</td>
                             <td>WIB</td>
                         </tr>
                         <tr>
-                            <td>Dzuhur</td>
+                            <!-- Dzuhur -->
+                            <td></td>
                             <td data-when='dzuhur'>11:43</td>
                             <td>WIB</td>
                         </tr>
                         <tr>
-                            <td>Ashar</td>
+                            <!-- Ashar -->
+                            <td></td>
                             <td data-when='ashar'>14:47</td>
                             <td>WIB</td>
                         </tr>
                         <tr>
-                            <td>Maghrib</td>
+                            <!-- Maghrib -->
+                            <td></td>
                             <td data-when='maghrib'>17:49</td>
                             <td>WIB</td>
                         </tr>
                         <tr>
-                            <td>Isya'</td>
+                            <!-- Isya -->
+                            <td>'</td>
                             <td data-when='isya'>18:58</td>
                             <td>WIB</td>
                         </tr>
@@ -121,11 +127,11 @@
                 <div>
                     <a class="detect-data-automatically" title="Klik untuk menerapkan deteksi lokasi otomatis">
                         <i class="fa fa-location-arrow"></i>
-                        Deteksi lokasi otomatis
+                        <span data-i18n="menuAutomaticLocationDetection">Deteksi lokasi otomatis</span>
                     </a>
                     <a class="set-data-manually" title="Klik untuk mengatur pilihan lokasi">
                         <i class="fa fa-location-arrow"></i>
-                        Atur manual pilihan lokasi
+                        <span>Atur manual pilihan lokasi</span>
                     </a>
                     <a class="just-text">
                         <i class="fa fa-wifi"></i>
@@ -138,15 +144,15 @@
                     </a>
                     <a class="share">
                         <i class="fa fa-share-square"></i>
-                        Share
+                        <span>Share</span>
                     </a>
                     <a class="source-code" href="https://github.com/novalagung/muslimboard" target="_blank">
                         <i class="fa fa-github"></i>
-                        Source Code
+                        <span>Source Code</span>
                     </a>
                     <a class="info">
                         <i class="fa fa-info-circle"></i>
-                        Info
+                        <span>Info</span>
                     </a>
                 </div>
             </div>
@@ -158,6 +164,9 @@
     <script src="assets/3rd-parties/moment/moment-timezone-with-data-1970-2030.min.js"></script>
     <script src="assets/3rd-parties/sweetalert2/sweetalert2.all.min.js"></script>
     <script src="assets/3rd-parties/tooltipster/tooltipster.bundle.min.js"></script>
-    <script src="assets/internal/scripts/script.js"></script>
+    <script src="assets/internal/scripts/utility.js"></script>
+    <script src="assets/internal/scripts/constant.js"></script>
+    <script src="assets/internal/scripts/i18n.js"></script>
+    <script src="assets/internal/scripts/app.js"></script>
 </body>
 </html>

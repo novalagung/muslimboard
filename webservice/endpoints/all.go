@@ -378,6 +378,15 @@ func getShalatScheduleByCoordinate(method string, latitude, longitude float64, m
 
 // =========================================================== UTILITY ===========================================================
 
+func validateOriginRequest(r*http.Request) error{
+	const whitelistedOrigin
+	originHeader:=r.Header.Get("Origin")
+	if 
+	moz-extension://b7d90294-f8dc-492e-8564-e3e7e4490aac
+	chrome-extension://lmnhjilamobdmdihfkofgiejgokabfad
+    chrome-extension://dfmgmbngjpmbbpgibmdfegilbfckkgli
+}
+
 // writeResponse definition
 func writeRespose(w http.ResponseWriter, r *http.Request, statusCode int, resp interface{}, err error) {
 
