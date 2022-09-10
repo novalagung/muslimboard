@@ -21,15 +21,6 @@
             sel.removeAllRanges();
             sel.addRange(range);
         },
-        getSelectedText: () => {
-            let text = '';
-            if (typeof window.getSelection != 'undefined') {
-                text = window.getSelection().toString();
-            } else if (typeof document.selection != 'undefined' && document.selection.type == 'Text') {
-                text = document.selection.createRange().text;
-            }
-            return text;
-        },
         debounce: function (func, wait, immediate) {
             let timeout;
             return function() {
@@ -46,7 +37,7 @@
                 if (callNow) func.apply(context, args);
             };
         },
-        getCurrentPosition: () => new Promise((resolve, reject) => {
+        getCurrentLocationCoordinate: () => new Promise((resolve, reject) => {
             const useCoordinateCache = () => {
                 const coordinateCache = JSON.parse(localStorage.getItem('data-coordinate-cache') || '{}')
                 Utility.log('timeout. use last cached location', coordinateCache)
@@ -92,14 +83,14 @@
                 }
             )
         }),
-        getData: (key, updateCallback) => new Promise(async (resolve) => {
-            const cacheKey = key
-            const cacheData = localStorage.getItem(cacheKey)
+        getLatestData: (key, callback, useCacheAsFailover = false) => new Promise(async (resolve) => {
             const nowYYYYMMDD = moment().format('YYYY-MM-DD')
             let data = {
                 lastUpdated: nowYYYYMMDD,
                 content: {}
             }
+
+            const cacheData = localStorage.getItem(key)
             if (cacheData) {
                 data = JSON.parse(cacheData)
             }
@@ -108,27 +99,29 @@
             const isNotToday = data.lastUpdated != nowYYYYMMDD
             if (isFirstTime || isNotToday) {
                 try {
-                    await updateCallback((result, error) => {
-                        if (error) {
-                            resolve(false)
-                            return
-                        }
-
+                    await callback((result) => {
                         data.lastUpdated = nowYYYYMMDD
                         data.content = result
-                        localStorage.setItem(cacheKey, JSON.stringify(data))
-                        
+                        localStorage.setItem(key, JSON.stringify(data))
                         resolve(data)
                     })
                 } catch (err) {
-                    Utility.log('error', err)
-                    resolve(false)
+                    Utility.error(err)
+                    if (useCacheAsFailover) {
+                        Utility.log('use cached data instead')
+                        resolve(data)
+                    } else {
+                        resolve(false)
+                    }
                 }
-            } else {
-                resolve(data)
             }
+
+            resolve(data)
         }),
-        removeLocalStorageData: (cond) => {
+        getLatestDataAndUseCacheAsFailover: async (key, callback) => {
+            return await Utility.getLatestData(key, callback, true)
+        },
+        removeLocalStorageItemsByPrefix: (cond) => {
             Utility.log('remove local storage', cond)
             Object.keys(localStorage).filter(cond).forEach((d) => { localStorage.removeItem(d) })
         },
@@ -139,8 +132,8 @@
         sleep: (n) => new Promise((resolve) => { setTimeout(() => { resolve() }, Utility.seconds(n)) }),
         seconds: (n) => n * 1000,
         log: (...args) => (Constant.app.debug) ? console.log(...args) : $.noop(),
+        error: (...args) => (Constant.app.debug) ? console.error(...args) : $.noop(),
         toTitleCase: (str) => str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()),
-        flattenString: (str, joiner = '') => str.split('\n').map((d) => d.trim()).filter((d) => d).join(joiner),
         getCurrentTimezoneAbbreviation: (countryCode) => {
             if (countryCode === 'id') {
                 switch (new Date().toString().match(/([-\+][0-9]+)\s/)[1]) {
@@ -170,12 +163,12 @@
         },
         fetch: (url) => {
             const controller = new AbortController()
-            const timeoutId = setTimeout(() => controller.abort(), Constant.app.timeoutDuration)
+
+            // If the purpose is to timeout the request only (not including the response), then enable the code below
+            // const timeoutId = setTimeout(() => controller.abort(), Constant.app.timeoutDuration)
+            // clearTimeout(timeoutId)
 
             return fetch(url, { signal: controller.signal })
-            
-            // If you only wanted to timeout the request, not the response, add:
-            // clearTimeout(timeoutId)
         }
     }
     
@@ -190,7 +183,8 @@
             email: 'caknopal@gmail.com',
         },
         app: {
-            baseUrl: 'https://asia-southeast2-muslim-board-ind-1472876095243.cloudfunctions.net',
+            baseUrlWebService: 'https://asia-southeast2-muslim-board-ind-1472876095243.cloudfunctions.net',
+            baseUrlGithub: 'https://raw.githubusercontent.com/novalagung/muslimboard/master/extension/data',
             debug: (() => !('update_url' in chrome.runtime.getManifest()))(),
             timeoutDuration: Utility.seconds(5),
             updateBackgroundDelayDuration: Utility.seconds(40),
@@ -264,14 +258,10 @@
         // get master location data.
         // if location data ever been loaded once, then the cache will be used on next call
         async getDataMasterLocation() {
-            const key = `data-location-static-${Constant.meta.version}`
-            const data = await Utility.getData(key, async (resolve) => {
-                const url = `data/data-location.json`
-                const response = await Utility.fetch(url)
-                const result = await response.json()
-                resolve(result)
-            })
-            return Promise.resolve(data)
+            const url = `data/data-location.json`
+            const response = await Utility.fetch(url)
+            const result = await response.json()
+            return result
         },
 
         // print location
@@ -332,11 +322,11 @@
                 localStorage.removeItem(key)
             }
 
-            const data = await Utility.getData(key, async (resolve) => {
+            const data = await Utility.getLatestData(key, async (resolve) => {
                 const method = 1
                 const month = parseInt(moment().format('MM'), 10)
                 const year = moment().year()
-                const url = `${Constant.app.baseUrl}/muslimboard-api?v=${Constant.meta.version}&op=shalat-schedule-by-coordinate&latitude=${latitude}&longitude=${longitude}&method=${method}&month=${month}&year=${year}`
+                const url = `${Constant.app.baseUrlWebService}/muslimboard-api?v=${Constant.meta.version}&op=shalat-schedule-by-coordinate&latitude=${latitude}&longitude=${longitude}&method=${method}&month=${month}&year=${year}`
                 const response = await Utility.fetch(url)
                 const result = await response.json()
         
@@ -380,11 +370,11 @@
                 localStorage.removeItem(key)
             }
 
-            const data = await Utility.getData(key, async (resolve) => {
+            const data = await Utility.getLatestData(key, async (resolve) => {
                 const method = 1
                 const month = parseInt(moment().format('MM'), 10)
                 const year = moment().year()
-                const url = `${Constant.app.baseUrl}/muslimboard-api?v=${Constant.meta.version}&op=shalat-schedule-by-location&locationID=${locationID}&province=${province}&city=${kabko}&method=${method}&month=${month}&year=${year}`
+                const url = `${Constant.app.baseUrlWebService}/muslimboard-api?v=${Constant.meta.version}&op=shalat-schedule-by-location&locationID=${locationID}&province=${province}&city=${kabko}&method=${method}&month=${month}&year=${year}`
                 const response = await Utility.fetch(url)
                 const result = await response.json()
         
@@ -428,7 +418,7 @@
             localStorage.removeItem('data-coordinate-cache')
 
             // remove prayer time cache
-            Utility.removeLocalStorageData((d) => d.indexOf('data-prayer-time') > -1)
+            Utility.removeLocalStorageItemsByPrefix((d) => d.indexOf('data-prayer-time') > -1)
         },
 
         // render prayer time to screen
@@ -545,35 +535,30 @@
         // get background image data then render it to screen.
         // if background image data ever been loaded once, then the cache will be used on next call
         async getDataBackgroundThenRender() {
-            let data = {}
 
             // load data from remote url
             try {
                 Utility.log('fetching remote data background')
-                const key = `data-background-remote-${Constant.meta.version}-${moment().format('YYYYMMDD')}`
-                data = await Utility.getData(key, async (resolve) => {
-                    Utility.removeLocalStorageData((d) => d.indexOf('data-background-remote') > -1)
-                    const url = `https://raw.githubusercontent.com/novalagung/muslimboard/master/extension/data/data-background.json?v=${Constant.meta.version}.${moment().format('YYYYMMDD')}`
+                const key = `data-background-remote-${Constant.meta.version}`
+                const data = await Utility.getLatestDataAndUseCacheAsFailover(key, async (resolve) => {
+                    const url = `${Constant.app.baseUrlGithub}/data-background.json?v=${Constant.meta.version}.${moment().format('YYYY-MM-DD')}`
                     const response = await Utility.fetch(url)
                     const result = await response.json()
                     resolve(result)
                 })
+                if (data?.content) {
+                    this.updateBackground.call(this, data.content)
+                    return
+                } 
             } catch (err) {
-                Utility.log('error', err)
+                Utility.error(err)
             }
 
             // in case of failure, use local data
-            if (!data) {
-                Utility.log('fetching local data background')
-                const key = `data-background-local-${Constant.meta.version}`
-                data = await Utility.getData(key, async (resolve) => {
-                    const url = `data/data-background.json`
-                    const response = await Utility.fetch(url)
-                    const result = await response.json()
-                    resolve(result)
-                })
-            }
-
+            Utility.log('fetching local data background')
+            const url = `data/data-background.json`
+            const response = await Utility.fetch(url)
+            const data = await response.json()
             this.updateBackground.call(this, data)
         },
 
@@ -604,7 +589,7 @@
                     }, Constant.app.updateBackgroundDelayDuration)
                 }
                 preloader.onerror = (err) => {
-                    this.nextSelectedBackground = Utility.randomFromArray(data.content.content, this.selectedBackground)
+                        this.nextSelectedBackground = Utility.randomFromArray(data.content, this.selectedBackground)
                     preloader.src = this.nextSelectedBackground.url
                 }
             }
@@ -614,7 +599,7 @@
             // meanwhile at first load, local image will be used to make the image loading process faster
             if (this.selectedBackground) {
                 this.selectedBackground = this.nextSelectedBackground
-                this.nextSelectedBackground = Utility.randomFromArray(data.content.content, this.selectedBackground)
+                    this.nextSelectedBackground = Utility.randomFromArray(data.content, this.selectedBackground)
     
                 $('#transitioner .content')
                     .css('opacity', '0')
@@ -655,8 +640,8 @@
                     updateBackgroundAthorName(this.selectedBackground)
                 }
 
-                this.selectedBackground = Utility.randomFromArray(data.content.content)
-                this.nextSelectedBackground = Utility.randomFromArray(data.content.content, this.selectedBackground)
+                this.selectedBackground = Utility.randomFromArray(data.content)
+                this.nextSelectedBackground = Utility.randomFromArray(data.content, this.selectedBackground)
 
                 // right after certain image loaded, trigger preload for next image,
                 // this approach is to ensure when the next image transition is happening,
@@ -671,10 +656,10 @@
                 }
                 preloader.onerror = () => {
                     this.selectedBackground = Utility.randomFromArray(
-                        data.content.content.filter((d) => d.url.indexOf('http') == -1),
+                        data.content.filter((d) => d.url.indexOf('http') == -1),
                         this.selectedBackground
                     )
-                    this.nextSelectedBackground = Utility.randomFromArray(data.content.content, this.selectedBackground)
+                    this.nextSelectedBackground = Utility.randomFromArray(data.content, this.selectedBackground)
                     doUpdateBackgroundForTheFirstTime()
                 }
             }
@@ -688,43 +673,38 @@
         // get data content then render it on screen.
         // if background image data ever been loaded once, then the cache will be used on next call
         async getDataContentThenRender() {
-            let data = {}
 
             // load data from remote url
             try {
                 Utility.log('fetching remote data content')
-                const key = `data-content-remote-${Constant.meta.version}-${moment().format('YYYYMMDD')}`
-                data = await Utility.getData(key, async (resolve) => {
-                    Utility.removeLocalStorageData((d) => d.indexOf('data-content-remote') > -1)
-                    const url = `https://raw.githubusercontent.com/novalagung/muslimboard/master/extension/data/data-content.json?v=${Constant.meta.version}.${moment().format('YYYYMMDD')}`
+                const key = `data-content-remote-${Constant.meta.version}`
+                const data = await Utility.getLatestDataAndUseCacheAsFailover(key, async (resolve) => {
+                    const url = `${Constant.app.baseUrlGithub}/data-content.json?v=${Constant.meta.version}.${moment().format('YYYY-MM-DD')}`
                     const response = await Utility.fetch(url)
                     const result = await response.json()
                     resolve(result)
                 })
+                if (data?.content) {
+                    this.updateContent.call(this, data.content)
+                    return
+                } 
             } catch (err) {
-                Utility.log('error', err)
+                Utility.error(err)
             }
 
             // in case of failure, use local data
-            if (!data) {
-                Utility.log('fetching local data content')
-                const key = `data-content-local-${Constant.meta.version}`
-                data = await Utility.getData(key, async (resolve) => {
-                    const url = `data/data-content.json`
-                    const response = await Utility.fetch(url)
-                    const result = await response.json()
-                    resolve(result)
-                })
-            }
-            
+            Utility.log('fetching local data content')
+            const url = `data/data-content.json`
+            const response = await Utility.fetch(url)
+            const data = await response.json()
             this.updateContent.call(this, data)
         },
 
         // update content. it's the quote and other text related to it.
         updateContent(data) {
-            this.selectedContent = Utility.randomFromArray(data.content.content, this.selectedContent)
+            this.selectedContent = Utility.randomFromArray(data.content, this.selectedContent)
             const content = this.selectedContent
-            const author = data.content.author[content.author]
+            const author = data.author[content.author]
     
             $('#wise-word').attr('data-type', content.type)
             $('#wise-word').find('p.matan').html(`<div>${content.matan}</div>`)
@@ -795,7 +775,7 @@
                     }
 
                     // on automatic mode, first get the current coordinate
-                    const location = await Utility.getCurrentPosition()
+                    const location = await Utility.getCurrentLocationCoordinate()
                     const { latitude, longitude } = location.coords
 
                     // and then proceed with getting the prayer times
@@ -850,7 +830,7 @@
                     this.renderPrayerTime.call(this, schedule)
                 }
             } catch (err) {
-                Utility.log('error', err)
+                Utility.error(err)
                 Swal.fire({
                     type: 'error',
                     title: `Deteksi lokasi ${isDetectModeAutomatic ? 'otomatis' : 'manual'} gagal`,
@@ -867,8 +847,7 @@
         async registerEventForForceLoadLocationAndPrayerTimes() {
 
             // get master location data
-            const locationData = await this.getDataMasterLocation.call(this)
-            const locations = locationData.content
+            const locations = await this.getDataMasterLocation.call(this)
 
             // function to render dropdown options
             const renderDropdownOption = (collections, keyValue, keyText, placeholder) => {
@@ -908,8 +887,8 @@
                     type: 'info',
                     title: 'Auto deteksi jadwal',
                     html: text,
-					showConfirmButton: true,
-					showCancelButton: true,
+                    showConfirmButton: true,
+                    showCancelButton: true,
                     confirmButtonText: buttonText,
                     cancelButtonText: 'Batal'
                 }).then(async (e) => {
@@ -918,7 +897,7 @@
                     }
 
                     // remove automatic location cache
-                    const location = await Utility.getCurrentPosition()
+                    const location = await Utility.getCurrentLocationCoordinate()
                     const { latitude, longitude } = location.coords
                     localStorage.removeItem(`data-prayer-time-by-coordinate-${latitude}-${longitude}-${moment().format('YYYY-MM-DD')}`)
 
@@ -965,8 +944,8 @@
                     type: 'info',
                     title: `Atur pilihan lokasi (manual)`,
                     html: text,
-					showConfirmButton: true,
-					showCancelButton: true,
+                    showConfirmButton: true,
+                    showCancelButton: true,
                     confirmButtonText: "Simpan",
                     cancelButtonText: "Batal",
                     preConfirm: () => {
@@ -1001,11 +980,11 @@
 
                 // get manual location data then show it on modal
                 const savedLocation = this.getManualLocationData.call(this)
-				$('.dropdown-province').val(savedLocation.province);
-				$('.dropdown-province').trigger('change');
-				setTimeout(() => {
-					$('.dropdown-city').val(savedLocation.id)
-				}, 300);
+                $('.dropdown-province').val(savedLocation.province);
+                $('.dropdown-province').trigger('change');
+                setTimeout(() => {
+                    $('.dropdown-city').val(savedLocation.id)
+                }, 300);
             })
             
             // on manual popup/modal, when user select a province,
@@ -1047,7 +1026,7 @@
 
             $.ajax({
                 type: 'GET',
-                url: `${Constant.app.baseUrl}/muslimboard-api?v=${Constant.meta.version}&op=ping`,
+                url: `${Constant.app.baseUrlWebService}/muslimboard-api?v=${Constant.meta.version}&op=ping`,
                 success: () => {
                     internetStatus(navigator.onLine ? 'online' : 'offline')()
                     window.addEventListener('online', internetStatus('online'))
