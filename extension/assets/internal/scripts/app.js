@@ -996,21 +996,20 @@
                 // const rawItems = JSON.parse((await Utility.chromeStorage.get('todo-list-items')) || '[]')
 
                 const rawItems = JSON.parse(localStorage.getItem('todo-list-items') || '[]')
-                const items = rawItems.filter((d) => d.text)
+                let items = rawItems.filter((d) => d.text)
                 Utility.log('found cached sync storage todo list items', items)
 
-                if (items.length > 0) {
-                    localStorage.setItem('todo-list-items', JSON.stringify(items))
-                } else {
-                    localStorage.setItem('todo-list-items', JSON.stringify([{
-                        text: 'Senantiasa bersyukur dan berbuat baik',
+                if (items.length === 0) {
+                    items = [{
+                        text: I18n.mapping.todoListPlaceholder.id,
                         checked: true
                     }, {
                         text: '',
                         checked: false
-                    }]))
+                    }]
                 }
 
+                localStorage.setItem('todo-list-items', JSON.stringify(items))
                 localStorage.setItem('todo-list-status', 'true')
                 localStorage.setItem('todo-list-box-ever-loaded', 'true')
             }
@@ -1030,7 +1029,13 @@
         async ensureTodoListItemsAppear() {
             $('#todo-list .items .item').remove()
 
-            const items = JSON.parse(localStorage.getItem('todo-list-items') || '[]')
+            let items = JSON.parse(localStorage.getItem('todo-list-items') || '[]')
+            items.forEach((d) => {
+                if (d.text === I18n.mapping.todoListPlaceholder.id) {
+                    d.text = I18n.getText('todoListPlaceholder')
+                }
+            })
+
             if (items.length == 0) {
                 this.insertTodoListItem.call(this)
                 this.ensureTodoListItemsAppear.call(this)

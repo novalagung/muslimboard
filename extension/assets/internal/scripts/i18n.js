@@ -50,6 +50,10 @@ const I18n = {
             en: 'Write something',
             id: 'Tulis sesuatu'
         },
+        todoListPlaceholder: {
+            en: 'Always be grateful and spread kindness',
+            id: 'Senantiasa bersyukur dan berbuat baik'
+        },
 
         footerMenuAutomaticLocationDetection: {
             en: 'Auto detect location (Worldwide)',
@@ -230,9 +234,7 @@ const I18n = {
         $('[data-i18n]').each((i, e) => {
             const $e = $(e)
             const key = $e.attr('data-i18n')
-            console.log(key, e, I18n.getText(key), $e.text())
             $e.text(I18n.getText(key))
-            console.log(key, e, I18n.getText(key), $e.text())
         })
     }
 }
