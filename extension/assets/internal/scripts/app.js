@@ -604,9 +604,6 @@
                     const locationText = `${Utility.toTitleCase(kabko)}, ${Utility.toTitleCase(province)}`
                     this.renderLocationText.call(this, locationText)
 
-                    // add some delay
-                    await Utility.sleep(0.5)
-
                     // kemenag bimaislam website (proxied by our serverless backend) is used to get the prayer time on manual mode.
                     // if prayer time data ever been loaded once, then the cache will be used on next call
                     const data =  await this.getPrayerTimesByLocationID(province, kabko, id)
@@ -1199,7 +1196,6 @@
         init() {
             console.log(`${Constant.meta.appName} ${Constant.meta.version}`)
 
-            this.renderPrayerTimePlaceholder.call(this)
             this.renderDateTime.call(this)
             this.getDataBackgroundThenRender.call(this)
             this.getDataContentThenRender.call(this)
