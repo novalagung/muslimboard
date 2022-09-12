@@ -199,7 +199,7 @@
 
         // render prayer time to screen
         renderPrayerTime(schedule) {
-            const tzAbbr = Utility.getCurrentTimezoneAbbreviation(this.geoLocationCountryCode)
+            let tzAbbr = Utility.getCurrentTimezoneAbbreviation(this.geoLocationCountryCode)
             
             const times = [
                 { value: schedule.Fajr, label: I18n.getText('prayerTimeFajr') },
@@ -210,6 +210,16 @@
                 { value: schedule.Isha, label: I18n.getText('prayerTimeIsha') },
             ]
             times.forEach((each, i) => {
+
+                // use the returned tz from prayer times api
+                if (each.value.indexOf(' ') > -1) {
+                    tzAbbr = Utility.getFormattedTzAbbr(
+                        each.value.split(' ').slice(1).join(' ')
+                            .replace('(', '')
+                            .replace(')', '')
+                    )
+                }
+
                 $(`.prayer-time tbody tr:eq(${i})`).css('visibility', 'visible')
                 $(`.prayer-time tbody tr:eq(${i}) td:eq(0)`).html(each.label)
                 $(`.prayer-time tbody tr:eq(${i}) td:eq(1)`).html(each.value.slice(0, 5))
@@ -320,7 +330,7 @@
             try {
                 Utility.log('fetching remote data background')
                 const key = `data-background-remote-${Constant.meta.version}`
-                const data = await Utility.getLatestDataAndUseCacheAsFailover(key, async (resolve) => {
+                const data = await Utility.getLatestData(key, async (resolve) => {
                     const url = `${Constant.app.baseUrlGithub}/data-background.json?v=${Constant.meta.version}.${moment().format('YYYY-MM-DD')}`
                     const response = await Utility.fetch(url)
                     const result = await response.json()
@@ -458,7 +468,7 @@
             try {
                 Utility.log('fetching remote data content')
                 const key = `data-content-${I18n.getSelectedLocale()}-remote-${Constant.meta.version}`
-                const data = await Utility.getLatestDataAndUseCacheAsFailover(key, async (resolve) => {
+                const data = await Utility.getLatestData(key, async (resolve) => {
                     const url = `${Constant.app.baseUrlGithub}/data-content-${I18n.getSelectedLocale()}.json?v=${Constant.meta.version}.${moment().format('YYYY-MM-DD')}`
                     const response = await Utility.fetch(url)
                     const result = await response.json()
@@ -593,9 +603,6 @@
                     const { province, kabko, id } = this.getManualLocationData.call(this)
                     const locationText = `${Utility.toTitleCase(kabko)}, ${Utility.toTitleCase(province)}`
                     this.renderLocationText.call(this, locationText)
-
-                    // add some delay
-                    await Utility.sleep(0.5)
 
                     // kemenag bimaislam website (proxied by our serverless backend) is used to get the prayer time on manual mode.
                     // if prayer time data ever been loaded once, then the cache will be used on next call
@@ -824,49 +831,44 @@
         // apply event handler for change language
         registerEventForChangeLanguageButton() {
 
+            let swalChangeLanguage = null
+
             // on info button click, show the info modal
             $('.change-language').on('click', (e) => {
                 e.preventDefault();
 
                 const text = `
                     <div class='modal-change-language'>
-                        <p>
-                            ${I18n.getText('modalAboutUsText1').replace('$1', `
-                                <a href='${Constant.meta.homepageLink}' target='_blank'>
-                                    ${Constant.meta.appName}
-                                </a>
-                            `)}
-                        </p>
-                        <p>
-                            ${I18n.getText('modalAboutUsText2')}
-                        </p>
-                        <p>
-                            ${I18n.getText('modalAboutUsText3').replace('$1', `
-                                <a 
-                                    href='mailto:${Constant.maintainer.email}?subject=${Constant.meta.appName} ${Constant.meta.version} feedback'
-                                >${Constant.maintainer.email}</a>
-                            `).replace('$2', `
-                                <a href='https://github.com/novalagung/muslimboard' target='_blank'>GitHub</a>
-                            `)}
-                        </p>
-                        <hr class='separator'>
-                        <p class='copyright text-center'>
-                            Maintained by <a href='https://www.linkedin.com/in/novalagung' target='_blank'>${Constant.maintainer.name}</a>
-                            <br>
-                            ${moment().format("YYYY")} | <a href='${Constant.meta.homepageLink}' target='_blank'>${Constant.meta.homepageLink}</a>
-                            <br>
-                        </p>
+                        <a href='#' data-locale='en'>
+                            English Language
+                        </a>
+                        <a href='#' data-locale='id'>
+                            Bahasa Indonesia
+                        </a>
                     </div>
                 `
 
-                Swal.fire({
+                swalChangeLanguage = Swal.fire({
                     type: 'info',
                     title: I18n.getText('modalChangeLanguageHeader'),
                     html: text,
                     showConfirmButton: false,
-                    allowOutsideClick: true
+                    allowOutsideClick: false
                 });
             });
+            
+            // handle change language event
+            $('body').on('click', '.modal-change-language a', async (e) => {
+                const locale = $(e.currentTarget).attr('data-locale')
+                I18n.setSelectedLocale(locale)
+                await swalChangeLanguage.close()
+                location.reload()
+            })
+
+            if (I18n.getSelectedLocale(false)) {
+                const text = `${I18n.getText('footerMenuChangeLanguage')} (${I18n.getSelectedLocale().toUpperCase()})`
+                $('.change-language span').text(text)
+            }
         },
 
         // apply event handler for about us button
@@ -875,7 +877,7 @@
             // on info button click, show the info modal
             $('.info').on('click', (e) => {
                 e.preventDefault();
-
+                const shareText = `${Constant.meta.appName} ${I18n.getText('appDescription')}`;
                 const text = `
                     <div class='modal-info'>
                         <p>
@@ -889,14 +891,32 @@
                             ${I18n.getText('modalAboutUsText2')}
                         </p>
                         <p>
-                            ${I18n.getText('modalAboutUsText3').replace('$1', `
-                                <a 
-                                    href='mailto:${Constant.maintainer.email}?subject=${Constant.meta.appName} ${Constant.meta.version} feedback'
-                                >${Constant.maintainer.email}</a>
-                            `).replace('$2', `
-                                <a href='https://github.com/novalagung/muslimboard' target='_blank'>GitHub</a>
-                            `)}
+                            ${I18n.getText('modalAboutUsText3')
+                                .replace('$1', `<a href='mailto:${Constant.maintainer.email}?subject=${Constant.meta.appName} ${Constant.meta.version} feedback'>${Constant.maintainer.email}</a>`)
+                                .replace('$2', `<a href='https://github.com/novalagung/muslimboard' target='_blank'>GitHub</a>`)}
                         </p>
+                        <hr class='separator'>
+                        <p>${I18n.getText('modalShareText')}</p>
+                        <div class="share-container">
+                            <div>
+                                <a 
+                                    class="btn-share facebook" 
+                                    target="_blank" 
+                                    href="https://www.facebook.com/sharer/sharer.php?u=${encodeURI(Constant.meta.homepageLink)}&title=${encodeURI(shareText)}" 
+                                    title="Facebook share"
+                                >
+                                    <i class="fa fa-facebook-square"></i>
+                                </a>
+                                <a 
+                                    class="btn-share twitter" 
+                                    target="_blank" 
+                                    href="http://twitter.com/share?text=${shareText}&url=${encodeURI(Constant.meta.homepageLink)}" 
+                                    title="Twitter share"
+                                >
+                                    <i class="fa fa-twitter"></i>
+                                </a>
+                            </div>
+                        </div>
                         <hr class='separator'>
                         <p class='copyright text-center'>
                             Maintained by <a href='https://www.linkedin.com/in/novalagung' target='_blank'>${Constant.maintainer.name}</a>
@@ -910,44 +930,6 @@
                 Swal.fire({
                     type: 'info',
                     title: [Constant.meta.appName, Constant.meta.version].join(" "),
-                    html: text,
-                    showConfirmButton: false,
-                    allowOutsideClick: true
-                });
-            });
-        },
-
-        // apply event handler for share button
-        registerEventForShareButton() {
-
-            // on share button click, show the share modal
-            $('.share').on('click', () => {
-                const title = `${Constant.meta.appName} ${I18n.getText('appDescription')}`;
-                const text = `
-                    <p>${I18n.getText('modalShareText')}</p>
-                    <div class="space-top">
-                        <a 
-                            class="btn-share facebook" 
-                            target="_blank" 
-                            href="https://www.facebook.com/sharer/sharer.php?u=${encodeURI(Constant.meta.homepageLink)}&title=${encodeURI(title)}" 
-                            title="Facebook share"
-                        >
-                            <i class="fa fa-facebook-square"></i>
-                        </a>
-                        <a 
-                            class="btn-share twitter" 
-                            target="_blank" 
-                            href="http://twitter.com/share?text=${title}&url=${encodeURI(Constant.meta.homepageLink)}" 
-                            title="Twitter share"
-                        >
-                            <i class="fa fa-twitter"></i>
-                        </a>
-                    </div>
-                `
-
-                Swal.fire({
-                    type: 'info',
-                    title: I18n.getText('modalShareHeader'),
                     html: text,
                     showConfirmButton: false,
                     allowOutsideClick: true
@@ -993,7 +975,7 @@
         // =========== TODO LIST
 
         // toggle TODO list visibility based on previously cached state
-        async ensureTodoListBoxVisibility() {
+        ensureTodoListBoxVisibility() {
             const value = localStorage.getItem('todo-list-status') || 'false'
             if (value === 'true') {
                 $('body').addClass('show-todo-list')
@@ -1006,7 +988,7 @@
         // - setup default TODO items data.
         // - ensure TODO list visibility baseed on previously cached state.
         // - and render TODO items
-        async ensureTodoListBoxVisibilityOnPageActive() {
+        ensureTodoListBoxVisibilityOnPageActive() {
 
             // migrate chrome.storage.sync storage data to localStorage
             const localStorageUsed = localStorage.getItem('todo-list-box-ever-loaded') || 'false'
@@ -1016,22 +998,20 @@
                 // disabling chrome storage. refer to https://stackoverflow.com/questions/28465384/how-is-chrome-storage-affected-when-an-extension-is-updated
                 // const rawItems = JSON.parse((await Utility.chromeStorage.get('todo-list-items')) || '[]')
 
-                const rawItems = JSON.parse(localStorage.getItem('todo-list-items') || '[]')
-                const items = rawItems.filter((d) => d.text)
+                let items = JSON.parse(localStorage.getItem('todo-list-items') || '[]').filter((d) => d.text)
                 Utility.log('found cached sync storage todo list items', items)
 
-                if (items.length > 0) {
-                    localStorage.setItem('todo-list-items', JSON.stringify(items))
-                } else {
-                    localStorage.setItem('todo-list-items', JSON.stringify([{
-                        text: 'Senantiasa bersyukur dan berbuat baik',
+                if (items.length === 0) {
+                    items = [{
+                        text: I18n.mapping.todoListPlaceholder.id,
                         checked: true
                     }, {
                         text: '',
                         checked: false
-                    }]))
+                    }]
                 }
 
+                localStorage.setItem('todo-list-items', JSON.stringify(items))
                 localStorage.setItem('todo-list-status', 'true')
                 localStorage.setItem('todo-list-box-ever-loaded', 'true')
             }
@@ -1048,17 +1028,17 @@
         },
 
         // render TODO list items
-        async ensureTodoListItemsAppear() {
+        ensureTodoListItemsAppear() {
             $('#todo-list .items .item').remove()
 
-            const items = JSON.parse(localStorage.getItem('todo-list-items') || '[]')
-            if (items.length == 0) {
-                this.insertTodoListItem.call(this)
-                this.ensureTodoListItemsAppear.call(this)
-                return
-            }
+            this.insertTodoListItem.call(this)
 
+            let items = JSON.parse(localStorage.getItem('todo-list-items') || '[]')
             items.forEach((each) => {
+                if (each.text === I18n.mapping.todoListPlaceholder.id) {
+                    each.text = I18n.getText('todoListPlaceholder')
+                }
+
                 $('#todo-list .items').prepend($(`
                     <div class="item ${each.checked ? 'checked' : ''}">
                         <input type="checkbox" class="item-checkbox" ${each.checked ? 'checked' : ''}>
@@ -1070,7 +1050,7 @@
         },
 
         // ensure the TODO list items is always stored on cache
-        async ensureTodoListItemsStored() {
+        ensureTodoListItemsStored() {
             const items = $('#todo-list .items .item').toArray().reverse().map((each) => ({
                 text: $(each).find('span[contenteditable]')[0].innerText,
                 checked: $(each).find('input[type=checkbox]').prop('checked')
@@ -1082,7 +1062,7 @@
         },
 
         // insert new TODO item
-        async insertTodoListItem() {
+        insertTodoListItem() {
             let items = JSON.parse(localStorage.getItem('todo-list-items') || '[]')
 
             // ensure to have only one row of empty text on top
@@ -1097,15 +1077,13 @@
 
             // disabling chrome storage. refer to https://stackoverflow.com/questions/28465384/how-is-chrome-storage-affected-when-an-extension-is-updated
             // await Utility.chromeStorage.set('todo-list-items', JSON.stringify(items))
-
-            this.ensureTodoListItemsAppear.call(this)
         },
 
         // contains event declarations for many TODO list operation
-        async registerEventTodoList() {
+        registerEventTodoList() {
 
             // event for hiding or showing the TODO list pane
-            $('#todo-list .toggler').on('click', async () => {
+            $('#todo-list .toggler').on('click', () => {
                 const value = localStorage.getItem('todo-list-status') || 'false'
                 if (value === 'true') {
                     localStorage.setItem('todo-list-status', 'false')
@@ -1119,8 +1097,8 @@
             // event for clicking add button
             $('#todo-list .add').on('click', (event) => {
                 this.insertTodoListItem.call(this)
+                this.ensureTodoListItemsAppear.call(this)
                 $('#todo-list .items .item:eq(0) span[contenteditable]').focus()
-                console.log('event', event)
             })
 
             // calculate TODO list item based on screen size
@@ -1167,9 +1145,12 @@
         // =========== UPDATE MESSAGE
 
         // show update message on extension/plugin update
-        showExtensionUpdateAndChangelogsModal() {
+        showExtensionWelcomeModal() {
             const keyOfUpdateMessage = `changelogs-message-${Constant.meta.version}`
             if (localStorage.getItem(keyOfUpdateMessage)) {
+                if (!I18n.getSelectedLocale(false)) {
+                    $('.change-language').trigger('click')
+                }
                 return
             }
 
@@ -1196,8 +1177,12 @@
                 html: text,
                 showConfirmButton: false,
                 allowOutsideClick: true
-            });
-    
+            }).then(() => {
+                if (!I18n.getSelectedLocale(false)) {
+                    $('.change-language').trigger('click')
+                }
+            })
+
             localStorage.setItem(keyOfUpdateMessage, true)
         },
 
@@ -1207,7 +1192,6 @@
         init() {
             console.log(`${Constant.meta.appName} ${Constant.meta.version}`)
 
-            this.renderPrayerTimePlaceholder.call(this)
             this.renderDateTime.call(this)
             this.getDataBackgroundThenRender.call(this)
             this.getDataContentThenRender.call(this)
@@ -1216,12 +1200,11 @@
             this.registerEventForInternetAvailabilityStatus.call(this)
             this.registerEventForChangeLanguageButton.call(this)
             this.registerEventForAboutUsButton.call(this)
-            this.registerEventForShareButton.call(this)
             this.registerEventForAlarm.call(this)
             this.registerEventTodoList.call(this)
             this.ensureTodoListBoxVisibilityOnPageActive.call(this)
             this.ensureTodoListItemsAppear.call(this)
-            this.showExtensionUpdateAndChangelogsModal.call(this)
+            this.showExtensionWelcomeModal.call(this)
         }
     }
 

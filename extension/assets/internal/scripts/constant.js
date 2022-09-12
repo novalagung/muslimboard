@@ -1,7 +1,7 @@
 const Constant = {
     meta: {
         version: (() => `v${chrome.runtime.getManifest().version}`)(),
-        appName: 'Muslim Board',
+        appName: chrome.runtime.getManifest().name,
         homepageLink: 'https://muslimboard.novalagung.com',
     },
     maintainer: {
@@ -16,8 +16,9 @@ const Constant = {
         updateBackgroundDelayDuration: Utility.seconds(40),
         updateContentDelayDuration: Utility.seconds(60),
         changelogs: [
-            'Seamlessly load background and quote data from GitHub, and use local data as failover',
-            'Cosmetic updates'
+            'Localization updates. Now muslimboard officially supports english language and bahasa indonesia',
+            'Bunch of updates following the localization feature',
+            'Couple of several UI/UX updates'
         ]
     },
 }

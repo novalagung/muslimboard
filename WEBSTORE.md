@@ -18,6 +18,7 @@ Features:
 - Muslim Board contains the TODO list feature in the right section. Users can write any notes and set the completion there.
 - Internet availability info is displayed in the bottom section. You will be notified when the internet is offline.
 - Popup notification will appear whenever prayer time is near.
+- Multi language support (english and bahasa indonesia).
 
 ---
 
@@ -35,6 +36,7 @@ Fitur:
 - Ada fasilitas TODO list untuk catatan.
 - Indikator penanda internet offline/online.
 - Popup notifikasi ketika mendekati waktu sholat.
+- Mendukung multi bahasa (bahasa inggris dan indonesia).
 
 ## Extension Permissions
 
@@ -64,9 +66,7 @@ Fitur:
 
 7. Remote Codes
 
-    Muslim Board is using a 3rd party called OpenLayers.js. Inside the lib, there is an eval statement. We can't be sure whether it's actually executed or not, because on Muslim Board we only use its geolocation detection feature.
-
-    Other than that, there are several JSON files that are loaded through AJAX.
+    Muslim board do not use any remote codes. Aside of that, there are three JSON files that are loaded through AJAX.
 
 ## Links
 

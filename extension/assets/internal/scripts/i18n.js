@@ -50,6 +50,10 @@ const I18n = {
             en: 'Write something',
             id: 'Tulis sesuatu'
         },
+        todoListPlaceholder: {
+            en: 'Always be grateful and spread kindness',
+            id: 'Senantiasa bersyukur dan berbuat baik'
+        },
 
         footerMenuAutomaticLocationDetection: {
             en: 'Auto detect location (Worldwide)',
@@ -67,13 +71,17 @@ const I18n = {
             en: 'Image from',
             id: 'Foto dari'
         },
-        footerMenuShare: {
-            en: 'Share',
-            id: 'Share'
+        footerMenuChangeLanguage: {
+            en: 'Change language',
+            id: 'Change language'
         },
         footerMenuSourceCode: {
             en: 'Source code',
             id: 'Source code'
+        },
+        footerMenuShare: {
+            en: 'Share',
+            id: 'Share'
         },
         footerMenuAboutUs: {
             en: 'About us',
@@ -81,7 +89,7 @@ const I18n = {
         },
 
         alarmExactPrayerTimeMessageTemplate: {
-            en: `exact|It is time $1 pray|In $2`,
+            en: `exact|It is time for $1 pray|In $2`,
             id: 'exact|Waktunya sholat $1|Untuk daerah $2'
         },
         alarmAlmostPrayerTimeMessageTemplate: {
@@ -162,7 +170,7 @@ const I18n = {
             id: '$1 adalah laman personal dashboard khusus untuk muslim, tersedia untuk semua browser modern. Plugin ini terinspirasi dari Momentum.'
         },
         modalAboutUsText2: {
-            en: `Prayer times schedule is fetched as per user's location.`,
+            en: `Prayer times is fetched as per user's location.`,
             id: 'Informasi jadwal sholat dimunculkan sesuai lokasi pengguna.'
         },
         modalAboutUsText3: {
@@ -175,13 +183,13 @@ const I18n = {
             id: 'Share ke sosial media'
         },
         modalShareText: {
-            en: 'Share the muslimboard browser extension to socials.',
-            id: 'Bagikan ekstensi browser muslimboard ke sosial media,<br />agar yang lain juga bisa mendapat manfaat.'
+            en: 'Share the muslimboard browser extension to socials:',
+            id: 'Bagikan ekstensi browser muslimboard ke sosial media:'
         },
 
         modalChangeLanguageHeader: {
-            en: 'Change language?',
-            id: 'Ubah bahasa?'
+            en: 'Select language',
+            id: 'Select language / Pilih bahasa'
         },
 
         modalInstallMuslimboardNotification: {
@@ -194,15 +202,12 @@ const I18n = {
         }
     },
 
-    getSelectedLocale: (failIfUnset = false) => {
+    getSelectedLocale: (defaultLocale = 'en') => {
         const locale = localStorage.getItem(`selected-locale`)
         if (locale) {
             return locale
         }
-        if (failIfUnset) {
-            return false
-        }
-        return 'en'
+        return defaultLocale
     },
     setSelectedLocale: (selectedLocale) => {
         localStorage.setItem(`selected-locale`, selectedLocale)
@@ -221,17 +226,10 @@ const I18n = {
         }
     },
     init: () => {
-        const locale = I18n.getSelectedLocale(true)
-        if (!locale) {
-            I18n.setSelectedLocale('en')
-        }
-
         $('[data-i18n]').each((i, e) => {
             const $e = $(e)
             const key = $e.attr('data-i18n')
-            console.log(key, e, I18n.getText(key), $e.text())
             $e.text(I18n.getText(key))
-            console.log(key, e, I18n.getText(key), $e.text())
         })
     }
 }

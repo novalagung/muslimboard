@@ -82,7 +82,7 @@ const Utility = {
             }
         )
     }),
-    getLatestData: (key, callback, useCacheAsFailover = false) => new Promise(async (resolve) => {
+    getLatestData: (key, callback) => new Promise(async (resolve) => {
         const nowYYYYMMDD = moment().format('YYYY-MM-DD')
         let data = {
             lastUpdated: nowYYYYMMDD,
@@ -96,6 +96,7 @@ const Utility = {
         
         const isFirstTime = Object.keys(data.content).length == 0
         const isNotToday = data.lastUpdated != nowYYYYMMDD
+        Utility.log('isFirstTime:', isFirstTime, 'isNotToday:', isNotToday)
         if (isFirstTime || isNotToday) {
             try {
                 await callback((result) => {
@@ -106,20 +107,13 @@ const Utility = {
                 })
             } catch (err) {
                 Utility.error(err)
-                if (useCacheAsFailover) {
-                    Utility.log('use cached data instead')
-                    resolve(data)
-                } else {
-                    resolve(false)
-                }
+                Utility.log('use cached data instead')
+                resolve(data)
             }
         }
 
         resolve(data)
     }),
-    getLatestDataAndUseCacheAsFailover: async (key, callback) => {
-        return await Utility.getLatestData(key, callback, true)
-    },
     removeLocalStorageItemsByPrefix: (cond) => {
         Utility.log('remove local storage', cond)
         Object.keys(localStorage).filter(cond).forEach((d) => { localStorage.removeItem(d) })
@@ -134,15 +128,17 @@ const Utility = {
     error: (...args) => (Constant.app.debug) ? console.error(...args) : $.noop(),
     toTitleCase: (str) => str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()),
     getCurrentTimezoneAbbreviation: (countryCode) => {
-        if (countryCode === 'id') {
-            switch (new Date().toString().match(/([-\+][0-9]+)\s/)[1]) {
-                case '+0700': return 'WIB'
-                case '+0800': return 'WITA'
-                case '+0900': return 'WIT'
-            }
+        const tzAbbr = moment.tz(moment.tz.guess()).zoneAbbr()
+        return Utility.getFormattedTzAbbr(tzAbbr)
+    },
+    getFormattedTzAbbr: (tzAbbr) => {
+        if (tzAbbr.indexOf('-') === 0) {
+            return `GMT${tzAbbr}`
+        } else if (String(parseInt(tzAbbr)) === tzAbbr) {
+            return `GMT+${tzAbbr}`
+        } else {
+            return tzAbbr
         }
-
-        return moment.tz(moment.tz.guess()).zoneAbbr()
     },
     distanceBetween(lat1, lon1, lat2, lon2) {
         const R = 6371 // km
