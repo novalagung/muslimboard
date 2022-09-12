@@ -96,6 +96,7 @@ const Utility = {
         
         const isFirstTime = Object.keys(data.content).length == 0
         const isNotToday = data.lastUpdated != nowYYYYMMDD
+        Utility.log('isFirstTime:', isFirstTime, 'isNotToday:', isNotToday)
         if (isFirstTime || isNotToday) {
             try {
                 await callback((result) => {

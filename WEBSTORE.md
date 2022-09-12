@@ -64,9 +64,7 @@ Fitur:
 
 7. Remote Codes
 
-    Muslim Board is using a 3rd party called OpenLayers.js. Inside the lib, there is an eval statement. We can't be sure whether it's actually executed or not, because on Muslim Board we only use its geolocation detection feature.
-
-    Other than that, there are several JSON files that are loaded through AJAX.
+    Muslim board do not use any remote codes. Aside of that, there are three JSON files that are loaded through AJAX.
 
 ## Links
 
