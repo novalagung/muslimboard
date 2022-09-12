@@ -89,7 +89,7 @@ const I18n = {
         },
 
         alarmExactPrayerTimeMessageTemplate: {
-            en: `exact|It is time $1 pray|In $2`,
+            en: `exact|It is time for $1 pray|In $2`,
             id: 'exact|Waktunya sholat $1|Untuk daerah $2'
         },
         alarmAlmostPrayerTimeMessageTemplate: {
