@@ -159,7 +159,6 @@ func HandleShalatScheduleByLocation(w http.ResponseWriter, r *http.Request) {
 	// parse result
 	latitude, _ := strconv.ParseFloat(coordinate["lat"].(string), 64)
 	longitude, _ := strconv.ParseFloat(coordinate["lon"].(string), 64)
-	// for now hardcode the contry to Indonesia
 
 	schedules, err := getShalatScheduleByCoordinate(method, latitude, longitude, month, year)
 	if err != nil {
@@ -377,6 +376,14 @@ func getShalatScheduleByCoordinate(method string, latitude, longitude float64, m
 }
 
 // =========================================================== UTILITY ===========================================================
+
+// todo
+func validateOriginRequest(r *http.Request) error {
+	// firefox: moz-extension://b7d90294-f8dc-492e-8564-e3e7e4490aac
+	// chrome: chrome-extension://ckeifgmkgeihgmbgcbcngkacnbeplgmj
+	// edge: chrome-extension://dfmgmbngjpmbbpgibmdfegilbfckkgli
+	return nil
+}
 
 // writeResponse definition
 func writeRespose(w http.ResponseWriter, r *http.Request, statusCode int, resp interface{}, err error) {

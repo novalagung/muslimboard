@@ -1,0 +1,97 @@
+{
+	"version": "2016.11.19",
+	"content": [{
+		"id": "1",
+		"matan": "فَاذْكُرُونِي أَذْكُرْكُمْ",
+		"translation": "Then do ye remember Me; I will remember you",
+		"reference": "QS. Al Baqarah: 152",
+		"type": "verse"
+	}, {
+		"id": "2",
+		"matan": "لَا تَحْزَنْ إِنَّ اللَّهَ مَعَنَا",
+		"translation": "Do not grieve; indeed Allah is with us",
+		"reference": "QS. At Taubah: 40",
+		"type": "verse"
+	}, {
+		"id": "3",
+		"matan": "وَاصْبِرُوا ۚ إِنَّ اللَّهَ مَعَ الصَّابِرِينَ",
+		"translation": "Be steadfast, surely Allah is with those who remain steadfast",
+		"reference": "QS. Al-Anfal: 46",
+		"type": "verse"
+	}, {
+		"id": "4",
+		"matan": "وَلْيَتَلَطَّفْ",
+		"translation": "Be gentle",
+		"reference": "QS. Al-Kahfi: 19",
+		"type": "verse"
+	}, {
+		"id": "5",
+		"matan": "وَاذْكُر رَّبَّكَ إِذَا نَسِيتَ",
+		"translation": "And remember your Lord when you forget",
+		"reference": "QS. Al-Kahfi: 24",
+		"type": "verse"
+	}, {
+		"id": "6",
+		"matan": "اللَّـهُ نُورُ السَّمَاوَاتِ وَالْأَرْضِ",
+		"translation": "Allah is the Light of the heavens and the earth",
+		"reference": "QS. An Nur: 35",
+		"type": "verse"
+	}, {
+		"id": "7",
+		"matan": "إِنَّ اللَّهَ يُحِبُّ الْعَبْدَ التَّقِىَّ الْغَنِىَّ الْخَفِىَّ",
+		"translation": "Allah loves the servant who is God-conscious and is free from want and is hidden (from the view of people) - Sa’ad bin Abi Waqqash",
+		"reference": "HR. Muslim no. 2965",
+		"type": "verse"
+	}, {
+		"id": "8",
+		"matan": "مَا نَقَصَتْ صَدَقَةٌ مِنْ مَالٍ وَمَا زَادَ اللَّهُ عَبْدًا بِعَفْوٍ إِلاَّ عِزًّا وَمَا تَوَاضَعَ أَحَدٌ لِلَّهِ إِلاَّ رَفَعَهُ اللَّ",
+		"translation": "Charity does not decrease wealth, no one forgives another except that Allah increases his honor, and no one humbles himself for the sake of Allah except that Allah raises his status",
+		"reference": "HR Muslim no 2588",
+		"type": "verse"
+	}, {
+		"id": "9",
+		"matan": "يُغْفَرُ لِلشَّهِيدِ كُلُّ ذَنْبٍ إِلاَّ الدَّيْنَ",
+		"translation": "All the sins of a Shahid (martyr) are forgiven except debt",
+		"reference": "HR. Muslim no. 1886",
+		"type": "verse"
+	}, {
+		"id": "10",
+		"matan": "مَا يُصِيبُ الْمُسْلِمَ مِنْ نَصَبٍ وَلَا وَصَبٍ وَلَا هَمٍّ وَلَا حُزْنٍ وَلَا أَذًى وَلَا غَمٍّ حَتَّى الشَّوْكَةِ يُشَاكُهَا إِلَّا كَفَّرَ اللَّهُ بِهَا مِنْ خَطَايَاهُ",
+		"translation": "Never a believer is stricken with discomfort, hardship or illness, grief or even with mental worry that his sins are not expiated for him",
+		"reference": "HR. Al-Bukhari no. 5642 and Muslim no. 2573",
+		"type": "verse"
+	}, {
+		"id": "11",
+		"matan": "وَمَن يَتَّقِ اللَّهَ يَجْعَل لَّهُ مَخْرَجًا﴿٢﴾ وَيَرْزُقْهُ مِنْ حَيْثُ لَا يَحْتَسِبُ",
+		"translation": "And whoever is mindful of Allah, He will make a way out for them, and provide for them from sources they could never imagine",
+		"reference": "Ath Thalaq: 2-3",
+		"type": "verse"
+	}, {
+		"id": "12",
+		"matan": "وَرَحْمَتِي وَسِعَتْ كُلَّ شَيْءٍ ۚفَسَأَكْتُبُهَا لِلَّذِينَ يَتَّقُونَ",
+		"translation": "... My mercy encompasses everything. I will ordain mercy for those who shun evil, pay alms-tax, and believe in Our revelations",
+		"reference": "Al A’raf: 156",
+		"type": "verse"
+	}, {
+		"id": "13",
+		"matan": "كُلُّ نَفْسٍ ذَآئِقَةُ ٱلْمَوْتِ",
+		"translation": "Everyone shall taste death",
+		"reference": "Ali Imran: 185",
+		"type": "verse"
+	}, {
+		"id": "14",
+		"matan": "إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ",
+		"translation": "You ˹alone˺ we worship and You ˹alone˺ we ask for help",
+		"reference": "Al fatihah: 5",
+		"type": "verse"
+	}, {
+		"id": "15",
+		"matan": "فَٱذْكُرُونِىٓ أَذْكُرْكُمْ",
+		"translation": "remember Me; I will remember you",
+		"reference": "QS. al Baqarah: 152",
+		"type": "verse"
+	}],
+	"author": {
+		
+	}
+}

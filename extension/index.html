@@ -46,7 +46,7 @@
         <section class="prayer-time">
             <div class="content">
                 <p class="title">
-                    <span>Jadwal sholat untuk hari ini:</span>
+                    <span data-i18n="prayerTimeTodaySchedule">Jadwal sholat untuk hari ini:</span>
                     <span class="date-time"></span>
                 </p>
                 <table>
@@ -57,32 +57,38 @@
                     </colgroup>
                     <tbody>
                         <tr>
-                            <td>Subuh</td>
+                            <!-- Subuh -->
+                            <td></td>
                             <td data-when='subuh'>04:18</td>
                             <td>WIB</td>
                         </tr>
                         <tr>
-                            <td>Dhuha</td>
+                            <!-- Dhuha -->
+                            <td></td>
                             <td data-when='dhuha'>05:58</td>
                             <td>WIB</td>
                         </tr>
                         <tr>
-                            <td>Dzuhur</td>
+                            <!-- Dzuhur -->
+                            <td></td>
                             <td data-when='dzuhur'>11:43</td>
                             <td>WIB</td>
                         </tr>
                         <tr>
-                            <td>Ashar</td>
+                            <!-- Ashar -->
+                            <td></td>
                             <td data-when='ashar'>14:47</td>
                             <td>WIB</td>
                         </tr>
                         <tr>
-                            <td>Maghrib</td>
+                            <!-- Maghrib -->
+                            <td></td>
                             <td data-when='maghrib'>17:49</td>
                             <td>WIB</td>
                         </tr>
                         <tr>
-                            <td>Isya'</td>
+                            <!-- Isya -->
+                            <td>'</td>
                             <td data-when='isya'>18:58</td>
                             <td>WIB</td>
                         </tr>
@@ -105,7 +111,9 @@
     <div id="todo-list">
         <div class="wrapper">
             <div class="toggler">
-                <i class="fa fa-eye"></i> Klik untuk <span class="true">menampilkan</span><span class="false">menyembunyikan</span> TODO list
+                <i class="fa fa-eye"></i>
+                <span class="true" data-i18n="todoListHeaderShow">Klik untuk menampilkan TODO list</span>
+                <span class="false" data-i18n="todoListHeaderHide">Klik untuk menyembunyikan TODO list</span>
             </div>
             <div class="items">
                 <button class="add">
@@ -119,34 +127,38 @@
         <div class="wrapper">
             <div class="menu left">
                 <div>
-                    <a class="detect-data-automatically" title="Klik untuk menerapkan deteksi lokasi otomatis">
+                    <a class="detect-data-automatically">
                         <i class="fa fa-location-arrow"></i>
-                        Deteksi lokasi otomatis
+                        <span data-i18n="footerMenuAutomaticLocationDetection">Deteksi lokasi otomatis</span>
                     </a>
-                    <a class="set-data-manually" title="Klik untuk mengatur pilihan lokasi">
+                    <a class="set-data-manually">
                         <i class="fa fa-location-arrow"></i>
-                        Atur manual pilihan lokasi
+                        <span data-i18n="footerMenuManualLocationSelection">Atur manual pilihan lokasi</span>
                     </a>
                     <a class="just-text">
                         <i class="fa fa-wifi"></i>
-                        Status internet: <span class="connection-status sad">offline</span>
+                        <span data-i18n="footerMenuInternetAvailability">Status internet:</span> <span class="connection-status sad">offline</span>
                     </a>
                     <a class="photo-ownership" target="_blank">
                         <i class="fa fa-camera"></i>
-                        <span class="label">Foto dari</span>
+                        <span class="label" data-i18n="footerMenuImageAuthor">Foto dari</span>
                         <span class="photographer"></span>
                     </a>
-                    <a class="share">
-                        <i class="fa fa-share-square"></i>
-                        Share
+                    <a class="change-language">
+                        <i class="fa fa-toggle-on"></i>
+                        <span>Change language</span>
                     </a>
                     <a class="source-code" href="https://github.com/novalagung/muslimboard" target="_blank">
                         <i class="fa fa-github"></i>
-                        Source Code
+                        <span data-i18n="footerMenuSourceCode">Source code</span>
+                    </a>
+                    <a class="share">
+                        <i class="fa fa-share-square"></i>
+                        <span data-i18n="footerMenuShare">Share</span>
                     </a>
                     <a class="info">
                         <i class="fa fa-info-circle"></i>
-                        Info
+                        <span data-i18n="footerMenuAboutUs">Informasi</span>
                     </a>
                 </div>
             </div>
@@ -158,6 +170,9 @@
     <script src="assets/3rd-parties/moment/moment-timezone-with-data-1970-2030.min.js"></script>
     <script src="assets/3rd-parties/sweetalert2/sweetalert2.all.min.js"></script>
     <script src="assets/3rd-parties/tooltipster/tooltipster.bundle.min.js"></script>
-    <script src="assets/internal/scripts/script.js"></script>
+    <script src="assets/internal/scripts/utility.js"></script>
+    <script src="assets/internal/scripts/constant.js"></script>
+    <script src="assets/internal/scripts/i18n.js"></script>
+    <script src="assets/internal/scripts/app.js"></script>
 </body>
 </html>
