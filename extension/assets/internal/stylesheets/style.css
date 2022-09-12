@@ -116,6 +116,7 @@ html {
     left: 19px;
     right: 0px;
     margin-top: 3px;
+    width: 270px;
 }
 #sidebar .date-time .location .not-found {
     cursor: pointer;
