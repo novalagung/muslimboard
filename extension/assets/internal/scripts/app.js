@@ -891,13 +891,9 @@
                             ${I18n.getText('modalAboutUsText2')}
                         </p>
                         <p>
-                            ${I18n.getText('modalAboutUsText3').replace('$1', `
-                                <a 
-                                    href='mailto:${Constant.maintainer.email}?subject=${Constant.meta.appName} ${Constant.meta.version} feedback'
-                                >${Constant.maintainer.email}</a>
-                            `).replace('$2', `
-                                <a href='https://github.com/novalagung/muslimboard' target='_blank'>GitHub</a>
-                            `)}
+                            ${I18n.getText('modalAboutUsText3')
+                                .replace('$1', `<a href='mailto:${Constant.maintainer.email}?subject=${Constant.meta.appName} ${Constant.meta.version} feedback'>${Constant.maintainer.email}</a>`)
+                                .replace('$2', `<a href='https://github.com/novalagung/muslimboard' target='_blank'>GitHub</a>`)}
                         </p>
                         <hr class='separator'>
                         <p>${I18n.getText('modalShareText')}</p>
