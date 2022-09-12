@@ -199,7 +199,7 @@
 
         // render prayer time to screen
         renderPrayerTime(schedule) {
-            const tzAbbr = Utility.getCurrentTimezoneAbbreviation(this.geoLocationCountryCode)
+            let tzAbbr = Utility.getCurrentTimezoneAbbreviation(this.geoLocationCountryCode)
             
             const times = [
                 { value: schedule.Fajr, label: I18n.getText('prayerTimeFajr') },
@@ -210,6 +210,16 @@
                 { value: schedule.Isha, label: I18n.getText('prayerTimeIsha') },
             ]
             times.forEach((each, i) => {
+
+                // use the returned tz from prayer times api
+                if (each.value.indexOf(' ') > -1) {
+                    tzAbbr = Utility.getFormattedTzAbbr(
+                        each.value.split(' ').slice(1).join(' ')
+                            .replace('(', '')
+                            .replace(')', '')
+                    )
+                }
+
                 $(`.prayer-time tbody tr:eq(${i})`).css('visibility', 'visible')
                 $(`.prayer-time tbody tr:eq(${i}) td:eq(0)`).html(each.label)
                 $(`.prayer-time tbody tr:eq(${i}) td:eq(1)`).html(each.value.slice(0, 5))

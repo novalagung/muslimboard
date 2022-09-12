@@ -128,15 +128,17 @@ const Utility = {
     error: (...args) => (Constant.app.debug) ? console.error(...args) : $.noop(),
     toTitleCase: (str) => str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()),
     getCurrentTimezoneAbbreviation: (countryCode) => {
-        if (countryCode === 'id') {
-            switch (new Date().toString().match(/([-\+][0-9]+)\s/)[1]) {
-                case '+0700': return 'WIB (GMT+7)'
-                case '+0800': return 'WITA (GMT+8)'
-                case '+0900': return 'WIT (GMT+9)'
-            }
+        const tzAbbr = moment.tz(moment.tz.guess()).zoneAbbr()
+        return Utility.getFormattedTzAbbr(tzAbbr)
+    },
+    getFormattedTzAbbr: (tzAbbr) => {
+        if (tzAbbr.indexOf('-') === 0) {
+            return `GMT${tzAbbr}`
+        } else if (String(parseInt(tzAbbr)) === tzAbbr) {
+            return `GMT+${tzAbbr}`
+        } else {
+            return tzAbbr
         }
-
-        return moment.tz(moment.tz.guess()).zoneAbbr()
     },
     distanceBetween(lat1, lon1, lat2, lon2) {
         const R = 6371 // km
