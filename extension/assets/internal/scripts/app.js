@@ -8,36 +8,9 @@
             const doRenderDateTime = () => {
                 const hour = moment().format('HH')
                 const minute = moment().format('mm')
-
-                let dayName = ''
-                switch (moment().format('dddd')) {
-                    case 'Sunday': dayName = 'Ahad'; break;
-                    case 'Monday': dayName = 'Senin'; break;
-                    case 'Tuesday': dayName = 'Selasa'; break;
-                    case 'Wednesday': dayName = 'Rabu'; break;
-                    case 'Thursday': dayName = 'Kamis'; break;
-                    case 'Friday': dayName = 'Jumat'; break;
-                    case 'Saturday': dayName = 'Sabtu'; break;
-                }
-
-                let monthName = ''
-                switch (moment().format('MM')) {
-                    case '01': monthName = 'Januari'; break;
-                    case '02': monthName = 'Februari'; break;
-                    case '03': monthName = 'Maret'; break;
-                    case '04': monthName = 'April'; break;
-                    case '05': monthName = 'Mei'; break;
-                    case '06': monthName = 'Juni'; break;
-                    case '07': monthName = 'Juli'; break;
-                    case '08': monthName = 'Agustus'; break;
-                    case '09': monthName = 'September'; break;
-                    case '10': monthName = 'Oktober'; break;
-                    case '11': monthName = 'November'; break;
-                    case '12': monthName = 'Desember'; break;
-                }
-
+                const dayName = I18n.getText(`day${moment().format('dddd')}`)
+                const monthName = I18n.getText(`month${moment().format('MMMM')}`)
                 const tzAbbr = Utility.getCurrentTimezoneAbbreviation(this.geoLocationCountryCode)
-
                 const dateFull = moment().format('$1, DD $2 YYYY HH:mm:ss $3')
                     .replace('$1', dayName)
                     .replace('$2', monthName)
@@ -120,7 +93,7 @@
 
         // get automatic prayer time
         async getPrayerTimesByCoordinate(latitude, longitude) {
-            const key = `data-prayer-time-by-coordinate-${latitude}-${longitude}-${moment().format('YYYY-MM-DD')}`
+            const key = `data-prayer-time-by-coordinate-${latitude}-${longitude}`
             if (latitude == 0 && longitude == 0) {
                 localStorage.removeItem(key)
             }
@@ -168,7 +141,7 @@
 
         // get prayer time by location id
         async getPrayerTimesByLocationID(province, kabko, locationID) {
-            const key = `data-prayer-time-by-location-${locationID}-${moment().format('YYYY-MM-DD')}`
+            const key = `data-prayer-time-by-location-${locationID}`
             if (!province && !kabko) {
                 localStorage.removeItem(key)
             }
@@ -277,13 +250,17 @@
     
                         const exactTime = time
                         if (exactTime >= nowYYYYMMDD) {
-                            const exactMessage = `exact|Waktunya sholat ${text}|Untuk daerah ${$('.location .text').text()}`
+                            const exactMessage = I18n.getText('alarmExactPrayerTimeMessageTemplate')
+                                .replace('$1', text)
+                                .replace('$2', $('.location .text').text())
                             chrome.alarms.create(exactMessage, { when: exactTime })
                         }
     
                         const almostTime = moment(time).add(-10, 'minutes').toDate().getTime()
                         if (almostTime >= nowYYYYMMDD) {
-                            const almostMessage = `almost|10 menit lagi adalah waktu sholat ${text}|Untuk daerah ${$('.location .text').text()}`
+                            const almostMessage = I18n.getText('alarmAlmostPrayerTimeMessageTemplate')
+                                .replace('$1', text)
+                                .replace('$2', $('.location .text').text())
                             chrome.alarms.create(almostMessage, { when: almostTime })
                         }
     
@@ -564,7 +541,7 @@
                                 return
                             } else {
                                 this.clearPrayerTimesCache.call(this)
-                                throw new Error('Gagal mengambil jadwal sholat. Pastikan terhubung dengan internet lalu refresh halaman')
+                                throw new Error(I18n.getText('promptErrorFailToGetPrayerTimesMessage'))
                             }
                         }
 
@@ -625,7 +602,7 @@
                     const data =  await this.getPrayerTimesByLocationID(province, kabko, id)
                     if (!data) {
                         this.clearPrayerTimesCache.call(this)
-                        throw new Error('Gagal mengambil jadwal sholat. Pastikan terhubung dengan internet lalu refresh halaman')
+                        throw new Error(I18n.getText('promptErrorFailToGetPrayerTimesMessage'))
                     }
 
                     this.geoLocationCountryCode = (data.content.data.countryCode || 'id')
@@ -636,7 +613,7 @@
                 Utility.error(err)
                 Swal.fire({
                     type: 'error',
-                    title: `Deteksi lokasi ${isDetectModeAutomatic ? 'otomatis' : 'manual'} gagal`,
+                    title: I18n.getText('promptErrorFailToGetDataTitle'),
                     html: err.message,
                     confirmButtonText: 'OK',
                     showConfirmButton: true,
@@ -677,23 +654,23 @@
             $('.detect-data-automatically').on('click', async () => {
                 Utility.log('force load location & prayer times')
 
-                let text = 'Anda yakin ingin mengaktifkan?'
-                let buttonText = 'Ya, aktifkan'
+                let text = I18n.getText('promptConfirmationMessageToActivateAutoDetectLocation')
+                let buttonText = I18n.getText('promptConfirmationYesToActivateAutoDetectLocation')
 
                 const isCachedCoordinateExists = localStorage.getItem('data-coordinate-cache') ? true : false
                 if (this.isUsingAutomaticLocation.call(this) && isCachedCoordinateExists) {
-                    text = 'Deteksi lokasi otomatis sudah aktif. Apakah anda ingin me-refresh lokasi?'
-                    buttonText = 'Ya, refresh lokasi'
+                    text = I18n.getText('promptConfirmationMessageToRefreshAutoDetectLocation')
+                    buttonText = I18n.getText('promptConfirmationYesToRefreshAutoDetectLocation')
                 }
 
                 Swal.fire({
                     type: 'info',
-                    title: 'Auto deteksi jadwal',
+                    title: I18n.getText('footerMenuAutomaticLocationDetection'),
                     html: text,
                     showConfirmButton: true,
                     showCancelButton: true,
                     confirmButtonText: buttonText,
-                    cancelButtonText: 'Batal'
+                    cancelButtonText: I18n.getText('promptConfirmationCancel')
                 }).then(async (e) => {
                     if (!e.value) {
                         return
@@ -702,7 +679,7 @@
                     // remove automatic location cache
                     const location = await Utility.getCurrentLocationCoordinate()
                     const { latitude, longitude } = location.coords
-                    localStorage.removeItem(`data-prayer-time-by-coordinate-${latitude}-${longitude}-${moment().format('YYYY-MM-DD')}`)
+                    localStorage.removeItem(`data-prayer-time-by-coordinate-${latitude}-${longitude}`)
 
                     // force to not use cached coordinate when refreshing finding coordinate.
                     // not really sure whether this one is good approach
@@ -721,18 +698,18 @@
                 Utility.log('set location of prayer times manually')
 
                 const text = `
-                    <p>Silakan pilih nama provinsi dan kabupaten/kota tempat anda sekarang berada</p>
+                    <p>${I18n.getText('promptManualLocationSelectionTitle')}</p>
                     <form class='manual-geolocation'>
                         <div class="row">
-                            <label>Provinsi</label>
+                            <label>${I18n.getText('promptManualLocationProvinceTitle')}</label>
                             <select required class="dropdown-province">
-                                ${renderDropdownOption(locations, 'provinsi', 'provinsi', 'Pilih provinsi')}
+                                ${renderDropdownOption(locations, 'provinsi', 'provinsi', I18n.getText('promptManualLocationProvinceSelectionLabel'))}
                             </select>
                         </div>
                         <div class="row">
-                            <label>Kota</label>
+                            <label>${I18n.getText('promptManualLocationCityTitle')}</label>
                             <select required class="dropdown-city">
-                                <option value="">---- PILIH PROVINSI TERLEBIH DAHULU ----</option>
+                                <option value="">---- ${I18n.getText('promptManualLocationProvinceOptionPlaceholderLabel')} ----</option>
                             </select>
                         </div>
                     </form>
@@ -745,12 +722,12 @@
                 // show the manual location picker
                 Swal.fire({
                     type: 'info',
-                    title: `Atur pilihan lokasi (manual)`,
+                    title: I18n.getText('footerMenuManualLocationSelection'),
                     html: text,
                     showConfirmButton: true,
                     showCancelButton: true,
-                    confirmButtonText: "Simpan",
-                    cancelButtonText: "Batal",
+                    confirmButtonText: I18n.getText('promptConfirmationSave'),
+                    cancelButtonText: I18n.getText('promptConfirmationCancel'),
                     preConfirm: () => {
                         province = $('.dropdown-province').val()
                         kabko = $('.dropdown-city').children('option').filter(':selected').text()
@@ -764,16 +741,16 @@
                     }
 
                     if (!province) {
-                        alert('Tidak bisa menyimpan perubahan karena provinsi kosong. Sementara diaktifkan kembali deteksi jadwal otomatis')
+                        alert(I18n.getText('promptErrorUnableToSaveDueToEmptyProvince'))
                         return
                     } else if (!kabko || (kabko || '').includes('----')) {
-                        alert('Tidak bisa menyimpan perubahan karena kabupaten/kota kosong. Sementara diaktifkan kembali deteksi jadwal otomatis')
+                        alert(I18n.getText('promptErrorUnableToSaveDueToEmptyCity'))
                         return
                     }
 
                     // delete previously cached selected location data.
                     // replace it with the newly selected location
-                    const key = `data-prayer-time-by-location-${locationID}-${moment().format('YYYY-MM-DD')}`
+                    const key = `data-prayer-time-by-location-${locationID}`
                     localStorage.removeItem(key)
                     localStorage.setItem('data-manual-location', `${province}|${kabko}|${locationID}`)
 
@@ -803,7 +780,7 @@
                 
                 $('.dropdown-city').replaceWith($(
                     `<select required class="dropdown-city">
-                        ${renderDropdownOption(cities, 'id', 'kabko', 'Pilih kabupaten/kota')}
+                        ${renderDropdownOption(cities, 'id', 'kabko', I18n.getText('promptManualLocationCitySelectionLabel'))}
                     </select>`
                 ))
             })
@@ -854,13 +831,23 @@
                 const text = `
                     <div class='modal-info'>
                         <p>
-                            <a href='${Constant.meta.homepageLink}' target='_blank'>${Constant.meta.appName}</a> adalah laman personal dashboard khusus untuk muslim yang berdomisili di Indonesia. Plugin ini terinspirasi dari Momentum, tersedia untuk browser Chrome & Firefox.
+                            ${I18n.getText('appAboutUs1').replace('$1', `
+                                <a href='${Constant.meta.homepageLink}' target='_blank'>
+                                    ${Constant.meta.appName}
+                                </a>
+                            `)}
                         </p>
                         <p>
-                            Informasi jadwal sholat dimunculkan sesuai lokasi pengguna.
+                            ${I18n.getText('appAboutUs2')}
                         </p>
                         <p>
-                            Untuk pertanyaan, kritik & saran, maupun jika ingin berkontribusi foto atau quote, silakan kirim email ke <a href='mailto:${Constant.maintainer.email}?subject=${Constant.meta.appName} - Pertanyaan, kritik, dan saran'>${Constant.maintainer.email}</a> atau via submit PR di <a href='https://github.com/novalagung/muslimboard' target='_blank'>GitHub</a>.
+                            ${I18n.getText('appAboutUs3').replace('$1', `
+                                <a 
+                                    href='mailto:${Constant.maintainer.email}?subject=${Constant.meta.appName} ${Constant.meta.version} feedback'
+                                >${Constant.maintainer.email}</a>
+                            `).replace('$2', `
+                                <a href='https://github.com/novalagung/muslimboard' target='_blank'>GitHub</a>
+                            `)}
                         </p>
                         <hr class='separator'>
                         <p class='copyright text-center'>
