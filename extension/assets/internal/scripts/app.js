@@ -995,8 +995,7 @@
                 // disabling chrome storage. refer to https://stackoverflow.com/questions/28465384/how-is-chrome-storage-affected-when-an-extension-is-updated
                 // const rawItems = JSON.parse((await Utility.chromeStorage.get('todo-list-items')) || '[]')
 
-                const rawItems = JSON.parse(localStorage.getItem('todo-list-items') || '[]')
-                let items = rawItems.filter((d) => d.text)
+                let items = JSON.parse(localStorage.getItem('todo-list-items') || '[]').filter((d) => d.text)
                 Utility.log('found cached sync storage todo list items', items)
 
                 if (items.length === 0) {
@@ -1032,13 +1031,11 @@
             this.insertTodoListItem.call(this)
 
             let items = JSON.parse(localStorage.getItem('todo-list-items') || '[]')
-            items.forEach((d) => {
-                if (d.text === I18n.mapping.todoListPlaceholder.id) {
-                    d.text = I18n.getText('todoListPlaceholder')
-                }
-            })
-
             items.forEach((each) => {
+                if (each.text === I18n.mapping.todoListPlaceholder.id) {
+                    each.text = I18n.getText('todoListPlaceholder')
+                }
+
                 $('#todo-list .items').prepend($(`
                     <div class="item ${each.checked ? 'checked' : ''}">
                         <input type="checkbox" class="item-checkbox" ${each.checked ? 'checked' : ''}>
