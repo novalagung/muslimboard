@@ -1,8 +1,8 @@
 # Muslim Board
 
-Personal Dashboard for Muslims in Indonesia.
+Personal Dashboard for Muslims anywhere in the world.
 
-Muslim Board is a personal dashboard for Muslims. This plugin is inspired by Momentum. For now, we only support Bahasa Indonesia.
+Muslim Board is a personal dashboard for Muslims. This plugin is inspired by Momentum. Currently we support English language and Bahasa Indonesia.
 
 ![preview](resources/guide/preview-1.jpg)
 
