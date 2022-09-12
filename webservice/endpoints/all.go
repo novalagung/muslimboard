@@ -382,6 +382,7 @@ func validateOriginRequest(r *http.Request) error {
 	// firefox: moz-extension://b7d90294-f8dc-492e-8564-e3e7e4490aac
 	// chrome: chrome-extension://ckeifgmkgeihgmbgcbcngkacnbeplgmj
 	// edge: chrome-extension://dfmgmbngjpmbbpgibmdfegilbfckkgli
+	return nil
 }
 
 // writeResponse definition

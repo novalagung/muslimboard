@@ -194,15 +194,18 @@ const I18n = {
         }
     },
 
-    getSelectedLocale: () => {
-        const locale = localStorage.getItem(`selected-locale-${Constant.meta.version}`)
+    getSelectedLocale: (failIfUnset = false) => {
+        const locale = localStorage.getItem(`selected-locale`)
         if (locale) {
             return locale
+        }
+        if (failIfUnset) {
+            return false
         }
         return 'en'
     },
     setSelectedLocale: (selectedLocale) => {
-        localStorage.setItem(`selected-locale-${Constant.meta.version}`, selectedLocale)
+        localStorage.setItem(`selected-locale`, selectedLocale)
     },
     getText: (key) => {
         const locale = I18n.getSelectedLocale()
@@ -218,7 +221,7 @@ const I18n = {
         }
     },
     init: () => {
-        const locale = localStorage.getItem(`selected-locale-${Constant.meta.version}`)
+        const locale = I18n.getSelectedLocale(true)
         if (!locale) {
             I18n.setSelectedLocale('en')
         }

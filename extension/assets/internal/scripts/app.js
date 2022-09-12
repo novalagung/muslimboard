@@ -34,7 +34,7 @@
         // get master location data.
         // if location data ever been loaded once, then the cache will be used on next call
         async getDataMasterLocation() {
-            const url = `data/data-location.json`
+            const url = `data/data-location-indonesia.json`
             const response = await Utility.fetch(url)
             const result = await response.json()
             return result
@@ -457,9 +457,9 @@
             // load data from remote url
             try {
                 Utility.log('fetching remote data content')
-                const key = `data-content-remote-${Constant.meta.version}`
+                const key = `data-content-${I18n.getSelectedLocale()}-remote-${Constant.meta.version}`
                 const data = await Utility.getLatestDataAndUseCacheAsFailover(key, async (resolve) => {
-                    const url = `${Constant.app.baseUrlGithub}/data-content.json?v=${Constant.meta.version}.${moment().format('YYYY-MM-DD')}`
+                    const url = `${Constant.app.baseUrlGithub}/data-content-${I18n.getSelectedLocale()}.json?v=${Constant.meta.version}.${moment().format('YYYY-MM-DD')}`
                     const response = await Utility.fetch(url)
                     const result = await response.json()
                     resolve(result)
@@ -474,7 +474,7 @@
 
             // in case of failure, use local data
             Utility.log('fetching local data content')
-            const url = `data/data-content.json`
+            const url = `data/data-content-${I18n.getSelectedLocale()}.json`
             const response = await Utility.fetch(url)
             const data = await response.json()
             this.updateContent.call(this, data)

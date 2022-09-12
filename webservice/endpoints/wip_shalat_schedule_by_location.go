@@ -26,8 +26,8 @@ var locations = make([]City, 0)
 func GetShalatScheduleByLocation(w http.ResponseWriter, r *http.Request) {
 
 	once.Do(func() {
-		p := "./data-location.json"
-		p = "./../extension/data/data-location.json"
+		p := "./data-location-indonesia.json"
+		p = "./../extension/data/data-location-indonesia.json"
 		buf, err := ioutil.ReadFile(p)
 		if err != nil {
 			log.Fatal(err)
