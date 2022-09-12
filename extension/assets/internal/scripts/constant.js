@@ -1,7 +1,7 @@
 const Constant = {
     meta: {
         version: (() => `v${chrome.runtime.getManifest().version}`)(),
-        appName: 'Muslim Board',
+        appName: chrome.runtime.getManifest().name,
         homepageLink: 'https://muslimboard.novalagung.com',
     },
     maintainer: {
