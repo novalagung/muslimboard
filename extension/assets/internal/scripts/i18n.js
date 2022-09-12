@@ -170,7 +170,7 @@ const I18n = {
             id: '$1 adalah laman personal dashboard khusus untuk muslim, tersedia untuk semua browser modern. Plugin ini terinspirasi dari Momentum.'
         },
         modalAboutUsText2: {
-            en: `Prayer times schedule is fetched as per user's location.`,
+            en: `Prayer times is fetched as per user's location.`,
             id: 'Informasi jadwal sholat dimunculkan sesuai lokasi pengguna.'
         },
         modalAboutUsText3: {
