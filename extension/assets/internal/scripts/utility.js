@@ -136,9 +136,9 @@ const Utility = {
     getCurrentTimezoneAbbreviation: (countryCode) => {
         if (countryCode === 'id') {
             switch (new Date().toString().match(/([-\+][0-9]+)\s/)[1]) {
-                case '+0700': return 'WIB'
-                case '+0800': return 'WITA'
-                case '+0900': return 'WIT'
+                case '+0700': return 'WIB (GMT+7)'
+                case '+0800': return 'WITA (GMT+8)'
+                case '+0900': return 'WIT (GMT+9)'
             }
         }
 

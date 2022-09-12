@@ -41,7 +41,7 @@ html {
 #sidebar-blur,
 #sidebar {
     position: absolute;
-    width: 340px;
+    width: 400px;
     color: white;
     z-index: 4;
 }
@@ -204,7 +204,7 @@ html {
     position: absolute;
     right: 60px;
     top: 20px;
-    left: 360px;
+    left: 400px;
 }
 body.show-todo-list #wise-word {
     right: 510px;
@@ -291,7 +291,7 @@ body.show-todo-list #wise-word {
 @media (min-width: 1600px) {
     #wise-word {
         right: 120px;
-        left: 420px;
+        left: 440px;
     }
     body.show-todo-list #wise-word {
         right: 570px;
@@ -300,7 +300,7 @@ body.show-todo-list #wise-word {
 @media (min-width: 2000px) {
     #wise-word {
         right: 200px;
-        left: 540px;
+        left: 560px;
     }
     body.show-todo-list #wise-word {
         right: 650px;
@@ -309,7 +309,7 @@ body.show-todo-list #wise-word {
 @media (min-width: 2400px) {
     #wise-word {
         right: 400px;
-        left: 720px;
+        left: 740px;
     }
     body.show-todo-list #wise-word {
         right: 850px;
@@ -662,9 +662,6 @@ body.show-todo-list #search-box.active {
 #swal2-content .modal-info * {
     text-align: left;
 }
-#swal2-content .space-top {
-    margin-top: 20px;
-}
 #swal2-content .modal-info p:not(:last-child) {
     margin-bottom: 10px;
 }
@@ -682,7 +679,7 @@ body.show-todo-list #search-box.active {
     margin-top: 22px;
     display: block;
 }
-#swal2-content .btn-share {
+#swal2-content .modal-info .share-container .btn-share {
     text-decoration: none;
     display: inline-block;
     color: #fff;
@@ -692,12 +689,30 @@ body.show-todo-list #search-box.active {
     font-size: 23px;
     border-radius: 4px;
     overflow: hidden;
+    text-align: center;
 }
-#swal2-content .btn-share.facebook {
+#swal2-content .modal-info .share-container .btn-share.facebook {
     background-color: #405D9B;
 }
-#swal2-content .btn-share.twitter {
+#swal2-content .modal-info .share-container .btn-share.twitter {
     background-color: #1DA1F2;
+}
+#swal2-content .modal-change-language {
+    padding-top: 10px;
+    padding-bottom: 40px;
+}
+#swal2-content .modal-change-language a {
+    margin: 0px 5px;
+    display: inline-block;
+    color: white;
+    border-radius: 6px;
+    padding: 12px 17px;
+    text-decoration: none;
+    font-weight: bold;
+    background-color: #00b16a;
+}
+#swal2-content .modal-change-language a:hover {
+    opacity: 0.6;
 }
 #swal2-content .manual-geolocation div.row {
     margin-bottom: 5px;

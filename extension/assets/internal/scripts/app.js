@@ -824,49 +824,44 @@
         // apply event handler for change language
         registerEventForChangeLanguageButton() {
 
+            let swalChangeLanguage = null
+
             // on info button click, show the info modal
             $('.change-language').on('click', (e) => {
                 e.preventDefault();
 
                 const text = `
                     <div class='modal-change-language'>
-                        <p>
-                            ${I18n.getText('modalAboutUsText1').replace('$1', `
-                                <a href='${Constant.meta.homepageLink}' target='_blank'>
-                                    ${Constant.meta.appName}
-                                </a>
-                            `)}
-                        </p>
-                        <p>
-                            ${I18n.getText('modalAboutUsText2')}
-                        </p>
-                        <p>
-                            ${I18n.getText('modalAboutUsText3').replace('$1', `
-                                <a 
-                                    href='mailto:${Constant.maintainer.email}?subject=${Constant.meta.appName} ${Constant.meta.version} feedback'
-                                >${Constant.maintainer.email}</a>
-                            `).replace('$2', `
-                                <a href='https://github.com/novalagung/muslimboard' target='_blank'>GitHub</a>
-                            `)}
-                        </p>
-                        <hr class='separator'>
-                        <p class='copyright text-center'>
-                            Maintained by <a href='https://www.linkedin.com/in/novalagung' target='_blank'>${Constant.maintainer.name}</a>
-                            <br>
-                            ${moment().format("YYYY")} | <a href='${Constant.meta.homepageLink}' target='_blank'>${Constant.meta.homepageLink}</a>
-                            <br>
-                        </p>
+                        <a href='#' data-locale='en'>
+                            English Language
+                        </a>
+                        <a href='#' data-locale='id'>
+                            Bahasa Indonesia
+                        </a>
                     </div>
                 `
 
-                Swal.fire({
+                swalChangeLanguage = Swal.fire({
                     type: 'info',
                     title: I18n.getText('modalChangeLanguageHeader'),
                     html: text,
                     showConfirmButton: false,
-                    allowOutsideClick: true
+                    allowOutsideClick: false
                 });
             });
+            
+            // handle change language event
+            $('body').on('click', '.modal-change-language a', async (e) => {
+                const locale = $(e.currentTarget).attr('data-locale')
+                I18n.setSelectedLocale(locale)
+                await swalChangeLanguage.close()
+                location.reload()
+            })
+
+            if (I18n.getSelectedLocale(false)) {
+                const text = `${I18n.getText('footerMenuChangeLanguage')} (${I18n.getSelectedLocale().toUpperCase()})`
+                $('.change-language span').text(text)
+            }
         },
 
         // apply event handler for about us button
@@ -875,7 +870,7 @@
             // on info button click, show the info modal
             $('.info').on('click', (e) => {
                 e.preventDefault();
-
+                const shareText = `${Constant.meta.appName} ${I18n.getText('appDescription')}`;
                 const text = `
                     <div class='modal-info'>
                         <p>
@@ -898,6 +893,28 @@
                             `)}
                         </p>
                         <hr class='separator'>
+                        <p>${I18n.getText('modalShareText')}</p>
+                        <div class="share-container">
+                            <div>
+                                <a 
+                                    class="btn-share facebook" 
+                                    target="_blank" 
+                                    href="https://www.facebook.com/sharer/sharer.php?u=${encodeURI(Constant.meta.homepageLink)}&title=${encodeURI(shareText)}" 
+                                    title="Facebook share"
+                                >
+                                    <i class="fa fa-facebook-square"></i>
+                                </a>
+                                <a 
+                                    class="btn-share twitter" 
+                                    target="_blank" 
+                                    href="http://twitter.com/share?text=${shareText}&url=${encodeURI(Constant.meta.homepageLink)}" 
+                                    title="Twitter share"
+                                >
+                                    <i class="fa fa-twitter"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <hr class='separator'>
                         <p class='copyright text-center'>
                             Maintained by <a href='https://www.linkedin.com/in/novalagung' target='_blank'>${Constant.maintainer.name}</a>
                             <br>
@@ -910,44 +927,6 @@
                 Swal.fire({
                     type: 'info',
                     title: [Constant.meta.appName, Constant.meta.version].join(" "),
-                    html: text,
-                    showConfirmButton: false,
-                    allowOutsideClick: true
-                });
-            });
-        },
-
-        // apply event handler for share button
-        registerEventForShareButton() {
-
-            // on share button click, show the share modal
-            $('.share').on('click', () => {
-                const title = `${Constant.meta.appName} ${I18n.getText('appDescription')}`;
-                const text = `
-                    <p>${I18n.getText('modalShareText')}</p>
-                    <div class="space-top">
-                        <a 
-                            class="btn-share facebook" 
-                            target="_blank" 
-                            href="https://www.facebook.com/sharer/sharer.php?u=${encodeURI(Constant.meta.homepageLink)}&title=${encodeURI(title)}" 
-                            title="Facebook share"
-                        >
-                            <i class="fa fa-facebook-square"></i>
-                        </a>
-                        <a 
-                            class="btn-share twitter" 
-                            target="_blank" 
-                            href="http://twitter.com/share?text=${title}&url=${encodeURI(Constant.meta.homepageLink)}" 
-                            title="Twitter share"
-                        >
-                            <i class="fa fa-twitter"></i>
-                        </a>
-                    </div>
-                `
-
-                Swal.fire({
-                    type: 'info',
-                    title: I18n.getText('modalShareHeader'),
                     html: text,
                     showConfirmButton: false,
                     allowOutsideClick: true
@@ -1167,9 +1146,12 @@
         // =========== UPDATE MESSAGE
 
         // show update message on extension/plugin update
-        showExtensionUpdateAndChangelogsModal() {
+        showExtensionWelcomeModal() {
             const keyOfUpdateMessage = `changelogs-message-${Constant.meta.version}`
             if (localStorage.getItem(keyOfUpdateMessage)) {
+                if (!I18n.getSelectedLocale(false)) {
+                    $('.change-language').trigger('click')
+                }
                 return
             }
 
@@ -1196,8 +1178,12 @@
                 html: text,
                 showConfirmButton: false,
                 allowOutsideClick: true
-            });
-    
+            }).then(() => {
+                if (!I18n.getSelectedLocale(false)) {
+                    $('.change-language').trigger('click')
+                }
+            })
+
             localStorage.setItem(keyOfUpdateMessage, true)
         },
 
@@ -1216,12 +1202,11 @@
             this.registerEventForInternetAvailabilityStatus.call(this)
             this.registerEventForChangeLanguageButton.call(this)
             this.registerEventForAboutUsButton.call(this)
-            this.registerEventForShareButton.call(this)
             this.registerEventForAlarm.call(this)
             this.registerEventTodoList.call(this)
             this.ensureTodoListBoxVisibilityOnPageActive.call(this)
             this.ensureTodoListItemsAppear.call(this)
-            this.showExtensionUpdateAndChangelogsModal.call(this)
+            this.showExtensionWelcomeModal.call(this)
         }
     }
 

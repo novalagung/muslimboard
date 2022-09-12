@@ -67,13 +67,17 @@ const I18n = {
             en: 'Image from',
             id: 'Foto dari'
         },
-        footerMenuShare: {
-            en: 'Share',
-            id: 'Share'
+        footerMenuChangeLanguage: {
+            en: 'Change language',
+            id: 'Change language'
         },
         footerMenuSourceCode: {
             en: 'Source code',
             id: 'Source code'
+        },
+        footerMenuShare: {
+            en: 'Share',
+            id: 'Share'
         },
         footerMenuAboutUs: {
             en: 'About us',
@@ -175,13 +179,13 @@ const I18n = {
             id: 'Share ke sosial media'
         },
         modalShareText: {
-            en: 'Share the muslimboard browser extension to socials.',
-            id: 'Bagikan ekstensi browser muslimboard ke sosial media,<br />agar yang lain juga bisa mendapat manfaat.'
+            en: 'Share the muslimboard browser extension to socials:',
+            id: 'Bagikan ekstensi browser muslimboard ke sosial media:'
         },
 
         modalChangeLanguageHeader: {
-            en: 'Change language?',
-            id: 'Ubah bahasa?'
+            en: 'Select language',
+            id: 'Select language / Pilih bahasa'
         },
 
         modalInstallMuslimboardNotification: {
@@ -194,15 +198,12 @@ const I18n = {
         }
     },
 
-    getSelectedLocale: (failIfUnset = false) => {
+    getSelectedLocale: (defaultLocale = 'en') => {
         const locale = localStorage.getItem(`selected-locale`)
         if (locale) {
             return locale
         }
-        if (failIfUnset) {
-            return false
-        }
-        return 'en'
+        return defaultLocale
     },
     setSelectedLocale: (selectedLocale) => {
         localStorage.setItem(`selected-locale`, selectedLocale)
