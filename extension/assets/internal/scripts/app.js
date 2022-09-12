@@ -972,7 +972,7 @@
         // =========== TODO LIST
 
         // toggle TODO list visibility based on previously cached state
-        async ensureTodoListBoxVisibility() {
+        ensureTodoListBoxVisibility() {
             const value = localStorage.getItem('todo-list-status') || 'false'
             if (value === 'true') {
                 $('body').addClass('show-todo-list')
@@ -985,7 +985,7 @@
         // - setup default TODO items data.
         // - ensure TODO list visibility baseed on previously cached state.
         // - and render TODO items
-        async ensureTodoListBoxVisibilityOnPageActive() {
+        ensureTodoListBoxVisibilityOnPageActive() {
 
             // migrate chrome.storage.sync storage data to localStorage
             const localStorageUsed = localStorage.getItem('todo-list-box-ever-loaded') || 'false'
@@ -1026,8 +1026,10 @@
         },
 
         // render TODO list items
-        async ensureTodoListItemsAppear() {
+        ensureTodoListItemsAppear() {
             $('#todo-list .items .item').remove()
+
+            this.insertTodoListItem.call(this)
 
             let items = JSON.parse(localStorage.getItem('todo-list-items') || '[]')
             items.forEach((d) => {
@@ -1035,12 +1037,6 @@
                     d.text = I18n.getText('todoListPlaceholder')
                 }
             })
-
-            if (items.length == 0) {
-                this.insertTodoListItem.call(this)
-                this.ensureTodoListItemsAppear.call(this)
-                return
-            }
 
             items.forEach((each) => {
                 $('#todo-list .items').prepend($(`
@@ -1054,7 +1050,7 @@
         },
 
         // ensure the TODO list items is always stored on cache
-        async ensureTodoListItemsStored() {
+        ensureTodoListItemsStored() {
             const items = $('#todo-list .items .item').toArray().reverse().map((each) => ({
                 text: $(each).find('span[contenteditable]')[0].innerText,
                 checked: $(each).find('input[type=checkbox]').prop('checked')
@@ -1066,7 +1062,7 @@
         },
 
         // insert new TODO item
-        async insertTodoListItem() {
+        insertTodoListItem() {
             let items = JSON.parse(localStorage.getItem('todo-list-items') || '[]')
 
             // ensure to have only one row of empty text on top
@@ -1081,15 +1077,13 @@
 
             // disabling chrome storage. refer to https://stackoverflow.com/questions/28465384/how-is-chrome-storage-affected-when-an-extension-is-updated
             // await Utility.chromeStorage.set('todo-list-items', JSON.stringify(items))
-
-            this.ensureTodoListItemsAppear.call(this)
         },
 
         // contains event declarations for many TODO list operation
-        async registerEventTodoList() {
+        registerEventTodoList() {
 
             // event for hiding or showing the TODO list pane
-            $('#todo-list .toggler').on('click', async () => {
+            $('#todo-list .toggler').on('click', () => {
                 const value = localStorage.getItem('todo-list-status') || 'false'
                 if (value === 'true') {
                     localStorage.setItem('todo-list-status', 'false')
@@ -1103,8 +1097,8 @@
             // event for clicking add button
             $('#todo-list .add').on('click', (event) => {
                 this.insertTodoListItem.call(this)
+                this.ensureTodoListItemsAppear.call(this)
                 $('#todo-list .items .item:eq(0) span[contenteditable]').focus()
-                console.log('event', event)
             })
 
             // calculate TODO list item based on screen size
