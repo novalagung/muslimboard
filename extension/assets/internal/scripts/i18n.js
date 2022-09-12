@@ -226,11 +226,6 @@ const I18n = {
         }
     },
     init: () => {
-        const locale = I18n.getSelectedLocale(true)
-        if (!locale) {
-            I18n.setSelectedLocale('en')
-        }
-
         $('[data-i18n]').each((i, e) => {
             const $e = $(e)
             const key = $e.attr('data-i18n')
