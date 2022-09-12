@@ -320,7 +320,7 @@
             try {
                 Utility.log('fetching remote data background')
                 const key = `data-background-remote-${Constant.meta.version}`
-                const data = await Utility.getLatestDataAndUseCacheAsFailover(key, async (resolve) => {
+                const data = await Utility.getLatestData(key, async (resolve) => {
                     const url = `${Constant.app.baseUrlGithub}/data-background.json?v=${Constant.meta.version}.${moment().format('YYYY-MM-DD')}`
                     const response = await Utility.fetch(url)
                     const result = await response.json()
@@ -458,7 +458,7 @@
             try {
                 Utility.log('fetching remote data content')
                 const key = `data-content-${I18n.getSelectedLocale()}-remote-${Constant.meta.version}`
-                const data = await Utility.getLatestDataAndUseCacheAsFailover(key, async (resolve) => {
+                const data = await Utility.getLatestData(key, async (resolve) => {
                     const url = `${Constant.app.baseUrlGithub}/data-content-${I18n.getSelectedLocale()}.json?v=${Constant.meta.version}.${moment().format('YYYY-MM-DD')}`
                     const response = await Utility.fetch(url)
                     const result = await response.json()

@@ -82,7 +82,7 @@ const Utility = {
             }
         )
     }),
-    getLatestData: (key, callback, useCacheAsFailover = false) => new Promise(async (resolve) => {
+    getLatestData: (key, callback) => new Promise(async (resolve) => {
         const nowYYYYMMDD = moment().format('YYYY-MM-DD')
         let data = {
             lastUpdated: nowYYYYMMDD,
@@ -106,20 +106,13 @@ const Utility = {
                 })
             } catch (err) {
                 Utility.error(err)
-                if (useCacheAsFailover) {
-                    Utility.log('use cached data instead')
-                    resolve(data)
-                } else {
-                    resolve(false)
-                }
+                Utility.log('use cached data instead')
+                resolve(data)
             }
         }
 
         resolve(data)
     }),
-    getLatestDataAndUseCacheAsFailover: async (key, callback) => {
-        return await Utility.getLatestData(key, callback, true)
-    },
     removeLocalStorageItemsByPrefix: (cond) => {
         Utility.log('remove local storage', cond)
         Object.keys(localStorage).filter(cond).forEach((d) => { localStorage.removeItem(d) })
