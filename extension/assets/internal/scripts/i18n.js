@@ -1,7 +1,5 @@
 const I18n = {
     mapping: {
-        appName: 'Muslim Board',
-        appShortName: 'muslimboard',
         appDescription: {
             en: 'Personal Dashboard for Muslim',
             id: 'Personal Dashboard untuk umat Islam'
@@ -47,6 +45,10 @@ const I18n = {
         todoListHeaderHide: {
             en: 'Hide TODO list panel',
             id: 'Sembunyikan TODO list'
+        },
+        todoListEntryPlaceholder: {
+            en: 'Write something',
+            id: 'Tulis sesuatu'
         },
 
         footerMenuAutomaticLocationDetection: {
@@ -155,18 +157,41 @@ const I18n = {
             id: 'Tidak bisa menyimpan perubahan karena kabupaten/kota kosong'
         },
 
-        appAboutUs1: {
+        modalAboutUsText1: {
             en: '$1 is personal dashboard for muslim, available on all modern browsers. This extension was inspired by Momentum.',
-            id: '$1 adalah laman personal dashboard khusus untuk muslim, tersedia untuk semua browser modern. Plugin ini terinspirasi dari Momentum/'
+            id: '$1 adalah laman personal dashboard khusus untuk muslim, tersedia untuk semua browser modern. Plugin ini terinspirasi dari Momentum.'
         },
-        appAboutUs2: {
+        modalAboutUsText2: {
             en: `Prayer times schedule is fetched as per user's location.`,
             id: 'Informasi jadwal sholat dimunculkan sesuai lokasi pengguna.'
         },
-        appAboutUs3: {
+        modalAboutUsText3: {
             en: 'For feedback or contribution, please email to $1 or submit a PR to $2.',
             id: 'Untuk pertanyaan, kritik & saran, maupun jika ingin berkontribusi foto atau quote, silakan kirim email ke $1 atau via submit PR di $2.'
         },
+
+        modalShareHeader: {
+            en: 'Share to social media',
+            id: 'Share ke sosial media'
+        },
+        modalShareText: {
+            en: 'Share the muslimboard browser extension to socials.',
+            id: 'Bagikan ekstensi browser muslimboard ke sosial media,<br />agar yang lain juga bisa mendapat manfaat.'
+        },
+
+        modalChangeLanguageHeader: {
+            en: 'Change language?',
+            id: 'Ubah bahasa?'
+        },
+
+        modalInstallMuslimboardNotification: {
+            en: '$1 is successfully installed.',
+            id: '$1 berhasil di-install.'
+        },
+        modalUpdateMuslimboardNotification: {
+            en: '$1 is successfully updated to version $s.',
+            id: '$1 anda telah di update ke versi $2.'
+        }
     },
 
     getSelectedLocale: () => {

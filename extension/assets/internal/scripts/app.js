@@ -821,8 +821,56 @@
             });
         },
 
-        // apply event handler for any clickable stuff on footer
-        registerEventForFooter() {
+        // apply event handler for change language
+        registerEventForChangeLanguageButton() {
+
+            // on info button click, show the info modal
+            $('.change-language').on('click', (e) => {
+                e.preventDefault();
+
+                const text = `
+                    <div class='modal-change-language'>
+                        <p>
+                            ${I18n.getText('modalAboutUsText1').replace('$1', `
+                                <a href='${Constant.meta.homepageLink}' target='_blank'>
+                                    ${Constant.meta.appName}
+                                </a>
+                            `)}
+                        </p>
+                        <p>
+                            ${I18n.getText('modalAboutUsText2')}
+                        </p>
+                        <p>
+                            ${I18n.getText('modalAboutUsText3').replace('$1', `
+                                <a 
+                                    href='mailto:${Constant.maintainer.email}?subject=${Constant.meta.appName} ${Constant.meta.version} feedback'
+                                >${Constant.maintainer.email}</a>
+                            `).replace('$2', `
+                                <a href='https://github.com/novalagung/muslimboard' target='_blank'>GitHub</a>
+                            `)}
+                        </p>
+                        <hr class='separator'>
+                        <p class='copyright text-center'>
+                            Maintained by <a href='https://www.linkedin.com/in/novalagung' target='_blank'>${Constant.maintainer.name}</a>
+                            <br>
+                            ${moment().format("YYYY")} | <a href='${Constant.meta.homepageLink}' target='_blank'>${Constant.meta.homepageLink}</a>
+                            <br>
+                        </p>
+                    </div>
+                `
+
+                Swal.fire({
+                    type: 'info',
+                    title: I18n.getText('modalChangeLanguageHeader'),
+                    html: text,
+                    showConfirmButton: false,
+                    allowOutsideClick: true
+                });
+            });
+        },
+
+        // apply event handler for about us button
+        registerEventForAboutUsButton() {
 
             // on info button click, show the info modal
             $('.info').on('click', (e) => {
@@ -831,17 +879,17 @@
                 const text = `
                     <div class='modal-info'>
                         <p>
-                            ${I18n.getText('appAboutUs1').replace('$1', `
+                            ${I18n.getText('modalAboutUsText1').replace('$1', `
                                 <a href='${Constant.meta.homepageLink}' target='_blank'>
                                     ${Constant.meta.appName}
                                 </a>
                             `)}
                         </p>
                         <p>
-                            ${I18n.getText('appAboutUs2')}
+                            ${I18n.getText('modalAboutUsText2')}
                         </p>
                         <p>
-                            ${I18n.getText('appAboutUs3').replace('$1', `
+                            ${I18n.getText('modalAboutUsText3').replace('$1', `
                                 <a 
                                     href='mailto:${Constant.maintainer.email}?subject=${Constant.meta.appName} ${Constant.meta.version} feedback'
                                 >${Constant.maintainer.email}</a>
@@ -867,26 +915,30 @@
                     allowOutsideClick: true
                 });
             });
+        },
+
+        // apply event handler for share button
+        registerEventForShareButton() {
 
             // on share button click, show the share modal
             $('.share').on('click', () => {
-                const title = `${Constant.meta.appName} Browser Extension/Plugin`;
+                const title = `${Constant.meta.appName} ${I18n.getText('appDescription')}`;
                 const text = `
-                    <p>Bagikan extension/plugin ini ke sosial media,<br />agar yang lain juga bisa mendapat manfaat.</p>
+                    <p>${I18n.getText('modalShareText')}</p>
                     <div class="space-top">
                         <a 
                             class="btn-share facebook" 
                             target="_blank" 
                             href="https://www.facebook.com/sharer/sharer.php?u=${encodeURI(Constant.meta.homepageLink)}&title=${encodeURI(title)}" 
-                            title="Share ke facebook"
+                            title="Facebook share"
                         >
                             <i class="fa fa-facebook-square"></i>
                         </a>
                         <a 
                             class="btn-share twitter" 
                             target="_blank" 
-                            href="https://twitter.com/home?status=${encodeURI([title, Constant.meta.homepageLink].join(" "))}" 
-                            title="Share ke twitter"
+                            href="http://twitter.com/share?text=${title}&url=${encodeURI(Constant.meta.homepageLink)}" 
+                            title="Twitter share"
                         >
                             <i class="fa fa-twitter"></i>
                         </a>
@@ -895,7 +947,7 @@
 
                 Swal.fire({
                     type: 'info',
-                    title: 'Share ke Sosial Media',
+                    title: I18n.getText('modalShareHeader'),
                     html: text,
                     showConfirmButton: false,
                     allowOutsideClick: true
@@ -1010,7 +1062,7 @@
                 $('#todo-list .items').prepend($(`
                     <div class="item ${each.checked ? 'checked' : ''}">
                         <input type="checkbox" class="item-checkbox" ${each.checked ? 'checked' : ''}>
-                        <span class="item-textbox" contenteditable="true" data-placeholder="Tulis sesuatu">${each.text.replace(/\n/gi, '<br>')}</span>
+                        <span class="item-textbox" contenteditable="true" data-placeholder="${I18n.getText('todoListEntryPlaceholder')}">${each.text.replace(/\n/gi, '<br>')}</span>
                         <button class="delete"><i class="fa fa-close"></i></button>
                     </div>
                 `))
@@ -1123,8 +1175,11 @@
 
             const isUpdate = Object.keys(localStorage).filter((d) => d.indexOf('changelogs-message') > -1).length > 0
             const openingMessage = isUpdate
-                ? `${Constant.meta.appName} anda telah di update ke versi ${Constant.meta.version}.`
-                : `${Constant.meta.appName} ${Constant.meta.version} berhasil di-install.`
+                ? I18n.getText('modalUpdateMuslimboardNotification')
+                    .replace('$1', Constant.meta.appName)
+                    .replace('$2', Constant.meta.version)
+                : I18n.getText('modalInstallMuslimboardNotification')
+                    .replace('$1', `${Constant.meta.appName} ${Constant.meta.version}`)
 
             const text = `
                 <div class="modal-info">
@@ -1137,7 +1192,7 @@
 
             Swal.fire({
                 type: 'info',
-                title: `Version Update ${Constant.meta.version}`,
+                title: `${Constant.meta.appName} ${Constant.meta.version}`,
                 html: text,
                 showConfirmButton: false,
                 allowOutsideClick: true
@@ -1159,7 +1214,9 @@
             this.loadLocationAndPrayerTimeThenRender.call(this)
             this.registerEventForForceLoadLocationAndPrayerTimes.call(this)
             this.registerEventForInternetAvailabilityStatus.call(this)
-            this.registerEventForFooter.call(this)
+            this.registerEventForChangeLanguageButton.call(this)
+            this.registerEventForAboutUsButton.call(this)
+            this.registerEventForShareButton.call(this)
             this.registerEventForAlarm.call(this)
             this.registerEventTodoList.call(this)
             this.ensureTodoListBoxVisibilityOnPageActive.call(this)
