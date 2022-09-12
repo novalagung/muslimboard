@@ -34,7 +34,7 @@
         // get master location data.
         // if location data ever been loaded once, then the cache will be used on next call
         async getDataMasterLocation() {
-            const url = `data/data-location-indonesia.json`
+            const url = `data/data-location-id.json`
             const response = await Utility.fetch(url)
             const result = await response.json()
             return result

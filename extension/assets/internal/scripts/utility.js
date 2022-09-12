@@ -125,7 +125,7 @@ const Utility = {
         Object.keys(localStorage).filter(cond).forEach((d) => { localStorage.removeItem(d) })
     },
     randomFromArray(arr, exclusion) {
-        const items = arr.filter((d) => exclusion ? (d != exclusion) : true)
+        const items = (arr || []).filter((d) => exclusion ? (d != exclusion) : true)
         return items[Math.floor(Math.random()*items.length)]
     },
     sleep: (n) => new Promise((resolve) => { setTimeout(() => { resolve() }, Utility.seconds(n)) }),
