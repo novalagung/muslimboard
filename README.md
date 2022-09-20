@@ -6,6 +6,12 @@ Muslim Board is a personal dashboard for Muslims. This plugin is inspired by Mom
 
 ![preview](resources/guide/preview-1.jpg)
 
+## Installtion
+
+- Google Chrome via [official Chrome web store](https://chrome.google.com/webstore/detail/muslim-board/lmnhjilamobdmdihfkofgiejgokabfad) 
+- Microsoft Edge via [official Edge add-ons marketplace](https://microsoftedge.microsoft.com/addons/detail/muslim-board/dfmgmbngjpmbbpgibmdfegilbfckkgli)
+- Mozilla Firefox via [official Firefox add-ons marketplace](https://addons.mozilla.org/en-US/firefox/addon/muslimboard/)
+
 ## Table of Content
 
 - Folder `extension` is where the chrome extension source code lies.
