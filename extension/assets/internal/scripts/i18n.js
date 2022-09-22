@@ -197,7 +197,7 @@ const I18n = {
             id: '$1 berhasil di-install.'
         },
         modalUpdateMuslimboardNotification: {
-            en: '$1 is successfully updated to version $s.',
+            en: '$1 is successfully updated to version $2.',
             id: '$1 anda telah di update ke versi $2.'
         }
     },

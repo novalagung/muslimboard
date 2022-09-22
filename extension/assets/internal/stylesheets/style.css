@@ -38,33 +38,18 @@ html {
     z-index: 3;
 }
 
-#sidebar-blur,
 #sidebar {
     position: absolute;
-    width: 400px;
+    width: 360px;
     color: white;
     z-index: 4;
-}
-#sidebar-blur {
-    top: 0;
-    height: 430px;
-    background-color: rgba(0, 0, 0, 0.3);
-    -webkit-filter: blur(40px);
-    -moz-filter: blur(40px);
-    -ms-filter: blur(40px);
-    -o-filter: blur(40px);
-    filter: blur(40px);
-    -webkit-transform: translate3d(0, 0, 0);
-    -moz-transform: translate3d(0, 0, 0);
-    -ms-transform: translate3d(0, 0, 0);
-    -o-transform: translate3d(0, 0, 0);
-    transform: translate3d(0, 0, 0);
 }
 #sidebar {
     padding: 30px 35px 0px;
 }
 #sidebar .date-time {
     height: 180px;
+    position: relative;
 }
 #sidebar .date-time a {
     color: inherit;
@@ -125,6 +110,7 @@ html {
 #sidebar .prayer-time {
     margin-top: 15px;
     height: 175px;
+    position: relative;
 }
 #sidebar .prayer-time p.title {
     margin-top: 0px;
@@ -246,6 +232,10 @@ body.show-todo-list #wise-word {
     margin-top: 8px;
     font-style: italic;
 }
+#wise-word .wrapper .vertical > p > div {
+    display: inline-block;
+    position: relative;
+}
 #wise-word[data-type="word of wisdom"] .wrapper .vertical .matan {
     display: none;
 }
@@ -255,39 +245,6 @@ body.show-todo-list #wise-word {
 #wise-word[data-type="word of wisdom"] .wrapper .vertical .reference {
     margin-top: 20px;
 }
-/* #wise-word .translation,
-#wise-word .matan,
-#wise-word .reference {
-    position: relative;
-}
-#wise-word .translation > div,
-#wise-word .matan > div,
-#wise-word .reference > div {
-    position: relative;
-    z-index: 1;
-}
-#wise-word .translation:before,
-#wise-word .matan:before,
-#wise-word .reference:before {
-    content: " ";
-    display: block;
-    position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.7);
-    -webkit-filter: blur(25px);
-    -moz-filter: blur(25px);
-    -ms-filter: blur(25px);
-    -o-filter: blur(25px);
-    filter: blur(25px);
-    -webkit-transform: translate3d(0, 0, 0);
-    -moz-transform: translate3d(0, 0, 0);
-    -ms-transform: translate3d(0, 0, 0);
-    -o-transform: translate3d(0, 0, 0);
-    transform: translate3d(0, 0, 0);
-} */
 
 @media (min-width: 1600px) {
     #wise-word {
@@ -378,26 +335,6 @@ body.show-todo-list #wise-word {
 }
 #footer .menu.left > div {
     position: relative;
-}
-#footer .menu.left > div:before {
-    content: " ";
-    display: block;
-    position: absolute;
-    left: 0;
-    top: -5px;
-    right: 0;
-    bottom: -7px;
-    background-color: rgba(0, 0, 0, 0.3);
-    -webkit-filter: blur(10px);
-    -moz-filter: blur(10px);
-    -ms-filter: blur(10px);
-    -o-filter: blur(10px);
-    filter: blur(10px);
-    -webkit-transform: translate3d(0, 0, 0);
-    -moz-transform: translate3d(0, 0, 0);
-    -ms-transform: translate3d(0, 0, 0);
-    -o-transform: translate3d(0, 0, 0);
-    transform: translate3d(0, 0, 0);
 }
 #footer .menu.left > div * {
     z-index: 2;
@@ -557,68 +494,7 @@ body.show-todo-list #todo-list .wrapper .items .item {
 #todo-list .wrapper .items .item:hover .delete {
     display: block;
 }
-/* #search-box {
-    z-index: 5;
-    position: absolute;
-    width: 600px;
-    right: -60px;
-    bottom: 9px;
-    transform: scale(0.7);
-    transition: ease-in-out right 300ms;
-    transition-property: right, bottom, margin-right, margin-bottom, transform;
-}
-#search-box.active {
-    right: 50%;
-    margin-right: -300px;
-    bottom: 50%;
-    margin-bottom: -15px;
-    transform: scale(1);
-}
-body.show-todo-list #search-box.active {
-    margin-right: -70px;
-    bottom: 31%;
-    margin-bottom: -15px;
-}
-#search-box.active p {
-    opacity: 1;
-}
-#search-box .wrapper {
-    position: relative;
-}
-#search-box input {
-    box-shadow: 0 1px 6px 0 rgba(32,33,36,0.28);
-    border-color: rgba(223,225,229,0);
-    font-size: 18px;
-    padding: 13px 20px 13px 40px;
-    border-radius: 16px;
-    width: 100%;
-    background-color: rgba(255, 255, 255, 0.92);
-    color: #363636;
-}
-#search-box input:focus {
-    outline: none;
-}
-#search-box .fa {
-    position: absolute;
-    left: 15px;
-    top: 16px;
-    color: #bcbcbc;
-    font-size: 17px;
-}
-#search-box p {
-    display: inline-block;
-    color: white;
-    background-color: #00b16a;
-    position: absolute;
-    width: 294px;
-    text-align: center;
-    bottom: -34px;
-    right: 50%;
-    margin-right: -147px;
-    border-radius: 5px;
-    opacity: 0;
-    transition: ease-in-out opacity 300ms;
-} */
+
 #footer .menu a {
     color: inherit;
     text-decoration: inherit;
@@ -728,3 +604,38 @@ body.show-todo-list #search-box.active {
     text-align: right;
     padding-right: 5px;
 }
+
+/* background blur shadow */
+#sidebar .date-time:before,
+#sidebar .prayer-time:before,
+#wise-word .wrapper .vertical > p > div:before,
+#footer .menu.left > div:before {
+    content: " ";
+    display: block;
+    position: absolute;
+    z-index: -1;
+    background-color: rgba(0, 0, 0, 0.3);
+    -webkit-filter: blur(40px);
+    -moz-filter: blur(40px);
+    -ms-filter: blur(40px);
+    -o-filter: blur(40px);
+    filter: blur(40px);
+    -webkit-transform: translate3d(0, 0, 0);
+    -moz-transform: translate3d(0, 0, 0);
+    -ms-transform: translate3d(0, 0, 0);
+    -o-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+}
+
+#footer .menu.left > div:before {
+    -webkit-filter: blur(10px);
+    -moz-filter: blur(10px);
+    -ms-filter: blur(10px);
+    -o-filter: blur(10px);
+    filter: blur(10px);
+}
+
+#sidebar .date-time:before                     { left: -15px; top: -15px; right: -15px; bottom: -15px; }
+#sidebar .prayer-time:before                   { left: -15px; top: -15px; right: 40px;  bottom: -20px; }
+#wise-word .wrapper .vertical > p > div:before { left: -15px; top: -15px; right: -15px; bottom: -15px; }
+#footer .menu.left > div:before                { left: 0;     top: -5px;  right: 0;     bottom: -7px; }

@@ -336,7 +336,7 @@
                     const result = await response.json()
                     resolve(result)
                 })
-                if (data?.content) {
+                if (Object.keys(data?.content || {}).length > 0) {
                     this.updateBackground.call(this, data.content)
                     return
                 } 
@@ -474,7 +474,7 @@
                     const result = await response.json()
                     resolve(result)
                 })
-                if (data?.content) {
+                if (Object.keys(data?.content || {}).length > 0) {
                     this.updateContent.call(this, data.content)
                     return
                 } 
