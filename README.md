@@ -39,15 +39,15 @@ However, before we start doing anything, especially on stuff within the `extensi
     - Certain images are loaded locally. These images will bring a performance boost during the initial load and also it's very useful when offline mode (no internet).
 
 - To contribute, simply fork → commit your changes → submit PR.
-- Navigate to `CONTRIBUTING.md` if you want to see the list of names who maintain and contribute to this project.
+- Navigate to [CONTRIBUTING.md](https://github.com/novalagung/muslimboard/blob/master/CONTRIBUTING.md) to see the list of amazing contributor of this project.
 
 ## Local Installation
 
-Use chrome → open up extension menu → click **Load unpacked** and navigate to the `extension` directory. Another browser has a similar way to load unpacked extensions.
+Use chrome → open up extension menu → click **Load unpacked** and navigate to the `extension` directory. Other browser has similar way to load unpacked extensions.
 
 ## Web Service
 
-We use GCP Function to host our serverless backend, it's publicly accessible on https://asia-southeast2-muslim-board-ind-1472876095243.cloudfunctions.net.
+We use GCP Function to host our serverless backend.
 
 ## Author
 
