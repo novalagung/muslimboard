@@ -18,11 +18,11 @@ Features:
 - Muslim Board contains the TODO list feature in the right section. Users can write any notes and set the completion there.
 - Internet availability info is displayed in the bottom section. You will be notified when the internet is offline.
 - Popup notification will appear whenever prayer time is near.
-- Multi language support (english and bahasa indonesia).
+- Multi language support (english, bahasa indonesia, traditional chinese).
 
 ---
 
-Muslim Board adalah personal dashboard khusus untuk muslim. Plugin ini terinspirasi dari Momentum. Plugin ini support dua bahasa: Inggris, Bahasa Indonesia, dan Cina Tradisional.
+Muslim Board adalah personal dashboard khusus untuk muslim. Plugin ini terinspirasi dari Momentum. Plugin ini support multi bahasa: Inggris, Bahasa Indonesia, dan Cina Tradisional.
 
 Muslim Board menyediakan banyak fitur berguna untuk meningkatkan produktifitas, diantaranya seperti jadwal sholat, quote islami, dan TODO list.
 
@@ -36,7 +36,7 @@ Fitur:
 - Ada fasilitas TODO list untuk catatan.
 - Indikator penanda internet offline/online.
 - Popup notifikasi ketika mendekati waktu sholat.
-- Mendukung multi bahasa (bahasa inggris dan indonesia).
+- Mendukung multi bahasa (bahasa inggris, indonesia, dan cina tradisional).
 
 ## Extension Permissions
 
