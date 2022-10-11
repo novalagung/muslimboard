@@ -839,12 +839,17 @@
 
                 const text = `
                     <div class='modal-change-language'>
-                        <a href='#' data-locale='en'>
-                            English Language
-                        </a>
-                        <a href='#' data-locale='id'>
-                            Bahasa Indonesia
-                        </a>
+                        <ul>
+                            <li><a href='#' data-locale='en'>
+                                English Language
+                            </a></li>
+                            <li><a href='#' data-locale='id'>
+                                Bahasa Indonesia
+                            </a></li>
+                            <li><a href='#' data-locale='zh-tw'>
+                                中文（繁體）
+                            </a></li>
+                        </ul>
                     </div>
                 `
 

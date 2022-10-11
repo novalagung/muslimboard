@@ -578,6 +578,12 @@ body.show-todo-list #todo-list .wrapper .items .item {
     padding-top: 10px;
     padding-bottom: 40px;
 }
+#swal2-content .modal-change-language ul {
+    list-style-type: none;
+}
+#swal2-content .modal-change-language ul li {
+    margin-top: 10px;
+}
 #swal2-content .modal-change-language a {
     margin: 0px 5px;
     display: inline-block;
