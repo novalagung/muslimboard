@@ -852,15 +852,9 @@
                 const text = `
                     <div class='modal-change-language'>
                         <ul>
-                            <li><a href='#' data-locale='en'>
-                                English Language
-                            </a></li>
-                            <li><a href='#' data-locale='id'>
-                                Bahasa Indonesia
-                            </a></li>
-                            <li><a href='#' data-locale='zh-tw'>
-                                中文（繁體）
-                            </a></li>
+                            <li><a href='#' data-locale='en'>English Language</a></li>
+                            <li><a href='#' data-locale='id'>Bahasa Indonesia</a></li>
+                            <li><a href='#' data-locale='zh-tw'>中文 (繁體)</a></li>
                         </ul>
                     </div>
                 `
@@ -894,7 +888,7 @@
             // on info button click, show the info modal
             $('.info').on('click', (e) => {
                 e.preventDefault();
-                const shareText = `${Constant.meta.appName} ${I18n.getText('appDescription')}`;
+                const shareText = `${Constant.meta.appName} - ${I18n.getText('appDescription')}`;
                 const text = `
                     <div class='modal-info'>
                         <p>
