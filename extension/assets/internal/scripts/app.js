@@ -466,7 +466,7 @@
 
             // load data from remote url
             try {
-                Utility.log('fetching remote data content')
+                Utility.log(`fetching remote data (${I18n.getSelectedLocale()}) content`)
                 const key = `data-content-${I18n.getSelectedLocale()}-remote-${Constant.meta.version}`
                 const data = await Utility.getLatestData(key, async (resolve) => {
                     const url = `${Constant.app.baseUrlGithub}/data-content-${I18n.getSelectedLocale()}.json?v=${Constant.meta.version}.${moment().format('YYYY-MM-DD')}`
@@ -483,8 +483,20 @@
             }
 
             // in case of failure, use local data
-            Utility.log('fetching local data content')
-            const url = `data/data-content-${I18n.getSelectedLocale()}.json`
+            try {
+                Utility.log(`fetching local data (${I18n.getSelectedLocale()}) content`)
+                const url = `data/data-content-${I18n.getSelectedLocale()}.json`
+                const response = await Utility.fetch(url)
+                const data = await response.json()
+                this.updateContent.call(this, data)
+                return
+            } catch (err) {
+                Utility.error(err)
+            }
+
+            // in case of failure (due to missing localized content or other reason), use english local content
+            Utility.log('fetching local data (en) content')
+            const url = `data/data-content-en.json`
             const response = await Utility.fetch(url)
             const data = await response.json()
             this.updateContent.call(this, data)
@@ -839,12 +851,11 @@
 
                 const text = `
                     <div class='modal-change-language'>
-                        <a href='#' data-locale='en'>
-                            English Language
-                        </a>
-                        <a href='#' data-locale='id'>
-                            Bahasa Indonesia
-                        </a>
+                        <ul>
+                            <li><a href='#' data-locale='en'>English Language</a></li>
+                            <li><a href='#' data-locale='id'>Bahasa Indonesia</a></li>
+                            <li><a href='#' data-locale='zh-tw'>中文 (繁體)</a></li>
+                        </ul>
                     </div>
                 `
 
@@ -877,7 +888,7 @@
             // on info button click, show the info modal
             $('.info').on('click', (e) => {
                 e.preventDefault();
-                const shareText = `${Constant.meta.appName} ${I18n.getText('appDescription')}`;
+                const shareText = `${Constant.meta.appName} - ${I18n.getText('appDescription')}`;
                 const text = `
                     <div class='modal-info'>
                         <p>

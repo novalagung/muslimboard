@@ -10,7 +10,7 @@ const Constant = {
     },
     app: {
         baseUrlWebService: 'https://asia-southeast2-muslim-board-ind-1472876095243.cloudfunctions.net',
-        baseUrlGithub: 'https://raw.githubusercontent.com/novalagung/muslimboard/master/extension/data',
+        baseUrlGithub: 'https://muslimboard.novalagung.com/extension/data',
         debug: (() => !('update_url' in chrome.runtime.getManifest()))(),
         timeoutDuration: Utility.seconds(5),
         updateBackgroundDelayDuration: Utility.seconds(40),
