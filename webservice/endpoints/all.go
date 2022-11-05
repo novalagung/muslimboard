@@ -13,7 +13,22 @@ import (
 	"github.com/go-resty/resty/v2"
 )
 
-var restyDebug = false
+var (
+	restyDebug                 bool   = false
+	shalatScheduleByCoordinate string = "shalatScheduleByCoordinate"
+)
+
+type GetValidateQueryResp struct {
+	Method    string
+	Latitude  string
+	Longitude string
+	Month     string
+	Year      string
+
+	LatInt     float64
+	LonInt     float64
+	StatusCode int
+}
 
 // =========================================================== ROUTER ===========================================================
 
@@ -86,25 +101,15 @@ func HandleImage(w http.ResponseWriter, r *http.Request) {
 // HandleShalatScheduleByCoordinate is handler of get shalat schedule by coordinate
 func HandleShalatScheduleByCoordinate(w http.ResponseWriter, r *http.Request) {
 
-	// parse params
-	method := r.URL.Query().Get("method")
-	if method == "" {
-		method = "1"
-	}
-	latitude := r.URL.Query().Get("latitude")
-	longitude := r.URL.Query().Get("longitude")
-	month := r.URL.Query().Get("month")
-	year := r.URL.Query().Get("year")
-
-	// if lat long is invalid, then simply return true
-	latInt, _ := strconv.ParseFloat(latitude, 64)
-	lonInt, _ := strconv.ParseFloat(longitude, 64)
-	if latInt == 0 && lonInt == 0 {
-		writeRespose(w, r, http.StatusOK, true, nil)
+	// get and validate query param
+	validateQuery, err := getValidateQuery(r, shalatScheduleByCoordinate)
+	if err != nil {
+		writeRespose(w, r, validateQuery.StatusCode, nil, err)
 		return
 	}
 
-	schedules, err := getShalatScheduleByCoordinate(method, latInt, lonInt, month, year)
+	// get shalat schedule
+	schedules, err := getShalatScheduleByCoordinate(validateQuery.Method, validateQuery.LatInt, validateQuery.LonInt, validateQuery.Month, validateQuery.Year)
 	if err != nil {
 		writeRespose(w, r, http.StatusInternalServerError, nil, err)
 		return
@@ -116,9 +121,9 @@ func HandleShalatScheduleByCoordinate(w http.ResponseWriter, r *http.Request) {
 		"countryCode": "id",
 	}
 
-	locationRes, err := getLocationByCoordinate(latitude, longitude)
+	locationRes, err := getLocationByCoordinate(validateQuery.Latitude, validateQuery.Longitude)
 	if err != nil {
-		writeRespose(w, r, http.StatusOK, res, nil)
+		writeRespose(w, r, http.StatusNotFound, res, nil)
 		return
 	}
 
@@ -414,4 +419,45 @@ func renderCacheHeader(w http.ResponseWriter, r *http.Request) {
 		// by default enable cache control
 		w.Header().Set("Cache-Control", "max-age=31536000")
 	}
+}
+func getValidateQuery(r *http.Request, module string) (resp GetValidateQueryResp, err error) {
+	if module == shalatScheduleByCoordinate {
+		//parse params
+		method := r.URL.Query().Get("method")
+		if method == "" {
+			method = "1"
+		}
+		latitude := r.URL.Query().Get("latitude")
+		if latitude == "" {
+			resp.StatusCode = http.StatusBadRequest
+			return resp, errors.New("can't get latitude data")
+		}
+		longitude := r.URL.Query().Get("longitude")
+		if longitude == "" {
+			resp.StatusCode = http.StatusBadRequest
+			return resp, errors.New("can't get longitude data")
+		}
+		month := r.URL.Query().Get("month")
+		year := r.URL.Query().Get("year")
+
+		// if lat long is invalid, then simply return err and status code is not founc
+		latInt, _ := strconv.ParseFloat(latitude, 64)
+		lonInt, _ := strconv.ParseFloat(longitude, 64)
+		if latInt == 0 && lonInt == 0 {
+			resp.StatusCode = http.StatusNotFound
+			return resp, errors.New("can't get latitude and longitude")
+		}
+		resp = GetValidateQueryResp{
+			Method:    method,
+			Latitude:  latitude,
+			Longitude: longitude,
+			Month:     month,
+			Year:      year,
+			LatInt:    latInt,
+			LonInt:    lonInt,
+		}
+	}
+
+	return resp, nil
+
 }
