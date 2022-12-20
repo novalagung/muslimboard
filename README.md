@@ -16,6 +16,7 @@ Muslim Board is a personal dashboard for Muslims. This plugin is inspired by Mom
 ## Table of Content
 
 - Folder `extension` is where the chrome extension source code lies.
+- Folder `macos` is the MacOS safari extension project directory. It is used for maintaining AppStore submission.
 - Folder `resources` contains a few resource files (it's used by the extension or website directly).
 - Folder `webservices` contains the backend serverless code (GCP function).
 - Folder `website` contains the source code web/landing page, https://muslimboard.novalagung.com.
