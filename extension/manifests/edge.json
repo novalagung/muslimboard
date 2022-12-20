@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "Muslim Board",
+  "short_name": "muslimboard",
+  "version": "2.5.3",
+  "description": "Personal Dashboard for Muslim",
+  "chrome_url_overrides": {
+    "newtab": "index.html"
+  },
+  "icons": {
+    "16": "assets/internal/images/logo-16.jpg",
+    "48": "assets/internal/images/logo-48.jpg",
+    "128": "assets/internal/images/logo-128.jpg"
+  },
+  "permissions": [
+    "geolocation",
+    "alarms",
+    "notifications",
+    "storage"
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  }
+}

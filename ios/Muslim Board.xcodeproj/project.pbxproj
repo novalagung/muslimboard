@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		192005152951B718003E691B /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = 192005142951B718003E691B /* manifest.json */; };
 		192241342951713B0009926A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 192241332951713B0009926A /* AppDelegate.swift */; };
 		192241382951713B0009926A /* Main.html in Resources */ = {isa = PBXBuildFile; fileRef = 192241362951713B0009926A /* Main.html */; };
 		1922413A2951713B0009926A /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 192241392951713B0009926A /* Icon.png */; };
@@ -24,7 +25,6 @@
 		1922418E295171F50009926A /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 1922418B295171F50009926A /* index.html */; };
 		1922418F295171F50009926A /* assets in Resources */ = {isa = PBXBuildFile; fileRef = 1922418C295171F50009926A /* assets */; };
 		19224190295171F50009926A /* data in Resources */ = {isa = PBXBuildFile; fileRef = 1922418D295171F50009926A /* data */; };
-		192241922951723D0009926A /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = 192241912951723D0009926A /* manifest.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,6 +66,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		192005142951B718003E691B /* manifest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = manifest.json; path = "Muslim Board Extension/manifest.json"; sourceTree = SOURCE_ROOT; };
 		192241302951713B0009926A /* Muslim Board.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Muslim Board.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		192241332951713B0009926A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		192241372951713B0009926A /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = ../Base.lproj/Main.html; sourceTree = "<group>"; };
@@ -90,7 +91,6 @@
 		1922418B295171F50009926A /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = index.html; path = ../../../extension/index.html; sourceTree = "<group>"; };
 		1922418C295171F50009926A /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = assets; path = ../../../extension/assets; sourceTree = "<group>"; };
 		1922418D295171F50009926A /* data */ = {isa = PBXFileReference; lastKnownFileType = folder; name = data; path = ../../../extension/data; sourceTree = "<group>"; };
-		192241912951723D0009926A /* manifest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = manifest.json; path = ../../../extension/manifests/manifest.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -203,7 +203,7 @@
 		192241692951713E0009926A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				192241912951723D0009926A /* manifest.json */,
+				192005142951B718003E691B /* manifest.json */,
 				1922418C295171F50009926A /* assets */,
 				1922418D295171F50009926A /* data */,
 				1922418B295171F50009926A /* index.html */,
@@ -368,7 +368,7 @@
 			files = (
 				19224190295171F50009926A /* data in Resources */,
 				1922418E295171F50009926A /* index.html in Resources */,
-				192241922951723D0009926A /* manifest.json in Resources */,
+				192005152951B718003E691B /* manifest.json in Resources */,
 				1922418F295171F50009926A /* assets in Resources */,
 				1922416F2951713E0009926A /* manifest.json.bak in Resources */,
 			);
