@@ -1,0 +1,830 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 55;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		192005152951B718003E691B /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = 192005142951B718003E691B /* manifest.json */; };
+		192241342951713B0009926A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 192241332951713B0009926A /* AppDelegate.swift */; };
+		192241382951713B0009926A /* Main.html in Resources */ = {isa = PBXBuildFile; fileRef = 192241362951713B0009926A /* Main.html */; };
+		1922413A2951713B0009926A /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 192241392951713B0009926A /* Icon.png */; };
+		1922413C2951713B0009926A /* Style.css in Resources */ = {isa = PBXBuildFile; fileRef = 1922413B2951713B0009926A /* Style.css */; };
+		1922413E2951713B0009926A /* Script.js in Resources */ = {isa = PBXBuildFile; fileRef = 1922413D2951713B0009926A /* Script.js */; };
+		192241402951713B0009926A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1922413F2951713B0009926A /* ViewController.swift */; };
+		192241432951713B0009926A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 192241412951713B0009926A /* Main.storyboard */; };
+		192241452951713D0009926A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 192241442951713D0009926A /* Assets.xcassets */; };
+		192241512951713E0009926A /* Muslim_BoardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 192241502951713E0009926A /* Muslim_BoardTests.swift */; };
+		1922415B2951713E0009926A /* Muslim_BoardUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1922415A2951713E0009926A /* Muslim_BoardUITests.swift */; };
+		1922415D2951713E0009926A /* Muslim_BoardUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1922415C2951713E0009926A /* Muslim_BoardUITestsLaunchTests.swift */; };
+		192241632951713E0009926A /* Muslim Board Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 192241622951713E0009926A /* Muslim Board Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		192241682951713E0009926A /* SafariWebExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 192241672951713E0009926A /* SafariWebExtensionHandler.swift */; };
+		1922416F2951713E0009926A /* manifest.json.bak in Resources */ = {isa = PBXBuildFile; fileRef = 1922416E2951713E0009926A /* manifest.json.bak */; };
+		1922418E295171F50009926A /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 1922418B295171F50009926A /* index.html */; };
+		1922418F295171F50009926A /* assets in Resources */ = {isa = PBXBuildFile; fileRef = 1922418C295171F50009926A /* assets */; };
+		19224190295171F50009926A /* data in Resources */ = {isa = PBXBuildFile; fileRef = 1922418D295171F50009926A /* data */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		1922414D2951713E0009926A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 192241282951713B0009926A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1922412F2951713B0009926A;
+			remoteInfo = "Muslim Board";
+		};
+		192241572951713E0009926A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 192241282951713B0009926A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1922412F2951713B0009926A;
+			remoteInfo = "Muslim Board";
+		};
+		192241642951713E0009926A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 192241282951713B0009926A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 192241612951713E0009926A;
+			remoteInfo = "Muslim Board Extension";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		192241812951713E0009926A /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				192241632951713E0009926A /* Muslim Board Extension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		192005142951B718003E691B /* manifest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = manifest.json; path = "Muslim Board Extension/manifest.json"; sourceTree = SOURCE_ROOT; };
+		192241302951713B0009926A /* Muslim Board.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Muslim Board.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		192241332951713B0009926A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		192241372951713B0009926A /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = ../Base.lproj/Main.html; sourceTree = "<group>"; };
+		192241392951713B0009926A /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
+		1922413B2951713B0009926A /* Style.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = Style.css; sourceTree = "<group>"; };
+		1922413D2951713B0009926A /* Script.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = Script.js; sourceTree = "<group>"; };
+		1922413F2951713B0009926A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		192241422951713B0009926A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		192241442951713D0009926A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		192241462951713D0009926A /* Muslim_Board.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Muslim_Board.entitlements; sourceTree = "<group>"; };
+		192241472951713D0009926A /* Muslim Board.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Muslim Board.entitlements"; sourceTree = "<group>"; };
+		1922414C2951713E0009926A /* Muslim BoardTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Muslim BoardTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		192241502951713E0009926A /* Muslim_BoardTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Muslim_BoardTests.swift; sourceTree = "<group>"; };
+		192241562951713E0009926A /* Muslim BoardUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Muslim BoardUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1922415A2951713E0009926A /* Muslim_BoardUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Muslim_BoardUITests.swift; sourceTree = "<group>"; };
+		1922415C2951713E0009926A /* Muslim_BoardUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Muslim_BoardUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		192241622951713E0009926A /* Muslim Board Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Muslim Board Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		192241672951713E0009926A /* SafariWebExtensionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariWebExtensionHandler.swift; sourceTree = "<group>"; };
+		1922416E2951713E0009926A /* manifest.json.bak */ = {isa = PBXFileReference; lastKnownFileType = text; path = manifest.json.bak; sourceTree = "<group>"; };
+		1922417A2951713E0009926A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1922417B2951713E0009926A /* Muslim_Board_Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Muslim_Board_Extension.entitlements; sourceTree = "<group>"; };
+		1922418B295171F50009926A /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = index.html; path = ../../../extension/index.html; sourceTree = "<group>"; };
+		1922418C295171F50009926A /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = assets; path = ../../../extension/assets; sourceTree = "<group>"; };
+		1922418D295171F50009926A /* data */ = {isa = PBXFileReference; lastKnownFileType = folder; name = data; path = ../../../extension/data; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1922412D2951713B0009926A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		192241492951713E0009926A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		192241532951713E0009926A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1922415F2951713E0009926A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		192241272951713B0009926A = {
+			isa = PBXGroup;
+			children = (
+				192241322951713B0009926A /* Muslim Board */,
+				1922414F2951713E0009926A /* Muslim BoardTests */,
+				192241592951713E0009926A /* Muslim BoardUITests */,
+				192241662951713E0009926A /* Muslim Board Extension */,
+				192241312951713B0009926A /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		192241312951713B0009926A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				192241302951713B0009926A /* Muslim Board.app */,
+				1922414C2951713E0009926A /* Muslim BoardTests.xctest */,
+				192241562951713E0009926A /* Muslim BoardUITests.xctest */,
+				192241622951713E0009926A /* Muslim Board Extension.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		192241322951713B0009926A /* Muslim Board */ = {
+			isa = PBXGroup;
+			children = (
+				192241332951713B0009926A /* AppDelegate.swift */,
+				1922413F2951713B0009926A /* ViewController.swift */,
+				192241412951713B0009926A /* Main.storyboard */,
+				192241442951713D0009926A /* Assets.xcassets */,
+				192241462951713D0009926A /* Muslim_Board.entitlements */,
+				192241472951713D0009926A /* Muslim Board.entitlements */,
+				192241352951713B0009926A /* Resources */,
+			);
+			path = "Muslim Board";
+			sourceTree = "<group>";
+		};
+		192241352951713B0009926A /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				192241362951713B0009926A /* Main.html */,
+				192241392951713B0009926A /* Icon.png */,
+				1922413B2951713B0009926A /* Style.css */,
+				1922413D2951713B0009926A /* Script.js */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		1922414F2951713E0009926A /* Muslim BoardTests */ = {
+			isa = PBXGroup;
+			children = (
+				192241502951713E0009926A /* Muslim_BoardTests.swift */,
+			);
+			path = "Muslim BoardTests";
+			sourceTree = "<group>";
+		};
+		192241592951713E0009926A /* Muslim BoardUITests */ = {
+			isa = PBXGroup;
+			children = (
+				1922415A2951713E0009926A /* Muslim_BoardUITests.swift */,
+				1922415C2951713E0009926A /* Muslim_BoardUITestsLaunchTests.swift */,
+			);
+			path = "Muslim BoardUITests";
+			sourceTree = "<group>";
+		};
+		192241662951713E0009926A /* Muslim Board Extension */ = {
+			isa = PBXGroup;
+			children = (
+				192241672951713E0009926A /* SafariWebExtensionHandler.swift */,
+				1922417A2951713E0009926A /* Info.plist */,
+				1922417B2951713E0009926A /* Muslim_Board_Extension.entitlements */,
+				192241692951713E0009926A /* Resources */,
+			);
+			path = "Muslim Board Extension";
+			sourceTree = "<group>";
+		};
+		192241692951713E0009926A /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				192005142951B718003E691B /* manifest.json */,
+				1922418C295171F50009926A /* assets */,
+				1922418D295171F50009926A /* data */,
+				1922418B295171F50009926A /* index.html */,
+				1922416E2951713E0009926A /* manifest.json.bak */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1922412F2951713B0009926A /* Muslim Board */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 192241822951713E0009926A /* Build configuration list for PBXNativeTarget "Muslim Board" */;
+			buildPhases = (
+				1922412C2951713B0009926A /* Sources */,
+				1922412D2951713B0009926A /* Frameworks */,
+				1922412E2951713B0009926A /* Resources */,
+				192241812951713E0009926A /* Embed App Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				192241652951713E0009926A /* PBXTargetDependency */,
+			);
+			name = "Muslim Board";
+			productName = "Muslim Board";
+			productReference = 192241302951713B0009926A /* Muslim Board.app */;
+			productType = "com.apple.product-type.application";
+		};
+		1922414B2951713E0009926A /* Muslim BoardTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 192241852951713E0009926A /* Build configuration list for PBXNativeTarget "Muslim BoardTests" */;
+			buildPhases = (
+				192241482951713E0009926A /* Sources */,
+				192241492951713E0009926A /* Frameworks */,
+				1922414A2951713E0009926A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1922414E2951713E0009926A /* PBXTargetDependency */,
+			);
+			name = "Muslim BoardTests";
+			productName = "Muslim BoardTests";
+			productReference = 1922414C2951713E0009926A /* Muslim BoardTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		192241552951713E0009926A /* Muslim BoardUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 192241882951713E0009926A /* Build configuration list for PBXNativeTarget "Muslim BoardUITests" */;
+			buildPhases = (
+				192241522951713E0009926A /* Sources */,
+				192241532951713E0009926A /* Frameworks */,
+				192241542951713E0009926A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				192241582951713E0009926A /* PBXTargetDependency */,
+			);
+			name = "Muslim BoardUITests";
+			productName = "Muslim BoardUITests";
+			productReference = 192241562951713E0009926A /* Muslim BoardUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		192241612951713E0009926A /* Muslim Board Extension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1922417E2951713E0009926A /* Build configuration list for PBXNativeTarget "Muslim Board Extension" */;
+			buildPhases = (
+				1922415E2951713E0009926A /* Sources */,
+				1922415F2951713E0009926A /* Frameworks */,
+				192241602951713E0009926A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Muslim Board Extension";
+			productName = "Muslim Board Extension";
+			productReference = 192241622951713E0009926A /* Muslim Board Extension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		192241282951713B0009926A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1340;
+				LastUpgradeCheck = 1340;
+				TargetAttributes = {
+					1922412F2951713B0009926A = {
+						CreatedOnToolsVersion = 13.4.1;
+					};
+					1922414B2951713E0009926A = {
+						CreatedOnToolsVersion = 13.4.1;
+						TestTargetID = 1922412F2951713B0009926A;
+					};
+					192241552951713E0009926A = {
+						CreatedOnToolsVersion = 13.4.1;
+						TestTargetID = 1922412F2951713B0009926A;
+					};
+					192241612951713E0009926A = {
+						CreatedOnToolsVersion = 13.4.1;
+					};
+				};
+			};
+			buildConfigurationList = 1922412B2951713B0009926A /* Build configuration list for PBXProject "Muslim Board" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 192241272951713B0009926A;
+			productRefGroup = 192241312951713B0009926A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1922412F2951713B0009926A /* Muslim Board */,
+				1922414B2951713E0009926A /* Muslim BoardTests */,
+				192241552951713E0009926A /* Muslim BoardUITests */,
+				192241612951713E0009926A /* Muslim Board Extension */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1922412E2951713B0009926A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1922413A2951713B0009926A /* Icon.png in Resources */,
+				192241432951713B0009926A /* Main.storyboard in Resources */,
+				1922413E2951713B0009926A /* Script.js in Resources */,
+				192241382951713B0009926A /* Main.html in Resources */,
+				192241452951713D0009926A /* Assets.xcassets in Resources */,
+				1922413C2951713B0009926A /* Style.css in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1922414A2951713E0009926A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		192241542951713E0009926A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		192241602951713E0009926A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				19224190295171F50009926A /* data in Resources */,
+				1922418E295171F50009926A /* index.html in Resources */,
+				192005152951B718003E691B /* manifest.json in Resources */,
+				1922418F295171F50009926A /* assets in Resources */,
+				1922416F2951713E0009926A /* manifest.json.bak in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1922412C2951713B0009926A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				192241402951713B0009926A /* ViewController.swift in Sources */,
+				192241342951713B0009926A /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		192241482951713E0009926A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				192241512951713E0009926A /* Muslim_BoardTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		192241522951713E0009926A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1922415D2951713E0009926A /* Muslim_BoardUITestsLaunchTests.swift in Sources */,
+				1922415B2951713E0009926A /* Muslim_BoardUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1922415E2951713E0009926A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				192241682951713E0009926A /* SafariWebExtensionHandler.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		1922414E2951713E0009926A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1922412F2951713B0009926A /* Muslim Board */;
+			targetProxy = 1922414D2951713E0009926A /* PBXContainerItemProxy */;
+		};
+		192241582951713E0009926A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1922412F2951713B0009926A /* Muslim Board */;
+			targetProxy = 192241572951713E0009926A /* PBXContainerItemProxy */;
+		};
+		192241652951713E0009926A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 192241612951713E0009926A /* Muslim Board Extension */;
+			targetProxy = 192241642951713E0009926A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		192241362951713B0009926A /* Main.html */ = {
+			isa = PBXVariantGroup;
+			children = (
+				192241372951713B0009926A /* Base */,
+			);
+			name = Main.html;
+			sourceTree = "<group>";
+		};
+		192241412951713B0009926A /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				192241422951713B0009926A /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		1922417C2951713E0009926A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		1922417D2951713E0009926A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		1922417F2951713E0009926A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "Muslim Board Extension/Muslim_Board_Extension.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 7;
+				DEVELOPMENT_TEAM = 8KLL93A755;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Muslim Board Extension/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Muslim Board Extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MARKETING_VERSION = 2.5.3;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.novalagung.muslimboard.Extension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		192241802951713E0009926A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "Muslim Board Extension/Muslim_Board_Extension.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 7;
+				DEVELOPMENT_TEAM = 8KLL93A755;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Muslim Board Extension/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Muslim Board Extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MARKETING_VERSION = 2.5.3;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.novalagung.muslimboard.Extension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		192241832951713E0009926A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
+				CODE_SIGN_ENTITLEMENTS = "Muslim Board/Muslim Board.entitlements";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 7;
+				DEVELOPMENT_TEAM = 8KLL93A755;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Muslim Board";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMainStoryboardFile = Main;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MARKETING_VERSION = 2.5.3;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+					"-framework",
+					WebKit,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.novalagung.muslimboard;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		192241842951713E0009926A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
+				CODE_SIGN_ENTITLEMENTS = "Muslim Board/Muslim Board.entitlements";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 7;
+				DEVELOPMENT_TEAM = 8KLL93A755;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Muslim Board";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMainStoryboardFile = Main;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MARKETING_VERSION = 2.5.3;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+					"-framework",
+					WebKit,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.novalagung.muslimboard;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		192241862951713E0009926A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 8KLL93A755;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.novalagung.muslimboardsafari.Muslim-BoardTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Muslim Board.app/Contents/MacOS/Muslim Board";
+			};
+			name = Debug;
+		};
+		192241872951713E0009926A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 8KLL93A755;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.novalagung.muslimboardsafari.Muslim-BoardTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Muslim Board.app/Contents/MacOS/Muslim Board";
+			};
+			name = Release;
+		};
+		192241892951713E0009926A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 8KLL93A755;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.novalagung.muslimboardsafari.Muslim-BoardUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = "Muslim Board";
+			};
+			name = Debug;
+		};
+		1922418A2951713E0009926A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 8KLL93A755;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.novalagung.muslimboardsafari.Muslim-BoardUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = "Muslim Board";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1922412B2951713B0009926A /* Build configuration list for PBXProject "Muslim Board" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1922417C2951713E0009926A /* Debug */,
+				1922417D2951713E0009926A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1922417E2951713E0009926A /* Build configuration list for PBXNativeTarget "Muslim Board Extension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1922417F2951713E0009926A /* Debug */,
+				192241802951713E0009926A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		192241822951713E0009926A /* Build configuration list for PBXNativeTarget "Muslim Board" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				192241832951713E0009926A /* Debug */,
+				192241842951713E0009926A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		192241852951713E0009926A /* Build configuration list for PBXNativeTarget "Muslim BoardTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				192241862951713E0009926A /* Debug */,
+				192241872951713E0009926A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		192241882951713E0009926A /* Build configuration list for PBXNativeTarget "Muslim BoardUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				192241892951713E0009926A /* Debug */,
+				1922418A2951713E0009926A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 192241282951713B0009926A /* Project object */;
+}

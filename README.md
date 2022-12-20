@@ -8,6 +8,7 @@ Muslim Board is a personal dashboard for Muslims. This plugin is inspired by Mom
 
 ## Installation
 
+- Apple Safari via [App Store](https://apps.apple.com/us/app/muslim-board/id1659445206)
 - Google Chrome and Opera Browser via [official Chrome web store](https://chrome.google.com/webstore/detail/muslim-board/lmnhjilamobdmdihfkofgiejgokabfad) 
 - Microsoft Edge via [official Edge add-ons marketplace](https://microsoftedge.microsoft.com/addons/detail/muslim-board/dfmgmbngjpmbbpgibmdfegilbfckkgli)
 - Mozilla Firefox via [official Firefox add-ons marketplace](https://addons.mozilla.org/en-US/firefox/addon/muslimboard/)
