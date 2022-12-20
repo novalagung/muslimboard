@@ -9,7 +9,7 @@ import Cocoa
 import SafariServices
 import WebKit
 
-let extensionBundleIdentifier = "com.novalagung.muslimboardsafari.Muslim-Board.Extension"
+let extensionBundleIdentifier = "com.novalagung.muslimboard.Extension"
 
 class ViewController: NSViewController, WKNavigationDelegate, WKScriptMessageHandler {
 

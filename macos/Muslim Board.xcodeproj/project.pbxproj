@@ -569,7 +569,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "Muslim Board Extension/Muslim_Board_Extension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = 8KLL93A755;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -600,7 +600,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "Muslim Board Extension/Muslim_Board_Extension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = 8KLL93A755;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
