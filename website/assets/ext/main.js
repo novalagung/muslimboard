@@ -1,20 +1,18 @@
 let vm = {}
 
 vm.second = 1000
-vm.urlContent = 'extension/data/data-content-id.json'
+vm.urlContent = 'extension/data/data-content-en.json'
 
 vm.getContent = (callback = $.noop) => {
     $.getJSON(vm.urlContent, (res) => {
-        let text = res.content
-            .filter((d) => d.type === 'word of wisdom')
-            .map((d) => {
-                let suffix = ''
-                if (res.author.hasOwnProperty(d.author)) {
-                    suffix = `<br /><br />~ <a href="${d.reference}" target="_blank">${res.author[d.author].name}</a>`
-                }
+        const text = res.content.map((d) => {
+            let content = `${d.matan} &nbsp;&nbsp;~&nbsp;&nbsp; ${d.translation}`
+            if (d.reference) {
+                content += ` &nbsp;&nbsp;~&nbsp;&nbsp; ${d.reference}`
+            }
 
-                return `${d.translation}${suffix}`
-            })
+            return content
+        })
 
         callback(text)
     })
@@ -31,7 +29,6 @@ vm.init = () => {
 
     // get content
     vm.getContent((data) => {
-
         // init the text transition
         $('.wise-word').html(data.join('|')).Morphext({
             speed: 10 * vm.second,

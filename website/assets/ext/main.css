@@ -135,12 +135,13 @@ body {
   border-radius: 12px;
   border: none;
 }
-#main > #content .wise-word {
+#main > #quotes .wise-word {
   font-style: italic;
   font-size: 23px;
   line-height: 1.5em;
   padding: 30px 40px;
   background-color: #f7f7f7;
+  text-align: right;
 }
 #main > #contribution .actions li:first-child a {
   margin-right: 10px;
