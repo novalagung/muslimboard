@@ -569,7 +569,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "Muslim Board Extension/Muslim_Board_Extension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = 8KLL93A755;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -582,7 +582,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				MARKETING_VERSION = 2.5.3;
+				MARKETING_VERSION = 2.5.6;
 				OTHER_LDFLAGS = (
 					"-framework",
 					SafariServices,
@@ -600,7 +600,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "Muslim Board Extension/Muslim_Board_Extension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = 8KLL93A755;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -613,7 +613,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				MARKETING_VERSION = 2.5.3;
+				MARKETING_VERSION = 2.5.6;
 				OTHER_LDFLAGS = (
 					"-framework",
 					SafariServices,
@@ -637,7 +637,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = 8KLL93A755;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -651,7 +651,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				MARKETING_VERSION = 2.5.3;
+				MARKETING_VERSION = 2.5.6;
 				OTHER_LDFLAGS = (
 					"-framework",
 					SafariServices,
@@ -676,7 +676,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = 8KLL93A755;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -690,7 +690,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				MARKETING_VERSION = 2.5.3;
+				MARKETING_VERSION = 2.5.6;
 				OTHER_LDFLAGS = (
 					"-framework",
 					SafariServices,
