@@ -16,8 +16,8 @@ const Constant = {
         updateBackgroundDelayDuration: Utility.seconds(40),
         updateContentDelayDuration: Utility.seconds(60),
         changelogs: [
-            'New language support: traditional chinese',
-            'Casual updates and improvements'
+            'Improve random generation algorithm',
+            'Add more contents & background'
         ]
     },
 }

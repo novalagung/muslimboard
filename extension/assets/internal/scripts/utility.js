@@ -118,9 +118,33 @@ const Utility = {
         Utility.log('remove local storage', cond)
         Object.keys(localStorage).filter(cond).forEach((d) => { localStorage.removeItem(d) })
     },
-    randomFromArray(arr, exclusion) {
-        const items = (arr || []).filter((d) => exclusion ? (d != exclusion) : true)
-        return items[Math.floor(Math.random()*items.length)]
+    randomFromArray(key, arr, exclusion) {
+        const cacheKey = `data-cache-${key}`
+        
+        let arrExcluded = JSON.parse(localStorage.getItem(cacheKey) || '[]')
+        if (exclusion) {
+            arrExcluded.push(exclusion.id)
+        }
+        if (key === 'background') {
+            localStorage.setItem(cacheKey, JSON.stringify(arrExcluded))
+            Utility.log('randomFromArray', cacheKey, 'arrExcluded:', arrExcluded)
+        }
+
+        const items = (arr || []).filter((d) => (arrExcluded.length > 0) ? (arrExcluded.indexOf(d.id) === -1) : true)
+        Utility.log('randomFromArray', cacheKey, 'items:', items)
+        if (items.length == 0) {
+            localStorage.removeItem(cacheKey)
+            return Utility.randomFromArray(key, arr, exclusion)
+        }
+
+        const nextItem = items[Math.floor(Math.random()*items.length)]
+        if (key === 'content') {
+            arrExcluded.push(nextItem.id)
+            localStorage.setItem(cacheKey, JSON.stringify(arrExcluded))
+            Utility.log('randomFromArray', cacheKey, 'arrExcluded:', arrExcluded)
+        }
+
+        return nextItem
     },
     sleep: (n) => new Promise((resolve) => { setTimeout(() => { resolve() }, Utility.seconds(n)) }),
     seconds: (n) => n * 1000,

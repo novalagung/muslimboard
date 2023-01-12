@@ -1,5 +1,5 @@
 {
-	"version": "2016.11.19",
+	"version": "2023.01.12",
 	"content": [{
 		"id": "1",
 		"matan": "فَاذْكُرُونِي أَذْكُرْكُمْ",
@@ -90,6 +90,48 @@
 		"translation": "remember Me; I will remember you",
 		"reference": "QS. al Baqarah: 152",
 		"type": "verse"
+	}, {
+		"id": "16",
+		"matan": "إنَّ أَوَّلَ مَا يُحَاسَبُ بِهِ العَبْدُ يَوْمَ القِيَامَةِ مِنْ عَمَلِهِ صَلاَتُهُ ، فَإنْ صَلُحَتْ ، فَقَدْ أفْلَحَ وأَنْجَحَ ، وَإنْ فَسَدَتْ ، فَقَدْ خَابَ وَخَسِرَ ",
+		"translation": "Indeed the first deed by which a servant will be called to account on the Day of Resurrection is his Salat. If it is complete, he is successful and saved, but if it is defective, he has failed and lost.",
+		"type": "verse",
+		"reference": "Jami` at-Tirmidhi 413, Sunan an-Nasa'i 465"
+	}, {
+		"id": "17",
+		"matan": "إِنَّ الرِّفْقَ لاَ يَكُونُ فِى شَىْءٍ إِلاَّ زَانَهُ وَلاَ يُنْزَعُ مِنْ شَىْءٍ إِلاَّ شَانَهُ",
+		"translation": "Kindness is not to be found in anything but that it adds to its beauty and it is not withdrawn from anything but it makes it defective.",
+		"type": "verse",
+		"reference": "Sahih Muslim 2594a"
+	}, {
+		"id": "18",
+		"matan": "مَنْ نَفَّسَ عَنْ مُؤْمِنٍ كُرْبَةً مِنْ كُرَبِ الدُّنْيَا نَفَّسَ اللَّهُ عَنْهُ كُرْبَةً مِنْ كُرَبِ يَوْمِ الْقِيَامَةِ، وَمَنْ يَسَّرَ عَلَى مُعْسِرٍ يَسَّرَ اللَّهُ عَلَيْهِ فِى الدُّنْيَا وَالآخِرَةِ",
+		"translation": "He who alleviates the suffering of a brother out of the sufferings of the world, Allah would alleviate his suffering from the sufferings of the Day of Resurrection, and he who finds relief for one who is hard-pressed, Allah would make things easy for him in the Hereafter.",
+		"type": "verse",
+		"reference": "Sahih Muslim 2699a"
+	}, {
+		"id": "19",
+		"matan": "وَلَوْ بَسَطَ اللَّهُ الرِّزْقَ لِعِبَادِهِ لَبَغَوْا فِي الْأَرْضِ وَلَكِنْ يُنَزِّلُ بِقَدَرٍ مَا يَشَاءُ إِنَّهُ بِعِبَادِهِ خَبِيرٌ بَصِيرٌ",
+		"translation": "If Allah were to enlarge the provision for His Servants, they would indeed transgress beyond all bounds through the earth; but he sends (it) down in due measure as He pleases. For He is with His Servants Well-acquainted, Watchful.",
+		"type": "verse",
+		"reference": "QS. Asy Syuraa: 27"
+	}, {
+		"id": "20",
+		"matan": "عَيْنَانِ لاَ تَمَسُّهُمَا النَّارُ عَيْنٌ بَكَتْ مِنْ خَشْيَةِ اللَّهِ وَعَيْنٌ بَاتَتْ تَحْرُسُ فِى سَبِيلِ اللَّهِ",
+		"translation": "There are two eyes that shall not be touched by the Fire: An eye that wept from the fear of Allah, and an eye that spent the night standing on guard in the cause of Allah.",
+		"type": "verse",
+		"reference": "Jami` at-Tirmidhi 1639"
+	}, {
+		"id": "21",
+		"matan": "عِظَمُ الْجَزَاءِ مَعَ عِظَمِ الْبَلاَءِ وَإِنَّ اللَّهَ إِذَا أَحَبَّ قَوْمًا ابْتَلاَهُمْ فَمَنْ رَضِيَ فَلَهُ الرِّضَا وَمَنْ سَخِطَ فَلَهُ السُّخْطُ",
+		"translation": "The greatest reward comes with the greatest trial. When Allah loves a people He tests them. Whoever accepts that wins His pleasure but whoever is discontent with that earns His wrath.",
+		"type": "verse",
+		"reference": "Sunan Ibn Majah 4031 and Jami` at-Tirmidhi 2396"
+	}, {
+		"id": "22",
+		"matan": "انْظُرُوا إِلَى مَنْ أَسْفَلَ مِنْكُمْ وَلاَ تَنْظُرُوا إِلَى مَنْ هُوَ فَوْقَكُمْ فَهُوَ أَجْدَرُ أَنْ لاَ تَزْدَرُوا نِعْمَةَ اللَّهِ",
+		"translation": "Look at those who stand at a lower level than you but don't look at those who stand at a higher level than you, for that is better-suited that you do not disparage Allah's favors.",
+		"type": "verse",
+		"reference": "Sahih Muslim 2963c"
 	}],
 	"author": {
 		
