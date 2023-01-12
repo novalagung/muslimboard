@@ -122,13 +122,15 @@ const Utility = {
         const cacheKey = `data-cache-${key}`
         
         let arrExcluded = JSON.parse(localStorage.getItem(cacheKey) || '[]')
-        if (exclusion && key === 'background') {
+        if (exclusion) {
             arrExcluded.push(exclusion.id)
+        }
+        if (key === 'background') {
             localStorage.setItem(cacheKey, JSON.stringify(arrExcluded))
             Utility.log('randomFromArray', cacheKey, 'arrExcluded:', arrExcluded)
         }
 
-        let items = (arr || []).filter((d) => (arrExcluded.length > 0) ? (arrExcluded.indexOf(d.id) == -1) : true)
+        const items = (arr || []).filter((d) => (arrExcluded.length > 0) ? (arrExcluded.indexOf(d.id) === -1) : true)
         Utility.log('randomFromArray', cacheKey, 'items:', items)
         if (items.length == 0) {
             localStorage.removeItem(cacheKey)
