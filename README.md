@@ -6,14 +6,18 @@ Muslim Board is a personal dashboard for Muslims. This plugin is inspired by Mom
 
 ![preview](resources/guide/preview-1.png)
 
-## Installation
+## Installation via Official Page
 
 - MacOS **Safari** via [App Store](https://apps.apple.com/us/app/muslim-board/id1659445206)
 - Google **Chrome** & **Opera** Browser via official [Chrome Web Store](https://chrome.google.com/webstore/detail/muslim-board/lmnhjilamobdmdihfkofgiejgokabfad) 
 - Microsoft **Edge** via official [Edge Add-ons Marketplace](https://microsoftedge.microsoft.com/addons/detail/muslim-board/dfmgmbngjpmbbpgibmdfegilbfckkgli)
 - Mozilla **Firefox** via official [Firefox Add-ons Marketplace](https://addons.mozilla.org/en-US/firefox/addon/muslimboard/)
 
-## Table of Content
+## Local Installation
+
+Use chrome → open up extension menu → click **Load unpacked** and navigate to the `extension` directory. Other browser has similar way to load unpacked extensions.
+
+## Project Structure
 
 - Folder `extension` is where the chrome extension source code lies.
 - Folder `macos` is the MacOS safari extension project directory. It is used for maintaining AppStore submission.
@@ -42,10 +46,6 @@ However, before we start doing anything, especially on stuff within the `extensi
 
 - To contribute, simply fork → commit your changes → submit PR.
 - Navigate to [CONTRIBUTING.md](https://github.com/novalagung/muslimboard/blob/master/CONTRIBUTING.md) to see the list of amazing contributor of this project.
-
-## Local Installation
-
-Use chrome → open up extension menu → click **Load unpacked** and navigate to the `extension` directory. Other browser has similar way to load unpacked extensions.
 
 ## Web Service
 
