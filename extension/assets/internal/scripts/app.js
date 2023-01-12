@@ -379,7 +379,7 @@
                     }, Constant.app.updateBackgroundDelayDuration)
                 }
                 preloader.onerror = (err) => {
-                        this.nextSelectedBackground = Utility.randomFromArray(data.content, this.selectedBackground)
+                        this.nextSelectedBackground = Utility.randomFromArray('background', data.content, this.selectedBackground)
                     preloader.src = this.nextSelectedBackground.url
                 }
             }
@@ -389,7 +389,7 @@
             // meanwhile at first load, local image will be used to make the image loading process faster
             if (this.selectedBackground) {
                 this.selectedBackground = this.nextSelectedBackground
-                    this.nextSelectedBackground = Utility.randomFromArray(data.content, this.selectedBackground)
+                    this.nextSelectedBackground = Utility.randomFromArray('background', data.content, this.selectedBackground)
     
                 $('#transitioner .content')
                     .css('opacity', '0')
@@ -430,8 +430,8 @@
                     updateBackgroundAthorName(this.selectedBackground)
                 }
 
-                this.selectedBackground = Utility.randomFromArray(data.content)
-                this.nextSelectedBackground = Utility.randomFromArray(data.content, this.selectedBackground)
+                this.selectedBackground = Utility.randomFromArray('background', data.content)
+                this.nextSelectedBackground = Utility.randomFromArray('background', data.content, this.selectedBackground)
 
                 // right after certain image loaded, trigger preload for next image,
                 // this approach is to ensure when the next image transition is happening,
@@ -446,10 +446,11 @@
                 }
                 preloader.onerror = () => {
                     this.selectedBackground = Utility.randomFromArray(
+                        'background', 
                         data.content.filter((d) => d.url.indexOf('http') == -1),
                         this.selectedBackground
                     )
-                    this.nextSelectedBackground = Utility.randomFromArray(data.content, this.selectedBackground)
+                    this.nextSelectedBackground = Utility.randomFromArray('background', data.content, this.selectedBackground)
                     doUpdateBackgroundForTheFirstTime()
                 }
             }
@@ -504,7 +505,7 @@
 
         // update content. it's the quote and other text related to it.
         updateContent(data) {
-            this.selectedContent = Utility.randomFromArray(data.content, this.selectedContent)
+            this.selectedContent = Utility.randomFromArray('content', data.content, this.selectedContent)
             const content = this.selectedContent
             const author = data.author[content.author]
     
