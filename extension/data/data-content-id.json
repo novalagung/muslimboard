@@ -1,5 +1,5 @@
 {
-	"version": "2022.09.22",
+	"version": "2023.01.12",
 	"content": [{
 		"id": "1",
 		"matan": "فَاذْكُرُونِي أَذْكُرْكُمْ",
@@ -163,252 +163,311 @@
 		"type": "word of wisdom",
 		"reference": "https://t.co/2FB4S5E3zE"
 	}, {
-		"id": "101",
+		"id": "28",
 		"translation": "Salah satu bentuk tipuan syaitan adalah, menjauhkan kita dari tadabur Al-Quran, karena dia (setan) tahu bahwa petunjuk itu ada pada tadabur tersebut -Wazir bin Hubairah",
 		"author": "@ahmedk0025",
 		"type": "word of wisdom",
 		"reference": "https://t.co/CLk9lUfRsW"
 	}, {
-		"id": "102",
+		"id": "29",
 		"translation": "Semakin kuat tauhid pada hati seorang hamba, semakin kuat keimanannya, semakin ia tenang dan semakin besar tawakkal dan keyakinannya –Syaikhul Islam Ibnu Taymiyyah",
 		"author": "@mmajdo",
 		"type": "word of wisdom",
 		"reference": "https://t.co/vxe4b3Ker5"
 	}, {
-		"id": "103",
+		"id": "30",
 		"translation": "Jika amal kita tidak ikhlas karena Alloh, semua yang sudah kita bangun akan roboh",
 		"author": "@saudAlfunaysan",
 		"type": "word of wisdom",
 		"reference": "https://twitter.com/twitulama/status/714366432788611073"
 	}, {
-		"id": "104",
+		"id": "31",
 		"translation": "Minta ampunlah atas dosa, berlapang dadalah, hidupkan hati kalian. Ingat, kita nantinya akan berpisah dengan dunia & yg dicinta",
 		"author": "@saudAlfunaysan",
 		"type": "word of wisdom",
 		"reference": "https://twitter.com/twitulama/status/714363004653932548"
 	}, {
-		"id": "105",
+		"id": "32",
 		"translation": "Sesungguhnya Allah memiliki hamba-hamba yang menghidupkan negeri, merekalah para pengikut sunnah",
 		"author": "@BassamAlshattI",
 		"type": "word of wisdom",
 		"reference": "https://www.facebook.com/twitulama/posts/1145998398765465"
 	}, {
-		"id": "106",
+		"id": "33",
 		"translation": "Tidak boleh seorang muslim berakhlak dengan akhlak orang munafik, seorang mukmin mau menerima nasihat, sedangkan orang munafik menolak nasihat. Kalau ada seseorang yang mengetahui kesalahan saudaranya, hendaknya dinasihati secara rahasia. Itulah akhlak yang benar.",
 		"author": "@azizfrhaan",
 		"type": "word of wisdom",
 		"reference": "https://www.facebook.com/twitulama/posts/1145752168790088"
 	}, {
-		"id": "107",
+		"id": "34",
 		"translation": "Hapuslah kekhilafan agar terjalin ukhuwwah, dan jangan menghapus ukhuwah karena sebuah kekhilafan",
 		"author": "@BassamAlshattI",
 		"type": "word of wisdom",
 		"reference": "https://www.facebook.com/twitulama/posts/1144733328891972"
 	}, {
-		"id": "108",
+		"id": "35",
 		"translation": "Tanda celaka dalah jika kita terus-terusan berbuat dosa sampai akhirnya terasa ringan & kecil dosa itu di hati -Ibnul Qoyim",
 		"author": "@eihab8888",
 		"type": "word of wisdom",
 		"reference": "https://twitter.com/twitulama/status/713933216332120065"
 	}, {
-		"id": "109",
+		"id": "36",
 		"matan": "إِنَّ اللَّهَ يُحِبُّ الْعَبْدَ التَّقِىَّ الْغَنِىَّ الْخَفِىَّ",
 		"translation": "Sesungguhnya Allah mencintai hamba yang bertakwa, hamba yang hatinya selalu merasa cukup dan yang suka mengasingkan diri - Sa’ad bin Abi Waqqash",
 		"reference": "HR. Muslim no. 2965",
 		"type": "verse"
 	}, {
-		"id": "110",
+		"id": "37",
 		"translation": "Dunia ini indah bukan karena banyaknya harta, tapi karena hati yang menerima dan bersyukur",
 		"type": "word of wisdom",
 		"reference": "https://www.instagram.com/p/BJ869QhDnDy/"
 	}, {
-		"id": "111",
+		"id": "38",
 		"translation": "Apabila Allah menghendaki kebaikan bagi hamba-Nya, maka Allah menyegerakan hukumannya di dunia. Dan apabila Allah menghendaki kejelekan bagi hamba-Nya, maka Allah menahan hukuman atas dosanya sampai dibalas pada hari kiamat",
 		"reference": "HR. At-Tirmidzi dari Anas bin Malik radhiyallahu'anhu. Shahihul Jaami': 308",
 		"type": "word of wisdom"
 	}, {
-		"id": "112",
+		"id": "39",
 		"translation": "Bersabarlah, musibah bisa menghapus dosa \"Tidak henti-hentinya musibah menimpa seorang mukmin dan mukminah pada dirinya, anaknya, dan hartanya, sampai ia berjumpa dengan Allah tanpa dosa sedikitpun\"",
 		"reference": "HR. At-Tirmidzi dari Abu Hurairah radhiyallahu'anhu. Ash-Shahihah: 2280",
 		"type": "word of wisdom"
 	}, {
-		"id": "113",
+		"id": "40",
 		"matan": "مَا نَقَصَتْ صَدَقَةٌ مِنْ مَالٍ وَمَا زَادَ اللَّهُ عَبْدًا بِعَفْوٍ إِلاَّ عِزًّا وَمَا تَوَاضَعَ أَحَدٌ لِلَّهِ إِلاَّ رَفَعَهُ اللَّ",
 		"translation": "Tidaklah sedekah itu mengurangi harta, tidaklah Allah menambahkan kepada seorang hamba yang memaafkan kecuali keperkasaan, dan tidaklah seseorang merendah karena Allah kecuali Allah akan mengangkatnya",
 		"reference": "HR Muslim no 2588",
 		"type": "verse"
 	}, {
-		"id": "114",
+		"id": "41",
 		"translation": "Sebelum maju untuk satu urusan penting, berdiskusilah dengan yang berpengalaman. Karena kalau tidak, anda kan menyesal dan merugi lebih banyak",
 		"author": "@1malmosned",
 		"type": "word of wisdom",
 		"reference": "https://t.co/2jX3JFLn0n"
 	}, {
-		"id": "115",
+		"id": "42",
 		"translation": "Orang berakal bukanlah yang kenal akan mana yang baik mana yang buruk, melainkan orang yang jika kenal kebaikan lalu ia ikuti, jika kenal keburukan lalu ia jauhi",
 		"reference": "Sufyan ibn Uyainah",
 		"type": "word of wisdom"
 	}, {
-		"id": "116",
+		"id": "43",
 		"translation": "Ibnu Sirin berkata: \"Kami diceritakan bahwa orang yang paling banyak dosanya adalah yang paling meluangkan diri untuk mengingat kesalahan orang lain\"",
 		"type": "word of wisdom"
 	}, {
-		"id": "117",
+		"id": "44",
 		"matan": "يُغْفَرُ لِلشَّهِيدِ كُلُّ ذَنْبٍ إِلاَّ الدَّيْنَ",
 		"translation": "Terbunuh di jalan Allah menghapuskan (dosa) seluruhnya, kecuali hutang",
 		"reference": "HR. Muslim no. 1886",
 		"type": "verse"
 	}, {
-		"id": "118",
+		"id": "45",
 		"translation": "Rasulullah Shallallahu ‘alaihi wa sallam bersabda: \"Teladanilah 2 orang sesudahku, yaitu Abu Bakar & Umar\"",
 		"reference": "HR Tirmidzi disahihkan Al Albani",
 		"type": "word of wisdom"
 	}, {
-		"id": "119",
+		"id": "46",
 		"translation": "Siapa yang menolong saudaranya dalam kebutuhannya, maka Allah Azza wa Jalla pun akan menolongnya dalam kebutuhannya",
 		"type": "word of wisdom",
 		"reference": "HR. Bukhari"
 	}, {
-		"id": "120",
+		"id": "47",
 		"translation": "Apabila kalian melihat seseorang yang mengurusi aib-aib manusia, dan melupakan aib dirinya sendiri, maka ketahuilah bahwasanya ia telah terkena tipu daya",
 		"type": "word of wisdom",
 		"reference": "Bakr bin Abdullah Al Muzani"
 	}, {
-		"id": "121",
+		"id": "48",
 		"matan": "مَا يُصِيبُ الْمُسْلِمَ مِنْ نَصَبٍ وَلَا وَصَبٍ وَلَا هَمٍّ وَلَا حُزْنٍ وَلَا أَذًى وَلَا غَمٍّ حَتَّى الشَّوْكَةِ يُشَاكُهَا إِلَّا كَفَّرَ اللَّهُ بِهَا مِنْ خَطَايَاهُ",
 		"translation": "Tidaklah seorang muslim tertimpa suatu kelelahan, atau penyakit, atau kehawatiran, atau kesedihan, atau gangguan, bahkan duri yang melukainya melainkan Allah akan menghapus kesalahan-kesalahannya karenanya",
 		"reference": "HR. Al-Bukhari no. 5642 dan Muslim no. 2573",
 		"type": "verse"
 	}, {
-		"id": "122",
+		"id": "49",
 		"translation": "Ketika harapan itu kita gantungkan kepada manusia, pasti berakhir dengan kekecewaan. Harapan yang indah adalah hanya berharap kepada Allah semata",
 		"type": "word of wisdom",
 		"reference": "Ustadz Abu Yahya Badursalam"
 	}, {
-		"id": "123",
+		"id": "50",
 		"translation": "Ketahuilah bahwa hati itu bisa melemah dan sakit, bahkan bisa mati karena kelalaian dan dosa-dosa",
 		"type": "word of wisdom",
 		"reference": "Ibnu Muflih (Kitab al-Adab al-Syar'iyah: 144)"
 	}, {
-		"id": "124",
+		"id": "51",
 		"translation": "Janganlah engkau beramal untuk diingat. Sembunyikanlah kebaikan sebagaimana engkau menyembunyikan keburukan",
 		"type": "word of wisdom",
 		"reference": "Bisyr ibnul Harits"
 	}, {
-		"id": "126",
+		"id": "52",
 		"matan": "وَمَن يَتَّقِ اللَّهَ يَجْعَل لَّهُ مَخْرَجًا﴿٢﴾ وَيَرْزُقْهُ مِنْ حَيْثُ لَا يَحْتَسِبُ",
 		"translation": "Barangsiapa bertakwa kepada Allah niscaya Dia akan mengadakan baginya jalan keluar. Dan memberinya rezeki dari arah yang tiada disangka-sangkanya",
 		"type": "verse",
 		"reference": "Ath Thalaq: 2-3"
 	}, {
-		"id": "127",
+		"id": "53",
 		"translation": "Musibah besar itu adalah seseorang mengetahui kekurangan dirinya, tapi tak peduli dan tak mau memperbaiki kekurangannya tersebut",
 		"type": "word of wisdom",
 		"reference": "Ibnu al-Mubarak"
 	}, {
-		"id": "128",
+		"id": "54",
 		"translation": "Pusaka dunia: Kebaikan yang diberikan. Pusaka di akhirat: Amal yang diterima. Orang yang paling tinggi kedudukannya di sisi Allah adalah orang yang Allah kumpulkan kedua pusaka tersebut pada dirinya.",
 		"author": "@ahmedk0025",
 		"type": "word of wisdom"
 	}, {
-		"id": "129",
+		"id": "55",
 		"translation": "3 hal yang jika hal ini terdapat dalam sebuah nasihat, maka tak kan tertolak: (1) jujur. (2) pengalaman dan memahami kondisi yang dinasihati. (3) lemah lembut dalam menyampaikannya",
 		"author": "@Dr_almosleh",
 		"type": "word of wisdom"
 	}, {
-		"id": "130",
+		"id": "56",
 		"translation": "Allah jadikan nikmat surga sebagai ganti kenikmatan yang tak didapat seorang mukmin di dunia dan balasan atas ketaatannya",
 		"author": "@tuijaaa2",
 		"type": "word of wisdom"
 	}, {
-		"id": "131",
+		"id": "57",
 		"translation": "Siapa yang menempuh jalan untuk mencari ilmu, maka Allah akan memudahkan baginya jalan menuju surga",
 		"type": "word of wisdom",
 		"reference": "HR. Muslim"
 	}, {
-		"id": "132",
+		"id": "58",
 		"translation": "Nashat, kalau disampaikan dengan gaya bahasa yang memaksa atau disertai dengan umpatan dan celaan, maka tak ada dada yang akan lapang untuk menerimanya",
 		"type": "word of wisdom",
 		"author": "@Dr_almosleh"
 	}, {
-		"id": "133",
+		"id": "59",
 		"translation": "Jangan malu bertanya tentang sesuatu yang Anda tidak tahu, karena ilmu itu diperoleh dengan pertanyaan yang baik",
 		"type": "word of wisdom",
 		"author": "@Dr_almosleh"
 	}, {
-		"id": "134",
+		"id": "60",
 		"translation": "Dahulu guru kami Al Imam Al Albani rahimahullah di penghujung hayatnya kerap berkata, \"Masalah kita saat ini adalah akhlaq\", bukan masalah kebodohan, bukan pula keracunan aqidah",
 		"type": "word of wisdom",
 		"author": "@alhalaby2010"
 	}, {
-		"id": "135",
+		"id": "61",
 		"matan": "وَرَحْمَتِي وَسِعَتْ كُلَّ شَيْءٍ ۚفَسَأَكْتُبُهَا لِلَّذِينَ يَتَّقُونَ",
 		"translation": "Dan rahmat-Ku luas meliputi segala sesuatu, maka aku akan memberikannya bagi mereka yang bertaqwa",
 		"type": "verse",
 		"reference": "Al A’raf: 156"
 	}, {
-		"id": "136",
+		"id": "62",
 		"translation": "Jika Anda diuji, ingat tiga hal: 1. Ada orang yang musibahnya lebih berat 2. Dekatnya pertolongan Allah 3. Besarnya pahala sabar",
 		"type": "word of wisdom",
 		"author": "@q8azm"
 	}, {
-		"id": "137",
+		"id": "63",
 		"matan": "كُلُّ نَفْسٍ ذَآئِقَةُ ٱلْمَوْتِ",
 		"translation": "Setiap yang bernyawa akan merasakan kematian",
 		"type": "verse",
 		"reference": "Ali Imran: 185"
 	}, {
-		"id": "138",
+		"id": "64",
 		"translation": "Amru bin Ma'di berkata: Perkataan yang lembut akan melembutkan hati yang lebih keras dari batu, sebaliknya perkataan yang kasar akan mengeraskan hati yang lebih lembut dari sutera",
 		"type": "word of wisdom",
 		"author": "@saudAlfunaysan"
 	}, {
-		"id": "139",
+		"id": "65",
 		"matan": "إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ",
 		"translation": "Hanya kepada-Mu kami beribadah dan hanya kepada-Mu kami memohon pertolongan",
 		"type": "verse",
 		"reference": "Al fatihah: 5"
 	}, {
-		"id": "140",
+		"id": "66",
 		"matan": "فَٱذْكُرُونِىٓ أَذْكُرْكُمْ",
 		"translation": "Ingatlah kamu kepada-Ku, niscaya Aku ingat (pula) kepadamu",
 		"type": "verse",
 		"reference": "QS. al Baqarah: 152"
 	}, {
-		"id": "141",
+		"id": "67",
 		"translation": "Sebagian salaf berkata, “Menyedihkan nasib orang pelit. Dia hidup di dunia seperti orang-orang miskin dan dihisab di akhirat seperti hisabnya orang kaya”",
 		"type": "word of wisdom",
 		"author": "@ALMOQHEM"
 	}, {
-		"id": "142",
+		"id": "68",
 		"translation": "Jangan bangga ketika manusia tahu perjuangan Anda. Tahu tidaknya mereka tidak manfaat tidak mudharat. Yang penting Allah terima!",
 		"type": "word of wisdom",
 		"author": "@AfnanTilmisani"
 	}, {
-		"id": "143",
+		"id": "69",
 		"translation": "Sholeh Al Fauzan berkata, “Tidak mungkin seseorang dapat membentengi aqidah melainkan orang yang mempelajari dan memahaminya”",
 		"type": "word of wisdom",
 		"author": "@eihab8888"
 	}, {
-		"id": "144",
+		"id": "70",
 		"translation": "Hati itu senantiasa haus, tak ada yang bisa memuaskan dahaganya melainkan rasa cinta kepada Allah, dan berdzikir mengingat-Nya",
 		"type": "word of wisdom",
 		"author": "@Dr_almosleh"
 	}, {
-		"id": "145",
+		"id": "71",
 		"translation": "Jika kamu berada di waktu sore, janganlah tunggu waktu pagi. Jika engkau berada di waktu pagi, janganlah menunggu sore hari. Pergunakanlah sehatmu sebelum datang sakitmu, dan pergunakanlah hidupmu sebelum datang kematianmu",
 		"type": "word of wisdom",
 		"author": "HR Bukhari"
 	}, {
-		"id": "146",
+		"id": "72",
 		"translation": "Bahagia itu adalah dengan qana'ah. Siapa yang hatinya sibuk dengan akhirat, maka Allah akan bahagiakan ia walaupun dengan sesuatu yang sedikit. Siapa yang hatinya sibuk dengan dunia, setiap kali tangannya penuh dengan dunia tersebut, maka semakin miskin hatinya",
 		"type": "word of wisdom",
 		"author": "@abdulaziztarefe"
 	}, {
-		"id": "147",
+		"id": "73",
 		"translation": "Bagi setiap pasangan suami istri, sebelum Anda berdua mencari-cari hak Anda atas pasangan Anda dalam kehidupan, apakah Anda sudah mencari apa hak Allah atas Anda dalam kehidupan Anda?",
 		"type": "word of wisdom",
 		"author": "@KhaledAlSaqaby"
+	}, {
+		"id": "74",
+		"matan": "إنَّ أَوَّلَ مَا يُحَاسَبُ بِهِ العَبْدُ يَوْمَ القِيَامَةِ مِنْ عَمَلِهِ صَلاَتُهُ ، فَإنْ صَلُحَتْ ، فَقَدْ أفْلَحَ وأَنْجَحَ ، وَإنْ فَسَدَتْ ، فَقَدْ خَابَ وَخَسِرَ ",
+		"translation": "Sesungguhnya amal yang pertama kali dihisab pada seorang hamba pada hari kiamat adalah shalatnya. Maka, jika shalatnya baik, sungguh ia telah beruntung dan berhasil. Dan jika shalatnya rusak, sungguh ia telah gagal dan rugi.",
+		"type": "verse",
+		"reference": "HR. At-Tirmidzi no. 413, An-Nasa’i no. 465, dishahihkan oleh Syaikh-Al Albani dalam Shahih Al Jami’"
+	}, {
+		"id": "75",
+		"matan": "إِنَّ الرِّفْقَ لاَ يَكُونُ فِى شَىْءٍ إِلاَّ زَانَهُ وَلاَ يُنْزَعُ مِنْ شَىْءٍ إِلاَّ شَانَهُ",
+		"translation": "Sesungguhnya kelembutan tidaklah diberikan pada segala urusan melainkan akan menghiasinya, dan tidaklah kelembutan ditarik dari tiap urusan kecuali akan menjadikannya buruk.",
+		"type": "verse",
+		"reference": "HR Muslim no: 2594"
+	}, {
+		"id": "76",
+		"matan": "مَا نُزِّلَ بَلاَءٌ إِلاَّ بِذَنْبٍ وَلاَ رُفِعَ بَلاَءٌ إِلاَّ بِتَوْبَةٍ",
+		"translation": "Tidaklah musibah tersebut turun melainkan karena dosa. Oleh karena itu, tidaklah bisa musibah tersebut hilang melainkan dengan taubat.",
+		"type": "verse",
+		"reference": "Al Jawabul Kaafi, hal. 87"
+	}, {
+		"id": "77",
+		"matan": "مَنْ نَفَّسَ عَنْ مُؤْمِنٍ كُرْبَةً مِنْ كُرَبِ الدُّنْيَا نَفَّسَ اللَّهُ عَنْهُ كُرْبَةً مِنْ كُرَبِ يَوْمِ الْقِيَامَةِ، وَمَنْ يَسَّرَ عَلَى مُعْسِرٍ يَسَّرَ اللَّهُ عَلَيْهِ فِى الدُّنْيَا وَالآخِرَةِ",
+		"translation": "Barangsiapa yang membantu seorang muslim (dalam) suatu kesusahan di dunia maka Allah akan menolongnya dalam kesusahan pada hari kiamat, dan barangsiapa yang meringankan (beban) seorang muslim yang sedang kesulitan maka Allah akan meringankan (bebannya) di dunia dan akhirat.",
+		"type": "verse",
+		"reference": "HR. Muslim, no. 2699"
+	}, {
+		"id": "78",
+		"matan": "وَلَوْ بَسَطَ اللَّهُ الرِّزْقَ لِعِبَادِهِ لَبَغَوْا فِي الْأَرْضِ وَلَكِنْ يُنَزِّلُ بِقَدَرٍ مَا يَشَاءُ إِنَّهُ بِعِبَادِهِ خَبِيرٌ بَصِيرٌ",
+		"translation": "Dan jikalau Allah melapangkan rezeki kepada hamba-hamba-Nya tentulah mereka akan melampaui batas di muka bumi, tetapi Allah menurunkan apa yang dikehendaki-Nya dengan ukuran. Sesungguhnya Dia Maha Mengetahui (keadaan) hamba-hamba-Nya lagi Maha Melihat.",
+		"type": "verse",
+		"reference": "QS. Asy Syuraa: 27"
+	}, {
+		"id": "79",
+		"matan": "عَيْنَانِ لاَ تَمَسُّهُمَا النَّارُ عَيْنٌ بَكَتْ مِنْ خَشْيَةِ اللَّهِ وَعَيْنٌ بَاتَتْ تَحْرُسُ فِى سَبِيلِ اللَّهِ",
+		"translation": "Dua mata yang tidak akan tersentuh oleh api neraka yaitu mata yang menangis karena takut kepada Allah dan mata yang bermalam (begadang) untuk berjaga-jaga (dari serangan musuh) ketika berperang di jalan Allah.",
+		"type": "verse",
+		"reference": "HR. Tirmidzi, no. 1639, disahihkan Syaikh Al Albani dalam Sahih Sunan At-Tirmizi 1338"
+	}, {
+		"id": "80",
+		"matan": "عِظَمُ الْجَزَاءِ مَعَ عِظَمِ الْبَلاَءِ وَإِنَّ اللَّهَ إِذَا أَحَبَّ قَوْمًا ابْتَلاَهُمْ فَمَنْ رَضِيَ فَلَهُ الرِّضَا وَمَنْ سَخِطَ فَلَهُ السُّخْطُ",
+		"translation": "Sesungguhnya besarnya pahala tergantung dengan besarnya ujian. Sesungguhnya, apabila Allâh mencintai suatu kaum, maka Dia akan mengujinya. Siapa yang ridha dengan ujian itu, maka ia akan mendapat keridhaan-Nya. Siapa yang membencinya maka ia akan mendapatkan kemurkaan-Nya.",
+		"type": "verse",
+		"reference": "HR. at-Tirmidzi no. 2396 dan Ibnu Majah no. 4031 (Ash-Shahîhah no. 146)"
+	}, {
+		"id": "81",
+		"matan": "اطول الناس هما الحسود و اهنئهم عيشا القنوع",
+		"translation": "Orang yang paling banyak di rundung rasa gundah adalah orang yang paling besar rasa hasadnya dan orang yang paling bahagia kehidupannya adalah orang yang paling besar rasa qona’ahnya.",
+		"type": "verse",
+		"reference": "Majmu’ Rasa`il oleh Ibnu Rajab 1/67"
+	}, {
+		"id": "82",
+		"translation": "Kegelisahan, kesusahan, dan kesedihan datang dari dua hal: pertama, menginginkan dan berambisi terhadap dunia; kedua, kurangnya melakukan amal kebaikan dan ketaatan",
+		"type": "word of wisdom",
+		"reference": "Uddatus Shabirin, hlm 258"
+	}, {
+		"id": "83",
+		"matan": "انْظُرُوا إِلَى مَنْ أَسْفَلَ مِنْكُمْ وَلاَ تَنْظُرُوا إِلَى مَنْ هُوَ فَوْقَكُمْ فَهُوَ أَجْدَرُ أَنْ لاَ تَزْدَرُوا نِعْمَةَ اللَّهِ",
+		"translation": "Pandanglah orang yang berada di bawahmu (dalam masalah harta dan dunia) dan janganlah engkau pandang orang yang berada di atasmu (dalam masalah ini). Dengan demikian, hal itu akan membuatmu tidak meremehkan nikmat Allah padamu.",
+		"type": "verse",
+		"reference": "HR. Muslim no. 2963"
 	}],
 	"author": {
 		"@KhaledAlSaqaby": {
