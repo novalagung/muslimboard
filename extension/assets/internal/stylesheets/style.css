@@ -355,10 +355,9 @@ body.show-todo-list #wise-word {
     height: 37px;
 }
 body.show-todo-list #todo-list {
-    top: 30px;
     bottom: 30px;
     width: 420px;
-    height: auto;
+    height: 100%;
 }
 #todo-list:hover {
     background-color: white;

@@ -1,11 +1,12 @@
 <!doctype html>
 
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Muslim Board</title>
+    <title>asdrd</title>
 
     <link rel="stylesheet" href="assets/3rd-parties/normalize/normalize.min.css" />
     <link rel="stylesheet" href="assets/3rd-parties/sweetalert2/sweetalert2.min.css">
@@ -14,6 +15,8 @@
     <link rel="stylesheet" href="assets/3rd-parties/tooltipster/tooltipster.custom-theme.css" />
     <link rel="stylesheet" href="assets/internal/fonts/font.css">
     <link rel="stylesheet" href="assets/internal/stylesheets/style.css">
+
+    <link rel="stylesheet" href="assets/3rd-parties/tailwind/output.css">
 </head>
 
 <body>
@@ -25,8 +28,8 @@
     </div>
     <div id="background-blur"></div>
 
-    <div id="sidebar">
-        <section class="date-time">
+    <div id="sidebar" class="!pt-10">
+        <section class="date-time !h-auto">
             <p class="time">
                 <span class="hour">00</span>
                 <span class="separator"></span>
@@ -97,17 +100,38 @@
         </section>
     </div>
 
-    <div id="wise-word">
-        <div class="wrapper">
-            <div class="vertical">
-                <p class="matan"></p>
-                <p class="translation"></p>
-                <p class="reference"></p>
-            </div>
+    <div id="wise-word" class="t-0 !h-full pt-10 pr-40 !top-0 !right-0">
+        <div class="wrapper !flex flex-col items-center pt-8">
+            <section>
+                <div class="vertical !flex flex-col items-center">
+                    <p class="matan"></p>
+                    <p class="translation !text-2xl leading-3 w-3/5"></p>
+                    <p class="reference"></p>
+                </div>
+            </section>
+
+            <section class="search py-12 w-full max-w-3xl">
+                <form class="flex flex-row justify-center h-12 bg-white rounded-md" action="https://www.google.com/search" method="get">
+
+                    <button class="p-2 bg-slate-200 rounded-md">
+                        <!-- Show google icon color  -->
+                      <img src="assets/internal/images/google-icon.png" alt="google" class="w-6 h-6" />  
+                        
+                    </button>
+
+                    <div class="flex-1 flex flex-wrap items-baseline">
+                        <input type="text" name="q" class="flex-1 p-2 h-full font-thin	
+                        peer w-full rounded-md bg-gray-50 px-4 outline-none drop-shadow-sm transition-all duration-200 ease-in-out focus:ring-0 focus:ring-blue-400
+                        " placeholder="Enter Search" autofocus />
+                        <i class="fa fa-times-circle clear-input p-2"></i>
+                    </div>
+                    
+                </form>
+            </section>
         </div>
     </div>
 
-    <div id="todo-list">
+    <div id="todo-list" class="absolute !bottom-0 !right-0">
         <div class="wrapper">
             <div class="toggler">
                 <i class="fa fa-eye"></i>
@@ -136,7 +160,8 @@
                     </a>
                     <a class="just-text">
                         <i class="fa fa-wifi"></i>
-                        <span data-i18n="footerMenuInternetAvailability">Status internet:</span> <span class="connection-status sad">offline</span>
+                        <span data-i18n="footerMenuInternetAvailability">Status internet:</span> <span
+                            class="connection-status sad">offline</span>
                     </a>
                     <a class="photo-ownership" target="_blank">
                         <i class="fa fa-camera"></i>
@@ -170,4 +195,5 @@
     <script src="assets/internal/scripts/i18n.js"></script>
     <script src="assets/internal/scripts/app.js"></script>
 </body>
+
 </html>
