@@ -89,7 +89,6 @@ html {
     height: 35px;
 }
 #sidebar .date-time .location .fa {
-    position: absolute;
     left: 0px;
     top: 1px;
 }
@@ -98,7 +97,6 @@ html {
     top: 2px;
 }
 #sidebar .date-time .location span {
-    position: absolute;
     left: 19px;
     right: 0px;
     margin-top: 3px;
@@ -110,7 +108,6 @@ html {
 
 #sidebar .prayer-time {
     margin-top: 15px;
-    height: 175px;
     position: relative;
 }
 #sidebar .prayer-time p.title {
@@ -185,26 +182,17 @@ html {
 }
 
 #wise-word {
-    height: 378px;
     z-index: 4;
-}
-#wise-word {
-    position: absolute;
-    right: 60px;
-    top: 20px;
-    left: 400px;
 }
 body.show-todo-list #wise-word {
     right: 510px;
 }
 #wise-word .wrapper {
-    display: table;
     width: 100%;
     height: 100%;
 }
 #wise-word .wrapper .vertical {
-    display: table-cell;
-    vertical-align: middle;
+    
 }
 #wise-word .wrapper .vertical.without-prayer-time {
     vertical-align: top;
@@ -355,10 +343,9 @@ body.show-todo-list #wise-word {
     height: 37px;
 }
 body.show-todo-list #todo-list {
-    top: 30px;
     bottom: 30px;
     width: 420px;
-    height: auto;
+    height: 100%;
 }
 #todo-list:hover {
     background-color: white;
