@@ -1,6 +1,6 @@
 $(document).ready(function () {
 
-    console.log("DOCUMENT READY RIGHT SIUDE")
+    
 
 
     // get width todo-main
@@ -29,7 +29,7 @@ $(document).ready(function () {
 
     $(".todo-hide").click(function () {
 
-        console.log("CLICKED")
+        
 
         $("#todo-main").css("right", "-" + todoMainWidth + "px")
 
@@ -66,10 +66,10 @@ $(document).ready(function () {
             }
         })
 
-        console.log(debugRes)
+        
 
         if (emptyItem) {
-            console.log("There is one empty item")
+            
             return
         }
 
@@ -89,7 +89,7 @@ $(document).ready(function () {
 
         })
 
-        console.log(todoItems)
+        
 
         localStorage.setItem("todoItems", JSON.stringify(todoItems))
 
@@ -142,7 +142,7 @@ $(document).ready(function () {
 
         })
 
-        console.log(todoItems)
+        
 
         localStorage.setItem("todoItems", JSON.stringify(todoItems))
 
@@ -168,7 +168,7 @@ $(document).ready(function () {
 
         })
 
-        console.log(todoItems)
+        
 
         localStorage.setItem("todoItems", JSON.stringify(todoItems))
 
@@ -197,7 +197,7 @@ $(document).ready(function () {
 
         })
 
-        console.log(todoItems)
+        
 
         localStorage.setItem("todoItems", JSON.stringify(todoItems))
 

@@ -18,12 +18,12 @@ addEventListener('DOMContentLoaded', () => {
 
         // get list value
         liValue = this.textContent;
-        // console.log(liValue);
+        
         liValue = liValue.toLowerCase();
 
         changeSelection(liValue);
         inputValue = encodeURIComponent(inputValue);
-        console.log("final = " + searchURL + inputValue + searchTerm);
+        
 
         
     }));
@@ -38,7 +38,7 @@ addEventListener('DOMContentLoaded', () => {
         let myForm = document.getElementById("search-form");
         myForm.action = searchURL + inputValue + searchTerm;
 
-        console.log("Final = " + searchURL + inputValue + searchTerm);
+        
 
         
     });
@@ -60,28 +60,22 @@ addEventListener('DOMContentLoaded', () => {
 
         if (liValue === "web") {
             inputValue = input.value;
-            // searchTerm = "&tbm="
-            console.log("input value = " + inputValue)
     
         } else if (liValue === "images") {
             inputValue = input.value;
             searchTerm = "&tbm=isch"
-            console.log("input value = " + inputValue)
     
         } else if (liValue === "videos") {
             inputValue = input.value;
             searchTerm = "&tbm=vid"
-            console.log("input value = " + inputValue)
     
         } else if (liValue === "news") {
             inputValue = input.value;
             searchTerm = "&tbm=nws"
-            console.log("input value = " + inputValue)
     
         } else if (liValue === "shopping") {
             inputValue = input.value;
             searchTerm = "&tbm=shop"
-            console.log("input value = " + inputValue)
     
         }
     
