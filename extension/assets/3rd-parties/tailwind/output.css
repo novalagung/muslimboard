@@ -545,14 +545,6 @@ video {
   right: 1rem;
 }
 
-.\!bottom-0 {
-  bottom: 0px !important;
-}
-
-.\!right-0 {
-  right: 0px !important;
-}
-
 .z-10 {
   z-index: 10;
 }
@@ -788,16 +780,8 @@ video {
   background-color: rgb(203 213 225 / var(--tw-bg-opacity));
 }
 
-.bg-inherit {
-  background-color: inherit;
-}
-
 .bg-opacity-50 {
   --tw-bg-opacity: 0.5;
-}
-
-.bg-none {
-  background-image: none;
 }
 
 .\!p-0 {
