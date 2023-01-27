@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>asdrd</title>
+    <title>Muslim Board</title>
 
     <link rel="stylesheet" href="assets/3rd-parties/normalize/normalize.min.css" />
     <link rel="stylesheet" href="assets/3rd-parties/sweetalert2/sweetalert2.min.css">
@@ -19,119 +19,286 @@
     <link rel="stylesheet" href="assets/3rd-parties/tailwind/output.css">
 </head>
 
-<body>
+<body class="h-screen">
     <div id="transitioner">
         <div class="content"></div>
     </div>
+
     <div id="background">
-        <div class="content"></div>
+        <div id="main-background" class="content opacity-70"></div>
     </div>
-    <div id="background-blur"></div>
 
-    <div id="sidebar" class="!pt-10">
-        <section class="date-time !h-auto">
-            <p class="time">
-                <span class="hour">00</span>
-                <span class="separator"></span>
-                <span class="minute">00</span>
-            </p>
-            <p class="date">
-                <i class="fa fa-calendar"></i>
-                <span class="text">Loading ...</span>
-            </p>
-            <p class="location">
-                <i class="fa fa-map-marker"></i>
-                <span class="text">Loading ...</span>
-            </p>
-        </section>
+    <main class="flex flex-wrap flex-row h-full max-h-full max-w-full">
 
-        <section class="prayer-time">
-            <div class="content">
-                <p class="title">
-                    <span data-i18n="prayerTimeTodaySchedule">Jadwal sholat untuk hari ini:</span>
-                    <span class="date-time"></span>
+        <!-- Left side  -->
+        <div id="sidebar" class="!p-0 basis-1/5	 !static flex flex-row flex-wrap content-center h-full">
+            <section class="date-time !h-auto max-w-full p-4">
+                <p class="time !m-0 !text-8xl">
+                    <span class="hour">00</span>
+                    <span class="separator"></span>
+                    <span class="minute">00</span>
                 </p>
-                <table>
-                    <colgroup>
-                        <col style="text-align: right;" />
-                        <col style="text-align: right;" />
-                        <col />
-                    </colgroup>
-                    <tbody>
-                        <tr>
-                            <!-- Subuh -->
-                            <td></td>
-                            <td data-when='subuh'>04:18</td>
-                            <td>WIB</td>
-                        </tr>
-                        <tr>
-                            <!-- Dhuha -->
-                            <td></td>
-                            <td data-when='dhuha'>05:58</td>
-                            <td>WIB</td>
-                        </tr>
-                        <tr>
-                            <!-- Dzuhur -->
-                            <td></td>
-                            <td data-when='dzuhur'>11:43</td>
-                            <td>WIB</td>
-                        </tr>
-                        <tr>
-                            <!-- Ashar -->
-                            <td></td>
-                            <td data-when='ashar'>14:47</td>
-                            <td>WIB</td>
-                        </tr>
-                        <tr>
-                            <!-- Maghrib -->
-                            <td></td>
-                            <td data-when='maghrib'>17:49</td>
-                            <td>WIB</td>
-                        </tr>
-                        <tr>
-                            <!-- Isya -->
-                            <td>'</td>
-                            <td data-when='isya'>18:58</td>
-                            <td>WIB</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-    </div>
+                <p class="date">
+                    <span>
 
-    <div id="wise-word" class="t-0 !h-full pt-10 pr-40 !top-0 !right-0">
-        <div class="wrapper !flex flex-col items-center pt-8">
-            <section>
-                <div class="vertical !flex flex-col items-center">
-                    <p class="matan"></p>
-                    <p class="translation !text-2xl leading-3 w-3/5"></p>
-                    <p class="reference"></p>
+                        <i class="fa fa-calendar"></i>
+                    </span>
+                    <span class="text">Loading ...</span>
+                </p>
+                <p class="location">
+                    <span>
+
+                        <i class="fa fa-map-marker"></i>
+                    </span>
+                    <span class="text">Loading ...</span>
+                </p>
+            </section>
+
+            <section class="prayer-time p-4">
+                <div class="content">
+                    <p class="title">
+                        <span data-i18n="prayerTimeTodaySchedule">Jadwal sholat untuk hari ini:</span>
+                        <span class="date-time"></span>
+                    </p>
+                    <table>
+                        <colgroup>
+                            <col style="text-align: right;" />
+                            <col style="text-align: right;" />
+                            <col />
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <!-- Subuh -->
+                                <td></td>
+                                <td data-when='subuh'>04:18</td>
+                                <td>WIB</td>
+                            </tr>
+                            <tr>
+                                <!-- Dhuha -->
+                                <td></td>
+                                <td data-when='dhuha'>05:58</td>
+                                <td>WIB</td>
+                            </tr>
+                            <tr>
+                                <!-- Dzuhur -->
+                                <td></td>
+                                <td data-when='dzuhur'>11:43</td>
+                                <td>WIB</td>
+                            </tr>
+                            <tr>
+                                <!-- Ashar -->
+                                <td></td>
+                                <td data-when='ashar'>14:47</td>
+                                <td>WIB</td>
+                            </tr>
+                            <tr>
+                                <!-- Maghrib -->
+                                <td></td>
+                                <td data-when='maghrib'>17:49</td>
+                                <td>WIB</td>
+                            </tr>
+                            <tr>
+                                <!-- Isya -->
+                                <td>'</td>
+                                <td data-when='isya'>18:58</td>
+                                <td>WIB</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </section>
-
-            <section class="search py-12 w-full max-w-3xl">
-                <form class="flex flex-row justify-center h-12 bg-white rounded-md" action="https://www.google.com/search" method="get">
-
-                    <button class="p-2 bg-slate-200 rounded-md">
-                        <!-- Show google icon color  -->
-                      <img src="assets/internal/images/google-icon.png" alt="google" class="w-6 h-6" />  
-                        
-                    </button>
-
-                    <div class="flex-1 flex flex-wrap items-baseline">
-                        <input type="text" name="q" class="flex-1 p-2 h-full font-thin	
-                        peer w-full rounded-md bg-gray-50 px-4 outline-none drop-shadow-sm transition-all duration-200 ease-in-out focus:ring-0 focus:ring-blue-400
-                        " placeholder="Enter Search" autofocus />
-                        <i class="fa fa-times-circle clear-input p-2"></i>
-                    </div>
-                    
-                </form>
-            </section>
         </div>
-    </div>
 
-    <div id="todo-list" class="absolute !bottom-0 !right-0">
+        <!-- Middle Side -->
+        <div id="wise-word" class="!h-full basis-3/5 ">
+            <div class="wrapper !flex flex-col justify-center items-center">
+
+                <section class="">
+                    <div class="vertical !flex flex-col items-center">
+                        <p class="matan
+                            !text-4xl
+                        "></p>
+                        <p class="translation
+                        !text-xl leading-3 "></p>
+                        <p class="reference"></p>
+                    </div>
+                </section>
+
+                <section class="search w-full max-w-3xl pt-8">
+                    <ul class="flex flex-row gap-16 mb-8 ml-4 text-slate-700 font-medium text-sm	">
+                        <li
+                            class="search-item 
+                        hover:text-slate-50 ease-out duration-300 cursor-pointer shadow-sm search-active text-slate-50">
+                            Web</li>
+                        <li class="search-item 
+                        hover:text-slate-50 ease-out duration-300 cursor-pointer shadow-sm">Images</li>
+                        <li class="search-item 
+                        hover:text-slate-50 ease-out duration-300 cursor-pointer shadow-sm">Videos</li>
+                        <li class="search-item 
+                        hover:text-slate-50 ease-out duration-300 cursor-pointer shadow-sm">Shopping</li>
+                        <li class="search-item 
+                        hover:text-slate-50 ease-out duration-300 cursor-pointer shadow-sm">News</li>
+                    </ul>
+
+                    <div id="search-form" class="flex flex-row justify-center h-12 bg-white rounded-md">
+
+                        <button class="p-2 bg-slate-200 rounded-md">
+                            <!-- Show google icon color  -->
+                            <img src="assets/internal/images/google-icon.png" alt="google" class="w-6 h-6" />
+
+                        </button>
+
+                        <div class="flex-1 flex flex-wrap items-baseline">
+                            <input type="text" id="search-value" class="flex-1 p-2 h-full font-thin	
+                            peer w-full rounded-md bg-gray-50 px-4 outline-none drop-shadow-sm transition-all duration-200 ease-in-out focus:ring-0 focus:ring-blue-400
+                            " placeholder="Enter Search" autofocus />
+                            <i class="fa fa-times-circle clear-input p-2"></i>
+                        </div>
+
+                    </div>
+                </section>
+
+                <section class="py-16 pb-0 px-8 w-full ">
+                    <!-- Swiper -->
+                    <div clasas="swiper mySwiper">
+                        <div class="swiper-wrapper
+                        overflow-hidden p-4
+                        ">
+
+                            <div class="swiper-slide
+                            grid grid-cols-5 gap-y-12
+                            ">
+                                <div id="facebook-icon" class="icon-item
+                                m-auto cursor-pointer 
+                                ">
+                                    <div class="icon-wrapper
+                                        rounded-full overflow-hidden transform hover:scale-110 shadow-lg hover:shadow-cyan-800 duration-500 ease-out
+                                    ">
+                                        <img src="assets/internal/images/facebook-icon.png" alt="icon" class="w-16 h-16
+                                              p-0.5 rounded-full
+                                        " />
+
+                                    </div>
+                                    <div class="icon-name
+                                    text-slate-50 mt-4 font-normal text-sm text-center
+                                    ">Facebook</div>
+                                </div>
+
+                                <div id="twitter-icon" class="icon-item
+                                m-auto cursor-pointer 
+                                ">
+                                    <div class="icon-wrapper
+                                        rounded-full overflow-hidden transform hover:scale-110 shadow-lg hover:shadow-cyan-800 duration-500 ease-out
+                                    ">
+                                        <img src="assets/internal/images/twitter-icon.png" alt="icon" class="w-16 h-16
+                                              p-0.5 rounded-full
+                                        " />
+
+                                    </div>
+                                    <div class="icon-name
+                                    text-slate-50 mt-4 font-normal text-sm text-center
+                                    ">Twitter</div>
+                                </div>
+
+                                <div id="instagram-icon" class="icon-item
+                                m-auto cursor-pointer 
+                                ">
+                                    <div class="icon-wrapper
+                                    rounded-full overflow-hidden transform hover:scale-110 shadow-lg hover:shadow-cyan-800 duration-500 ease-out
+                                    ">
+                                        <img src="assets/internal/images/instagram-icon.png" alt="icon" class="w-16 h-16
+                                            p-0.5 rounded-full
+                                        16" />
+
+                                    </div>
+                                    <div class="icon-name
+                                    text-slate-50 mt-4 font-normal text-sm text-center
+                                    ">Instagram</div>
+                                </div>
+
+                                <div id="youtube-icon" class="icon-item
+                                m-auto cursor-pointer 
+                                ">
+                                    <div class="icon-wrapper
+                                        rounded-full overflow-hidden transform hover:scale-110 shadow-lg hover:shadow-cyan-800 duration-500 ease-out
+                                    ">
+                                        <img src="assets/internal/images/youtube-icon.png" alt="icon" class="w-16 h-16
+                                              p-0.5 rounded-full
+                                        " />
+
+                                    </div>
+                                    <div class="icon-name
+                                    text-slate-50 mt-4 font-normal text-sm text-center
+                                    ">Youtube</div>
+                                </div>
+
+                                <div id="quran-icon" class="icon-item
+                                m-auto cursor-pointer 
+                                ">
+                                    <div class="icon-wrapper
+                                        rounded-full overflow-hidden transform hover:scale-110 shadow-lg hover:shadow-cyan-800 duration-500 ease-out
+                                    ">
+                                        <img src="assets/internal/images/quran-icon.png" alt="icon" class="w-16 h-16
+                                              p-0.5 rounded-full
+                                        " />
+
+                                    </div>
+                                    <div class="icon-name
+                                    text-slate-50 mt-4 font-normal text-sm text-center
+                                    ">Quran</div>
+                                </div>
+
+                                <div id="quora-icon" class="icon-item
+                                m-auto cursor-pointer 
+                                ">
+                                    <div class="icon-wrapper
+                                    rounded-full overflow-hidden transform hover:scale-110 shadow-lg hover:shadow-cyan-800 duration-500 ease-out
+                                    ">
+                                        <img src="assets/internal/images/quora-icon.png" alt="icon" class="w-16 h-16
+                                            p-0.5 rounded-full
+                                        16" />
+
+                                    </div>
+                                    <div class="icon-name
+                                    text-slate-50 mt-4 font-normal text-sm text-center
+                                    ">Quora</div>
+                                </div>
+
+
+                            </div>
+
+
+
+                        </div>
+
+                        <div class="swiper-pagination"></div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- Right Side -->
+        <aside class="todo-show
+        flex absolute right-8 top-8 gap-8 text-white z-10 transition-all ease-in-out duration-300">
+            <div class="setting-sticky-note text-center text-base cursor-pointer hover:scale-110 duration-300">
+                <i class="fa fa-sticky-note bg-slate-300 rounded-full p-4 text-slate-700 bg-opacity-50"></i>
+            </div>
+            <!-- <div class="setting-btn text-center text-base cursor-pointer hover:scale-110 duration-300">
+                <i class="fa fa-cog bg-slate-300 rounded-full p-4 text-slate-700 bg-opacity-50"></i>
+            </div> -->
+        </aside>
+
+        <aside id="todo-main" class="fixed top-0 -right-full h-full w-1/5 z-50 bg-slate-300 opacity-75 transition-all ease-in-out duration-300">
+            <div class="todo-setting">
+
+            </div>
+            <div class="todo-list flex">
+
+            </div>
+        </aside>
+    </main>
+
+    <!-- <div id="todo-list" class="absolute !bottom-0 !right-0">
         <div class="wrapper">
             <div class="toggler">
                 <i class="fa fa-eye"></i>
@@ -144,7 +311,7 @@
                 </button>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <div id="footer">
         <div class="wrapper">
@@ -194,6 +361,11 @@
     <script src="assets/internal/scripts/constant.js"></script>
     <script src="assets/internal/scripts/i18n.js"></script>
     <script src="assets/internal/scripts/app.js"></script>
+
+    <script src="assets/3rd-parties/swiper/swiper-bundle.min.js"></script>
+    <script src="assets/internal/scripts/search.js"></script>
+    <script src="assets/internal/scripts/iconSwiper.js"></script>
+    <script src="assets/internal/scripts/rightSideBar.js"></script>
 </body>
 
 </html>
