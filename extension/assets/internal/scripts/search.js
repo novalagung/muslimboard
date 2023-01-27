@@ -90,6 +90,7 @@ addEventListener('DOMContentLoaded', () => {
     const clearInput = document.getElementById("clear-input");
     clearInput.addEventListener("click", function () {
         input.value = "";
+        inputValue = "";
         input.focus();
     });
 
