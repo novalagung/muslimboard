@@ -28,7 +28,7 @@
         <div id="main-background" class="content opacity-70"></div>
     </div>
 
-    <main class="flex flex-wrap flex-row h-full max-h-full max-w-full">
+    <main class="relative overflow-hidden flex flex-wrap flex-row h-full max-h-full max-w-full">
 
         <!-- Left side  -->
         <div id="sidebar" class="!p-0 basis-1/5	 !static flex flex-row flex-wrap content-center h-full">
@@ -288,11 +288,38 @@
             </div> -->
         </aside>
 
-        <aside id="todo-main" class="fixed top-0 -right-full h-full w-1/5 z-50 bg-slate-300 opacity-75 transition-all ease-in-out duration-300">
-            <div class="todo-setting">
+        <aside id="todo-main"
+            class="absolute top-0 -right-full h-full w-3/12 z-50 bg-slate-300 opacity-100 transition-all ease-in-out duration-300">
+            <div class="todo-setting p-4 text-2xl text-slate-900">
+
+                <div class="add-item">
+                    <i class="fa fa-plus-circle text-slate-700 text-3xl cursor-pointer"></i>
+                </div>
 
             </div>
-            <div class="todo-list flex">
+            <div class="todo-list">
+
+                <div class="items max-w-full flex flex-col py-4 gap-4">
+                    <div class="item
+                        flex gap-x-1.5 text-xl w-full border-b-2 border-slate-800 p-4 relative group
+                    ">
+                        <input type="checkbox" class="w-8 content-center accent-sky-400">
+                        <span
+                            class="flex-auto item-textbox w-2/3 text-base font-medium px-2 py-1 focus:outline-none"
+                            contenteditable="true" data-placeholder="Tulis sesuatu"></span>
+                        <i class="opacity-0 absolute right-4 fa fa-trash self-center text-red-500 transition-all duration-300 cursor-pointer group-hover:opacity-100"></i>
+                    </div>
+
+                    <div class="item
+                        flex gap-x-1.5 text-xl w-full border-b-2 border-slate-800 p-4 relative group
+                    ">
+                        <input type="checkbox" class="w-8 content-center accent-sky-400">
+                        <span
+                            class="flex-auto item-textbox w-2/3 text-base font-medium px-2 py-1 focus:outline-none"
+                            contenteditable="true" data-placeholder="Tulis sesuatu">Senantiasa bersyukur dan berbuat baik</span>
+                        <i class="opacity-0 absolute right-4 fa fa-trash self-center text-red-500 transition-all duration-300 cursor-pointer group-hover:opacity-100"></i>
+                    </div>
+                </div>
 
             </div>
         </aside>
