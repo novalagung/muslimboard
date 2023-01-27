@@ -92,6 +92,13 @@ addEventListener('DOMContentLoaded', () => {
         window.location.href = googleSearchUrl;
     }
 
+    // clear input 
+    const clearInput = document.getElementById("clear-input");
+    clearInput.addEventListener("click", function () {
+        input.value = "";
+        input.focus();
+    });
+
 });
 
 

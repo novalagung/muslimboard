@@ -1,9 +1,9 @@
-<!doctype html>
-
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Muslim Board</title>
@@ -152,7 +152,7 @@
                             <input type="text" id="search-value" class="flex-1 p-2 h-full font-thin	
                             peer w-full rounded-md bg-gray-50 px-4 outline-none drop-shadow-sm transition-all duration-200 ease-in-out focus:ring-0 focus:ring-blue-400
                             " placeholder="Enter Search" autofocus />
-                            <i class="fa fa-times-circle clear-input p-2"></i>
+                            <i id="clear-input" class="fa fa-times-circle p-2 cursor-pointer"></i>
                         </div>
 
                     </div>
@@ -289,7 +289,7 @@
         </aside>
 
         <aside id="todo-main"
-            class="absolute top-0 -right-full h-full w-3/12 z-50 bg-slate-300 opacity-100 transition-all ease-in-out duration-300">
+            class="absolute top-0 -right-full h-full w-3/12 z-50 bg-slate-200 opacity-100 transition-all ease-in-out duration-300">
             <div class="todo-setting p-4 text-2xl text-slate-900">
 
                 <div class="add-item">
@@ -303,7 +303,7 @@
                     <div class="item
                         flex gap-x-1.5 text-xl w-full border-b-2 border-slate-800 p-4 relative group
                     ">
-                        <input type="checkbox" class="w-8 content-center accent-sky-400">
+                        <input type="checkbox" class="w-8 content-center accent-sky-400" aria-label="checkbox" />
                         <span
                             class="flex-auto item-textbox w-2/3 text-base font-medium px-2 py-1 focus:outline-none"
                             contenteditable="true" data-placeholder="Tulis sesuatu"></span>
@@ -313,7 +313,7 @@
                     <div class="item
                         flex gap-x-1.5 text-xl w-full border-b-2 border-slate-800 p-4 relative group
                     ">
-                        <input type="checkbox" class="w-8 content-center accent-sky-400">
+                        <input type="checkbox" class="w-8 content-center accent-sky-400" aria-label="checkbox" />
                         <span
                             class="flex-auto item-textbox w-2/3 text-base font-medium px-2 py-1 focus:outline-none"
                             contenteditable="true" data-placeholder="Tulis sesuatu">Senantiasa bersyukur dan berbuat baik</span>
@@ -389,7 +389,6 @@
     <script src="assets/internal/scripts/i18n.js"></script>
     <script src="assets/internal/scripts/app.js"></script>
 
-    <script src="assets/3rd-parties/swiper/swiper-bundle.min.js"></script>
     <script src="assets/internal/scripts/search.js"></script>
     <script src="assets/internal/scripts/iconSwiper.js"></script>
     <script src="assets/internal/scripts/rightSideBar.js"></script>

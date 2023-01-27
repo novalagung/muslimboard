@@ -45,7 +45,7 @@ $(document).ready(function () {
     <div class="item
         flex gap-x-1.5 text-xl w-full border-b-2 border-slate-800 p-4 relative group 
     ">
-        <input type="checkbox" class="w-8 content-center accent-sky-400">
+        <input type="checkbox" class="w-8 content-center accent-sky-400" aria-label="checkbox" />
         <span
             class="flex-auto item-textbox w-2/3 text-base font-medium px-2 py-1 focus:outline-none"
             contenteditable="true" data-placeholder="Tulis sesuatu"></span>
@@ -109,7 +109,7 @@ $(document).ready(function () {
                 <div class="item
                     flex gap-x-1.5 text-xl w-full border-b-2 border-slate-800 p-4 relative group 
                 ">
-                    <input type="checkbox" class="w-8 content-center accent-sky-400">
+                    <input type="checkbox" class="w-8 content-center accent-sky-400" aria-label="checkbox" />
                     <span
                         class="flex-auto item-textbox w-2/3 text-base font-medium px-2 py-1 focus:outline-none"
                         contenteditable="true" data-placeholder="Tulis sesuatu"></span>
