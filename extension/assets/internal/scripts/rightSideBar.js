@@ -64,6 +64,15 @@ $(document).ready(function () {
 
         })
 
+        // if status checked, make text line-through
+        $("#todo-main .items .item input[type=checkbox]").each(function () {
+            if ($(this).prop("checked")) {
+                $(this).parent().find(".item-textbox").css("text-decoration", "line-through")
+            } else {
+                $(this).parent().find(".item-textbox").css("text-decoration", "none")
+            }
+        })
+
     }
 
     // Register todo list 
