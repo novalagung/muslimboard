@@ -1,9 +1,16 @@
 (() => {
     const App = {
-    
+
+        toggleSettingsModal(open) {
+            console.log(open)
+            const modal = document.getElementById('settingsModal')
+            open ? modal.classList.add('show') : modal.classList.remove('show')
+        },
+
+        
         // =========== CLOCK
-    
         // render time to screen at start and every seconds
+        dateInHijri: false,
         renderDateTime() {
             const doRenderDateTime = () => {
                 const hour = moment().format('HH')
@@ -11,11 +18,13 @@
                 const dayName = I18n.getText(`day${moment().format('dddd')}`)
                 const monthName = I18n.getText(`month${moment().format('MMMM')}`)
                 const tzAbbr = Utility.getCurrentTimezoneAbbreviation(this.geoLocationCountryCode)
-                const dateFull = moment().format('$1, DD $2 YYYY HH:mm:ss $3')
+                let dateFull = moment().format('$1, DD $2 YYYY HH:mm:ss $3')
                     .replace('$1', dayName)
                     .replace('$2', monthName)
                     .replace('$3', tzAbbr)
-
+                if (this.dateInHijri) {
+                    dateFull = new Intl.DateTimeFormat('ar-TN-u-ca-islamic', { day: 'numeric', month: 'long', weekday: 'long', year: 'numeric' }).format(Date.now());
+                }
                 $('.time .hour').text(hour)
                 $('.time .minute').text(minute)
                 $('.date .text').text(dateFull)
@@ -24,7 +33,7 @@
             doRenderDateTime()
             setInterval(doRenderDateTime, Utility.seconds(1))
         },
-    
+
         // =========== LOCATION
 
         // global geolocation watch object
@@ -68,10 +77,10 @@
             if (localStorage.getItem('data-manual-location')) {
                 return false
             }
-            
+
             return true
         },
-    
+
         // =========== PRAYER TIME
 
         // render player time placeholder.
@@ -86,7 +95,7 @@
                 $(`.prayer-time tbody tr:eq(${i}) td:eq(1)`).html('')
                 $(`.prayer-time tbody tr:eq(${i}) td:eq(2)`).html('')
             })
-            
+
             $(`.prayer-time tbody tr:eq(0)`).css('visibility', 'visible')
             $(`.prayer-time tbody tr:eq(0) td:eq(0)`).html('<span class="placeholder">Loading ...</span>')
         },
@@ -105,7 +114,7 @@
                 const url = `${Constant.app.baseUrlWebService}/muslimboard-api?v=${Constant.meta.version}&op=shalat-schedule-by-coordinate&latitude=${latitude}&longitude=${longitude}&method=${method}&month=${month}&year=${year}`
                 const response = await Utility.fetch(url)
                 const result = await response.json()
-        
+
                 resolve(result)
             })
             let isDataFound = true
@@ -153,7 +162,7 @@
                 const url = `${Constant.app.baseUrlWebService}/muslimboard-api?v=${Constant.meta.version}&op=shalat-schedule-by-location&locationID=${locationID}&province=${province}&city=${kabko}&method=${method}&month=${month}&year=${year}`
                 const response = await Utility.fetch(url)
                 const result = await response.json()
-        
+
                 resolve(result)
             })
             let isDataFound = true
@@ -200,7 +209,7 @@
         // render prayer time to screen
         renderPrayerTime(schedule) {
             let tzAbbr = Utility.getCurrentTimezoneAbbreviation(this.geoLocationCountryCode)
-            
+
             const times = [
                 { value: schedule.Fajr, label: I18n.getText('prayerTimeFajr') },
                 { value: schedule.Sunrise, label: I18n.getText('prayerTimeSunrise') },
@@ -225,7 +234,7 @@
                 $(`.prayer-time tbody tr:eq(${i}) td:eq(1)`).html(each.value.slice(0, 5))
                 $(`.prayer-time tbody tr:eq(${i}) td:eq(2)`).html(tzAbbr)
             })
-            
+
             // set alaram once loaded
             let isAlarmEverSet = false
             setInterval(() => {
@@ -247,17 +256,17 @@
                 const ishaYMDHM = ymdhmFormatter(schedule.Isha)
 
                 const nowYYYYMMDD = Date.now()
-                
+
                 $('.prayer-time tbody tr').removeClass('active')
 
                 const createAlarm = (time, text) => {
-                    if (!(!isAlarmEverSet || moment().seconds() % 10  == 0)) {
+                    if (!(!isAlarmEverSet || moment().seconds() % 10 == 0)) {
                         return
                     }
 
                     if (chrome.alarms) {
                         chrome.alarms.clear()
-    
+
                         const exactTime = time
                         if (exactTime >= nowYYYYMMDD) {
                             const exactMessage = I18n.getText('alarmExactPrayerTimeMessageTemplate')
@@ -265,7 +274,7 @@
                                 .replace('$2', $('.location .text').text())
                             chrome.alarms.create(exactMessage, { when: exactTime })
                         }
-    
+
                         const almostTime = moment(time).add(-10, 'minutes').toDate().getTime()
                         if (almostTime >= nowYYYYMMDD) {
                             const almostMessage = I18n.getText('alarmAlmostPrayerTimeMessageTemplate')
@@ -273,7 +282,7 @@
                                 .replace('$2', $('.location .text').text())
                             chrome.alarms.create(almostMessage, { when: almostTime })
                         }
-    
+
                         isAlarmEverSet = true
                     }
                 }
@@ -290,7 +299,7 @@
                     const $tr = $('.prayer-time tbody tr:eq(4)')
                     $tr.addClass('active')
                     createAlarm(maghribYMDHM, $tr.find('td:eq(0)').text())
-                    
+
                 } else if (nowHM >= dhuhrHM) {
                     const $tr = $('.prayer-time tbody tr:eq(3)')
                     $tr.addClass('active')
@@ -313,9 +322,9 @@
                 }
             }, Utility.seconds(1))
         },
-    
+
         // =========== BACKGROUND
-        
+
         // store selected background image
         selectedBackground: false,
 
@@ -339,7 +348,7 @@
                 if (Object.keys(data?.content || {}).length > 0) {
                     this.updateBackground.call(this, data.content)
                     return
-                } 
+                }
             } catch (err) {
                 Utility.error(err)
             }
@@ -373,52 +382,52 @@
                 preloader.src = this.nextSelectedBackground.url
                 preloader.onload = () => {
                     Utility.log('next image preloaded', preloader.src)
-    
+
                     setTimeout(() => {
                         this.updateBackground.call(this, data)
                     }, Constant.app.updateBackgroundDelayDuration)
                 }
                 preloader.onerror = (err) => {
-                        this.nextSelectedBackground = Utility.randomFromArray('background', data.content, this.selectedBackground)
+                    this.nextSelectedBackground = Utility.randomFromArray('background', data.content, this.selectedBackground)
                     preloader.src = this.nextSelectedBackground.url
                 }
             }
-    
+
             // if certain image is currently appearing on screen,
             // then the transition need to be smooth.
             // meanwhile at first load, local image will be used to make the image loading process faster
             if (this.selectedBackground) {
                 this.selectedBackground = this.nextSelectedBackground
-                    this.nextSelectedBackground = Utility.randomFromArray('background', data.content, this.selectedBackground)
-    
+                this.nextSelectedBackground = Utility.randomFromArray('background', data.content, this.selectedBackground)
+
                 $('#transitioner .content')
                     .css('opacity', '0')
                     .css('background-image', `url("${this.selectedBackground.url}")`)
-    
+
                 const position = this.selectedBackground.position
                 $('#transitioner .content')
                     .css('opacity', '0')
                     .css('background-position', position ? `${position.horizontal} ${position.vertical}` : '')
-    
+
                 await Utility.sleep(0.1)
-    
+
                 $('#transitioner .content').animate({
                     'opacity': 1,
                 }, 'slow', async () => {
                     $('#background .content').css('background-image', `url("${this.selectedBackground.url}")`)
                     $('#background .content').css('background-position', position ? `${position.horizontal} ${position.vertical}` : '')
-    
+
                     await Utility.sleep(0.1)
-    
+
                     $('#transitioner .content').css('opacity', '0')
-    
+
                     doUpdateBackgroundAndPreloadNextImage()
                     updateBackgroundAthorName(this.selectedBackground)
                 })
             } else {
                 const doUpdateBackgroundForTheFirstTime = () => {
                     $('#background .content').css('background-image', `url("${this.selectedBackground.url}")`)
-        
+
                     const position = this.selectedBackground.position
                     if (position) {
                         $('#background .content').css('background-position', `${position.horizontal} ${position.vertical}`)
@@ -446,7 +455,7 @@
                 }
                 preloader.onerror = () => {
                     this.selectedBackground = Utility.randomFromArray(
-                        'background', 
+                        'background',
                         data.content.filter((d) => d.url.indexOf('http') == -1),
                         this.selectedBackground
                     )
@@ -455,9 +464,9 @@
                 }
             }
         },
-    
+
         // =========== QUOTE CONTENT
-        
+
         // store selected content
         selectedContent: false,
 
@@ -478,7 +487,7 @@
                 if (Object.keys(data?.content || {}).length > 0) {
                     this.updateContent.call(this, data.content)
                     return
-                } 
+                }
             } catch (err) {
                 Utility.error(err)
             }
@@ -508,18 +517,18 @@
             this.selectedContent = Utility.randomFromArray('content', data.content, this.selectedContent)
             const content = this.selectedContent
             const author = data.author[content.author]
-    
+
             $('#wise-word').attr('data-type', content.type)
             $('#wise-word').find('p.matan').html(`<div>${content.matan}</div>`)
             $('#wise-word').find('p.translation').html(`<div>${content.translation}</div>`)
-    
+
             if (content.type.indexOf('verse') > -1) {
                 $('#wise-word').find('p.reference').html(`<div>${content.reference}</div>`)
             } else if (author) {
                 const text = content.reference
                     ? `<a href='${content.reference}' target='_blank'>${author.name}</a>`
                     : `<span>${author.name}</span>`
-                    
+
                 $('#wise-word').find('p.reference').html(`<div>${text}</div>`)
                 $('#wise-word').find('p.reference *:first')
                     .addClass('tooltipster')
@@ -539,14 +548,14 @@
 
                 $('#wise-word').find('p.reference').html(`<div>${text}</div>`)
             }
-    
+
             setTimeout(() => {
                 this.updateContent.call(this, data)
             }, Constant.app.updateContentDelayDuration)
         },
-    
+
         // =========== PRAYER TIMES
-    
+
         // load the location and prayer information whether on manual mode or automatic
         async loadLocationAndPrayerTimeThenRender() {
             this.renderPrayerTimePlaceholder.call(this)
@@ -569,7 +578,7 @@
                         }
 
                         this.geoLocationCountryCode = (data.content.data.countryCode || 'id')
-                
+
                         const address = data.content.data.address
                         this.renderLocationText.call(this, address)
 
@@ -599,7 +608,7 @@
 
                         const updatedLatitude = position.coords.latitude
                         const updatedLongitude = position.coords.longitude
-                        
+
                         // refresh prayer time on movement
                         const distance = Utility.distanceBetween(latitude, longitude, updatedLatitude, updatedLongitude)
                         if (distance > 0) {
@@ -619,7 +628,7 @@
 
                     // kemenag bimaislam website (proxied by our serverless backend) is used to get the prayer time on manual mode.
                     // if prayer time data ever been loaded once, then the cache will be used on next call
-                    const data =  await this.getPrayerTimesByLocationID(province, kabko, id)
+                    const data = await this.getPrayerTimesByLocationID(province, kabko, id)
                     if (!data) {
                         this.clearPrayerTimesCache.call(this)
                         throw new Error(I18n.getText('promptErrorFailToGetPrayerTimesMessage'))
@@ -661,7 +670,7 @@
                         return 0
                     }
                 })
-    
+
                 const options = contentOptions.map((each) => {
                     return `<option value='${each[keyValue]}'>${each[keyText]}</option>`
                 })
@@ -712,7 +721,7 @@
                     this.loadLocationAndPrayerTimeThenRender.call(this)
                 })
             })
-            
+
             // register event handler for applying manual location
             $('.set-data-manually').on('click', async () => {
                 Utility.log('set location of prayer times manually')
@@ -786,7 +795,7 @@
                     $('.dropdown-city').val(savedLocation.id)
                 }, 300);
             })
-            
+
             // on manual popup/modal, when user select a province,
             // then proceed with showing cities under the particular province
             $('body').on('change', '.dropdown-province', async (e) => {
@@ -797,7 +806,7 @@
 
                 const found = locations.find((d) => d.provinsi == value)
                 const cities = found ? found.children : []
-                
+
                 $('.dropdown-city').replaceWith($(
                     `<select required class="dropdown-city">
                         ${renderDropdownOption(cities, 'id', 'kabko', I18n.getText('promptManualLocationCitySelectionLabel'))}
@@ -805,9 +814,9 @@
                 ))
             })
         },
-    
+
         // =========== FOOTER
-    
+
         // perform detection on internet status, whether it's online or not
         registerEventForInternetAvailabilityStatus() {
             const internetStatus = (status) => () => {
@@ -868,7 +877,7 @@
                     allowOutsideClick: false
                 });
             });
-            
+
             // handle change language event
             $('body').on('click', '.modal-change-language a', async (e) => {
                 const locale = $(e.currentTarget).attr('data-locale')
@@ -904,8 +913,8 @@
                         </p>
                         <p>
                             ${I18n.getText('modalAboutUsText3')
-                                .replace('$1', `<a href='mailto:${Constant.maintainer.email}?subject=${Constant.meta.appName} ${Constant.meta.version} feedback'>${Constant.maintainer.email}</a>`)
-                                .replace('$2', `<a href='https://github.com/novalagung/muslimboard' target='_blank'>GitHub</a>`)}
+                        .replace('$1', `<a href='mailto:${Constant.maintainer.email}?subject=${Constant.meta.appName} ${Constant.meta.version} feedback'>${Constant.maintainer.email}</a>`)
+                        .replace('$2', `<a href='https://github.com/novalagung/muslimboard' target='_blank'>GitHub</a>`)}
                         </p>
                         <hr class='separator'>
                         <p>${I18n.getText('modalShareText')}</p>
@@ -1027,7 +1036,7 @@
                 localStorage.setItem('todo-list-status', 'true')
                 localStorage.setItem('todo-list-box-ever-loaded', 'true')
             }
-   
+
             this.ensureTodoListBoxVisibility.call(this)
             this.ensureTodoListItemsAppear.call(this)
 
@@ -1217,6 +1226,28 @@
             this.ensureTodoListBoxVisibilityOnPageActive.call(this)
             this.ensureTodoListItemsAppear.call(this)
             this.showExtensionWelcomeModal.call(this)
+            
+            // Open and close buttons for settings modal
+            const openSettingsModal = document.getElementById('openSettingsModal')
+            const closeModalButton = document.getElementById('closeModalButton')
+            openSettingsModal.addEventListener('click', () => {
+                this.toggleSettingsModal(true)
+            })
+            closeModalButton.addEventListener('click', () => {
+                this.toggleSettingsModal(false)
+            })
+
+            // hijri and gorgerian dates
+            const hijriBtn = document.getElementById('hijriBtn');
+            const gregorianBtn = document.getElementById('gregorianBtn');
+            hijriBtn.addEventListener('click', (e) => {
+                this.dateInHijri = true
+                this.renderDateTime()
+            })
+            gregorianBtn.addEventListener('click', (e) => {
+                this.dateInHijri = false
+                this.renderDateTime()
+            })
         }
     }
 

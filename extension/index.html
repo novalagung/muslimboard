@@ -1,6 +1,7 @@
 <!doctype html>
 
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -122,10 +123,28 @@
         </div>
     </div>
 
-    <div id="footer">
-        <div class="wrapper">
-            <div class="menu left">
-                <div>
+    <div id="settingsModal" class="modal">
+
+        <div class="modal-overlay"></div>
+        <div class="modal-wrapper">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Settings</h3>
+                    <button id="closeModalButton" class="modal-header-closebtn">
+                        <i class="fa fa-close"></i>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <div>
+                        <h4 class="label">Date format</h4>
+                        <div class="date-format-input-wrapper">
+                            <input type="radio" id="hijriBtn" name="fav_date_format" value="hijri">
+                            <label for="hijri">Hijri</label>
+                            <input type="radio" id="gregorianBtn" name="fav_date_format" value="gregorian">
+                            <label for="gregorian">Gregorian</label>
+                        </div>
+                    </div>
                     <a class="detect-data-automatically">
                         <i class="fa fa-location-arrow"></i>
                         <span data-i18n="footerMenuAutomaticLocationDetection">Deteksi lokasi otomatis</span>
@@ -133,15 +152,6 @@
                     <a class="set-data-manually">
                         <i class="fa fa-location-arrow"></i>
                         <span data-i18n="footerMenuManualLocationSelection">Atur manual pilihan lokasi</span>
-                    </a>
-                    <a class="just-text">
-                        <i class="fa fa-wifi"></i>
-                        <span data-i18n="footerMenuInternetAvailability">Status internet:</span> <span class="connection-status sad">offline</span>
-                    </a>
-                    <a class="photo-ownership" target="_blank">
-                        <i class="fa fa-camera"></i>
-                        <span class="label" data-i18n="footerMenuImageAuthor">Foto dari</span>
-                        <span class="photographer"></span>
                     </a>
                     <a class="change-language">
                         <i class="fa fa-toggle-on"></i>
@@ -151,10 +161,36 @@
                         <i class="fa fa-github"></i>
                         <span data-i18n="footerMenuSourceCode">Source code</span>
                     </a>
-                    <a class="info">
-                        <i class="fa fa-info-circle"></i>
-                        <span data-i18n="footerMenuAboutUs">Informasi</span>
-                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer">
+        <div class="wrapper">
+            <div class="menu left">
+                <div>
+                    <a role="button" id="openSettingsModal">
+                        <i class="fa fa-gear"></i>
+                        <span>Settings</span>
+                        </button>
+
+                     
+                        <a class="just-text">
+                            <i class="fa fa-wifi"></i>
+                            <span data-i18n="footerMenuInternetAvailability">Status internet:</span> <span
+                                class="connection-status sad">offline</span>
+                        </a>
+                        <a class="photo-ownership" target="_blank">
+                            <i class="fa fa-camera"></i>
+                            <span class="label" data-i18n="footerMenuImageAuthor">Foto dari</span>
+                            <span class="photographer"></span>
+                        </a>
+                       
+                        <a class="info">
+                            <i class="fa fa-info-circle"></i>
+                            <span data-i18n="footerMenuAboutUs">Informasi</span>
+                        </a>
                 </div>
             </div>
         </div>
@@ -170,4 +206,5 @@
     <script src="assets/internal/scripts/i18n.js"></script>
     <script src="assets/internal/scripts/app.js"></script>
 </body>
+
 </html>
