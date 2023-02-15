@@ -302,7 +302,7 @@ body.show-todo-list #wise-word {
     color: white;
     padding-left: 30px;
     padding-right: 30px;
-    padding-bottom: 10px;
+    padding-bottom: 8px;
     z-index: 4;
     font-size: 12px;
 }
@@ -340,6 +340,9 @@ body.show-todo-list #wise-word {
 #footer .menu.left > div * {
     z-index: 2;
     position: relative;
+    display: inline-block;
+    padding-bottom: 2px;
+    border-bottom: 1px solid transparent;
 }
 #todo-list {
     overflow: hidden;
@@ -504,8 +507,7 @@ body.show-todo-list #todo-list .wrapper .items .item {
     cursor: pointer;
 }
 #footer .menu a:not(.just-text):hover {
-    padding-bottom: 2px;
-    border-bottom: 1px solid #ddd;
+    border-bottom-color: #ddd;
 }
 #footer .menu a .connection-status {
     position: relative;
