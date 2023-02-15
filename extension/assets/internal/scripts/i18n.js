@@ -1,9 +1,10 @@
 const I18n = {
     mapping: {
         appDescription: {
+            ar: 'لوحة التحكم الشخصية للمسلم',
             en: 'Personal Dashboard for Muslim',
             id: 'Personal Dashboard untuk umat Islam',
-            ar: 'لوحة التحكم الشخصية للمسلم'
+            // 'zh-tw': '',
         },
 
         daySunday:    { ar: 'الأحد',    en: 'Sunday',    id: 'Ahad',   'zh-tw': '星期日' },
@@ -28,8 +29,8 @@ const I18n = {
         monthDecember:  { ar:'ديسمبر', en: 'December',  id: 'Desember',  'zh-tw': '十二月' },
 
         prayerTimeTodaySchedule: {
-            en: 'Today prayer times:',
             ar: 'مواعيد صلوات اليوم:',
+            en: 'Today prayer times:',
             id: 'Jadwal sholat untuk hari ini:',
             'zh-tw': '今日祈禱時間：'
         },

@@ -853,8 +853,9 @@
                 const text = `
                     <div class='modal-change-language'>
                         <ul>
-                            <li><a href='#' data-locale='ar'>اللغة العربية</a></li>
                             <li><a href='#' data-locale='en'>English Language</a></li>
+                            <li><hr /></li>
+                            <li><a href='#' data-locale='ar'>اللغة العربية</a></li>
                             <li><a href='#' data-locale='id'>Bahasa Indonesia</a></li>
                             <li><a href='#' data-locale='zh-tw'>中文 (繁體)</a></li>
                         </ul>
