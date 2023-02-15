@@ -6,26 +6,26 @@ const I18n = {
             ar: 'لوحة التحكم الشخصية للمسلم'
         },
 
-        daySunday: { ar: 'الأحد', en: 'Sunday', id: 'Ahad', 'zh-tw': '星期日'},
-        dayMonday: { ar: 'الأثنين', en: 'Monday', id: 'Senin', 'zh-tw': '星期一'},
-        dayTuesday: { ar: 'الثلاثاء', en: 'Tuesday', id: 'Selasa', 'zh-tw': '星期二'},
-        dayWednesday: { ar: 'الأربعاء', en: 'Wednesday', id: 'Rabu', 'zh-tw': '星期三'},
-        dayThursday: { ar: 'الخميس', en: 'Thursday', id: 'Kamis', 'zh-tw': '星期四'},
-        dayFriday: { ar: 'الجمعة', en: 'Friday', id: 'Jumat', 'zh-tw': '星期五'},
-        daySaturday: { ar: 'السبت', en: 'Saturday', id: 'Sabtu', 'zh-tw': '星期六'},
+        daySunday:    { ar: 'الأحد',    en: 'Sunday',    id: 'Ahad',   'zh-tw': '星期日' },
+        dayMonday:    { ar: 'الأثنين',  en: 'Monday',    id: 'Senin',  'zh-tw': '星期一' },
+        dayTuesday:   { ar: 'الثلاثاء', en: 'Tuesday',   id: 'Selasa', 'zh-tw': '星期二' },
+        dayWednesday: { ar: 'الأربعاء', en: 'Wednesday', id: 'Rabu',   'zh-tw': '星期三' },
+        dayThursday:  { ar: 'الخميس',  en: 'Thursday',  id: 'Kamis',  'zh-tw': '星期四' },
+        dayFriday:    { ar: 'الجمعة',  en: 'Friday',    id: 'Jumat',  'zh-tw': '星期五' },
+        daySaturday:  { ar: 'السبت',   en: 'Saturday',  id: 'Sabtu',  'zh-tw': '星期六' },
 
-        monthJanuary: { ar:'يناير', en: 'January', id: 'Januari', 'zh-tw': '一月'},
-        monthFebruary: { ar:'فبراير', en: 'February', id: 'Februari', 'zh-tw': '二月'},
-        monthMarch: { ar:'مارس', en: 'March', id: 'Maret', 'zh-tw': '三月'},
-        monthApril: { ar:'أبريل', en: 'April', id: 'April', 'zh-tw': '四月'},
-        monthMay: { ar:'مايو', en: 'May', id: 'Mei', 'zh-tw': '五月'},
-        monthJune: { ar:'يونيو', en: 'June', id: 'Juni', 'zh-tw': '六月'},
-        monthJuly: { ar:'يوليو', en: 'July', id: 'July', 'zh-tw': '七月'},
-        monthAugust: { ar:'أغسطس', en: 'August', id: 'Agustus', 'zh-tw': '八月'},
-        monthSeptember: { ar:'سبتمبر', en: 'September', id: 'September', 'zh-tw': '九月'},
-        monthOctober: { ar:'أكتوبر', en: 'October', id: 'Oktober', 'zh-tw': '十月'},
-        monthNovember: { ar:'نوفمبر', en: 'November', id: 'November', 'zh-tw': '十一月'},
-        monthDecember: { ar:'ديسمبر', en: 'December', id: 'Desember', 'zh-tw': '十二月'},
+        monthJanuary:   { ar:'يناير',  en: 'January',   id: 'Januari',   'zh-tw': '一月'   },
+        monthFebruary:  { ar:'فبراير', en: 'February',  id: 'Februari',  'zh-tw': '二月'   },
+        monthMarch:     { ar:'مارس',   en: 'March',     id: 'Maret',     'zh-tw': '三月'   },
+        monthApril:     { ar:'أبريل',  en: 'April',     id: 'April',     'zh-tw': '四月'   },
+        monthMay:       { ar:'مايو',   en: 'May',       id: 'Mei',       'zh-tw': '五月'   },
+        monthJune:      { ar:'يونيو',  en: 'June',      id: 'Juni',      'zh-tw': '六月'   },
+        monthJuly:      { ar:'يوليو',  en: 'July',      id: 'July',      'zh-tw': '七月'   },
+        monthAugust:    { ar:'أغسطس',  en: 'August',    id: 'Agustus',   'zh-tw': '八月'   },
+        monthSeptember: { ar:'سبتمبر', en: 'September', id: 'September', 'zh-tw': '九月'   },
+        monthOctober:   { ar:'أكتوبر', en: 'October',   id: 'Oktober',   'zh-tw': '十月'   },
+        monthNovember:  { ar:'نوفمبر', en: 'November',  id: 'November',  'zh-tw': '十一月' },
+        monthDecember:  { ar:'ديسمبر', en: 'December',  id: 'Desember',  'zh-tw': '十二月' },
 
         prayerTimeTodaySchedule: {
             en: 'Today prayer times:',
@@ -34,12 +34,12 @@ const I18n = {
             'zh-tw': '今日祈禱時間：'
         },
 
-        prayerTimeFajr: {ar:'الفجر', en: 'Fajr', id: 'Subuh', 'zh-tw': '晨禮'},
-        prayerTimeSunrise: {ar:'الشروق', en: 'Sunrise', id: 'Dhuha', 'zh-tw': '日出'},
-        prayerTimeDhuhr: {ar:'الظهر', en: 'Dhuhr', id: 'Dzuhur', 'zh-tw': '晌禮'},
-        prayerTimeAsr: {ar:'العصر', en: 'Asr', id: 'Ashar', 'zh-tw': '晡禮'},
-        prayerTimeMaghrib: {ar:'المغرب', en: 'Maghrib', id: 'Maghrib', 'zh-tw': '昏禮'},
-        prayerTimeIsha: {ar:'العشاء', en: 'Isha', id: `Isya'`, 'zh-tw': '宵禮'},
+        prayerTimeFajr:    { ar:'الفجر',  en: 'Fajr',    id: 'Subuh',   'zh-tw': '晨禮' },
+        prayerTimeSunrise: { ar:'الشروق', en: 'Sunrise', id: 'Dhuha',   'zh-tw': '日出' },
+        prayerTimeDhuhr:   { ar:'الظهر',  en: 'Dhuhr',   id: 'Dzuhur',  'zh-tw': '晌禮' },
+        prayerTimeAsr:     { ar:'العصر',  en: 'Asr',     id: 'Ashar',   'zh-tw': '晡禮' },
+        prayerTimeMaghrib: { ar:'المغرب', en: 'Maghrib', id: 'Maghrib', 'zh-tw': '昏禮' },
+        prayerTimeIsha:    { ar:'العشاء', en: 'Isha',    id: `Isya'`,   'zh-tw': '宵禮' },
 
         todoListHeaderShow: {
             ar: 'إظهار لائحة المهام',
@@ -289,7 +289,6 @@ const I18n = {
         return defaultLocale
     },
     setSelectedLocale: (selectedLocale) => {
-        console.log('hi =================.', selectedLocale);
         localStorage.setItem(`selected-locale`, selectedLocale)
     },
     getText: (key) => {
