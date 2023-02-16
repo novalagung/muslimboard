@@ -332,7 +332,7 @@ body.show-todo-list #wise-word {
     color: white;
     padding-left: 30px;
     padding-right: 30px;
-    padding-bottom: 8px;
+    padding-bottom: 3px;
     z-index: 4;
     font-size: 12px;
 }
@@ -619,14 +619,23 @@ body.show-todo-list #todo-list .wrapper .items .item {
     margin-top: 10px;
 }
 #swal2-content .modal-change-language a {
-    margin: 0px 5px;
-    display: inline-block;
+    margin: 0px auto;
+    display: block;
     color: white;
-    border-radius: 6px;
+    border-radius: 1px;
     padding: 12px 17px;
     text-decoration: none;
     font-weight: bold;
     background-color: #00b16a;
+    width: 199px;
+}
+#swal2-content .modal-change-language hr {
+    width: 199px;
+    height: 1px;
+    background-color: #f1f1f1;
+    border: none;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 #swal2-content .modal-change-language a:hover {
     opacity: 0.6;

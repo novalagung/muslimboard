@@ -16,8 +16,7 @@ const Constant = {
         updateBackgroundDelayDuration: Utility.seconds(40),
         updateContentDelayDuration: Utility.seconds(60),
         changelogs: [
-            'Improve random generation algorithm',
-            'Add more contents & background'
+            'New language support: arabic localization'
         ]
     },
 }

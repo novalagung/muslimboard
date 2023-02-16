@@ -1,9 +1,10 @@
 const I18n = {
     mapping: {
         appDescription: {
+            ar: 'لوحة التحكم الشخصية للمسلم',
             en: 'Personal Dashboard for Muslim',
             id: 'Personal Dashboard untuk umat Islam',
-            ar: 'لوحة التحكم الشخصية للمسلم'
+            // 'zh-tw': '',
         },
 
         daySunday:    { ar: 'الأحد',    en: 'Sunday',    id: 'Ahad',   'zh-tw': '星期日' },
@@ -28,8 +29,8 @@ const I18n = {
         monthDecember:  { ar:'ديسمبر', en: 'December',  id: 'Desember',  'zh-tw': '十二月' },
 
         prayerTimeTodaySchedule: {
-            en: 'Today prayer times:',
             ar: 'مواعيد صلوات اليوم:',
+            en: 'Today prayer times:',
             id: 'Jadwal sholat untuk hari ini:',
             'zh-tw': '今日祈禱時間：'
         },
@@ -229,7 +230,7 @@ const I18n = {
         },
 
         modalAboutUsText1: {
-            ar: '$ 1 هي لوحة تحكم شخصية للمسلمين ، وهي متوفرة على جميع المتصفحات الحديثة. هذا الامتداد مستوحى من Momentum.',
+            ar: '$1 هي لوحة تحكم شخصية للمسلمين ، وهي متوفرة على جميع المتصفحات الحديثة. هذا الامتداد مستوحى من Momentum.',
             en: '$1 is personal dashboard for muslim, available on all modern browsers. This extension was inspired by Momentum.',
             id: '$1 adalah laman personal dashboard khusus untuk muslim, tersedia untuk semua browser modern. Plugin ini terinspirasi dari Momentum.',
             'zh-tw': '$1 是一個為穆斯林個人設計的儀表板，適用於所有現代瀏覽器。這個擴充功能受到 Momentum 的啟發。'
@@ -241,7 +242,7 @@ const I18n = {
             'zh-tw': '祈禱時間是根據使用者的位置顯示。'
         },
         modalAboutUsText3: {
-            ar: 'للتعليق أو المساهمة ، يرجى إرسال بريد إلكتروني إلى $ 1 أو إرسال PR إلى $2.',
+            ar: 'للتعليق أو المساهمة ، يرجى إرسال بريد إلكتروني إلى $1 أو إرسال PR إلى $2.',
             en: 'For feedback or contribution, please email to $1 or submit a PR to $2.',
             id: 'Untuk pertanyaan, kritik & saran, maupun jika ingin berkontribusi foto atau quote, silakan kirim email ke $1 atau via submit PR di $2.',
             'zh-tw': '如有任何意見或建議，或想要貢獻照片或名言，請發送電子郵件至 $1 或提交 PR 到 $2。'
