@@ -11,6 +11,36 @@ html {
     box-sizing: inherit;
 }
 
+/* RTL Support */
+html[dir=rtl] #wise-word{
+    right: 400px;
+    left: auto
+}
+
+html[dir=rtl] #sidebar .date-time .time {
+    display: flex;
+    flex-direction: row-reverse;
+    margin-right: -2px;
+    margin-left: -18px;
+    justify-content: space-around;
+}
+
+html[dir=rtl] #sidebar .date-time .time .separator:before {
+    margin-left: auto;
+    margin-right: -16px;
+}
+
+html[dir=rtl] #sidebar .date-time .location i {
+    left: auto;
+    right: 0;
+}
+
+html[dir=rtl] #sidebar .date-time .location span {
+    right: 19px;
+    left: 0px;
+}
+
+
 #transitioner,
 #background,
 #background-blur {

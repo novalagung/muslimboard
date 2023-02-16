@@ -852,11 +852,11 @@
 
                 const text = `
                     <div class='modal-change-language'>
-                        <ul>
+                    <ul>
                         <li><a href='#' data-locale='ar'>اللغة العربية</a></li>
-                            <li><a href='#' data-locale='en'>English Language</a></li>
-                            <li><a href='#' data-locale='id'>Bahasa Indonesia</a></li>
-                            <li><a href='#' data-locale='zh-tw'>中文 (繁體)</a></li>
+                        <li><a href='#' data-locale='en'>English Language</a></li>
+                        <li><a href='#' data-locale='id'>Bahasa Indonesia</a></li>
+                        <li><a href='#' data-locale='zh-tw'>中文 (繁體)</a></li>
                         </ul>
                     </div>
                 `
@@ -1199,12 +1199,20 @@
             localStorage.setItem(keyOfUpdateMessage, true)
         },
 
+        checkDirection() {
+            const selectedLocale = I18n.getSelectedLocale()
+            if (selectedLocale === 'ar') {
+                document.documentElement.setAttribute('dir', 'rtl')
+                document.documentElement.setAttribute('lang', 'ar')
+            }
+        },
+
         // =========== INIT
 
         // orchestrate everything
         init() {
             console.log(`${Constant.meta.appName} ${Constant.meta.version}`)
-
+            this.checkDirection.call(this)
             this.renderDateTime.call(this)
             this.getDataBackgroundThenRender.call(this)
             this.getDataContentThenRender.call(this)
