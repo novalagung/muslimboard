@@ -6,7 +6,7 @@ const Constant = {
     },
     maintainer: {
         name: 'Noval Agung Prayogo',
-        email: 'caknopal@gmail.com',
+        email: 'hello@novalagung.com',
     },
     app: {
         baseUrlWebService: 'https://asia-southeast2-muslim-board-ind-1472876095243.cloudfunctions.net',
