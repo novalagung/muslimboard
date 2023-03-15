@@ -2,10 +2,10 @@ name: gcp function keep alive
 
 on:
   schedule:
-    - cron: '*/15 * * * *'
+    - cron: '*/5 * * * *'
 jobs:
   build:
     name: keep alive
     runs-on: ubuntu-latest
     steps:
-      - run: curl -X GET "https://asia-southeast2-muslim-board-ind-1472876095243.cloudfunctions.net/muslimboard-api?v=v2.6.0&op=ping"
+      - run: curl -X GET "https://asia-southeast2-muslim-board-ind-1472876095243.cloudfunctions.net/muslimboard-api?v=v2.6.0&op=shalat-schedule-by-coordinate&latitude=41.0895249&longitude=-73.8419063&method=1&month=3&year=2023"
