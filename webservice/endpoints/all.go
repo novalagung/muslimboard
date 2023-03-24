@@ -30,18 +30,21 @@ func MuslimboardApi(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if r.Method == http.MethodGet {
-		switch r.URL.Query().Get("op") {
+		switch op := r.URL.Query().Get("op"); op {
 
 		case "ping":
 			writeRespose(w, r, http.StatusOK, true, nil)
 
 		case "image":
+			logInfo("MuslimboardApi", "incoming request", "op="+op, r.URL.String())
 			HandleImage(w, r)
 
 		case "shalat-schedule-by-coordinate":
+			logInfo("MuslimboardApi", "incoming request", "op="+op, r.URL.String())
 			HandleShalatScheduleByCoordinate(w, r)
 
 		case "shalat-schedule-by-location":
+			logInfo("MuslimboardApi", "incoming request", "op="+op, r.URL.String())
 			HandleShalatScheduleByLocation(w, r)
 
 		default:
@@ -60,6 +63,7 @@ func HandleImage(w http.ResponseWriter, r *http.Request) {
 	imageUrl, _ := url.QueryUnescape(r.URL.Query().Get("image"))
 	if imageUrl == "" {
 		err := fmt.Errorf("missing image url")
+		logError("HandleImage", "queryUnescape", err.Error())
 		writeRespose(w, r, http.StatusBadRequest, nil, err)
 		return
 	}
@@ -69,6 +73,7 @@ func HandleImage(w http.ResponseWriter, r *http.Request) {
 		defer body.Close()
 	}
 	if err != nil {
+		logError("HandleImage", "getImage", err.Error())
 		writeRespose(w, r, http.StatusBadRequest, nil, err)
 		return
 	}
@@ -78,6 +83,7 @@ func HandleImage(w http.ResponseWriter, r *http.Request) {
 
 	_, err = io.Copy(w, body)
 	if err != nil {
+		logError("HandleImage", "io.Copy", err.Error())
 		writeRespose(w, r, http.StatusBadRequest, nil, err)
 		return
 	}
@@ -106,6 +112,7 @@ func HandleShalatScheduleByCoordinate(w http.ResponseWriter, r *http.Request) {
 
 	schedules, err := getShalatScheduleByCoordinate(method, latInt, lonInt, month, year)
 	if err != nil {
+		logError("HandleShalatScheduleByCoordinate", "getShalatScheduleByCoordinate", err.Error())
 		writeRespose(w, r, http.StatusInternalServerError, nil, err)
 		return
 	}
@@ -118,6 +125,7 @@ func HandleShalatScheduleByCoordinate(w http.ResponseWriter, r *http.Request) {
 
 	locationRes, err := getLocationByCoordinate(latitude, longitude)
 	if err != nil {
+		logError("HandleShalatScheduleByCoordinate", "getLocationByCoordinate", err.Error())
 		writeRespose(w, r, http.StatusOK, res, nil)
 		return
 	}
@@ -144,6 +152,7 @@ func HandleShalatScheduleByLocation(w http.ResponseWriter, r *http.Request) {
 	// get coordinate by location
 	coordinate, err := getCoordinateByLocation(location)
 	if err != nil {
+		logError("HandleShalatScheduleByLocation", "getCoordinateByLocation", err.Error())
 		writeRespose(w, r, http.StatusInternalServerError, nil, err)
 		return
 	}
@@ -162,6 +171,7 @@ func HandleShalatScheduleByLocation(w http.ResponseWriter, r *http.Request) {
 
 	schedules, err := getShalatScheduleByCoordinate(method, latitude, longitude, month, year)
 	if err != nil {
+		logError("HandleShalatScheduleByLocation", "getShalatScheduleByCoordinate", err.Error())
 		writeRespose(w, r, http.StatusInternalServerError, nil, err)
 		return
 	}
@@ -181,10 +191,13 @@ func HandleShalatScheduleByLocation(w http.ResponseWriter, r *http.Request) {
 func getImage(url string, w http.ResponseWriter) (string, io.ReadCloser, error) {
 	response, err := http.Get(url)
 	if err != nil {
+		logError("getImage", "http.Get", err.Error())
 		return "", nil, err
 	}
 	if response.StatusCode != 200 {
-		return "", nil, errors.New("received non 200 response code")
+		err = errors.New("received non 200 response code")
+		logError("getImage", "response.StatusCode", err.Error())
+		return "", nil, err
 	}
 
 	contentType := response.Header.Get("Content-type")
@@ -205,10 +218,12 @@ func getCoordinateByLocation(location string) (map[string]interface{}, error) {
 		}).
 		Get("https://nominatim.openstreetmap.org/")
 	if err != nil {
+		logError("getCoordinateByLocation", "resty.Get", err.Error())
 		return nil, err
 	}
 	if resp.IsError() {
 		err = fmt.Errorf("%v", resp.Error())
+		logError("getCoordinateByLocation", "resp.IsError", err.Error())
 		return nil, err
 	}
 
@@ -229,15 +244,18 @@ func getCoordinateByLocation(location string) (map[string]interface{}, error) {
 	}{}
 	err = json.Unmarshal(resp.Body(), &coordinates)
 	if err != nil {
+		logError("getCoordinateByLocation", "json.Unmarshal", err.Error())
 		return nil, err
 	}
 
 	if coordinates == nil {
 		err = fmt.Errorf("coordinates not found")
+		logError("getCoordinateByLocation", "coordinates", err.Error())
 		return nil, err
 	}
 	if len(coordinates) == 0 {
 		err = fmt.Errorf("coordinates not found")
+		logError("getCoordinateByLocation", "len(coordinates) == 0", err.Error())
 		return nil, err
 	}
 
@@ -264,10 +282,12 @@ func getLocationByCoordinate(latitude, longitude string) (map[string]interface{}
 		}).
 		Get("https://nominatim.openstreetmap.org/reverse")
 	if err != nil {
+		logError("getLocationByCoordinate", "resty.Get", err.Error())
 		return nil, err
 	}
 	if resp.IsError() {
 		err = fmt.Errorf("%v", resp.Error())
+		logError("getLocationByCoordinate", "resp.IsError", err.Error())
 		return nil, err
 	}
 
@@ -297,6 +317,7 @@ func getLocationByCoordinate(latitude, longitude string) (map[string]interface{}
 	}{}
 	err = json.Unmarshal(resp.Body(), &location)
 	if err != nil {
+		logError("getLocationByCoordinate", "json.Unmarshal", err.Error())
 		return nil, err
 	}
 
@@ -350,10 +371,12 @@ func getShalatScheduleByCoordinate(method string, latitude, longitude float64, m
 		}).
 		Get("http://api.aladhan.com/v1/calendar")
 	if err != nil {
+		logError("getShalatScheduleByCoordinate", "resty.Get", err.Error())
 		return nil, err
 	}
 	if resp.IsError() {
 		err = fmt.Errorf("%v", resp.Error())
+		logError("getShalatScheduleByCoordinate", "resp.IsError", err.Error())
 		return nil, err
 	}
 
@@ -365,10 +388,12 @@ func getShalatScheduleByCoordinate(method string, latitude, longitude float64, m
 	}{}
 	err = json.Unmarshal(resp.Body(), &schedules)
 	if err != nil {
+		logError("getShalatScheduleByCoordinate", "json.Unmarshal", err.Error())
 		return nil, err
 	}
 	if schedules.Code != 200 {
 		err = fmt.Errorf("%v", schedules.Status)
+		logError("getShalatScheduleByCoordinate", "schedules.Code != 200", err.Error())
 		return nil, err
 	}
 
@@ -414,4 +439,12 @@ func renderCacheHeader(w http.ResponseWriter, r *http.Request) {
 		// by default enable cache control
 		w.Header().Set("Cache-Control", "max-age=31536000")
 	}
+}
+
+func logInfo(args ...string) {
+	fmt.Println(`{"message": "` + strings.Join(args, " ") + `", "severity": "INFO"}`)
+}
+
+func logError(args ...string) {
+	fmt.Println(`{"message": "` + strings.Join(args, " ") + `", "severity": "ERROR"}`)
 }
