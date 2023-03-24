@@ -1,5 +1,5 @@
 {
-	"version": "2023.01.12",
+	"version": "2023.03.23",
 	"content": [{
 		"id": "1",
 		"matan": "فَاذْكُرُونِي أَذْكُرْكُمْ",
@@ -233,7 +233,7 @@
 		"type": "word of wisdom"
 	}, {
 		"id": "40",
-		"matan": "مَا نَقَصَتْ صَدَقَةٌ مِنْ مَالٍ وَمَا زَادَ اللَّهُ عَبْدًا بِعَفْوٍ إِلاَّ عِزًّا وَمَا تَوَاضَعَ أَحَدٌ لِلَّهِ إِلاَّ رَفَعَهُ اللَّ",
+		"matan": "مَا نَقَصَتْ صَدَقَةٌ مِنْ مَالٍ، وَمَا زَادَ اللهُ عَبْدًا بِعَفْوٍ، إِلَّا عِزًّا، وَمَا تَوَاضَعَ أَحَدٌ لِلَّهِ إِلَّا رَفَعَهُ اللهُ",
 		"translation": "Tidaklah sedekah itu mengurangi harta, tidaklah Allah menambahkan kepada seorang hamba yang memaafkan kecuali keperkasaan, dan tidaklah seseorang merendah karena Allah kecuali Allah akan mengangkatnya",
 		"reference": "HR Muslim no 2588",
 		"type": "verse"
