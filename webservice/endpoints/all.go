@@ -1,6 +1,7 @@
 package p
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -9,8 +10,11 @@ import (
 	"net/url"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/go-resty/resty/v2"
+	"github.com/redis/go-redis/v9"
+	log "github.com/sirupsen/logrus"
 )
 
 var restyDebug = false
@@ -36,15 +40,15 @@ func MuslimboardApi(w http.ResponseWriter, r *http.Request) {
 			writeRespose(w, r, http.StatusOK, true, nil)
 
 		case "image":
-			logInfo("MuslimboardApi", "incoming request", "op="+op, r.URL.String())
+			log.Infoln("MuslimboardApi", "incoming request", "op="+op, r.URL.String())
 			HandleImage(w, r)
 
 		case "shalat-schedule-by-coordinate":
-			logInfo("MuslimboardApi", "incoming request", "op="+op, r.URL.String())
+			log.Infoln("MuslimboardApi", "incoming request", "op="+op, r.URL.String())
 			HandleShalatScheduleByCoordinate(w, r)
 
 		case "shalat-schedule-by-location":
-			logInfo("MuslimboardApi", "incoming request", "op="+op, r.URL.String())
+			log.Infoln("MuslimboardApi", "incoming request", "op="+op, r.URL.String())
 			HandleShalatScheduleByLocation(w, r)
 
 		default:
@@ -60,20 +64,24 @@ func MuslimboardApi(w http.ResponseWriter, r *http.Request) {
 // =========================================================== HANDLER ===========================================================
 
 func HandleImage(w http.ResponseWriter, r *http.Request) {
+
+	// handler ctx
+	ctx := context.Background()
+
 	imageUrl, _ := url.QueryUnescape(r.URL.Query().Get("image"))
 	if imageUrl == "" {
 		err := fmt.Errorf("missing image url")
-		logError("HandleImage", "queryUnescape", err.Error())
+		log.Errorln("HandleImage", "queryUnescape", err.Error())
 		writeRespose(w, r, http.StatusBadRequest, nil, err)
 		return
 	}
 
-	contentType, body, err := getImage(imageUrl, w)
+	contentType, body, err := getImage(ctx, imageUrl, w)
 	if body != nil {
 		defer body.Close()
 	}
 	if err != nil {
-		logError("HandleImage", "getImage", err.Error())
+		log.Errorln("HandleImage", "getImage", err.Error())
 		writeRespose(w, r, http.StatusBadRequest, nil, err)
 		return
 	}
@@ -83,7 +91,7 @@ func HandleImage(w http.ResponseWriter, r *http.Request) {
 
 	_, err = io.Copy(w, body)
 	if err != nil {
-		logError("HandleImage", "io.Copy", err.Error())
+		log.Errorln("HandleImage", "io.Copy", err.Error())
 		writeRespose(w, r, http.StatusBadRequest, nil, err)
 		return
 	}
@@ -91,6 +99,22 @@ func HandleImage(w http.ResponseWriter, r *http.Request) {
 
 // HandleShalatScheduleByCoordinate is handler of get shalat schedule by coordinate
 func HandleShalatScheduleByCoordinate(w http.ResponseWriter, r *http.Request) {
+
+	// handler ctx
+	ctx := context.Background()
+
+	// check cache
+	cachedRes, err := newRedis().Get(ctx, r.URL.String()).Result()
+	if err != nil {
+		log.Warningln("HandleShalatScheduleByCoordinate", "newRedis().Get", err.Error())
+	} else {
+		cachedResMap, err := convertToMap(cachedRes)
+		if len(cachedResMap) > 0 && err == nil {
+			log.Infoln("HandleShalatScheduleByCoordinate", "load from cache", r.URL.String())
+			writeRespose(w, r, http.StatusOK, cachedResMap, nil)
+			return
+		}
+	}
 
 	// parse params
 	method := r.URL.Query().Get("method")
@@ -110,9 +134,9 @@ func HandleShalatScheduleByCoordinate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	schedules, err := getShalatScheduleByCoordinate(method, latInt, lonInt, month, year)
+	schedules, err := getShalatScheduleByCoordinate(ctx, method, latInt, lonInt, month, year)
 	if err != nil {
-		logError("HandleShalatScheduleByCoordinate", "getShalatScheduleByCoordinate", err.Error())
+		log.Errorln("HandleShalatScheduleByCoordinate", "getShalatScheduleByCoordinate", err.Error())
 		writeRespose(w, r, http.StatusInternalServerError, nil, err)
 		return
 	}
@@ -123,21 +147,44 @@ func HandleShalatScheduleByCoordinate(w http.ResponseWriter, r *http.Request) {
 		"countryCode": "id",
 	}
 
-	locationRes, err := getLocationByCoordinate(latitude, longitude)
+	locationRes, err := getLocationByCoordinate(ctx, latitude, longitude)
 	if err != nil {
-		logError("HandleShalatScheduleByCoordinate", "getLocationByCoordinate", err.Error())
+		log.Errorln("HandleShalatScheduleByCoordinate", "getLocationByCoordinate", err.Error())
 		writeRespose(w, r, http.StatusOK, res, nil)
 		return
 	}
 
 	res["address"] = locationRes["address"]
 	res["countryCode"] = locationRes["countryCode"]
+
+	// cache response
+	err = newRedis().Set(ctx, r.URL.String(), convertToJson(res), time.Hour*24*10).Err()
+	if err != nil {
+		log.Warningln("HandleShalatScheduleByCoordinate", "newRedis().Set", err.Error())
+	}
+
 	writeRespose(w, r, http.StatusOK, res, nil)
 }
 
 // HandleShalatScheduleByLocation is handler of get shalat schedule by location
 // for now, immediately use aladhan.com api coz kemenag backend still under development
 func HandleShalatScheduleByLocation(w http.ResponseWriter, r *http.Request) {
+
+	// handler ctx
+	ctx := context.Background()
+
+	// check cache
+	cachedRes, err := newRedis().Get(ctx, r.URL.String()).Result()
+	if err != nil {
+		log.Warningln("HandleShalatScheduleByLocation", "newRedis().Get", err.Error())
+	} else {
+		cachedResMap, err := convertToMap(cachedRes)
+		if len(cachedResMap) > 0 && err == nil {
+			log.Infoln("HandleShalatScheduleByLocation", "load from cache", r.URL.String())
+			writeRespose(w, r, http.StatusOK, cachedResMap, nil)
+			return
+		}
+	}
 
 	province := r.URL.Query().Get("province")
 	city := r.URL.Query().Get("city")
@@ -150,9 +197,9 @@ func HandleShalatScheduleByLocation(w http.ResponseWriter, r *http.Request) {
 	location = strings.TrimSpace(location)
 
 	// get coordinate by location
-	coordinate, err := getCoordinateByLocation(location)
+	coordinate, err := getCoordinateByLocation(ctx, location)
 	if err != nil {
-		logError("HandleShalatScheduleByLocation", "getCoordinateByLocation", err.Error())
+		log.Errorln("HandleShalatScheduleByLocation", "getCoordinateByLocation", err.Error())
 		writeRespose(w, r, http.StatusInternalServerError, nil, err)
 		return
 	}
@@ -169,9 +216,9 @@ func HandleShalatScheduleByLocation(w http.ResponseWriter, r *http.Request) {
 	latitude, _ := strconv.ParseFloat(coordinate["lat"].(string), 64)
 	longitude, _ := strconv.ParseFloat(coordinate["lon"].(string), 64)
 
-	schedules, err := getShalatScheduleByCoordinate(method, latitude, longitude, month, year)
+	schedules, err := getShalatScheduleByCoordinate(ctx, method, latitude, longitude, month, year)
 	if err != nil {
-		logError("HandleShalatScheduleByLocation", "getShalatScheduleByCoordinate", err.Error())
+		log.Errorln("HandleShalatScheduleByLocation", "getShalatScheduleByCoordinate", err.Error())
 		writeRespose(w, r, http.StatusInternalServerError, nil, err)
 		return
 	}
@@ -183,20 +230,26 @@ func HandleShalatScheduleByLocation(w http.ResponseWriter, r *http.Request) {
 		"countryCode": "id",
 	}
 
+	// cache response
+	err = newRedis().Set(ctx, r.URL.String(), convertToJson(res), time.Hour*24*10).Err()
+	if err != nil {
+		log.Warningln("HandleShalatScheduleByLocation", "newRedis().Set", err.Error())
+	}
+
 	writeRespose(w, r, http.StatusOK, res, nil)
 }
 
 // =========================================================== MODEL ===========================================================
 
-func getImage(url string, w http.ResponseWriter) (string, io.ReadCloser, error) {
+func getImage(ctx context.Context, url string, w http.ResponseWriter) (string, io.ReadCloser, error) {
 	response, err := http.Get(url)
 	if err != nil {
-		logError("getImage", "http.Get", err.Error())
+		log.Errorln("getImage", "http.Get", err.Error())
 		return "", nil, err
 	}
 	if response.StatusCode != 200 {
 		err = errors.New("received non 200 response code")
-		logError("getImage", "response.StatusCode", err.Error())
+		log.Errorln("getImage", "response.StatusCode", err.Error())
 		return "", nil, err
 	}
 
@@ -205,12 +258,13 @@ func getImage(url string, w http.ResponseWriter) (string, io.ReadCloser, error) 
 }
 
 // getCoordinateByLocation do get coordinate by location details
-func getCoordinateByLocation(location string) (map[string]interface{}, error) {
+func getCoordinateByLocation(ctx context.Context, location string) (map[string]interface{}, error) {
 
 	// dispatch query to open street map geocoding api
 	resp, err := resty.New().
 		SetDebug(restyDebug).
 		R().
+		SetContext(ctx).
 		SetQueryParams(map[string]string{
 			"format": "json",
 			"q":      location,
@@ -218,12 +272,12 @@ func getCoordinateByLocation(location string) (map[string]interface{}, error) {
 		}).
 		Get("https://nominatim.openstreetmap.org/")
 	if err != nil {
-		logError("getCoordinateByLocation", "resty.Get", err.Error())
+		log.Errorln("getCoordinateByLocation", "resty.Get", err.Error())
 		return nil, err
 	}
 	if resp.IsError() {
 		err = fmt.Errorf("%v", resp.Error())
-		logError("getCoordinateByLocation", "resp.IsError", err.Error())
+		log.Errorln("getCoordinateByLocation", "resp.IsError", err.Error())
 		return nil, err
 	}
 
@@ -244,18 +298,18 @@ func getCoordinateByLocation(location string) (map[string]interface{}, error) {
 	}{}
 	err = json.Unmarshal(resp.Body(), &coordinates)
 	if err != nil {
-		logError("getCoordinateByLocation", "json.Unmarshal", err.Error())
+		log.Errorln("getCoordinateByLocation", "json.Unmarshal", err.Error())
 		return nil, err
 	}
 
 	if coordinates == nil {
 		err = fmt.Errorf("coordinates not found")
-		logError("getCoordinateByLocation", "coordinates", err.Error())
+		log.Errorln("getCoordinateByLocation", "coordinates", err.Error())
 		return nil, err
 	}
 	if len(coordinates) == 0 {
 		err = fmt.Errorf("coordinates not found")
-		logError("getCoordinateByLocation", "len(coordinates) == 0", err.Error())
+		log.Errorln("getCoordinateByLocation", "len(coordinates) == 0", err.Error())
 		return nil, err
 	}
 
@@ -269,12 +323,13 @@ func getCoordinateByLocation(location string) (map[string]interface{}, error) {
 }
 
 // getLocationByCoordinate do get location details by coordinate
-func getLocationByCoordinate(latitude, longitude string) (map[string]interface{}, error) {
+func getLocationByCoordinate(ctx context.Context, latitude, longitude string) (map[string]interface{}, error) {
 
 	// dispatch query to open street map geocoding api
 	resp, err := resty.New().
 		SetDebug(restyDebug).
 		R().
+		SetContext(ctx).
 		SetQueryParams(map[string]string{
 			"format": "json",
 			"lat":    latitude,
@@ -282,12 +337,12 @@ func getLocationByCoordinate(latitude, longitude string) (map[string]interface{}
 		}).
 		Get("https://nominatim.openstreetmap.org/reverse")
 	if err != nil {
-		logError("getLocationByCoordinate", "resty.Get", err.Error())
+		log.Errorln("getLocationByCoordinate", "resty.Get", err.Error())
 		return nil, err
 	}
 	if resp.IsError() {
 		err = fmt.Errorf("%v", resp.Error())
-		logError("getLocationByCoordinate", "resp.IsError", err.Error())
+		log.Errorln("getLocationByCoordinate", "resp.IsError", err.Error())
 		return nil, err
 	}
 
@@ -317,7 +372,7 @@ func getLocationByCoordinate(latitude, longitude string) (map[string]interface{}
 	}{}
 	err = json.Unmarshal(resp.Body(), &location)
 	if err != nil {
-		logError("getLocationByCoordinate", "json.Unmarshal", err.Error())
+		log.Errorln("getLocationByCoordinate", "json.Unmarshal", err.Error())
 		return nil, err
 	}
 
@@ -356,12 +411,13 @@ func getLocationByCoordinate(latitude, longitude string) (map[string]interface{}
 }
 
 // getShalatScheduleByCoordinate do get shalat schedule by coordinate
-func getShalatScheduleByCoordinate(method string, latitude, longitude float64, month, year string) ([]map[string]interface{}, error) {
+func getShalatScheduleByCoordinate(ctx context.Context, method string, latitude, longitude float64, month, year string) ([]map[string]interface{}, error) {
 
 	// dispatch query to open street map geocoding api
 	resp, err := resty.New().
 		SetDebug(restyDebug).
 		R().
+		SetContext(ctx).
 		SetQueryParams(map[string]string{
 			"method":    method,
 			"latitude":  fmt.Sprintf("%v", latitude),
@@ -371,12 +427,12 @@ func getShalatScheduleByCoordinate(method string, latitude, longitude float64, m
 		}).
 		Get("http://api.aladhan.com/v1/calendar")
 	if err != nil {
-		logError("getShalatScheduleByCoordinate", "resty.Get", err.Error())
+		log.Errorln("getShalatScheduleByCoordinate", "resty.Get", err.Error())
 		return nil, err
 	}
 	if resp.IsError() {
 		err = fmt.Errorf("%v", resp.Error())
-		logError("getShalatScheduleByCoordinate", "resp.IsError", err.Error())
+		log.Errorln("getShalatScheduleByCoordinate", "resp.IsError", err.Error())
 		return nil, err
 	}
 
@@ -388,12 +444,12 @@ func getShalatScheduleByCoordinate(method string, latitude, longitude float64, m
 	}{}
 	err = json.Unmarshal(resp.Body(), &schedules)
 	if err != nil {
-		logError("getShalatScheduleByCoordinate", "json.Unmarshal", err.Error())
+		log.Errorln("getShalatScheduleByCoordinate", "json.Unmarshal", err.Error())
 		return nil, err
 	}
 	if schedules.Code != 200 {
 		err = fmt.Errorf("%v", schedules.Status)
-		logError("getShalatScheduleByCoordinate", "schedules.Code != 200", err.Error())
+		log.Errorln("getShalatScheduleByCoordinate", "schedules.Code != 200", err.Error())
 		return nil, err
 	}
 
@@ -401,14 +457,6 @@ func getShalatScheduleByCoordinate(method string, latitude, longitude float64, m
 }
 
 // =========================================================== UTILITY ===========================================================
-
-// todo
-func validateOriginRequest(r *http.Request) error {
-	// firefox: moz-extension://b7d90294-f8dc-492e-8564-e3e7e4490aac
-	// chrome: chrome-extension://ckeifgmkgeihgmbgcbcngkacnbeplgmj
-	// edge: chrome-extension://dfmgmbngjpmbbpgibmdfegilbfckkgli
-	return nil
-}
 
 // writeResponse definition
 func writeRespose(w http.ResponseWriter, r *http.Request, statusCode int, resp interface{}, err error) {
@@ -441,10 +489,21 @@ func renderCacheHeader(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func logInfo(args ...string) {
-	fmt.Println(`{"message": "` + strings.Join(args, " ") + `", "severity": "INFO"}`)
+func newRedis() *redis.Client {
+	return redis.NewClient(&redis.Options{
+		Addr:     "muslimboard-redis:6379",
+		Password: "",
+		DB:       0,
+	})
 }
 
-func logError(args ...string) {
-	fmt.Println(`{"message": "` + strings.Join(args, " ") + `", "severity": "ERROR"}`)
+func convertToJson(src interface{}) string {
+	buf, _ := json.Marshal(src)
+	return string(buf)
+}
+
+func convertToMap(src string) (map[string]interface{}, error) {
+	res := make(map[string]interface{})
+	err := json.Unmarshal([]byte(src), &res)
+	return res, err
 }

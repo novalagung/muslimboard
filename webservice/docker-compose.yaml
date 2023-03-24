@@ -1,0 +1,33 @@
+version: '3.9'
+
+services:
+
+  redis:
+    restart: always
+    container_name: muslimboard-redis
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - volume-redis:/data
+    networks:
+      - muslimboard-network
+
+  webservice:
+    restart: always
+    container_name: muslimboard-api
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    environment:
+      - PORT=8012
+    ports:
+      - "8012:8012"
+    networks:
+      - muslimboard-network
+
+networks:
+  muslimboard-network:
+
+volumes:
+  volume-redis:

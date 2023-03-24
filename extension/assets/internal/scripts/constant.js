@@ -9,14 +9,14 @@ const Constant = {
         email: 'hello@novalagung.com',
     },
     app: {
-        baseUrlWebService: 'https://asia-southeast2-muslim-board-ind-1472876095243.cloudfunctions.net',
+        baseUrlWebService: 'https://muslimboard-api.novalagung.com',
         baseUrlGithub: 'https://muslimboard.novalagung.com/extension/data',
         debug: (() => !('update_url' in chrome.runtime.getManifest()))(),
         timeoutDuration: Utility.seconds(5),
         updateBackgroundDelayDuration: Utility.seconds(40),
         updateContentDelayDuration: Utility.seconds(60),
         changelogs: [
-            'New language support: arabic localization'
+            'fix: timeout issue that often happen from aladhan api'
         ]
     },
 }
