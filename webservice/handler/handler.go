@@ -59,7 +59,7 @@ func HandleShalatScheduleByCoordinate(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 
 	// check cache
-	cacheKey := r.URL.Query().Get("browser-uuid") + "|" + r.URL.String()
+	cacheKey := r.URL.String()
 	cachedRes, err := pkg_redis.NewRedis().Get(ctx, cacheKey).Result()
 	if err != nil {
 		log.Warningln(logNamespace, "pkg_redis.NewRedis().Get", err.Error())
@@ -116,7 +116,7 @@ func HandleShalatScheduleByLocation(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 
 	// check cache
-	cacheKey := r.URL.Query().Get("browser-uuid") + "|" + r.URL.String()
+	cacheKey := r.URL.String()
 	cachedRes, err := pkg_redis.NewRedis().Get(ctx, cacheKey).Result()
 	if err != nil {
 		log.Warningln(logNamespace, "pkg_redis.NewRedis().Get", err.Error())
