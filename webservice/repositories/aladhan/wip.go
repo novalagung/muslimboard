@@ -1,4 +1,4 @@
-package p
+package aladhan
 
 import (
 	"encoding/json"

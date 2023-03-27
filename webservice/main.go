@@ -5,11 +5,11 @@ import (
 	"net/http"
 	"os"
 
-	endpoints "muslimboard-api.novalagung.com/endpoints"
+	router "muslimboard-api.novalagung.com/router"
 )
 
 func main() {
-	http.HandleFunc("/muslimboard-api", endpoints.MuslimboardApi)
+	http.HandleFunc("/muslimboard-api", router.MuslimboardApi)
 
 	port := ":" + os.Getenv("PORT")
 	log.Println("listening to", port)
