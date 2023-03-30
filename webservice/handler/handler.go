@@ -105,10 +105,17 @@ func HandleShalatScheduleByCoordinate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// cache response
-	err = pkg_redis.NewRedis().Set(ctx, cacheKey, pkg_common.ConvertToJson(res), models.RedisKeepAliveDuration).Err()
-	if err != nil {
-		log.Warningln(logNamespace, "pkg_redis.NewRedis().Set", err.Error())
+	// cache data
+	if schedulesRaw := res["schedules"]; schedulesRaw != nil {
+		if schedules := schedulesRaw.([]map[string]interface{}); len(schedules) > 0 {
+			log.Debugln(logNamespace, "set cache", cacheKey)
+
+			// cache response
+			err = pkg_redis.NewRedis().Set(ctx, cacheKey, pkg_common.ConvertToJson(res), models.RedisKeepAliveDuration).Err()
+			if err != nil {
+				log.Warningln(logNamespace, "pkg_redis.NewRedis().Set", err.Error())
+			}
+		}
 	}
 
 	pkg_http.WriteRespose(w, r, http.StatusOK, res, nil)
@@ -161,10 +168,17 @@ func HandleShalatScheduleByLocation(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// cache response
-	err = pkg_redis.NewRedis().Set(ctx, cacheKey, pkg_common.ConvertToJson(res), models.RedisKeepAliveDuration).Err()
-	if err != nil {
-		log.Warningln(logNamespace, "pkg_redis.NewRedis().Set", err.Error())
+	// cache data
+	if schedulesRaw := res["schedules"]; schedulesRaw != nil {
+		if schedules := schedulesRaw.([]map[string]interface{}); len(schedules) > 0 {
+			log.Debugln(logNamespace, "set cache", cacheKey)
+
+			// cache response
+			err = pkg_redis.NewRedis().Set(ctx, cacheKey, pkg_common.ConvertToJson(res), models.RedisKeepAliveDuration).Err()
+			if err != nil {
+				log.Warningln(logNamespace, "pkg_redis.NewRedis().Set", err.Error())
+			}
+		}
 	}
 
 	pkg_http.WriteRespose(w, r, http.StatusOK, res, nil)
