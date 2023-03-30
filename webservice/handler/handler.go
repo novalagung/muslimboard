@@ -7,9 +7,9 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
-	"time"
 
 	log "github.com/sirupsen/logrus"
+	"muslimboard-api.novalagung.com/models"
 	pkg_common "muslimboard-api.novalagung.com/pkg/common"
 	pkg_http "muslimboard-api.novalagung.com/pkg/http"
 	pkg_redis "muslimboard-api.novalagung.com/pkg/redis"
@@ -66,6 +66,13 @@ func HandleShalatScheduleByCoordinate(w http.ResponseWriter, r *http.Request) {
 	} else {
 		cachedResMap, err := pkg_common.ConvertToMap(cachedRes)
 		if len(cachedResMap) > 0 && err == nil {
+
+			// prolong the cache expiration date
+			err = pkg_redis.NewRedis().Set(ctx, cacheKey, cachedRes, models.RedisKeepAliveDuration).Err()
+			if err != nil {
+				log.Warningln(logNamespace, "pkg_redis.NewRedis().Set", err.Error())
+			}
+
 			log.Debugln(logNamespace, "load from cache", cacheKey)
 			pkg_http.WriteRespose(w, r, http.StatusOK, cachedResMap, nil)
 			return
@@ -99,7 +106,7 @@ func HandleShalatScheduleByCoordinate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// cache response
-	err = pkg_redis.NewRedis().Set(ctx, cacheKey, pkg_common.ConvertToJson(res), time.Hour*24*10).Err()
+	err = pkg_redis.NewRedis().Set(ctx, cacheKey, pkg_common.ConvertToJson(res), models.RedisKeepAliveDuration).Err()
 	if err != nil {
 		log.Warningln(logNamespace, "pkg_redis.NewRedis().Set", err.Error())
 	}
@@ -123,6 +130,13 @@ func HandleShalatScheduleByLocation(w http.ResponseWriter, r *http.Request) {
 	} else {
 		cachedResMap, err := pkg_common.ConvertToMap(cachedRes)
 		if len(cachedResMap) > 0 && err == nil {
+
+			// prolong the cache expiration date
+			err = pkg_redis.NewRedis().Set(ctx, cacheKey, cachedRes, models.RedisKeepAliveDuration).Err()
+			if err != nil {
+				log.Warningln(logNamespace, "pkg_redis.NewRedis().Set", err.Error())
+			}
+
 			log.Debugln(logNamespace, "load from cache", cacheKey)
 			pkg_http.WriteRespose(w, r, http.StatusOK, cachedResMap, nil)
 			return
@@ -148,7 +162,7 @@ func HandleShalatScheduleByLocation(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// cache response
-	err = pkg_redis.NewRedis().Set(ctx, cacheKey, pkg_common.ConvertToJson(res), time.Hour*24*10).Err()
+	err = pkg_redis.NewRedis().Set(ctx, cacheKey, pkg_common.ConvertToJson(res), models.RedisKeepAliveDuration).Err()
 	if err != nil {
 		log.Warningln(logNamespace, "pkg_redis.NewRedis().Set", err.Error())
 	}
