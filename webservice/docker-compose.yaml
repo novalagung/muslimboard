@@ -12,6 +12,11 @@ services:
       - volume-redis:/data
     networks:
       - muslimboard-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.30'
+          # memory: 1000M
 
   webservice:
     restart: always
@@ -25,6 +30,11 @@ services:
       - "8012:8012"
     networks:
       - muslimboard-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.30'
+          memory: 30M
 
 networks:
   muslimboard-network:

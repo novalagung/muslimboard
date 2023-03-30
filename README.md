@@ -24,7 +24,7 @@ Use chrome → open up extension menu → click **Load unpacked** and navigate t
 - Folder `extension` is where the chrome extension source code lies.
 - Folder `macos` is the MacOS safari extension project directory. It is used for maintaining AppStore submission.
 - Folder `resources` contains a few resource files (it's used by the extension or website directly).
-- Folder `webservices` contains the backend serverless code (GCP function).
+- Folder `webservices` contains the backend webservice API code.
 - Folder `website` contains the source code web/landing page, https://muslimboard.novalagung.com.
 
 ## Contribution
@@ -48,10 +48,6 @@ However, before we start doing anything, especially on stuff within the `extensi
 
 - To contribute, simply fork → commit your changes → submit PR.
 - Navigate to [CONTRIBUTING.md](https://github.com/novalagung/muslimboard/blob/master/CONTRIBUTING.md) to see the list of amazing contributor of this project.
-
-## Web Service
-
-We use GCP Function to host our serverless backend.
 
 ## Author
 

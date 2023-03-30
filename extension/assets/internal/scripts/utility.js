@@ -188,5 +188,22 @@ const Utility = {
         // clearTimeout(timeoutId)
 
         return fetch(url, { signal: controller.signal })
-    }
+    },
+    getBrowserUuid() {
+        let key = `browser-uuid-${Constant.meta.version}`
+        let browserUuid = localStorage.getItem(key) || ''
+        if (browserUuid.length < 50) {
+            return browserUuid;
+        }
+
+        if (self.crypto.randomUUID) {
+            browserUuid = `${self.crypto.randomUUID()}-${new Date().getTime()}`
+        }
+        if (browserUuid.length < 50) {
+            return '';
+        }
+
+        localStorage.setItem(key, browserUuid)
+        return browserUuid
+    },
 }
