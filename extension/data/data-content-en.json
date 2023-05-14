@@ -1,5 +1,5 @@
 {
-	"version": "2023.01.12",
+	"version": "2023.05.14",
 	"content": [{
 		"id": "1",
 		"matan": "فَاذْكُرُونِي أَذْكُرْكُمْ",
@@ -44,7 +44,7 @@
 		"type": "verse"
 	}, {
 		"id": "8",
-		"matan": "مَا نَقَصَتْ صَدَقَةٌ مِنْ مَالٍ وَمَا زَادَ اللَّهُ عَبْدًا بِعَفْوٍ إِلاَّ عِزًّا وَمَا تَوَاضَعَ أَحَدٌ لِلَّهِ إِلاَّ رَفَعَهُ اللَّ",
+		"matan": "مَا نَقَصَتْ صَدَقَةٌ مِنْ مَالٍ وَمَا زَادَ اللَّهُ عَبْدًا بِعَفْوٍ إِلاَّ عِزًّا وَمَا تَوَاضَعَ أَحَدٌ لِلَّهِ إِلاَّ رَفَعَهُ اللَّهُ",
 		"translation": "Charity does not decrease wealth, no one forgives another except that Allah increases his honor, and no one humbles himself for the sake of Allah except that Allah raises his status",
 		"reference": "HR Muslim no 2588",
 		"type": "verse"
