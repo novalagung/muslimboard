@@ -21,8 +21,8 @@
                 $('.date .text').text(dateFull)
 
                 const monthHijr = I18n.getText(`month${moment().format('iM')}`)
-                const dateHijr = moment().format('iD $4 iYYYY')
-                    .replace('$4', monthHijr)
+                const dateHijr = moment().format('iD $1 iYYYY')
+                    .replace('$1', monthHijr) + ' AH'
                 $('.date-hijr .text').text(dateHijr)
             }
 
