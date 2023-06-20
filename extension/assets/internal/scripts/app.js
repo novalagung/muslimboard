@@ -1170,7 +1170,7 @@
 
             const isUpdate = Object.keys(localStorage).filter((d) => d.indexOf('changelogs-message') > -1).length > 0
             const openingMessage = isUpdate
-                ? I18n.getText('modalUpdateMuslimboardNotification')
+                ? I18n.getText('modalUpdateInstalledMuslimboardNotification')
                     .replace('$1', Constant.meta.appName)
                     .replace('$2', Constant.meta.version)
                 : I18n.getText('modalInstallMuslimboardNotification')
@@ -1198,13 +1198,23 @@
             })
 
             localStorage.setItem(keyOfUpdateMessage, true)
+
+            setTimeout(() => {
+                // remove new version cache keys
+                Object.keys(localStorage)
+                    .filter((d) => d.indexOf('new-version') > -1)
+                    .forEach((k) => {
+                        localStorage.removeItem(k)
+                    })
+            }, 1000)
         },
 
         async checkNewVersion() {
-            const keyOfUpdateMessage = `changelogs-message-${Constant.meta.version}`
-            if (!localStorage.getItem(keyOfUpdateMessage)) {
+            const keyOfNewVersionMessage = `new-version-${Constant.meta.version}-${moment().format('MM')}`
+            if (localStorage.getItem(keyOfNewVersionMessage)) {
                 return
             }
+            localStorage.setItem(keyOfNewVersionMessage, 'true')
 
             const url = `https://api.github.com/repos/novalagung/muslimboard/releases`
             const response = await Utility.fetch(url)
@@ -1215,33 +1225,23 @@
             if (result[0].tag_name === Constant.meta.version) {
                 return
             }
-            console.log('result[0].tag_name', result[0].tag_name, Constant.meta.version)
-            const openingMessage = isUpdate
-                ? I18n.getText('modalUpdateMuslimboardNotification')
-                    .replace('$1', Constant.meta.appName)
-                    .replace('$2', Constant.meta.version)
-                : I18n.getText('modalInstallMuslimboardNotification')
-                    .replace('$1', `${Constant.meta.appName} ${Constant.meta.version}`)
+            Utility.log('new version', result[0].tag_name, Constant.meta.version)
+
+            const message = I18n.getText('modalUpdateAvailableMuslimboardNotification')
+                .replace('$1', `<b>${result[0].tag_name}</b>`)
 
             const text = `
                 <div class="modal-info">
-                    <p>New version found, <b>${result[0].tag_name}</b>. Please ensure to update to the latest version</p>
-                    <ul>
-                        ${Constant.app.changelogs.map((d) => `<li>${d}</li>`).join('')}
-                    </ul>
+                    <p style="text-align: center;">${message}</p>
                 </div>
             `
 
             Swal.fire({
                 type: 'info',
-                title: `${Constant.meta.appName} ${result[0].tag_name}`,
+                title: `New version! ${result[0].tag_name}`,
                 html: text,
                 showConfirmButton: false,
                 allowOutsideClick: true
-            }).then(() => {
-                if (!I18n.getSelectedLocale(false)) {
-                    $('.change-language').trigger('click')
-                }
             })
         },
 
