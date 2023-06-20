@@ -900,7 +900,7 @@
 
                 const keyOfNewVersionMessage = `new-version-${Constant.meta.version}}`
                 const newVersion = localStorage.getItem(keyOfNewVersionMessage) || ''
-                const newVersionText = newVersion.indexOf('v') === 0 ? `
+                const newVersionText = Utility.versionAsFloat(newVersion) > Utility.versionAsFloat(Constant.meta.version) ? `
                     <hr class='separator'>
                     <p>
                         ${I18n.getText('modalUpdateAvailableMuslimboardNotification')
@@ -1240,7 +1240,7 @@
             if (!result[0]) {
                 return
             }
-            if (result[0].tag_name === Constant.meta.version) {
+            if (Utility.versionAsFloat(result[0].tag_name) <= Utility.versionAsFloat(Constant.meta.version)) {
                 return
             }
             localStorage.setItem(keyOfNewVersionMessage, result[0].tag_name)

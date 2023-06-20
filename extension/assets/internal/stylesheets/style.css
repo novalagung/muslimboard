@@ -79,7 +79,8 @@ html {
     top: -10px;
     margin-left: -28px;
 }
-#sidebar .date-time .date .date-hijr,
+#sidebar .date-time .date,
+#sidebar .date-time .date-hijr,
 #sidebar .date-time .location {
     font-weight: normal;
     font-size: 12px;
@@ -109,7 +110,7 @@ html {
 }
 
 #sidebar .prayer-time {
-    margin-top: 15px;
+    margin-top: 25px;
     height: 175px;
     position: relative;
 }

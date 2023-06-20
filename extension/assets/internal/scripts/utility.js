@@ -206,4 +206,5 @@ const Utility = {
         localStorage.setItem(key, browserUuid)
         return browserUuid
     },
+    versionAsFloat: (s) => parseFloat(s.replace('v', '').replace('.', ''))
 }
