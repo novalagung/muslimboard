@@ -280,11 +280,17 @@ const I18n = {
             id: '$1 berhasil di-install.',
             'zh-tw': '$1 已成功安裝。'
         },
-        modalUpdateMuslimboardNotification: {
+        modalUpdateInstalledMuslimboardNotification: {
             ar: '$1 تم تحديثه إلى نسخة $2.',
             en: '$1 is successfully updated to version $2.',
             id: '$1 anda telah di update ke versi $2.',
             'zh-tw': '$1 已成功更新至版本 $2。'
+        },
+        modalUpdateAvailableMuslimboardNotification: {
+            // ar: '',
+            en: 'New version available, $1. Ensure to get the latest version.',
+            id: 'Versi terbaru sudah tersedia, $1. Silakan lakukan update.',
+            // 'zh-tw': ''
         }
     },
 
