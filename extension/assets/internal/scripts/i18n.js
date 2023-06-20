@@ -135,9 +135,9 @@ const I18n = {
             id: 'Share',
             'zh-tw': '分享'
         },
-        footerMenuAboutUs: {
+        footerMenuInfo: {
             ar: 'عنا',
-            en: 'About us',
+            en: 'Info',
             id: 'Informasi',
             'zh-tw': '關於我們'
         },
@@ -272,12 +272,6 @@ const I18n = {
             en: 'For feedback or contribution, please email to $1 or submit a PR to $2.',
             id: 'Untuk pertanyaan, kritik & saran, maupun jika ingin berkontribusi foto atau quote, silakan kirim email ke $1 atau via submit PR di $2.',
             'zh-tw': '如有任何意見或建議，或想要貢獻照片或名言，請發送電子郵件至 $1 或提交 PR 到 $2。'
-        },
-        modalAboutUsText3: {
-            // ar: '',
-            en: 'New version found, <b>$1</b>. Please ensure to get the latest version via browser marketplace.',
-            id: 'Versi terbaru sudah tersedia, <b>$1</b>. Silakan update',
-            // 'zh-tw': ''
         },
 
         modalShareHeader: {

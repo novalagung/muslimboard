@@ -897,6 +897,17 @@
             $('.info').on('click', (e) => {
                 e.preventDefault();
                 const shareText = `${Constant.meta.appName} - ${I18n.getText('appDescription')}`;
+
+                const keyOfNewVersionMessage = `new-version-${Constant.meta.version}}`
+                const newVersion = localStorage.getItem(keyOfNewVersionMessage) || ''
+                const newVersionText = newVersion.indexOf('v') === 0 ? `
+                    <hr class='separator'>
+                    <p>
+                        ${I18n.getText('modalUpdateAvailableMuslimboardNotification')
+                            .replace('$1', `<b>${newVersion}</b>`)}
+                    </p>
+                ` : ''
+
                 const text = `
                     <div class='modal-info'>
                         <p>
@@ -914,6 +925,7 @@
                                 .replace('$1', `<a href='mailto:${Constant.maintainer.email}?subject=${Constant.meta.appName} ${Constant.meta.version} feedback'>${Constant.maintainer.email}</a>`)
                                 .replace('$2', `<a href='https://github.com/novalagung/muslimboard' target='_blank'>GitHub</a>`)}
                         </p>
+                        ${newVersionText}
                         <hr class='separator'>
                         <p>${I18n.getText('modalShareText')}</p>
                         <div class="share-container">
@@ -1183,7 +1195,8 @@
 
             const text = `
                 <div class="modal-info">
-                    <p>${openingMessage} Changelogs:</p>
+                    <p>${openingMessage}</p>
+                    <p>Changelogs:</p>
                     <ul>
                         ${Constant.app.changelogs.map((d) => `<li>${d}</li>`).join('')}
                     </ul>
@@ -1215,7 +1228,7 @@
         },
 
         async checkNewVersion() {
-            const keyOfNewVersionMessage = `new-version-${Constant.meta.version}-${moment().format('MM')}`
+            const keyOfNewVersionMessage = `new-version-${Constant.meta.version}}`
             if (localStorage.getItem(keyOfNewVersionMessage)) {
                 return
             }
@@ -1230,6 +1243,8 @@
             if (result[0].tag_name === Constant.meta.version) {
                 return
             }
+            localStorage.setItem(keyOfNewVersionMessage, result[0].tag_name)
+
             Utility.log('new version', result[0].tag_name, Constant.meta.version)
 
             const message = I18n.getText('modalUpdateAvailableMuslimboardNotification')
