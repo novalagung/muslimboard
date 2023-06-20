@@ -17,6 +17,7 @@ const Constant = {
         updateContentDelayDuration: Utility.seconds(60),
         changelogs: [
             'Add hijri calendar',
+            'New version checker',
             'Common backend updates'
         ]
     },

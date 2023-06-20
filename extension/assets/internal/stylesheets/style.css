@@ -550,6 +550,9 @@ body.show-todo-list #todo-list .wrapper .items .item {
     color: inherit;
     font-weight: bold;
 }
+#swal2-content .modal-info p b {
+    font-weight: bold;
+}
 #swal2-content .modal-info p.copyright {
     margin-top: 20px;
 }
