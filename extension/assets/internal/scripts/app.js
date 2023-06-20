@@ -19,6 +19,11 @@
                 $('.time .hour').text(hour)
                 $('.time .minute').text(minute)
                 $('.date .text').text(dateFull)
+
+                const monthHijr = I18n.getText(`month${moment().format('iM')}`)
+                const dateHijr = moment().format('iD $4 iYYYY')
+                    .replace('$4', monthHijr)
+                $('.date-hijr .text').text(dateHijr)
             }
 
             doRenderDateTime()

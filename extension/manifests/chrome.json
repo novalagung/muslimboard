@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Muslim Board",
   "short_name": "muslimboard",
-  "version": "2.7.0",
+  "version": "2.8.0",
   "description": "Personal Dashboard for Muslim",
   "chrome_url_overrides": {
     "newtab": "index.html"

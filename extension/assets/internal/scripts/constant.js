@@ -16,8 +16,8 @@ const Constant = {
         updateBackgroundDelayDuration: Utility.seconds(40),
         updateContentDelayDuration: Utility.seconds(60),
         changelogs: [
-            'fix timeout issue that often happen from aladhan api',
-            'common backend updates'
+            'Add hijri calendar',
+            'Common backend updates'
         ]
     },
 }
