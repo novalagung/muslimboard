@@ -1200,6 +1200,51 @@
             localStorage.setItem(keyOfUpdateMessage, true)
         },
 
+        async checkNewVersion() {
+            const keyOfUpdateMessage = `changelogs-message-${Constant.meta.version}`
+            if (!localStorage.getItem(keyOfUpdateMessage)) {
+                return
+            }
+
+            const url = `https://api.github.com/repos/novalagung/muslimboard/releases`
+            const response = await Utility.fetch(url)
+            const result = await response.json()
+            if (!result[0]) {
+                return
+            }
+            if (result[0].tag_name === Constant.meta.version) {
+                return
+            }
+            console.log('result[0].tag_name', result[0].tag_name, Constant.meta.version)
+            const openingMessage = isUpdate
+                ? I18n.getText('modalUpdateMuslimboardNotification')
+                    .replace('$1', Constant.meta.appName)
+                    .replace('$2', Constant.meta.version)
+                : I18n.getText('modalInstallMuslimboardNotification')
+                    .replace('$1', `${Constant.meta.appName} ${Constant.meta.version}`)
+
+            const text = `
+                <div class="modal-info">
+                    <p>New version found, <b>${result[0].tag_name}</b>. Please ensure to update to the latest version</p>
+                    <ul>
+                        ${Constant.app.changelogs.map((d) => `<li>${d}</li>`).join('')}
+                    </ul>
+                </div>
+            `
+
+            Swal.fire({
+                type: 'info',
+                title: `${Constant.meta.appName} ${result[0].tag_name}`,
+                html: text,
+                showConfirmButton: false,
+                allowOutsideClick: true
+            }).then(() => {
+                if (!I18n.getSelectedLocale(false)) {
+                    $('.change-language').trigger('click')
+                }
+            })
+        },
+
         // =========== INIT
 
         // orchestrate everything
@@ -1219,6 +1264,7 @@
             this.ensureTodoListBoxVisibilityOnPageActive.call(this)
             this.ensureTodoListItemsAppear.call(this)
             this.showExtensionWelcomeModal.call(this)
+            this.checkNewVersion.call(this)
         }
     }
 
