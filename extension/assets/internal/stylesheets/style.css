@@ -79,7 +79,7 @@ html {
     top: -10px;
     margin-left: -28px;
 }
-#sidebar .date-time .date,
+#sidebar .date-time .date .date-hijr,
 #sidebar .date-time .location {
     font-weight: normal;
     font-size: 12px;
