@@ -468,6 +468,228 @@
 		"translation": "Pandanglah orang yang berada di bawahmu (dalam masalah harta dan dunia) dan janganlah engkau pandang orang yang berada di atasmu (dalam masalah ini). Dengan demikian, hal itu akan membuatmu tidak meremehkan nikmat Allah padamu.",
 		"type": "verse",
 		"reference": "HR. Muslim no. 2963"
+	}, {
+		"id": "84",
+		"matan": "وَلَنَبْلُوَنَّكُمْ بِشَيْءٍ مِّنَ الْخَوْفِ وَالْجُوْعِ وَنَقْصٍ مِّنَ الْاَمْوَالِ وَالْاَنْفُسِ وَالثَّمَرٰتِۗ وَبَشِّرِ الصّٰبِرِيْنَ",
+		"translation": "Kami pasti akan mengujimu dengan sedikit ketakutan dan kelaparan, kekurangan harta, jiwa, dan buah-buahan. Sampaikanlah (wahai Nabi Muhammad) kabar gembira kepada orang-orang sabar.",
+		"type": "verse",
+		"reference": "QS. Al Baqarah: 155"
+	}, {
+		"id": "85",
+		"matan": "لَا يُكَلِّفُ اللّٰهُ نَفْسًا اِلَّا وُسْعَهَا",
+		"translation": "Allah tidak membebani seseorang melainkan sesuai dengan kesanggupannya.",
+		"type": "verse",
+		"reference": "QS. Al Baqarah: 286"
+	},{
+		"id": "86",
+		"matan": "لَىِٕنْ شَكَرْتُمْ لَاَزِيْدَنَّكُمْ وَلَىِٕنْ كَفَرْتُمْ اِنَّ عَذَابِيْ لَشَدِيْدٌ",
+		"translation": "Sesungguhnya jika kamu bersyukur, pasti Kami akan menambah (nikmat) kepadamu, namun jika kamu mengingkari (nikmat-Ku), maka sesungguhnya azab-Ku sangatlah pedih.",
+		"type": "verse",
+		"reference": "QS. Ibrahim: 7"
+	},{
+		"id": "87",
+		"matan": "اِنَّ الْحَسَنٰتِ يُذْهِبْنَ السَّيِّاٰتِۗ ذٰلِكَ ذِكْرٰى لِلذّٰكِرِيْنَ",
+		"translation": "Sesungguhnya perbuatan-perbuatan yang baik itu menghapuskan (dosa) perbuatan-perbuatan yang buruk.",
+		"type": "verse",
+		"reference": "QS. Hud: 114"
+	},{
+		"id": "88",
+		"matan": "وَقُوْلُوْا لِلنَّاسِ حُسْنًا",
+		"translation": "Dan ucapkanlah kata-kata yang baik kepada manusia.",
+		"type": "verse",
+		"reference": "QS. Al Baqarah: 83"
+	},{
+		"id": "89",
+		"matan": "فَاِذَا عَزَمْتَ فَتَوَكَّلْ عَلَى اللّٰهِ ۗ اِنَّ اللّٰهَ يُحِبُّ الْمُتَوَكِّلِيْنَ",
+		"translation": "Kemudian apabila kamu telah membulatkan tekad, maka bertawakkallah kepada Allah. Sesungguhnya Allah menyukai orang-orang yang bertawakkal kepada-Nya.",
+		"type": "verse",
+		"reference": "QS. Ali Imran: 159"
+	},{
+		"id": "90",
+		"matan": "الَّذِيْ خَلَقَ سَبْعَ سَمٰوٰتٍ طِبَاقًاۗ مَا تَرٰى فِيْ خَلْقِ الرَّحْمٰنِ مِنْ تَفٰوُتٍۗ فَارْجِعِ الْبَصَرَۙ هَلْ تَرٰى مِنْ فُطُوْرٍ",
+		"translation": "Yang menciptakan tujuh langit berlapis-lapis. Tidak akan kamu lihat sesuatu yang tidak seimbang pada ciptaan Tuhan Yang Maha Pengasih. Maka lihatlah sekali lagi, adakah kamu lihat sesuatu yang cacat?",
+		"type": "verse",
+		"reference": "QS. Al Mulk: 3"
+	},{
+		"id": "91",
+		"matan": "وَابْتَغِ فِيْمَآ اٰتٰىكَ اللّٰهُ الدَّارَ الْاٰخِرَةَ وَلَا تَنْسَ نَصِيْبَكَ مِنَ الدُّنْيَا",
+		"translation": "Dan carilah pada apa yang telah dianugerahkan kepadamu (kebahagiaan) negeri akhirat, dan janganlah kamu melupakan bagianmu dari (kenikmatan) duniawi.",
+		"type": "verse",
+		"reference": "QS. Al Qasas: 77"
+	},{
+		"id": "92",
+		"matan": "وَلَا تَسْتَوِى الْحَسَنَةُ وَلَا السَّيِّئَةُ ۗاِدْفَعْ بِالَّتِيْ هِيَ اَحْسَنُ فَاِذَا الَّذِيْ بَيْنَكَ وَبَيْنَهٗ عَدَاوَةٌ كَاَنَّهٗ وَلِيٌّ حَمِيْمٌ",
+		"translation": "Kebaikan tidak sama dengan kejahatan. Tolaklah kejahatan itu dengan cara yang lebih baik, sehingga yang memusuhimu akan seperti teman yang setia.",
+		"type": "verse",
+		"reference": "QS. Fussilat: 34"
+	},{
+		"id": "93",
+		"matan": "اِنَّمَا يُوَفَّى الصّٰبِرُوْنَ اَجْرَهُمْ بِغَيْرِ حِسَابٍ",
+		"translation": "Sesungguhnya hanya orang-orang yang bersabarlah yang dicukupkan pahala mereka tanpa batas.",
+		"type": "verse",
+		"reference": "QS. Azumar: 10"
+	},{
+		"id": "94",
+		"matan": "اِنَّمَا يُوَفَّى الصّٰبِرُوْنَ اَجْرَهُمْ بِغَيْرِ حِسَابٍ",
+		"translation": "Sesungguhnya hanya orang-orang yang bersabarlah yang dicukupkan pahala mereka tanpa batas.",
+		"type": "verse",
+		"reference": "QS. Azumar: 10"
+	},{
+		"id": "95",
+		"matan": "فَمَنْ يَّعْمَلْ مِثْقَالَ ذَرَّةٍ خَيْرًا يَّرَهٗۚ",
+		"translation": "Barangsiapa yang mengerjakan kebaikan sekecil apapun, niscaya dia akan melihat (balasan)nya.",
+		"type": "verse",
+		"reference": "QS. Az Zalzalah: 7"
+	},{
+		"id": "96",
+		"matan": "وَمَنْ يَّعْمَلْ مِثْقَالَ ذَرَّةٍ شَرًّا يَّرَهٗ",
+		"translation": "Barangsiapa yang mengerjakan kejahatan sekecil apapun, niscaya dia akan melihat (balasan)nya.",
+		"type": "verse",
+		"reference": "QS. Az Zalzalah: 8"
+	},{
+		"id": "97",
+		"matan": "يٰٓاَيُّهَا الَّذِيْنَ اٰمَنُوْا لَا تَدْخُلُوْا بُيُوْتًا غَيْرَ بُيُوْتِكُمْ حَتّٰى تَسْتَأْنِسُوْا وَتُسَلِّمُوْا عَلٰٓى اَهْلِهَاۗ ذٰلِكُمْ خَيْرٌ لَّكُمْ لَعَلَّكُمْ تَذَكَّرُوْنَ",
+		"translation": "Wahai orang beriman, janganlah kamu memasuki rumah yang bukan rumahmu sebelum meminta izin dan memberi salam kepada penghuninya. Yang demikian itu lebih baik agar kamu selalu ingat.",
+		"type": "verse",
+		"reference": "QS. An Nur: 27"
+	},{
+		"id": "98",
+		"matan": "وَاَمَّا مَنْ خَافَ مَقَامَ رَبِّهٖ وَنَهَى النَّفْسَ عَنِ الْهَوٰىۙ فَاِنَّ الْجَنَّةَ هِيَ الْمَأْوٰىۗ",
+		"translation": "Dan adapun orang-orang yang takut pada kebesaran Tuhannya dan menahan diri dari keinginan hawa nafsunya, maka sesungguhnya surgalah tempat tinggal mereka.",
+		"type": "verse",
+		"reference": "QS. An Naziat: 40-41"
+	},{
+		"id": "99",
+		"matan": "يٰٓاَيُّهَا النَّاسُ اِنَّا خَلَقْنٰكُمْ مِّنْ ذَكَرٍ وَّاُنْثٰى وَجَعَلْنٰكُمْ شُعُوْبًا وَّقَبَاۤىِٕلَ لِتَعَارَفُوْا ۚ اِنَّ اَكْرَمَكُمْ عِنْدَ اللّٰهِ اَتْقٰىكُمْ ۗاِنَّ اللّٰهَ عَلِيْمٌ خَبِيْرٌ",
+		"translation": "Hai manusia, sesungguhnya Kami menciptakan kamu dari seorang laki-laki dan seorang perempuan dan menjadikan kamu berbangsa-bangsa dan bersuku-suku supaya kamu saling mengenal. Sesungguhnya yang paling mulia di antara kamu di sisi Allah adalah orang yang paling bertakwa. Sesungguhnya Allah Maha Mengetahui lagi Maha Teliti.",
+		"type": "verse",
+		"reference": "QS. Al Hujurat: 13"
+	},{
+		"id": "100",
+		"matan": "ۨوَيْلٌ لِّكُلِّ هُمَزَةٍ لُّمَزَةٍۙ الَّذِيْ جَمَعَ مَالًا وَّعَدَّدَهٗۙ يَحْسَبُ اَنَّ مَالَهٗٓ اَخْلَدَهٗۚ",
+		"translation": "Kecelakaanlah bagi setiap pengumpat dan pencela, yang mengumpulkan harta dan menghitung-hitungnya. Dia mengira bahwa hartanya dapat menyelamatkannya.",
+		"type": "verse",
+		"reference": "QS. Al Humazah: 1-3"
+	},{
+		"id": "101",
+		"matan": "اَلَمْ يَعْلَمْ بِاَنَّ اللّٰهَ يَرٰىۗ",
+		"translation": "Tidakkah dia menyadari bahwa sesungguhnya Allah melihat segala perbuatannya?",
+		"type": "verse",
+		"reference": "QS. Al Alaq: 14"
+	},{
+		"id": "102",
+		"matan": "وَاللّٰهُ خَيْرُ الرّٰزِقِيْنَ ࣖ",
+		"translation": "Dan Allah Sebaik-baik Pemberi rezeki.",
+		"type": "verse",
+		"reference": "QS. Al Jumu'ah: 11"
+	},{
+		"id": "103",
+		"matan": "وَاسْتَعِيْنُوْا بِالصَّبْرِ وَالصَّلٰوةِ",
+		"translation": "Dan mintalah pertolongan dengan sabar dan shalat.",
+		"type": "verse",
+		"reference": "QS. Al Baqarah: 45"
+	},{
+		"id": "104",
+		"matan": "وَمَا هٰذِهِ الْحَيٰوةُ الدُّنْيَآ اِلَّا لَهْوٌ وَّلَعِبٌۗ وَاِنَّ الدَّارَ الْاٰخِرَةَ لَهِيَ الْحَيَوَانُۘ لَوْ كَانُوْا يَعْلَمُوْنَ",
+		"translation": "Dan tiadalah kehidupan dunia ini melainkan hanya senda gurau dan main-main. Dan sesungguhnya akhirat itulah yang sebenarnya kehidupan, jika saja mereka mengetahui.",
+		"type": "verse",
+		"reference": "QS. Al Ankabut: 64"
+	},{
+		"id": "105",
+		"matan": "اَحَسِبَ النَّاسُ اَنْ يُّتْرَكُوْٓا اَنْ يَّقُوْلُوْٓا اٰمَنَّا وَهُمْ لَا يُفْتَنُوْنَ",
+		"translation": "Apakah manusia itu mengira bahwa mereka dibiarkan (saja) mengatakan, 'Kami telah beriman' sedang mereka tidak diuji lagi?",
+		"type": "verse",
+		"reference": "QS. Al Ankabut: 2"
+	},{
+		"id": "106",
+		"matan": "لِّكَيْلَا تَأْسَوْا عَلٰى مَا فَاتَكُمْ وَلَا تَفْرَحُوْا بِمَآ اٰتٰىكُمْ ۗوَاللّٰهُ لَا يُحِبُّ كُلَّ مُخْتَالٍ فَخُوْرٍۙ",
+		"translation": "Agar kamu tidak bersedih hati terhadap apa yang luput dari kamu dan tidak pula terlalu gembira terhadap apa yang diberikan-Nya kepadamu. Dan Allah tidak menyukai terhadap orang yang sombong dan membanggakan diri.",
+		"type": "verse",
+		"reference": "QS. Al Hadid: 23"
+	},{
+		"id": "107",
+		"matan": "اَيْنَ مَا تَكُوْنُوْا يُدْرِكْكُّمُ الْمَوْتُ وَلَوْ كُنْتُمْ فِيْ بُرُوْجٍ مُّشَيَّدَةٍ",
+		"translation": "Di mana saja kamu berada, kematian akan mendapatkanmu, kendatipun kamu berada dalam benteng yang tinggi dan kokoh.",
+		"type": "verse",
+		"reference": "QS. An Nisa: 78"
+	},{
+		"id": "108",
+		"matan": "وَاللّٰهُ اَخْرَجَكُمْ مِّنْۢ بُطُوْنِ اُمَّهٰتِكُمْ لَا تَعْلَمُوْنَ شَيْـًٔاۙ وَّجَعَلَ لَكُمُ السَّمْعَ وَالْاَبْصَارَ وَالْاَفْـِٕدَةَ ۙ لَعَلَّكُمْ تَشْكُرُوْنَ",
+		"translation": "Dan Allah mengeluarkan kamu dari perut ibumu dalam keadaan tidak mengetahui sesuatu apa pun, dan Dia memberimu pendengaran, penglihatan, dan hati agar kamu bersyukur.",
+		"type": "verse",
+		"reference": "QS. An Nahl: 78"
+	},{
+		"id": "109",
+		"matan": "وَتَرَى الْجِبَالَ تَحْسَبُهَا جَامِدَةً وَّهِيَ تَمُرُّ مَرَّ السَّحَابِۗ",
+		"translation": "Dan engkau akan melihat gunung-gunung, yang engkau kira tetap berdiri di tempatnya, padahal dia berjalan seperti awan berjalan.",
+		"type": "verse",
+		"reference": "QS. An Naml: 88"
+	},{
+		"id": "110",
+		"matan": "اِنَّ اللّٰهَ لَا يُغَيِّرُ مَا بِقَوْمٍ حَتّٰى يُغَيِّرُوْا مَا بِاَنْفُسِهِمْۗ",
+		"translation": "Sesungguhnya Allah tidak akan mengubah nasib suatu kaum sehingga mereka mengubah keadaan yang ada pada diri mereka sendiri.",
+		"type": "verse",
+		"reference": "QS. Ar Ra'd: 11"
+	},{
+		"id": "111",
+		"matan": "وَلَا تَهِنُوْا وَلَا تَحْزَنُوْا وَاَنْتُمُ الْاَعْلَوْنَ اِنْ كُنْتُمْ مُّؤْمِنِيْنَ",
+		"translation": "Jangan kamu merasa lemah dan jangan bersedih, sebab kamu paling tinggi derajatnya jika kamu beriman.",
+		"type": "verse",
+		"reference": "QS. Ali Imran: 139"
+	},{
+		"id": "112",
+		"matan": "وَمَنْ يَّكْسِبْ اِثْمًا فَاِنَّمَا يَكْسِبُهٗ عَلٰى نَفْسِهٖ ۗ وَكَانَ اللّٰهُ عَلِيْمًا حَكِيْمًا",
+		"translation": "Dan barangsiapa berbuat kesalahan atau dosa, kemudian dia tuduhkan kepada orang yang tidak bersalah, maka sungguh dia telah memikul suatu kebohongan dan dosa yang nyata.",
+		"type": "verse",
+		"reference": "QS. An Nisa: 111"
+	},{
+		"id": "113",
+		"matan": "لَهٗ مُعَقِّبٰتٌ مِّنْۢ بَيْنِ يَدَيْهِ وَمِنْ خَلْفِهٖ يَحْفَظُوْنَهٗ مِنْ اَمْرِ اللّٰهِ",
+		"translation": "Bagi manusia ada malaikat-malaikat yang selalu mengikutinya di hadapan dan di belakangnya, mereka menjaganya atas perintah Allah.",
+		"type": "verse",
+		"reference": "QS. Ar Rad: 11"
+	},{
+		"id": "114",
+		"matan": "وَقَضٰى رَبُّكَ اَلَّا تَعْبُدُوْٓا اِلَّآ اِيَّاهُ وَبِالْوَالِدَيْنِ اِحْسٰنًاۗ اِمَّا يَبْلُغَنَّ عِنْدَكَ الْكِبَرَ اَحَدُهُمَآ اَوْ كِلٰهُمَا فَلَا تَقُلْ لَّهُمَآ اُفٍّ وَّلَا تَنْهَرْهُمَا وَقُلْ لَّهُمَا قَوْلًا كَرِيْمًا",
+		"translation": "Dan Tuhanmu telah memerintahkan supaya kamu jangan menyembah selain Dia dan hendaklah kamu berbuat baik pada ibu bapakmu dengan sebaik-baiknya. Jika salah seorang di antara keduanya atau kedua-duanya sampai berumur lanjut dalam pemeliharaanmu, maka sekali-kali janganlah kamu mengatakan kepada keduanya perkataan 'ah' dan janganlah kamu membentak mereka dan ucapkanlah kepada mereka perkataan yang mulia.",
+		"type": "verse",
+		"reference": "QS. Al Isra: 23"
+	},{
+		"id": "115",
+		"matan": "وَمِنَ النَّاسِ مَنْ يَّتَّخِذُ مِنْ دُوْنِ اللّٰهِ اَنْدَادًا يُّحِبُّوْنَهُمْ كَحُبِّ اللّٰهِ ۗ وَالَّذِيْنَ اٰمَنُوْٓا اَشَدُّ حُبًّا لِّلّٰهِ ۙوَلَوْ يَرَى الَّذِيْنَ ظَلَمُوْٓا اِذْ يَرَوْنَ الْعَذَابَۙ اَنَّ الْقُوَّةَ لِلّٰهِ جَمِيْعًا ۙوَّاَنَّ اللّٰهَ شَدِيْدُ الْعَذَابِ",
+		"translation": "Dan di antara manusia ada orang-orang yang menyembah tandingan-tandingan selain Allah, mereka mencintainya sebagaimana mereka mencintai Allah. Adapun orang-orang yang beriman amat sangat cintanya kepada Allah. Dan jika seandainya orang-orang yang berbuat zalim itu mengetahui ketika mereka melihat siksa (pada hari kiamat), bahwa kekuatan itu kepunyaan Allah semuanya, dan bahwa Allah amat berat siksaan-Nya (niscaya mereka menyesal).",
+		"type": "verse",
+		"reference": "QS. Al Baqarah: 165"
+	},{
+		"id": "116",
+		"matan": "اِنَّ الَّذِيْنَ اٰمَنُوْا وَعَمِلُوا الصّٰلِحٰتِ سَيَجْعَلُ لَهُمُ الرَّحْمٰنُ وُدًّا",
+		"translation": "Sesungguhnya orang-orang yang beriman dan beramal saleh, kelak Allah Yang Maha Pemurah akan menanamkan dalam (hati) mereka rasa kasih sayang.",
+		"type": "verse",
+		"reference": "QS. Maryam: 96"
+	},{
+		"id": "117",
+		"matan": "اَلْخَبِيْثٰتُ لِلْخَبِيْثِيْنَ وَالْخَبِيْثُوْنَ لِلْخَبِيْثٰتِۚ وَالطَّيِّبٰتُ لِلطَّيِّبِيْنَ وَالطَّيِّبُوْنَ لِلطَّيِّبٰتِۚ ",
+		"translation": "Perempuan-perempuan yang keji untuk laki-laki yang keji dan laki-laki yang keji untuk perempuan-perempuan yang keji (pula), sedangkan perempuan-perempuan yang baik untuk laki-laki yang baik dan laki-laki yang baik untuk perempuan-perempuan yang baik (pula).",
+		"type": "verse",
+		"reference": "QS. An Nur: 26"
+	},{
+		"id": "118",
+		"matan": "وَوَصَّيْنَا الْاِنْسَانَ بِوَالِدَيْهِۚ حَمَلَتْهُ اُمُّهٗ وَهْنًا عَلٰى وَهْنٍ وَّفِصَالُهٗ فِيْ عَامَيْنِ اَنِ اشْكُرْ لِيْ وَلِوَالِدَيْكَۗ اِلَيَّ الْمَصِيْرُ",
+		"translation": "Dan Kami perintahkan kepada manusia (berbuat baik) kepada kedua orang ibu bapaknya, ibunya telah mengandungnya dalam keadaan lemah yang bertambah-tambah, dan menyapihnya dalam dua tahun. Bersyukurlah kepada-Ku dan kepada dua orang ibu bapakmu, hanya kepada-Kulah kembalimu.",
+		"type": "verse",
+		"reference": "QS. Luqman: 14"
+	},{
+		"id": "119",
+		"matan": "اِنَّ الْحَسَنٰتِ يُذْهِبْنَ السَّيِّاٰتِۗ ذٰلِكَ ذِكْرٰى لِلذّٰكِرِيْنَ",
+		"translation": "Sesungguhnya perbuatan-perbuatan yang baik itu menghapuskan (dosa) perbuatan-perbuatan yang buruk. Itu adalah peringatan bagi orang-orang yang selalu mengingat (Allah).",
+		"type": "verse",
+		"reference": "QS. Hud: 114"
+	},{
+		"id": "120",
+		"matan": "يٰٓاَيُّهَا الَّذِيْنَ اٰمَنُوا اذْكُرُوا اللّٰهَ ذِكْرًا كَثِيْرًاۙ",
+		"translation": "Wahai orang-orang yang beriman, ingatlah Allah dengan zikir sebanyak-banyaknya.",
+		"type": "verse",
+		"reference": "QS. Al Ahzab: 41"
 	}],
 	"author": {
 		"@KhaledAlSaqaby": {
