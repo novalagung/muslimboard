@@ -1,5 +1,5 @@
 {
-	"version": "2023.05.14",
+	"version": "2023.07.27",
 	"content": [{
 		"id": "1",
 		"matan": "فَاذْكُرُونِي أَذْكُرْكُمْ",
@@ -46,7 +46,7 @@
 		"id": "8",
 		"matan": "مَا نَقَصَتْ صَدَقَةٌ مِنْ مَالٍ وَمَا زَادَ اللَّهُ عَبْدًا بِعَفْوٍ إِلاَّ عِزًّا وَمَا تَوَاضَعَ أَحَدٌ لِلَّهِ إِلاَّ رَفَعَهُ اللَّهُ",
 		"translation": "Charity does not decrease wealth, no one forgives another except that Allah increases his honor, and no one humbles himself for the sake of Allah except that Allah raises his status",
-		"reference": "HR Muslim no 2588",
+		"reference": "HR. Muslim no 2588",
 		"type": "verse"
 	}, {
 		"id": "9",
@@ -64,31 +64,31 @@
 		"id": "11",
 		"matan": "وَمَن يَتَّقِ اللَّهَ يَجْعَل لَّهُ مَخْرَجًا﴿٢﴾ وَيَرْزُقْهُ مِنْ حَيْثُ لَا يَحْتَسِبُ",
 		"translation": "And whoever is mindful of Allah, He will make a way out for them, and provide for them from sources they could never imagine",
-		"reference": "Ath Thalaq: 2-3",
+		"reference": "QS. Ath Thalaq: 2-3",
 		"type": "verse"
 	}, {
 		"id": "12",
 		"matan": "وَرَحْمَتِي وَسِعَتْ كُلَّ شَيْءٍ ۚفَسَأَكْتُبُهَا لِلَّذِينَ يَتَّقُونَ",
 		"translation": "... My mercy encompasses everything. I will ordain mercy for those who shun evil, pay alms-tax, and believe in Our revelations",
-		"reference": "Al A’raf: 156",
+		"reference": "QS. Al A’raf: 156",
 		"type": "verse"
 	}, {
 		"id": "13",
 		"matan": "كُلُّ نَفْسٍ ذَآئِقَةُ ٱلْمَوْتِ",
 		"translation": "Everyone shall taste death",
-		"reference": "Ali Imran: 185",
+		"reference": "QS. Ali Imran: 185",
 		"type": "verse"
 	}, {
 		"id": "14",
 		"matan": "إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ",
 		"translation": "You ˹alone˺ we worship and You ˹alone˺ we ask for help",
-		"reference": "Al fatihah: 5",
+		"reference": "QS. Al fatihah: 5",
 		"type": "verse"
 	}, {
 		"id": "15",
 		"matan": "فَٱذْكُرُونِىٓ أَذْكُرْكُمْ",
 		"translation": "remember Me; I will remember you",
-		"reference": "QS. al Baqarah: 152",
+		"reference": "QS. Al Baqarah: 152",
 		"type": "verse"
 	}, {
 		"id": "16",
@@ -132,6 +132,222 @@
 		"translation": "Look at those who stand at a lower level than you but don't look at those who stand at a higher level than you, for that is better-suited that you do not disparage Allah's favors.",
 		"type": "verse",
 		"reference": "Sahih Muslim 2963c"
+	}, {
+		"id": "23",
+		"matan": "وَلَنَبْلُوَنَّكُمْ بِشَيْءٍ مِّنَ الْخَوْفِ وَالْجُوْعِ وَنَقْصٍ مِّنَ الْاَمْوَالِ وَالْاَنْفُسِ وَالثَّمَرٰتِۗ وَبَشِّرِ الصّٰبِرِيْنَ",
+		"translation": "We will certainly test you with a touch of fear and famine and loss of property, life, and crops. Give good news to those who patiently endure.",
+		"type": "verse",
+		"reference": "QS. Al Baqarah: 155"
+	}, {
+		"id": "24",
+		"matan": "لَا يُكَلِّفُ اللّٰهُ نَفْسًا اِلَّا وُسْعَهَا",
+		"translation": "Allah does not require of any soul more than what it can afford.",
+		"type": "verse",
+		"reference": "QS. Al Baqarah: 286"
+	},{
+		"id": "25",
+		"matan": "لَىِٕنْ شَكَرْتُمْ لَاَزِيْدَنَّكُمْ وَلَىِٕنْ كَفَرْتُمْ اِنَّ عَذَابِيْ لَشَدِيْدٌ",
+		"translation": "If you are grateful, I will certainly give you more. But if you are ungrateful, surely My punishment is severe.",
+		"type": "verse",
+		"reference": "QS. Ibrahim: 7"
+	},{
+		"id": "26",
+		"matan": "اِنَّ الْحَسَنٰتِ يُذْهِبْنَ السَّيِّاٰتِۗ ذٰلِكَ ذِكْرٰى لِلذّٰكِرِيْنَ",
+		"translation": "Surely good deeds wipe out evil deeds. That is a reminder for the mindful.",
+		"type": "verse",
+		"reference": "QS. Hud: 114"
+	},{
+		"id": "27",
+		"matan": "وَقُوْلُوْا لِلنَّاسِ حُسْنًا",
+		"translation": "Speak kindly to people.",
+		"type": "verse",
+		"reference": "QS. Al Baqarah: 83"
+	},{
+		"id": "28",
+		"matan": "فَاِذَا عَزَمْتَ فَتَوَكَّلْ عَلَى اللّٰهِ ۗ اِنَّ اللّٰهَ يُحِبُّ الْمُتَوَكِّلِيْنَ",
+		"translation": "Once you make a decision, put your trust in Allah. Surely Allah loves those who trust in Him.",
+		"type": "verse",
+		"reference": "QS. Ali Imran: 159"
+	},{
+		"id": "29",
+		"matan": "الَّذِيْ خَلَقَ سَبْعَ سَمٰوٰتٍ طِبَاقًاۗ مَا تَرٰى فِيْ خَلْقِ الرَّحْمٰنِ مِنْ تَفٰوُتٍۗ فَارْجِعِ الْبَصَرَۙ هَلْ تَرٰى مِنْ فُطُوْرٍ",
+		"translation": "˹He is the One˺ Who created seven heavens, one above the other. You will never see any imperfection in the creation of the Most Compassionate. So look again: do you see any flaws?",
+		"type": "verse",
+		"reference": "QS. Al Mulk: 3"
+	},{
+		"id": "30",
+		"matan": "وَابْتَغِ فِيْمَآ اٰتٰىكَ اللّٰهُ الدَّارَ الْاٰخِرَةَ وَلَا تَنْسَ نَصِيْبَكَ مِنَ الدُّنْيَا",
+		"translation": "Rather, seek the ˹reward˺ of the Hereafter by means of what Allah has granted you, without forgetting your share of this world.",
+		"type": "verse",
+		"reference": "QS. Al Qasas: 77"
+	},{
+		"id": "31",
+		"matan": "وَلَا تَسْتَوِى الْحَسَنَةُ وَلَا السَّيِّئَةُ ۗاِدْفَعْ بِالَّتِيْ هِيَ اَحْسَنُ فَاِذَا الَّذِيْ بَيْنَكَ وَبَيْنَهٗ عَدَاوَةٌ كَاَنَّهٗ وَلِيٌّ حَمِيْمٌ",
+		"translation": "Good and evil cannot be equal. Respond ˹to evil˺ with what is best, then the one you are in a feud with will be like a close friend.",
+		"type": "verse",
+		"reference": "QS. Fussilat: 34"
+	},{
+		"id": "32",
+		"matan": "اِنَّمَا يُوَفَّى الصّٰبِرُوْنَ اَجْرَهُمْ بِغَيْرِ حِسَابٍ",
+		"translation": "Only those who endure patiently will be given their reward without limit.",
+		"type": "verse",
+		"reference": "QS. Azumar: 10"
+	},{
+		"id": "33",
+		"matan": "فَمَنْ يَّعْمَلْ مِثْقَالَ ذَرَّةٍ خَيْرًا يَّرَهٗۚ",
+		"translation": "So whoever does an atom’s weight of good will see it.",
+		"type": "verse",
+		"reference": "QS. Az Zalzalah: 7"
+	},{
+		"id": "34",
+		"matan": "وَمَنْ يَّعْمَلْ مِثْقَالَ ذَرَّةٍ شَرًّا يَّرَهٗ",
+		"translation": "And whoever does an atom’s weight of evil will see it.",
+		"type": "verse",
+		"reference": "QS. Az Zalzalah: 8"
+	},{
+		"id": "35",
+		"matan": "يٰٓاَيُّهَا الَّذِيْنَ اٰمَنُوْا لَا تَدْخُلُوْا بُيُوْتًا غَيْرَ بُيُوْتِكُمْ حَتّٰى تَسْتَأْنِسُوْا وَتُسَلِّمُوْا عَلٰٓى اَهْلِهَاۗ ذٰلِكُمْ خَيْرٌ لَّكُمْ لَعَلَّكُمْ تَذَكَّرُوْنَ",
+		"translation": "O believers! Do not enter any house other than your own until you have asked for permission and greeted its occupants. This is best for you, so perhaps you will be mindful.",
+		"type": "verse",
+		"reference": "QS. An Nur: 27"
+	},{
+		"id": "36",
+		"matan": "وَاَمَّا مَنْ خَافَ مَقَامَ رَبِّهٖ وَنَهَى النَّفْسَ عَنِ الْهَوٰىۙ فَاِنَّ الْجَنَّةَ هِيَ الْمَأْوٰىۗ",
+		"translation": "And as for those who were in awe of standing before their Lord and restrained themselves from ˹evil˺ desires, paradise will certainly be ˹their˺ home.",
+		"type": "verse",
+		"reference": "QS. An Naziat: 40-41"
+	},{
+		"id": "37",
+		"matan": "يٰٓاَيُّهَا النَّاسُ اِنَّا خَلَقْنٰكُمْ مِّنْ ذَكَرٍ وَّاُنْثٰى وَجَعَلْنٰكُمْ شُعُوْبًا وَّقَبَاۤىِٕلَ لِتَعَارَفُوْا ۚ اِنَّ اَكْرَمَكُمْ عِنْدَ اللّٰهِ اَتْقٰىكُمْ ۗاِنَّ اللّٰهَ عَلِيْمٌ خَبِيْرٌ",
+		"translation": "O humanity! Indeed, We created you from a male and a female, and made you into peoples and tribes so that you may ˹get to˺ know one another. Surely the most noble of you in the sight of Allah is the most righteous among you. Allah is truly All-Knowing, All-Aware.",
+		"type": "verse",
+		"reference": "QS. Al Hujurat: 13"
+	},{
+		"id": "38",
+		"matan": "ۨوَيْلٌ لِّكُلِّ هُمَزَةٍ لُّمَزَةٍۙ الَّذِيْ جَمَعَ مَالًا وَّعَدَّدَهٗۙ يَحْسَبُ اَنَّ مَالَهٗٓ اَخْلَدَهٗۚ",
+		"translation": "Woe to every backbiter, slanderer, who amasses wealth ˹greedily˺ and counts it ˹repeatedly˺, thinking that their wealth will make them immortal!",
+		"type": "verse",
+		"reference": "QS. Al Humazah: 1-3"
+	},{
+		"id": "39",
+		"matan": "اَلَمْ يَعْلَمْ بِاَنَّ اللّٰهَ يَرٰىۗ",
+		"translation": "Does he not know that Allah sees ˹all˺?",
+		"type": "verse",
+		"reference": "QS. Al Alaq: 14"
+	},{
+		"id": "40",
+		"matan": "وَاللّٰهُ خَيْرُ الرّٰزِقِيْنَ ࣖ",
+		"translation": "And Allah is the Best Provider.",
+		"type": "verse",
+		"reference": "QS. Al Jumu'ah: 11"
+	},{
+		"id": "41",
+		"matan": "وَاسْتَعِيْنُوْا بِالصَّبْرِ وَالصَّلٰوةِ",
+		"translation": "And seek help through patience and prayer.",
+		"type": "verse",
+		"reference": "QS. Al Baqarah: 45"
+	},{
+		"id": "42",
+		"matan": "وَمَا هٰذِهِ الْحَيٰوةُ الدُّنْيَآ اِلَّا لَهْوٌ وَّلَعِبٌۗ وَاِنَّ الدَّارَ الْاٰخِرَةَ لَهِيَ الْحَيَوَانُۘ لَوْ كَانُوْا يَعْلَمُوْنَ",
+		"translation": "And this worldly life is not but diversion and amusement. And indeed, the home of the Hereafter - that is the [eternal] life, if only they knew.",
+		"type": "verse",
+		"reference": "QS. Al Ankabut: 64"
+	},{
+		"id": "43",
+		"matan": "اَحَسِبَ النَّاسُ اَنْ يُّتْرَكُوْٓا اَنْ يَّقُوْلُوْٓا اٰمَنَّا وَهُمْ لَا يُفْتَنُوْنَ",
+		"translation": "Do people think once they say, “We believe,” that they will be left without being put to the test?",
+		"type": "verse",
+		"reference": "QS. Al Ankabut: 2"
+	},{
+		"id": "44",
+		"matan": "لِّكَيْلَا تَأْسَوْا عَلٰى مَا فَاتَكُمْ وَلَا تَفْرَحُوْا بِمَآ اٰتٰىكُمْ ۗوَاللّٰهُ لَا يُحِبُّ كُلَّ مُخْتَالٍ فَخُوْرٍۙ",
+		"translation": "˹We let you know this˺ so that you neither grieve over what you have missed nor boast over what He has granted you. For Allah does not like whoever is arrogant, boastful.",
+		"type": "verse",
+		"reference": "QS. Al Hadid: 23"
+	},{
+		"id": "45",
+		"matan": "اَيْنَ مَا تَكُوْنُوْا يُدْرِكْكُّمُ الْمَوْتُ وَلَوْ كُنْتُمْ فِيْ بُرُوْجٍ مُّشَيَّدَةٍ",
+		"translation": "Wherever you may be, death will overcome you—even if you were in fortified towers.",
+		"type": "verse",
+		"reference": "QS. An Nisa: 78"
+	},{
+		"id": "46",
+		"matan": "وَاللّٰهُ اَخْرَجَكُمْ مِّنْۢ بُطُوْنِ اُمَّهٰتِكُمْ لَا تَعْلَمُوْنَ شَيْـًٔاۙ وَّجَعَلَ لَكُمُ السَّمْعَ وَالْاَبْصَارَ وَالْاَفْـِٕدَةَ ۙ لَعَلَّكُمْ تَشْكُرُوْنَ",
+		"translation": "And Allah brought you out of the wombs of your mothers while you knew nothing, and gave you hearing, sight, and intellect so perhaps you would be thankful.",
+		"type": "verse",
+		"reference": "QS. An Nahl: 78"
+	},{
+		"id": "47",
+		"matan": "وَتَرَى الْجِبَالَ تَحْسَبُهَا جَامِدَةً وَّهِيَ تَمُرُّ مَرَّ السَّحَابِۗ",
+		"translation": "Now you see the mountains, thinking they are firmly fixed, but they are travelling ˹just˺ like clouds.",
+		"type": "verse",
+		"reference": "QS. An Naml: 88"
+	},{
+		"id": "48",
+		"matan": "اِنَّ اللّٰهَ لَا يُغَيِّرُ مَا بِقَوْمٍ حَتّٰى يُغَيِّرُوْا مَا بِاَنْفُسِهِمْۗ",
+		"translation": "Indeed, Allah would never change a people’s state ˹of favour˺ until they change their own state ˹of faith˺.",
+		"type": "verse",
+		"reference": "QS. Ar Ra'd: 11"
+	},{
+		"id": "49",
+		"matan": "وَلَا تَهِنُوْا وَلَا تَحْزَنُوْا وَاَنْتُمُ الْاَعْلَوْنَ اِنْ كُنْتُمْ مُّؤْمِنِيْنَ",
+		"translation": "Do not falter or grieve, for you will have the upper hand, if you are ˹true˺ believers.",
+		"type": "verse",
+		"reference": "QS. Ali Imran: 139"
+	},{
+		"id": "50",
+		"matan": "وَمَنْ يَّكْسِبْ اِثْمًا فَاِنَّمَا يَكْسِبُهٗ عَلٰى نَفْسِهٖ ۗ وَكَانَ اللّٰهُ عَلِيْمًا حَكِيْمًا",
+		"translation": "And whoever commits a sin—it is only to their own loss. Allah is All-Knowing, All-Wise.",
+		"type": "verse",
+		"reference": "QS. An Nisa: 111"
+	},{
+		"id": "51",
+		"matan": "لَهٗ مُعَقِّبٰتٌ مِّنْۢ بَيْنِ يَدَيْهِ وَمِنْ خَلْفِهٖ يَحْفَظُوْنَهٗ مِنْ اَمْرِ اللّٰهِ",
+		"translation": "For each one there are successive angels before and behind, protecting them by Allah’s command.",
+		"type": "verse",
+		"reference": "QS. Ar Rad: 11"
+	},{
+		"id": "52",
+		"matan": "وَقَضٰى رَبُّكَ اَلَّا تَعْبُدُوْٓا اِلَّآ اِيَّاهُ وَبِالْوَالِدَيْنِ اِحْسٰنًاۗ اِمَّا يَبْلُغَنَّ عِنْدَكَ الْكِبَرَ اَحَدُهُمَآ اَوْ كِلٰهُمَا فَلَا تَقُلْ لَّهُمَآ اُفٍّ وَّلَا تَنْهَرْهُمَا وَقُلْ لَّهُمَا قَوْلًا كَرِيْمًا",
+		"translation": "For your Lord has decreed that you worship none but Him. And honour your parents. If one or both of them reach old age in your care, never say to them ˹even˺ ‘ugh,’ nor yell at them. Rather, address them respectfully.",
+		"type": "verse",
+		"reference": "QS. Al Isra: 23"
+	},{
+		"id": "53",
+		"matan": "وَمِنَ النَّاسِ مَنْ يَّتَّخِذُ مِنْ دُوْنِ اللّٰهِ اَنْدَادًا يُّحِبُّوْنَهُمْ كَحُبِّ اللّٰهِ ۗ وَالَّذِيْنَ اٰمَنُوْٓا اَشَدُّ حُبًّا لِّلّٰهِ ۙوَلَوْ يَرَى الَّذِيْنَ ظَلَمُوْٓا اِذْ يَرَوْنَ الْعَذَابَۙ اَنَّ الْقُوَّةَ لِلّٰهِ جَمِيْعًا ۙوَّاَنَّ اللّٰهَ شَدِيْدُ الْعَذَابِ",
+		"translation": "Still there are some who take others as Allah’s equal—they love them as they should love Allah—but the ˹true˺ believers love Allah even more. If only the wrongdoers could see the ˹horrible˺ punishment ˹awaiting them˺, they would certainly realize that all power belongs to Allah and that Allah is indeed severe in punishment.",
+		"type": "verse",
+		"reference": "QS. Al Baqarah: 165"
+	},{
+		"id": "54",
+		"matan": "اِنَّ الَّذِيْنَ اٰمَنُوْا وَعَمِلُوا الصّٰلِحٰتِ سَيَجْعَلُ لَهُمُ الرَّحْمٰنُ وُدًّا",
+		"translation": "As for those who believe and do good, the Most Compassionate will ˹certainly˺ bless them with ˹genuine˺ love.",
+		"type": "verse",
+		"reference": "QS. Maryam: 96"
+	},{
+		"id": "55",
+		"matan": "اَلْخَبِيْثٰتُ لِلْخَبِيْثِيْنَ وَالْخَبِيْثُوْنَ لِلْخَبِيْثٰتِۚ وَالطَّيِّبٰتُ لِلطَّيِّبِيْنَ وَالطَّيِّبُوْنَ لِلطَّيِّبٰتِۚ ",
+		"translation": "Wicked women are for wicked men, and wicked men are for wicked women. And virtuous women are for virtuous men, and virtuous men are for virtuous women.",
+		"type": "verse",
+		"reference": "QS. An Nur: 26"
+	},{
+		"id": "56",
+		"matan": "وَوَصَّيْنَا الْاِنْسَانَ بِوَالِدَيْهِۚ حَمَلَتْهُ اُمُّهٗ وَهْنًا عَلٰى وَهْنٍ وَّفِصَالُهٗ فِيْ عَامَيْنِ اَنِ اشْكُرْ لِيْ وَلِوَالِدَيْكَۗ اِلَيَّ الْمَصِيْرُ",
+		"translation": "And We have commanded people to ˹honour˺ their parents. Their mothers bore them through hardship upon hardship, and their weaning takes two years. So be grateful to Me and your parents. To Me is the final return.",
+		"type": "verse",
+		"reference": "QS. Luqman: 14"
+	},{
+		"id": "57",
+		"matan": "اِنَّ الْحَسَنٰتِ يُذْهِبْنَ السَّيِّاٰتِۗ ذٰلِكَ ذِكْرٰى لِلذّٰكِرِيْنَ",
+		"translation": "Surely good deeds wipe out evil deeds. That is a reminder for the mindful.",
+		"type": "verse",
+		"reference": "QS. Hud: 114"
+	},{
+		"id": "58",
+		"matan": "يٰٓاَيُّهَا الَّذِيْنَ اٰمَنُوا اذْكُرُوا اللّٰهَ ذِكْرًا كَثِيْرًاۙ",
+		"translation": "O believers! Always remember Allah often.",
+		"type": "verse",
+		"reference": "QS. Al Ahzab: 41"
 	}],
 	"author": {
 		
