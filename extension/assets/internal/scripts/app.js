@@ -1074,6 +1074,7 @@
                     <div class="item ${each.checked ? 'checked' : ''}">
                         <input type="checkbox" class="item-checkbox" ${each.checked ? 'checked' : ''}>
                         <span class="item-textbox" contenteditable="true" data-placeholder="${I18n.getText('todoListEntryPlaceholder')}">${each.text.replace(/\n/gi, '<br>')}</span>
+                        <button class="move"><i class="fa fa-arrows"></i></button>
                         <button class="delete"><i class="fa fa-close"></i></button>
                     </div>
                 `))
@@ -1171,6 +1172,16 @@
                 $checkbox.prop('checked', !$checkbox.prop('checked'))
                 this.ensureTodoListItemsStored.call(this)
             })
+
+            // handle sortable
+            const sortable = new Draggable.Sortable(document.querySelectorAll('#todo-list .items'), {
+                draggable: '.item',
+                handle: '.move'
+            });
+            sortable.on('sortable:stop', () => {
+                // add delay to ensure DOM completelly finished it's process before updating the local storage
+                setTimeout(() => { this.ensureTodoListItemsStored.call(this) }, 300)
+            });
         },
 
         // =========== UPDATE MESSAGE

@@ -16,9 +16,8 @@ const Constant = {
         updateBackgroundDelayDuration: Utility.seconds(40),
         updateContentDelayDuration: Utility.seconds(60),
         changelogs: [
-            'Add hijri calendar',
-            'New version checker',
-            'Common backend updates'
+            'Enable sortable TODO list items',
+            'New contents',
         ]
     },
 }
