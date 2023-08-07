@@ -432,6 +432,14 @@ body.show-todo-list #todo-list .wrapper .items .item {
 #todo-list .wrapper .items .item:hover {
     background-color: #f9f9f9;
 }
+#todo-list .wrapper .items .item.draggable-source--is-dragging,
+#todo-list .wrapper .items .item.draggable-mirror {
+    width: 403px;
+    background-color: #00b16a !important;
+}
+#todo-list .wrapper .items .item.draggable-mirror {
+    opacity: 0.1;
+}
 #todo-list .wrapper .items .item input[type=checkbox] {
     position: absolute;
     margin-top: -6.5px;
@@ -477,9 +485,9 @@ body.show-todo-list #todo-list .wrapper .items .item {
     content: attr(data-placeholder);
     color: #b1b1b1;
 }
-#todo-list .wrapper .items .item .delete {
+#todo-list .wrapper .items .item .delete,
+#todo-list .wrapper .items .item .move {
     cursor: pointer;
-    background-color: #e74c3c;
     border: none;
     padding: 3px 4px 5px 4px;
     width: 25px;
@@ -490,13 +498,22 @@ body.show-todo-list #todo-list .wrapper .items .item {
     font-size: 15px;
     box-shadow: 0 1px 6px 0 rgba(32,33,36,0.28);
     position: absolute;
-    right: 14px;
     top: 50%;
     margin-top: -12.5px;
     z-index: 7;
     display: none;
 }
-#todo-list .wrapper .items .item:hover .delete {
+#todo-list .wrapper .items .item .delete {
+    right: 14px;
+    background-color: #e74c3c;
+}
+#todo-list .wrapper .items .item .move {
+    right: 44px;
+    background-color: #3c53e7;
+    cursor: move;
+}
+#todo-list .wrapper .items .item:hover .delete,
+#todo-list .wrapper .items .item:hover .move {
     display: block;
 }
 
