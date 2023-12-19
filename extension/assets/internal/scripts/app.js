@@ -26,6 +26,8 @@
                 $('.date-hijr .text').text(dateHijr)
             }
 
+            
+        
             doRenderDateTime()
             setInterval(doRenderDateTime, Utility.seconds(1))
         },
@@ -317,6 +319,40 @@
                     createAlarm(fajrYMDHM, $tr.find('td:eq(0)').text())
                 }
             }, Utility.seconds(1))
+        },
+
+        // render remaining time until the next prayer time
+        // re-render title to add remaining time until the next prayer time
+        renderRemainingPrayerTime() {
+
+            const doRenderRemainingPrayerTime = () => {
+                const activePrayerTime = $('.prayer-time tbody .active td:eq(1)');
+                const activePrayer = $('.prayer-time tbody .active td:eq(0)').html();
+                if (activePrayerTime.length > 0) {
+                    const activePrayerTimeStr = activePrayerTime.html();
+                    const currentTime = moment().format('HH:mm:ss');
+                    
+                    // compare current time and next prayer time (.active)
+                    const diffTime = moment(activePrayerTimeStr, 'HH:mm:ss').unix() - moment(currentTime, 'HH:mm:ss').unix() - (moment().utcOffset()*60);
+                    const diffTimeFormatted = moment.unix(diffTime).format('HH:mm');
+
+                    // coloring
+                    let colorClass = '';
+                    if (diffTime < -24000) { // meaning less than 20 mins will be red
+                        colorClass = 'red';
+                    }
+                    
+                    const remainingTime = '( - ' + diffTimeFormatted + ' )';
+                    $('.prayer-time tbody tr td[data-for="remaining-time"]').html("")
+                    $('.prayer-time tbody tr td[data-for="remaining-time"]').removeClass();
+                    $('.prayer-time tbody .active td:eq(3)').addClass(colorClass);
+                    $('.prayer-time tbody .active td:eq(3)').html(remainingTime);
+                    document.title = 'Muslim Board: ' + remainingTime + ' to ' + activePrayer;
+                }
+            }
+            
+            doRenderRemainingPrayerTime()
+            setInterval(doRenderRemainingPrayerTime, Utility.seconds(1))
         },
     
         // =========== BACKGROUND
@@ -1286,6 +1322,7 @@
             this.getDataBackgroundThenRender.call(this)
             this.getDataContentThenRender.call(this)
             this.loadLocationAndPrayerTimeThenRender.call(this)
+            this.renderRemainingPrayerTime.call(this)
             this.registerEventForForceLoadLocationAndPrayerTimes.call(this)
             this.registerEventForInternetAvailabilityStatus.call(this)
             this.registerEventForChangeLanguageButton.call(this)

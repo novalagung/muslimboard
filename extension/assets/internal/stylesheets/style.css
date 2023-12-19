@@ -175,6 +175,11 @@ html {
     text-align: right;
     /* width: 55px; */
 }
+#sidebar .prayer-time table tr td:nth-child(4) {
+    font-weight: bold;
+    text-align: left;
+    width: 95px;
+}
 #sidebar .prayer-time table tr span.placeholder {
     font-weight: normal;
     font-size: 12px;
@@ -183,6 +188,9 @@ html {
     position: absolute;
     margin-left: -3px;
     margin-top: -15px;
+}
+#sidebar .prayer-time table tr td.red {
+    color: #ff1800;
 }
 
 #wise-word {
