@@ -16,8 +16,7 @@ const Constant = {
         updateBackgroundDelayDuration: Utility.seconds(40),
         updateContentDelayDuration: Utility.seconds(60),
         changelogs: [
-            'Enable sortable TODO list items',
-            'New contents',
+            'Display the remaining time info',
         ]
     },
 }

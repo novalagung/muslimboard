@@ -142,45 +142,45 @@ html {
     border-collapse: collapse;
     margin-left: -5px;
 }
-#sidebar .prayer-time table tr {
+#sidebar .prayer-time table tr.prayer-time-row {
     cursor: default;
 }
-#sidebar .prayer-time table tr.active {
+#sidebar .prayer-time table tr.prayer-time-row.active {
     background-color: #00B16A;
 }
-#sidebar .prayer-time table tr:not(.active):hover {
+#sidebar .prayer-time table tr.prayer-time-row:not(.active):hover {
     background-color: rgba(255, 255, 255, 0.2);
 }
-#sidebar .prayer-time table tr.next {
+#sidebar .prayer-time table tr.prayer-time-row.next {
     background-color: #76C8E2;
     color: #006c8d;
 }
-#sidebar .prayer-time table tr td {
+#sidebar .prayer-time table tr.prayer-time-row td {
     padding: 0px;
     height: 25px;
     font-family: Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
-#sidebar .prayer-time table tr td:nth-child(1) {
+#sidebar .prayer-time table tr.prayer-time-row td:nth-child(1) {
     padding-left: 5px;
     padding-right: 5px;
     text-transform: uppercase;
 }
-#sidebar .prayer-time table tr td:nth-child(2) {
+#sidebar .prayer-time table tr.prayer-time-row td:nth-child(2) {
     text-align: center;
     font-weight: bold;
     width: 85px;
 }
-#sidebar .prayer-time table tr td:nth-child(3) {
+#sidebar .prayer-time table tr.prayer-time-row td:nth-child(3) {
     padding-right: 5px;
     text-align: right;
     /* width: 55px; */
 }
-#sidebar .prayer-time table tr td:nth-child(4) {
+#sidebar .prayer-time table tr.prayer-time-row td:nth-child(4) {
     font-weight: bold;
     text-align: left;
     width: 95px;
 }
-#sidebar .prayer-time table tr span.placeholder {
+#sidebar .prayer-time table tr.prayer-time-row span.placeholder {
     font-weight: normal;
     font-size: 12px;
     text-transform: capitalize !important;
@@ -189,8 +189,19 @@ html {
     margin-left: -3px;
     margin-top: -15px;
 }
-#sidebar .prayer-time table tr td.red {
-    color: #ff1800;
+#sidebar .prayer-time table tr.remaining-time {
+    display: none;
+}
+#sidebar .prayer-time table tr.remaining-time td {
+    background-color: #00B16A;
+}
+#sidebar .prayer-time table tr.remaining-time td div {
+    font-style: italic;
+    font-size: 12px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    text-align: center;
+    border-top: 1px solid #00a362;
 }
 
 #wise-word {
