@@ -68,6 +68,25 @@ const I18n = {
         prayerTimeMaghrib: { ar:'المغرب', en: 'Maghrib', id: 'Maghrib', 'zh-tw': '昏禮' },
         prayerTimeIsha:    { ar:'العشاء', en: 'Isha',    id: `Isya'`,   'zh-tw': '宵禮' },
 
+        prayerTimeNextRemainingTextHM: {
+            ar: 'في ساعات $1 ودقائق $2',
+            en: 'in $1 hour(s) and $2 minute(s)',
+            id: 'sekitar $1 jam $2 menit lagi',
+            'zh-tw': '$1 小時 $2 分鐘內'
+        },
+        prayerTimeNextRemainingTextM: {
+            ar: 'في $1 دقيقة',
+            en: 'in $1 minute(s)',
+            id: 'sekitar $1 menit lagi',
+            'zh-tw': '$1 分鐘內'
+        },
+        prayerTimeNextRemainingTextNow: {
+            ar: 'وقت صلاة $1',
+            en: 'time for $1 pray',
+            id: 'masuk waktu sholat $1',
+            'zh-tw': '$1祈禱的時間'
+        },
+
         todoListHeaderShow: {
             ar: 'إظهار لائحة المهام',
             en: 'Show TODO list panel',

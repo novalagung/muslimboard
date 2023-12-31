@@ -148,6 +148,8 @@ const Utility = {
     },
     sleep: (n) => new Promise((resolve) => { setTimeout(() => { resolve() }, Utility.seconds(n)) }),
     seconds: (n) => n * 1000,
+    minutes: (n) => 60 * Utility.seconds(n),
+    hours: (n) => 60 * Utility.minutes(n),
     log: (...args) => (Constant.app.debug) ? console.log(...args) : $.noop(),
     error: (...args) => (Constant.app.debug) ? console.error(...args) : $.noop(),
     toTitleCase: (str) => str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()),
@@ -206,5 +208,6 @@ const Utility = {
         localStorage.setItem(key, browserUuid)
         return browserUuid
     },
-    versionAsFloat: (s) => parseFloat(s.replace('v', '').replace('.', ''))
+    versionAsFloat: (s) => parseFloat(s.replace('v', '').replace('.', '')),
+    now: () => moment()
 }

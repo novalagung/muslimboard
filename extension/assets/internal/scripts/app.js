@@ -4,14 +4,15 @@
         // =========== CLOCK
     
         // render time to screen at start and every seconds
+        renderDateTimeInterval: undefined,
         renderDateTime() {
             const doRenderDateTime = () => {
-                const hour = moment().format('HH')
-                const minute = moment().format('mm')
-                const dayName = I18n.getText(`day${moment().format('dddd')}`)
-                const monthName = I18n.getText(`month${moment().format('MMMM')}`)
+                const hour = Utility.now().format('HH')
+                const minute = Utility.now().format('mm')
+                const dayName = I18n.getText(`day${Utility.now().format('dddd')}`)
+                const monthName = I18n.getText(`month${Utility.now().format('MMMM')}`)
                 const tzAbbr = Utility.getCurrentTimezoneAbbreviation(this.geoLocationCountryCode)
-                const dateFull = moment().format('$1, DD $2 YYYY HH:mm:ss $3')
+                const dateFull = Utility.now().format('$1, DD $2 YYYY HH:mm:ss $3')
                     .replace('$1', dayName)
                     .replace('$2', monthName)
                     .replace('$3', tzAbbr)
@@ -20,14 +21,15 @@
                 $('.time .minute').text(minute)
                 $('.date .text').text(dateFull)
 
-                const monthHijr = I18n.getText(`month${moment().format('iM')}`)
-                const dateHijr = moment().format('iD $1 iYYYY')
+                const monthHijr = I18n.getText(`month${Utility.now().format('iM')}`)
+                const dateHijr = Utility.now().format('iD $1 iYYYY')
                     .replace('$1', monthHijr) + ' AH'
                 $('.date-hijr .text').text(dateHijr)
             }
 
             doRenderDateTime()
-            setInterval(doRenderDateTime, Utility.seconds(1))
+            clearInterval(this.renderDateTimeInterval)
+            this.renderDateTimeInterval = setInterval(doRenderDateTime, Utility.seconds(1))
         },
     
         // =========== LOCATION
@@ -79,21 +81,23 @@
     
         // =========== PRAYER TIME
 
+        activePrayerTimeDurationInMinute: 10,
+
         // render player time placeholder.
         // used on the screen during loading data process
         renderPrayerTimePlaceholder() {
             $('.location .text').text('Loading ...')
-            $(`.prayer-time tbody`).css('visibility', 'hidden')
+            // $(`.prayer-time tbody`).css('visibility', 'hidden')
 
             Array(6).fill(0).forEach((each, i) => {
-                $(`.prayer-time tbody tr:eq(${i})`).css('visibility', 'hidden')
-                $(`.prayer-time tbody tr:eq(${i}) td:eq(0)`).html('')
-                $(`.prayer-time tbody tr:eq(${i}) td:eq(1)`).html('')
-                $(`.prayer-time tbody tr:eq(${i}) td:eq(2)`).html('')
+                // $(`.prayer-time tbody tr.prayer-time-row:eq(${i})`).css('visibility', 'hidden')
+                $(`.prayer-time tbody tr.prayer-time-row:eq(${i}) td:eq(0)`).html('')
+                $(`.prayer-time tbody tr.prayer-time-row:eq(${i}) td:eq(1)`).html('')
+                $(`.prayer-time tbody tr.prayer-time-row:eq(${i}) td:eq(2)`).html('')
             })
             
-            $(`.prayer-time tbody tr:eq(0)`).css('visibility', 'visible')
-            $(`.prayer-time tbody tr:eq(0) td:eq(0)`).html('<span class="placeholder">Loading ...</span>')
+            // $(`.prayer-time tbody tr.prayer-time-row:eq(0)`).css('visibility', 'visible')
+            $(`.prayer-time tbody tr.prayer-time-row:eq(0) td:eq(0)`).html('<span class="placeholder">Loading ...</span>')
         },
 
         // get automatic prayer time
@@ -105,8 +109,8 @@
 
             const data = await Utility.getLatestData(key, async (resolve) => {
                 const method = 1
-                const month = parseInt(moment().format('MM'), 10)
-                const year = moment().year()
+                const month = parseInt(Utility.now().format('MM'), 10)
+                const year = Utility.now().year()
                 const url = `${Constant.app.baseUrlWebService}/muslimboard-api?v=${Constant.meta.version}&op=shalat-schedule-by-coordinate&latitude=${latitude}&longitude=${longitude}&method=${method}&month=${month}&year=${year}`
                 const response = await Utility.fetch(url)
                 const result = await response.json()
@@ -129,7 +133,7 @@
             }
 
             // construct prayer time data then render
-            const schedules = data.content.data.schedules.find((d) => d.date.gregorian.date == moment().format('DD-MM-YYYY'))
+            const schedules = data.content.data.schedules.find((d) => d.date.gregorian.date == Utility.now().format('DD-MM-YYYY'))
             isDataFound = true
             if (!schedules) {
                 isDataFound = false
@@ -153,8 +157,8 @@
 
             const data = await Utility.getLatestData(key, async (resolve) => {
                 const method = 1
-                const month = parseInt(moment().format('MM'), 10)
-                const year = moment().year()
+                const month = parseInt(Utility.now().format('MM'), 10)
+                const year = Utility.now().year()
                 const url = `${Constant.app.baseUrlWebService}/muslimboard-api?v=${Constant.meta.version}&op=shalat-schedule-by-location&locationID=${locationID}&province=${province}&city=${kabko}&method=${method}&month=${month}&year=${year}`
                 const response = await Utility.fetch(url)
                 const result = await response.json()
@@ -177,7 +181,7 @@
             }
 
             // construct prayer time data then render
-            const schedules = data.content.data.schedules.find((d) => d.date.gregorian.date == moment().format('DD-MM-YYYY'))
+            const schedules = data.content.data.schedules.find((d) => d.date.gregorian.date == Utility.now().format('DD-MM-YYYY'))
             isDataFound = true
             if (!schedules) {
                 isDataFound = false
@@ -203,6 +207,7 @@
         },
 
         // render prayer time to screen
+        renderPrayerTimeInterval: undefined,
         renderPrayerTime(schedule) {
             let tzAbbr = Utility.getCurrentTimezoneAbbreviation(this.geoLocationCountryCode)
             
@@ -225,17 +230,18 @@
                     )
                 }
 
-                $(`.prayer-time tbody tr:eq(${i})`).css('visibility', 'visible')
-                $(`.prayer-time tbody tr:eq(${i}) td:eq(0)`).html(each.label)
-                $(`.prayer-time tbody tr:eq(${i}) td:eq(1)`).html(each.value.slice(0, 5))
-                $(`.prayer-time tbody tr:eq(${i}) td:eq(2)`).html(tzAbbr)
+                $(`.prayer-time tbody tr.prayer-time-row:eq(${i})`).css('visibility', 'visible')
+                $(`.prayer-time tbody tr.prayer-time-row:eq(${i}) td:eq(0)`).html(each.label)
+                $(`.prayer-time tbody tr.prayer-time-row:eq(${i}) td:eq(1)`).html(each.value.slice(0, 5))
+                $(`.prayer-time tbody tr.prayer-time-row:eq(${i}) td:eq(2)`).html(tzAbbr)
             })
             
             // set alaram once loaded
             let isAlarmEverSet = false
-            setInterval(() => {
+
+            const doRenderPrayerTime = () => {
                 const hmFormatter = (str) => parseInt(str.slice(0, 5).replace(':', ''), 10)
-                const nowHM = parseInt(moment().add(-10, 'minutes').format('HHmm'), 10)
+                const nowHM = parseInt(Utility.now().add(-1 * this.activePrayerTimeDurationInMinute, 'minutes').format('HHmm'), 10)
                 const fajrHM = hmFormatter(schedule.Fajr)
                 const sunriseHM = hmFormatter(schedule.Sunrise)
                 const dhuhrHM = hmFormatter(schedule.Dhuhr)
@@ -243,7 +249,7 @@
                 const maghribHM = hmFormatter(schedule.Maghrib)
                 const ishaHM = hmFormatter(schedule.Isha)
 
-                const ymdhmFormatter = (str) => moment(`${moment().format('YYYY-MM-DD ')} ${str.slice(0, 5)}`, 'YYYY-MM-DD HH:mm').toDate().getTime()
+                const ymdhmFormatter = (str) => moment(`${Utility.now().format('YYYY-MM-DD ')} ${str.slice(0, 5)}`, 'YYYY-MM-DD HH:mm').toDate().getTime()
                 const fajrYMDHM = ymdhmFormatter(schedule.Fajr)
                 const sunriseYMDHM = ymdhmFormatter(schedule.Sunrise)
                 const dhuhrYMDHM = ymdhmFormatter(schedule.Dhuhr)
@@ -256,7 +262,7 @@
                 $('.prayer-time tbody tr').removeClass('active')
 
                 const createAlarm = (time, text) => {
-                    if (!(!isAlarmEverSet || moment().seconds() % 10  == 0)) {
+                    if (!(!isAlarmEverSet || Utility.now().seconds() % 10  == 0)) {
                         return
                     }
 
@@ -271,7 +277,7 @@
                             chrome.alarms.create(exactMessage, { when: exactTime })
                         }
     
-                        const almostTime = moment(time).add(-10, 'minutes').toDate().getTime()
+                        const almostTime = moment(time).add(-1 * this.activePrayerTimeDurationInMinute, 'minutes').toDate().getTime()
                         if (almostTime >= nowYYYYMMDD) {
                             const almostMessage = I18n.getText('alarmAlmostPrayerTimeMessageTemplate')
                                 .replace('$1', text)
@@ -287,27 +293,27 @@
                     // do nothing
 
                 } else if (nowHM >= maghribHM) {
-                    const $tr = $('.prayer-time tbody tr:eq(5)')
+                    const $tr = $('.prayer-time tbody tr.prayer-time-row:eq(5)')
                     $tr.addClass('active')
                     createAlarm(ishaYMDHM, $tr.find('td:eq(0)').text())
 
                 } else if (nowHM >= asrHM) {
-                    const $tr = $('.prayer-time tbody tr:eq(4)')
+                    const $tr = $('.prayer-time tbody tr.prayer-time-row:eq(4)')
                     $tr.addClass('active')
                     createAlarm(maghribYMDHM, $tr.find('td:eq(0)').text())
                     
                 } else if (nowHM >= dhuhrHM) {
-                    const $tr = $('.prayer-time tbody tr:eq(3)')
+                    const $tr = $('.prayer-time tbody tr.prayer-time-row:eq(3)')
                     $tr.addClass('active')
                     createAlarm(asrYMDHM, $tr.find('td:eq(0)').text())
 
                 } else if (nowHM >= sunriseHM) {
-                    const $tr = $('.prayer-time tbody tr:eq(2)')
+                    const $tr = $('.prayer-time tbody tr.prayer-time-row:eq(2)')
                     $tr.addClass('active')
                     createAlarm(dhuhrYMDHM, $tr.find('td:eq(0)').text())
 
                 } else if (nowHM >= fajrHM) {
-                    const $tr = $('.prayer-time tbody tr:eq(1)')
+                    const $tr = $('.prayer-time tbody tr.prayer-time-row:eq(1)')
                     $tr.addClass('active')
                     createAlarm(sunriseYMDHM, $tr.find('td:eq(0)').text())
 
@@ -316,7 +322,76 @@
                     $tr.addClass('active')
                     createAlarm(fajrYMDHM, $tr.find('td:eq(0)').text())
                 }
-            }, Utility.seconds(1))
+
+                this.renderRemainingPrayerTime.call(this);
+            }
+
+            doRenderPrayerTime()
+            clearInterval(this.renderPrayerTimeInterval)
+            this.renderPrayerTimeInterval = setInterval(doRenderPrayerTime, Utility.seconds(1))
+        },
+
+        // render remaining time until the next prayer time
+        // re-render title to add remaining time until the next prayer time
+        renderRemainingPrayerTimeInterval: undefined,
+        renderRemainingPrayerTime() {
+
+            const doRenderRemainingPrayerTime = () => {
+                $('.prayer-time tbody tr.remaining-time td').html('');
+                $('.prayer-time tbody tr.remaining-time').hide();
+
+                // skip if no upcoming prayer detected
+                const $activeTr = $('.prayer-time tbody tr.active');
+                if ($activeTr.length === 0) {
+                    return
+                }
+            
+                // claculate remaining time
+
+                const dateTimeFormat = Utility.now().format("YYYY-MM-DD $1")
+
+                const activePrayerTimeStr = $activeTr.find('td:eq(1)').text();
+                const activePrayerDateTime = dateTimeFormat.replace("$1", activePrayerTimeStr);
+                const activePrayerDateTimeUnix = moment(activePrayerDateTime).unix();
+                
+                const currentTimeStr = Utility.now().format("HH:mm")
+                const currentDateTime = dateTimeFormat.replace("$1", currentTimeStr);
+                const currentDateTimeUnix = moment(currentDateTime).unix();
+
+                const prayerName = $activeTr.find('td:eq(0)').text();
+
+                const offset = Utility.now().utcOffset() * 60
+                let timeDifference = activePrayerDateTimeUnix - currentDateTimeUnix;
+                const remainingTime = moment.unix(timeDifference - offset);
+
+                // generate remaining time info in friendly format accordingly
+                let remainingTimeText = ""
+                if (timeDifference < 60 && timeDifference >= (-60 * this.activePrayerTimeDurationInMinute)) {
+                    remainingTimeText = I18n.getText('prayerTimeNextRemainingTextNow')
+                        .replace('$1', prayerName)
+                } else if (parseInt(remainingTime.format('H'), 10) > 0 && parseInt(remainingTime.format('m'), 10) > 0) {
+                    remainingTimeText = I18n.getText('prayerTimeNextRemainingTextHM')
+                        .replace('$1', remainingTime.format('H'))
+                        .replace('$2', remainingTime.format('m'))
+                } else if (parseInt(remainingTime.format('m'), 10) > 0) {
+                    remainingTimeText = I18n.getText('prayerTimeNextRemainingTextM')
+                        .replace('$1', remainingTime.format('m'))
+                }
+
+                // skip displaying remaining time info if there nothing needs to be displayed
+                if (!remainingTimeText) {
+                    return
+                }
+
+                // render the info to screen
+                $('.prayer-time tbody tr.active + tr.remaining-time').show()
+                $('.prayer-time tbody tr.active + tr.remaining-time td').html(`<div>${remainingTimeText}</div>`);
+                document.title = `${Constant.meta.appName} - ${prayerName} ${remainingTimeText}`
+            }
+            
+            doRenderRemainingPrayerTime()
+            clearInterval(this.renderRemainingPrayerTimeInterval)
+            this.renderRemainingPrayerTimeInterval = setInterval(doRenderRemainingPrayerTime, Utility.seconds(1))
         },
     
         // =========== BACKGROUND
@@ -336,7 +411,7 @@
                 Utility.log('fetching remote data background')
                 const key = `data-background-remote-${Constant.meta.version}`
                 const data = await Utility.getLatestData(key, async (resolve) => {
-                    const url = `${Constant.app.baseUrlGithub}/data-background.json?v=${Constant.meta.version}.${moment().format('YYYY-MM-DD')}`
+                    const url = `${Constant.app.baseUrlGithub}/data-background.json?v=${Constant.meta.version}.${Utility.now().format('YYYY-MM-DD')}`
                     const response = await Utility.fetch(url)
                     const result = await response.json()
                     resolve(result)
@@ -475,7 +550,7 @@
                 Utility.log(`fetching remote data (${I18n.getSelectedLocale()}) content`)
                 const key = `data-content-${I18n.getSelectedLocale()}-remote-${Constant.meta.version}`
                 const data = await Utility.getLatestData(key, async (resolve) => {
-                    const url = `${Constant.app.baseUrlGithub}/data-content-${I18n.getSelectedLocale()}.json?v=${Constant.meta.version}.${moment().format('YYYY-MM-DD')}`
+                    const url = `${Constant.app.baseUrlGithub}/data-content-${I18n.getSelectedLocale()}.json?v=${Constant.meta.version}.${Utility.now().format('YYYY-MM-DD')}`
                     const response = await Utility.fetch(url)
                     const result = await response.json()
                     resolve(result)
@@ -578,7 +653,7 @@
                         const address = data.content.data.address
                         this.renderLocationText.call(this, address)
 
-                        const schedule = data.content.data.schedules.find((d) => d.date.gregorian.date == moment().format('DD-MM-YYYY')).timings
+                        const schedule = data.content.data.schedules.find((d) => d.date.gregorian.date == Utility.now().format('DD-MM-YYYY')).timings
                         this.renderPrayerTime.call(this, schedule)
                     }
 
@@ -631,7 +706,7 @@
                     }
 
                     this.geoLocationCountryCode = (data.content.data.countryCode || 'id')
-                    const schedule = data.content.data.schedules.find((d) => d.date.gregorian.date == moment().format('DD-MM-YYYY')).timings
+                    const schedule = data.content.data.schedules.find((d) => d.date.gregorian.date == Utility.now().format('DD-MM-YYYY')).timings
                     this.renderPrayerTime.call(this, schedule)
                 }
             } catch (err) {
@@ -952,7 +1027,7 @@
                         <p class='copyright text-center'>
                             Maintained by <a href='https://www.linkedin.com/in/novalagung' target='_blank'>${Constant.maintainer.name}</a>
                             <br>
-                            ${moment().format("YYYY")} | <a href='${Constant.meta.homepageLink}' target='_blank'>${Constant.meta.homepageLink}</a>
+                            ${Utility.now().format("YYYY")} | <a href='${Constant.meta.homepageLink}' target='_blank'>${Constant.meta.homepageLink}</a>
                             <br>
                         </p>
                     </div>
