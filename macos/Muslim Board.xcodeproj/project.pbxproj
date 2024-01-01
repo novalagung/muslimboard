@@ -76,7 +76,6 @@
 		1922413F2951713B0009926A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		192241422951713B0009926A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		192241442951713D0009926A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		192241462951713D0009926A /* Muslim_Board.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Muslim_Board.entitlements; sourceTree = "<group>"; };
 		192241472951713D0009926A /* Muslim Board.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Muslim Board.entitlements"; sourceTree = "<group>"; };
 		1922414C2951713E0009926A /* Muslim BoardTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Muslim BoardTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		192241502951713E0009926A /* Muslim_BoardTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Muslim_BoardTests.swift; sourceTree = "<group>"; };
@@ -154,7 +153,6 @@
 				1922413F2951713B0009926A /* ViewController.swift */,
 				192241412951713B0009926A /* Main.storyboard */,
 				192241442951713D0009926A /* Assets.xcassets */,
-				192241462951713D0009926A /* Muslim_Board.entitlements */,
 				192241472951713D0009926A /* Muslim Board.entitlements */,
 				192241352951713B0009926A /* Resources */,
 			);
@@ -638,7 +636,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = 8KLL93A755;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -678,7 +676,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = 8KLL93A755;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
