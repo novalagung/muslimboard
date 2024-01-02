@@ -36,27 +36,18 @@ Use chrome → open up extension menu → click **Load unpacked** and navigate t
 - Folder `webservices` contains the backend webservice API code.
 - Folder `website` contains the source code web/landing page, https://muslimboard.novalagung.com.
 
-## Contribution
+## Hall of Fame Contributor
 
-Anyone is allowed to contribute to this project. Bug fixes, improvements, feature requests, you name it!
-
-However, before we start doing anything, especially on stuff within the `extension` folder, please keep in mind that:
-
-- First, you need to understand how browser extensions work.
-- Browser addons marketplaces have strict rules over a lot of things! Not every cool tech or approach is allowed, especially if it could bring vulnerability risk (from a security perspective).
-
-    - External requests are strictly monitored and controlled. See the `content_security_policy` field on `manifest.json`.
-    - This is one reason why libraries such as `jQuery` and `font-awesome` are physically copied to the source code.
-    - It would be nice to have some cutting-edge technology applied here, but if it's resulting in rejection during submission, well ... I will not approve it.
-    - I suggest opening a discussion/issue first, before doing any PRs, except if it's about code refactoring or bug fixing.
-
-- Performance aspect is one primary key point in the development of Muslim Board.
-
-    - Muslim Board extension needs to work well across many computers, any browsers, on any condition: slow internet, offline mode, low-spec computer, etc.
-    - Certain images are loaded locally. These images will bring a performance boost during the initial load and also it's very useful when offline mode (no internet).
-
-- To contribute, simply fork → commit your changes → submit PR.
-- Navigate to [CONTRIBUTING.md](https://github.com/novalagung/muslimboard/blob/master/CONTRIBUTING.md) to see the list of amazing contributor of this project.
+- [Eky Pradhana](https://www.linkedin.com/in/eky-pradhana-a7aa6143)
+- [Elena Dobrolyubova](https://github.com/eid23) (adding Russian localization)
+- [Ferdina Kusumah](https://github.com/FerdinaKusumah)
+- [Moch. Sudharmono](https://github.com/moch-sudharmono) (adding Hijri calendar)
+- [Mohammed Ayman](https://github.com/MohammedAyman2018) (adding Arabic localization)
+- [Muhammad Ichsanul Fadhil](https://github.com/ichsanputr)
+- [Rahadian Ardya](https://www.linkedin.com/in/rahadianardya) (adding remaining time info)
+- [Rochmad Nurul Fahmi](https://github.com/rochmadnf)
+- [Rosdyana Kusuma](https://github.com/rosdyana) (adding Traditional Chinese localization)
+- [王艺凯](https://github.com/redundan3y) (adding Simplified Chinese localization)
 
 ## Author
 
