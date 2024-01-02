@@ -21,7 +21,7 @@
                 $('.time .minute').text(minute)
                 $('.date .text').text(dateFull)
 
-                const monthHijr = I18n.getText(`month${Utility.now().format('iM')}`)
+                const monthHijr = I18n.getText(`monthHijr${Utility.now().format('iM')}`)
                 const dateHijr = Utility.now().format('iD $1 iYYYY')
                     .replace('$1', monthHijr) + ' AH'
                 $('.date-hijr .text').text(dateHijr)
@@ -939,6 +939,7 @@
                             <li><a href='#' data-locale='ru'>Русский язык</a></li>
                             <li><a href='#' data-locale='ar'>اللغة العربية</a></li>
                             <li><a href='#' data-locale='zh-tw'>中文 (繁體)</a></li>
+                            <li><a href='#' data-locale='zh-cn'>中文 (简体)</a></li>
                         </ul>
                     </div>
                 `
