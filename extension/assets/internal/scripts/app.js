@@ -937,6 +937,7 @@
                             <li><hr /></li>
                             <li><a href='#' data-locale='ar'>اللغة العربية</a></li>
                             <li><a href='#' data-locale='id'>Bahasa Indonesia</a></li>
+                            <li><a href='#' data-locale='ru'>Выбрать язык</a></li>
                             <li><a href='#' data-locale='zh-tw'>中文 (繁體)</a></li>
                         </ul>
                     </div>

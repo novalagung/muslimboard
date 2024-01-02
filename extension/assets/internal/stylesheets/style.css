@@ -367,7 +367,7 @@ body.show-todo-list #wise-word {
 #todo-list {
     overflow: hidden;
     position: absolute;
-    width: 200px;
+    width: 240px;
     right: 30px;
     bottom: 16px;
     background-color: rgba(255, 255, 255, 0.92);
