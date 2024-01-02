@@ -1,0 +1,4 @@
+files:
+  - source: /extension/assets/internal/scripts/i18n.js
+    translation: /extension/assets/internal/scripts/i18n-%two_letters_code%.js
+    multilingual: 1
