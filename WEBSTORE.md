@@ -4,7 +4,7 @@ Personal Dashboard for Muslim
 
 ## Description
 
-Muslim Board is a personal dashboard for Muslims. This plugin is inspired by Momentum. Currently we support English language, Bahasa Indonesia, Russian, Arabic, Traditional Chinese, and Simplified Chinese.
+Muslim Board is a personal dashboard for Muslims. Currently we support English language, Bahasa Indonesia, Russian, Arabic, Traditional Chinese, and Simplified Chinese. This browser extension was inspired by Momentum.
 
 Muslim Board provides several useful features to improve productivity, such as prayer schedule, islamic quotes, and TODO list.
 

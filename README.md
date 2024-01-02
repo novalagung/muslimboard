@@ -1,8 +1,6 @@
 # Muslim Board
 
-Personal Dashboard for Muslims anywhere in the world.
-
-Muslim Board is a personal dashboard for Muslims, inspired by Momentum, available on multiple languages.
+Personal Dashboard for Muslims anywhere in the world, available on many languages.
 
 ## Supported languages
 
