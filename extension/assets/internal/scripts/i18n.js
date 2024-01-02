@@ -343,7 +343,7 @@ const I18n = {
             ar: 'شارك ملحق مسلمبورد على وسائل التواصل:',
             en: 'Share Muslim Board browser extension to socials:',
             id: 'Bagikan ekstensi browser Muslim Board ke sosial media:',
-            'zh-tw': '分享 muslimboard 瀏覽器擴充功能到社交媒體：',
+            'zh-tw': '分享 Muslim Board 瀏覽器擴充功能到社交媒體：',
             'zh-cn': '分享 Muslim Board 浏览器扩展到社交媒体：'
         },
         
