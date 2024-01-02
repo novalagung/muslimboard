@@ -367,7 +367,7 @@ body.show-todo-list #wise-word {
 #todo-list {
     overflow: hidden;
     position: absolute;
-    width: 200px;
+    width: 240px;
     right: 30px;
     bottom: 16px;
     background-color: rgba(255, 255, 255, 0.92);
@@ -658,7 +658,7 @@ body.show-todo-list #todo-list .wrapper .items .item {
     font-size: 15px;
 }
 #swal2-content .manual-geolocation label {
-    width: 66px;
+    width: 100px;
     display: inline-block;
     text-align: right;
     padding-right: 5px;
