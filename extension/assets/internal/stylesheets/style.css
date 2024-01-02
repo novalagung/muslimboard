@@ -658,7 +658,7 @@ body.show-todo-list #todo-list .wrapper .items .item {
     font-size: 15px;
 }
 #swal2-content .manual-geolocation label {
-    width: 66px;
+    width: 100px;
     display: inline-block;
     text-align: right;
     padding-right: 5px;

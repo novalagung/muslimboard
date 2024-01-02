@@ -203,7 +203,7 @@ const I18n = {
         promptErrorFailToGetPrayerTimesMessage: {
             ar: 'تعذر الحصول على مواقيت الصلاة بسبب خطأ. يرجى التأكد من توفر اتصال بالإنترنت ثم قم بتحديث الصفحة',
             en: 'Unable to get prayer times due to error. Please ensure an internet connection is available and then refresh the page',
-            ru: 'Невозможно получить время молитвы из-за ошибки. Пожалуйста, убедитесь в наличии подключения к сети Интернет и затем обновите страницу.',
+            ru: 'Невозможно получить время молитвы из-за ошибки. Пожалуйста, убедитесь в наличии подключения к сети Интернет и затем обновите страницу',
             id: 'Gagal mengambil jadwal sholat. Pastikan terhubung dengan internet lalu refresh halaman',
             'zh-tw': '無法取得祈禱時間，請確保網路連線正常，然後重新整理頁面'
         },
@@ -326,7 +326,7 @@ const I18n = {
         modalAboutUsText3: {
             ar: 'للتعليق أو المساهمة ، يرجى إرسال بريد إلكتروني إلى $1 أو إرسال PR إلى $2.',
             en: 'For feedback or contribution, please email to $1 or submit a PR to $2.',
-            ru: 'Предложения или замечания, пожалуйста, направляйте на электронный адрес $1 или обратитесь к специалисту по связям с общественностью $2.',
+            ru: 'Предложения или замечания, пожалуйста, направляйте на электронный адресу $1 или непосредственно на $2.',
             id: 'Untuk pertanyaan, kritik & saran, maupun jika ingin berkontribusi foto atau quote, silakan kirim email ke $1 atau via submit PR di $2.',
             'zh-tw': '如有任何意見或建議，或想要貢獻照片或名言，請發送電子郵件至 $1 或提交 PR 到 $2。'
         },
@@ -369,11 +369,11 @@ const I18n = {
             'zh-tw': '$1 已成功更新至版本 $2。'
         },
         modalUpdateAvailableMuslimboardNotification: {
-            // ar: '',
+            ar: 'يتوفر إصدار جديد، $1. تأكد من تثبيت أحدث إصدار.',
             en: 'A new version is available, $1. Ensure to get the latest version installed.',
             ru: 'Доступна новая версия, $1. Убедитесь, что у вас установлена последняя версия.',
             id: 'Versi terbaru sudah tersedia, $1. Silakan lakukan update.',
-            // 'zh-tw': ''
+            'zh-tw': '有新版本可用，$1。 確保安裝最新版本。'
         }
     },
 
