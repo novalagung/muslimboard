@@ -349,13 +349,13 @@ const I18n = {
         },
         footerMenuAutomaticLocationDetection: {
             ar: 'تحديد المكان تلقائياً (حول العالم)',
-            en: 'Auto detect location (Worldwide)',
+            en: 'Auto-detect location (Worldwide)',
             id: 'Deteksi lokasi otomatis',
             'zh-tw': '自動偵測位置'
         },
         footerMenuManualLocationSelection: {
-            ar: 'حدد مكان بعينه (اندونيسيا)',
-            en: 'Choose specific location (Indonesia)',
+            ar: 'حدد مكان بعينه (إندونيسيا)',
+            en: 'Choose specific location (Indonesia only)',
             id: 'Atur manual pilihan lokasi (Indonesia)',
             'zh-tw': '手動選擇位置 (印尼)'
         },
@@ -409,13 +409,13 @@ const I18n = {
         },
         promptErrorFailToGetDataTitle: {
             ar: 'مشكلة في جلب البيانات',
-            en: 'Error koneksi pengambilan data',
-            id: 'Fetch data error',
+            en: 'Error fetching data',
+            id: 'Error koneksi pengambilan data',
             'zh-tw': '取得資料錯誤'
         },
         promptErrorFailToGetPrayerTimesMessage: {
             ar: 'تعذر الحصول على مواقيت الصلاة بسبب خطأ. يرجى التأكد من توفر اتصال بالإنترنت ثم قم بتحديث الصفحة',
-            en: 'Unable to get prayer times due to error. Please ensure internet connection is available and then refresh the page',
+            en: 'Unable to get prayer times due to error. Please ensure an internet connection is available and then refresh the page',
             id: 'Gagal mengambil jadwal sholat. Pastikan terhubung dengan internet lalu refresh halaman',
             'zh-tw': '無法取得祈禱時間，請確保網路連線正常，然後重新整理頁面'
         },
@@ -433,7 +433,7 @@ const I18n = {
         },
         promptConfirmationMessageToActivateAutoDetectLocation: {
             ar: 'هل أنت متأكد من أنك تريد تمكين الكشف التلقائي عن الموقع للحصول على أوقات الصلاة؟',
-            en: 'Are you sure want to enable auto detect location for getting prayer times?',
+            en: 'Are you sure want to enable auto-detect location for getting prayer times?',
             id: 'Anda yakin ingin mengaktifkan deteksi lokasi otomatis untuk pengambilan jadwal shalat?',
             'zh-tw': '您確定要啟用自動偵測位置以取得祈禱時間嗎？'
         },
@@ -445,19 +445,19 @@ const I18n = {
         },
         promptConfirmationMessageToRefreshAutoDetectLocation: {
             ar: 'تحديد الموقع التلقائي مفعّل، هل تريد تحديث الموقع؟',
-            en: 'Auto detect location is enabled. Do you want to refresh the location detection?',
+            en: 'Auto-detect location is enabled. Do you want to refresh it?',
             id: 'Deteksi lokasi otomatis sudah aktif. Apakah anda ingin me-refresh lokasi?',
             'zh-tw': '自動偵測位置已啟用。您要重新整理偵測位置嗎？'
         },
         promptConfirmationYesToRefreshAutoDetectLocation: {
             ar: 'نعم، حدّث الموقع',
-            en: 'Yes, refresh location detection',
+            en: 'Yes, refresh location',
             id: 'Ya, refresh lokasi',
             'zh-tw': '是的，重新整理偵測位置'
         },
         promptManualLocationSelectionTitle: {
             ar: 'حدد المقاطعة والمدينة التي ترغب في استخدامهما للحصول على أوقات الصلاة',
-            en: 'Select the province and city you would like to use for getting the prayer times',
+            en: 'Select the province and city you would like to use for getting prayer times',
             id: 'Silakan pilih nama provinsi dan kabupaten/kota tempat anda sekarang berada',
             'zh-tw': '請選擇您想要使用的省份和城市，以取得祈禱時間'
         },
@@ -505,13 +505,13 @@ const I18n = {
         },
         modalAboutUsText1: {
             ar: '$1 هي لوحة تحكم شخصية للمسلمين ، وهي متوفرة على جميع المتصفحات الحديثة. هذا الامتداد مستوحى من Momentum.',
-            en: '$1 is personal dashboard for muslim, available on all modern browsers. This extension was inspired by Momentum.',
+            en: '$1 is a personal dashboard for Muslims, available on all modern browsers. This browser extension was inspired by Momentum.',
             id: '$1 adalah laman personal dashboard khusus untuk muslim, tersedia untuk semua browser modern. Plugin ini terinspirasi dari Momentum.',
             'zh-tw': '$1 是一個為穆斯林個人設計的儀表板，適用於所有現代瀏覽器。這個擴充功能受到 Momentum 的啟發。'
         },
         modalAboutUsText2: {
             ar: `يتم جلب أوقات الصلاة حسب موقع المستخدم.`,
-            en: `Prayer times is fetched as per user's location.`,
+            en: `Prayer times are fetched as per the user's location.`,
             id: 'Informasi jadwal sholat dimunculkan sesuai lokasi pengguna.',
             'zh-tw': '祈禱時間是根據使用者的位置顯示。'
         },
@@ -529,8 +529,8 @@ const I18n = {
         },
         modalShareText: {
             ar: 'شارك ملحق مسلمبورد على وسائل التواصل:',
-            en: 'Share the muslimboard browser extension to socials:',
-            id: 'Bagikan ekstensi browser muslimboard ke sosial media:',
+            en: 'Share Muslim Board browser extension to socials:',
+            id: 'Bagikan ekstensi browser Muslim Board ke sosial media:',
             'zh-tw': '分享 muslimboard 瀏覽器擴充功能到社交媒體：'
         },
         modalChangeLanguageHeader: {
@@ -553,7 +553,7 @@ const I18n = {
         },
         modalUpdateAvailableMuslimboardNotification: {
             // ar: '',
-            en: 'New version available, $1. Ensure to get the latest version.',
+            en: 'A new version is available, $1. Ensure to get the latest version installed.',
             id: 'Versi terbaru sudah tersedia, $1. Silakan lakukan update.'
         }
     },
