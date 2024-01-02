@@ -9,3 +9,4 @@
 - [Rahadian Ardya](https://www.linkedin.com/in/rahadianardya) (add the *remaining time* info)
 - [Rochmad Nurul Fahmi](https://github.com/rochmadnf)
 - [Rosdyana Kusuma](https://github.com/rosdyana) (add the *traditional chinese* localization)
+- [王艺凯](https://github.com/redundan3y) (add the *simplified chinese* localization)
