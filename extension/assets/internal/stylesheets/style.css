@@ -635,9 +635,8 @@ body.show-todo-list #todo-list .wrapper .items .item {
     border-radius: 1px;
     padding: 12px 17px;
     text-decoration: none;
-    font-weight: bold;
     background-color: #00b16a;
-    width: 199px;
+    width: 270px;
 }
 #swal2-content .modal-change-language hr {
     width: 199px;

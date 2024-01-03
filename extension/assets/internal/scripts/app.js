@@ -930,23 +930,29 @@
             $('.change-language').on('click', (e) => {
                 e.preventDefault();
 
+                const items = Object.keys(I18n.mapping.languageName).filter((d) => d !== 'en' && d !== 'id').map((d) => {
+                    const lang = I18n.mapping.languageName[d]
+                    if (lang.native) {
+                        return `<li><a href='#' data-locale='${d}'><span>${lang.english}</span><br /><span>${lang.native}</span></a></li>`
+                    } else {
+                        return `<li><a href='#' data-locale='${d}'><span>${lang.english}</span></a></li>`
+                    }
+                })
+
                 const text = `
                     <div class='modal-change-language'>
                         <ul>
                             <li><a href='#' data-locale='en'>English Language</a></li>
                             <li><hr /></li>
                             <li><a href='#' data-locale='id'>Bahasa Indonesia</a></li>
-                            <li><a href='#' data-locale='ru'>Русский язык</a></li>
-                            <li><a href='#' data-locale='ar'>اللغة العربية</a></li>
-                            <li><a href='#' data-locale='zh-tw'>中文 (繁體)</a></li>
-                            <li><a href='#' data-locale='zh-cn'>中文 (简体)</a></li>
+                            ${items.join('')}
                         </ul>
                     </div>
                 `
 
                 swalChangeLanguage = Swal.fire({
                     type: 'info',
-                    title: I18n.getText('modalChangeLanguageHeader'),
+                    title: `Change language\n${I18n.getText('modalChangeLanguageHeader')}`,
                     html: text,
                     showConfirmButton: false,
                     allowOutsideClick: false
@@ -962,7 +968,12 @@
             })
 
             if (I18n.getSelectedLocale(false)) {
-                const text = `${I18n.getText('footerMenuChangeLanguage')} (${I18n.getSelectedLocale().toUpperCase()})`
+                const langCode = I18n.getSelectedLocale().toUpperCase()
+                let activeLanguage = (langCode === 'EN' || langCode === 'ID')
+                    ? `${I18n.getText('languageName').english} ${I18n.getSelectedLocale().toUpperCase()}`
+                    : `${I18n.getText('languageName').native} ${I18n.getSelectedLocale().toUpperCase()}`
+                const text = `Change language (${activeLanguage})`
+                // const text = I18n.getText('footerMenuChangeLanguage')
                 $('.change-language span').text(text)
             }
         },

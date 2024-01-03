@@ -10,6 +10,8 @@ Personal Dashboard for Muslims anywhere in the world, available on many language
 - Arabic
 - Traditional Chinese
 - Simplified Chinese
+- Hindi
+- Bengali
 
 ## Preview
 
@@ -38,6 +40,7 @@ Use chrome → open up extension menu → click **Load unpacked** and navigate t
 
 ## Hall of Fame Contributor
 
+- [A B M Noushad Bhuiyan](https://www.linkedin.com/in/a-b-m-noushad-bhuiyan-166449122) (adding Hindi & Bengali localizations)
 - [Eky Pradhana](https://www.linkedin.com/in/eky-pradhana-a7aa6143)
 - [Elena Dobrolyubova](https://github.com/eid23) (adding Russian localization)
 - [Ferdina Kusumah](https://github.com/FerdinaKusumah)
