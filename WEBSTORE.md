@@ -4,9 +4,19 @@ Personal Dashboard for Muslim
 
 ## Description
 
-Muslim Board is a personal dashboard for Muslims. Currently we support English language, Bahasa Indonesia, Russian, Arabic, Traditional Chinese, Simplified Chinese, Hindi, and Bengali. This browser extension was inspired by Momentum.
+Muslim Board is a personal dashboard for Muslims anywhere in the world, available on many languages. This plugin is inspired by Momentum.
 
 Muslim Board provides several useful features to improve productivity, such as prayer schedule, islamic quotes, and TODO list.
+
+Supported languages:
+- English language
+- Bahasa Indonesia
+- Russian
+- Arabic
+- Traditional Chinese
+- Simplified Chinese
+- Hindi
+- Bengali
 
 Usage:
 - To use Muslim Board, simply open a new tab on any browser, just that! the extension will automatically appear on the newly created tab.
@@ -18,11 +28,11 @@ Features:
 - Muslim Board contains the TODO list feature in the right section. Users can write any notes and set the completion there.
 - Internet availability info is displayed in the bottom section. You will be notified when the internet is offline.
 - Popup notification will appear whenever prayer time is near.
-- Multi language support (English language, Bahasa Indonesia, Russian, Arabic, Traditional Chinese, Simplified Chinese, Hindi, and Bengali).
+- Multi language support.
 
 ---
 
-Muslim Board adalah personal dashboard khusus untuk muslim. Plugin ini terinspirasi dari Momentum. Plugin ini support multi bahasa: Inggris, Bahasa Indonesia, dan Cina Tradisional.
+Muslim Board adalah personal dashboard khusus untuk muslim, terseda dalam banyak bahasa. Plugin ini terinspirasi dari Momentum.
 
 Muslim Board menyediakan banyak fitur berguna untuk meningkatkan produktifitas, diantaranya seperti jadwal sholat, quote islami, dan TODO list.
 
@@ -36,7 +46,7 @@ Fitur:
 - Ada fasilitas TODO list untuk catatan.
 - Indikator penanda internet offline/online.
 - Popup notifikasi ketika mendekati waktu sholat.
-- Mendukung multi bahasa (bahasa inggris, indonesia, dan cina tradisional).
+- Mendukung banyak bahasa.
 
 ## Extension Permissions
 
