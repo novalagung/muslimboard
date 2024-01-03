@@ -950,9 +950,13 @@
                     </div>
                 `
 
+                const langCode = I18n.getSelectedLocale().toUpperCase()
+                const modalTitle = (langCode === 'EN')
+                    ? `Change language`
+                    : `Change language\n${I18n.getText('modalChangeLanguageHeader')}`
                 swalChangeLanguage = Swal.fire({
                     type: 'info',
-                    title: `Change language\n${I18n.getText('modalChangeLanguageHeader')}`,
+                    title: modalTitle,
                     html: text,
                     showConfirmButton: false,
                     allowOutsideClick: false
@@ -969,9 +973,9 @@
 
             if (I18n.getSelectedLocale(false)) {
                 const langCode = I18n.getSelectedLocale().toUpperCase()
-                let activeLanguage = (langCode === 'EN' || langCode === 'ID')
-                    ? `${I18n.getText('languageName').english} ${I18n.getSelectedLocale().toUpperCase()}`
-                    : `${I18n.getText('languageName').native} ${I18n.getSelectedLocale().toUpperCase()}`
+                const activeLanguage = (langCode === 'EN' || langCode === 'ID')
+                    ? `${I18n.getText('languageName').english} ${langCode}`
+                    : `${I18n.getText('languageName').native} ${langCode}`
                 const text = `Change language (${activeLanguage})`
                 // const text = I18n.getText('footerMenuChangeLanguage')
                 $('.change-language span').text(text)

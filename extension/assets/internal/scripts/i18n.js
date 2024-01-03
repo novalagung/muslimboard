@@ -470,7 +470,7 @@ const I18n = {
             ru: 'Выбрать язык',
             bn: 'ভাষা নির্বাচন করুন', 
             hi: 'भाषा चुनें',
-            id: 'Select language / Pilih bahasa',
+            id: 'Pilih bahasa',
             'zh-tw': '選擇語言',
             'zh-cn': '选择语言'
         },
