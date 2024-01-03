@@ -345,7 +345,7 @@ const I18n = {
             ar: 'مقاطعة',
             en: 'Province',
             ru: 'Провинция',
-            bn: 'প্রদেশ ', 
+            bn: 'প্রদেশ', 
             hi: 'प्रांत',
             id: 'Provinsi',
             'zh-tw': '省份',
