@@ -138,7 +138,8 @@
         }
     }, {
         "id": "15",
-        "urlLocal": "https://i.imgur.com/vLGrjTz.jpg",
+        "url": "https://i.imgur.com/vLGrjTz.jpg",
+        "urlLocal": "assets/internal/images/photo-1414788020357-3690cfdab669.jpeg",
         "source": "https://wallpapercave.com/w/wp7465193",
         "author": {
             "name": "WallpaperCave",
