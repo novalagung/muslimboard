@@ -435,6 +435,9 @@
         // update background images randomly on every X interval
         async updateBackground(data) {
 
+            // get background url. use local image if exists
+            const doGetBackgroundURL = (bg) => (bg.urlLocal) ? bg.urlLocal : bg.url
+
             // update author name
             const updateBackgroundAthorName = (background) => {
                 if (background.hasOwnProperty('author')) {
@@ -450,7 +453,7 @@
                 Utility.log('preparing next image')
 
                 const preloader = new Image()
-                preloader.src = this.nextSelectedBackground.url
+                preloader.src = doGetBackgroundURL(this.nextSelectedBackground)
                 preloader.onload = () => {
                     Utility.log('next image preloaded', preloader.src)
     
@@ -460,7 +463,7 @@
                 }
                 preloader.onerror = (err) => {
                         this.nextSelectedBackground = Utility.randomFromArray('background', data.content, this.selectedBackground)
-                    preloader.src = this.nextSelectedBackground.url
+                    preloader.src = doGetBackgroundURL(this.nextSelectedBackground)
                 }
             }
     
@@ -473,7 +476,7 @@
     
                 $('#transitioner .content')
                     .css('opacity', '0')
-                    .css('background-image', `url("${this.selectedBackground.url}")`)
+                    .css('background-image', `url("${doGetBackgroundURL(this.selectedBackground)}")`)
     
                 const position = this.selectedBackground.position
                 $('#transitioner .content')
@@ -485,7 +488,7 @@
                 $('#transitioner .content').animate({
                     'opacity': 1,
                 }, 'slow', async () => {
-                    $('#background .content').css('background-image', `url("${this.selectedBackground.url}")`)
+                    $('#background .content').css('background-image', `url("${doGetBackgroundURL(this.selectedBackground)}")`)
                     $('#background .content').css('background-position', position ? `${position.horizontal} ${position.vertical}` : '')
     
                     await Utility.sleep(0.1)
@@ -497,7 +500,7 @@
                 })
             } else {
                 const doUpdateBackgroundForTheFirstTime = () => {
-                    $('#background .content').css('background-image', `url("${this.selectedBackground.url}")`)
+                    $('#background .content').css('background-image', `url("${doGetBackgroundURL(this.selectedBackground)}")`)
         
                     const position = this.selectedBackground.position
                     if (position) {
@@ -519,7 +522,7 @@
                 // on rare occasion the preload might failing due to various reason such slow internet,
                 // and if that situation is happening, use the local image
                 const preloader = new Image()
-                preloader.src = this.selectedBackground.url
+                preloader.src = doGetBackgroundURL(this.selectedBackground)
                 preloader.onload = () => {
                     Utility.log('next image preloaded', preloader.src)
                     doUpdateBackgroundForTheFirstTime()
@@ -527,7 +530,7 @@
                 preloader.onerror = () => {
                     this.selectedBackground = Utility.randomFromArray(
                         'background', 
-                        data.content.filter((d) => d.url.indexOf('http') == -1),
+                        data.content.filter((d) => doGetBackgroundURL(d).indexOf('http') == -1),
                         this.selectedBackground
                     )
                     this.nextSelectedBackground = Utility.randomFromArray('background', data.content, this.selectedBackground)
