@@ -38,6 +38,12 @@ Use chrome → open up extension menu → click **Load unpacked** and navigate t
 - Folder `webservices` contains the backend webservice API code.
 - Folder `website` contains the source code web/landing page, https://muslimboard.novalagung.com.
 
+## Lisensi dan Status FOSSA
+
+Muslim Board gratis untuk disebarluaskan secara bebas dibawah lisensi MIT License.
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fnovalagung%2Fmuslimboard.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fnovalagung%2Fmuslimboard?ref=badge_large)
+
 ## Hall of Fame Contributor
 
 - [A B M Noushad Bhuiyan](https://www.linkedin.com/in/a-b-m-noushad-bhuiyan-166449122) (adding Hindi & Bengali localizations)
