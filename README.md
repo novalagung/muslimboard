@@ -18,6 +18,7 @@ Personal Dashboard for Muslims anywhere in the world, available on many language
 <a href="https://www.producthunt.com/products/muslim-board?utm_source=badge-follow&utm_medium=badge&utm_souce=badge-muslim&#0045;board" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/follow.svg?product_id=498580&theme=light" alt="Muslim&#0032;Board - Personal&#0032;Dashboard&#0032;for&#0032;Muslim | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
 
 ![preview](resources/guide/preview-1.png)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fnovalagung%2Fmuslimboard.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fnovalagung%2Fmuslimboard?ref=badge_shield)
 
 ## Installation via Official Page
 
@@ -55,3 +56,7 @@ Use chrome → open up extension menu → click **Load unpacked** and navigate t
 ## Author
 
 Noval Agung Prayogo
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fnovalagung%2Fmuslimboard.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fnovalagung%2Fmuslimboard?ref=badge_large)
