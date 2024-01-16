@@ -42,7 +42,7 @@ Use chrome → open up extension menu → click **Load unpacked** and navigate t
 
 Muslim Board gratis untuk disebarluaskan secara bebas dibawah lisensi MIT License.
 
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fnovalagung%2Fmuslimboard.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fnovalagung%2Fmuslimboard?ref=badge_large)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fnovalagung%2Fmuslimboard.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fnovalagung%2Fmuslimboard?ref=badge_shield)
 
 ## Hall of Fame Contributor
 
