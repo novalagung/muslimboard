@@ -1,5 +1,5 @@
 {
-	"version": "2023.07.27",
+	"version": "2024.01.22",
 	"content": [{
 		"id": "1",
 		"matan": "فَاذْكُرُونِي أَذْكُرْكُمْ",
@@ -632,10 +632,10 @@
 		"reference": "QS. Ali Imran: 139"
 	},{
 		"id": "111",
-		"matan": "وَمَنْ يَّكْسِبْ اِثْمًا فَاِنَّمَا يَكْسِبُهٗ عَلٰى نَفْسِهٖ ۗ وَكَانَ اللّٰهُ عَلِيْمًا حَكِيْمًا",
+		"matan": "وَمَن يَكْسِبْ خَطِيٓـَٔةً أَوْ إِثْمًۭا ثُمَّ يَرْمِ بِهِۦ بَرِيٓـًۭٔا فَقَدِ ٱحْتَمَلَ بُهْتَـٰنًۭا وَإِثْمًۭا مُّبِينًۭا",
 		"translation": "Dan barangsiapa berbuat kesalahan atau dosa, kemudian dia tuduhkan kepada orang yang tidak bersalah, maka sungguh dia telah memikul suatu kebohongan dan dosa yang nyata.",
 		"type": "verse",
-		"reference": "QS. An Nisa: 111"
+		"reference": "QS. An Nisa: 112"
 	},{
 		"id": "112",
 		"matan": "لَهٗ مُعَقِّبٰتٌ مِّنْۢ بَيْنِ يَدَيْهِ وَمِنْ خَلْفِهٖ يَحْفَظُوْنَهٗ مِنْ اَمْرِ اللّٰهِ",
