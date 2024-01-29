@@ -6,24 +6,24 @@ import (
 	"io"
 	"os"
 
-	"github.com/getsentry/sentry-go"
 	"github.com/go-resty/resty/v2"
+	"muslimboard-api.novalagung.com/models"
 	"muslimboard-api.novalagung.com/pkg/logger"
+	"muslimboard-api.novalagung.com/pkg/otel"
 )
 
 // GetImage gets image from unsplash
 func GetImage(ctx context.Context, url string) (string, io.ReadCloser, error) {
-	namespace := "repositories.unsplash.GetImage"
+	namespace := models.Namespace("repositories.unsplash.GetImage")
 	log := logger.New(namespace)
 
-	span := sentry.StartSpan(ctx, namespace)
-	span.Description = namespace
-	span.Finish()
+	ctx, span := otel.Tracer.Start(ctx, namespace)
+	defer span.End()
 
 	resp, err := resty.New().
 		SetDebug(os.Getenv("DEBUG") == "true").
 		R().
-		SetContext(span.Context()).
+		SetContext(ctx).
 		Get(url)
 	if err != nil {
 		log.Error(ctx, fmt.Errorf("resty.Get %w", err))

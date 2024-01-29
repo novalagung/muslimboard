@@ -7,10 +7,11 @@ import (
 	"time"
 
 	"github.com/getsentry/sentry-go"
+	"muslimboard-api.novalagung.com/models"
 )
 
 func Init() error {
-	namespace := "pkg.sentry"
+	namespace := models.Namespace("pkg.sentry")
 	slog.Debug(namespace, "action", "initializing sentry")
 
 	dsn := os.Getenv("SENTRY_DSN")

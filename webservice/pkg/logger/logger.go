@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/getsentry/sentry-go"
+	"muslimboard-api.novalagung.com/models"
 )
 
 type Logger struct {
@@ -13,7 +14,7 @@ type Logger struct {
 }
 
 func Init(level slog.Level) {
-	namespace := "pkg.logger"
+	namespace := models.Namespace("pkg.logger")
 	slog.SetDefault(slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
 		Level: level,
 	})))

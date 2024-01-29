@@ -7,25 +7,25 @@ import (
 	"os"
 	"strings"
 
-	"github.com/getsentry/sentry-go"
 	"github.com/go-resty/resty/v2"
+	"muslimboard-api.novalagung.com/models"
 	"muslimboard-api.novalagung.com/pkg/logger"
+	"muslimboard-api.novalagung.com/pkg/otel"
 )
 
 // GetCoordinateByLocation do get coordinate by location details
 func GetCoordinateByLocation(ctx context.Context, location string) (map[string]interface{}, error) {
-	namespace := "repositories.aladhan.GetCoordinateByLocation"
+	namespace := models.Namespace("repositories.aladhan.GetCoordinateByLocation")
 	log := logger.New(namespace)
 
-	span := sentry.StartSpan(ctx, namespace)
-	span.Description = namespace
-	span.Finish()
+	ctx, span := otel.Tracer.Start(ctx, namespace)
+	defer span.End()
 
 	// dispatch query to open street map geocoding api
 	resp, err := resty.New().
 		SetDebug(os.Getenv("DEBUG") == "true").
 		R().
-		SetContext(span.Context()).
+		SetContext(ctx).
 		SetQueryParams(map[string]string{
 			"format": "json",
 			"q":      location,
@@ -85,18 +85,17 @@ func GetCoordinateByLocation(ctx context.Context, location string) (map[string]i
 
 // GetLocationByCoordinate do get location details by coordinate
 func GetLocationByCoordinate(ctx context.Context, latitude, longitude string) (map[string]interface{}, error) {
-	namespace := "repositories.aladhan.GetLocationByCoordinate"
+	namespace := models.Namespace("repositories.aladhan.GetLocationByCoordinate")
 	log := logger.New(namespace)
 
-	span := sentry.StartSpan(ctx, namespace)
-	span.Description = namespace
-	span.Finish()
+	ctx, span := otel.Tracer.Start(ctx, namespace)
+	defer span.End()
 
 	// dispatch query to open street map geocoding api
 	resp, err := resty.New().
 		SetDebug(os.Getenv("DEBUG") == "true").
 		R().
-		SetContext(span.Context()).
+		SetContext(ctx).
 		SetQueryParams(map[string]string{
 			"format": "json",
 			"lat":    latitude,
@@ -179,18 +178,17 @@ func GetLocationByCoordinate(ctx context.Context, latitude, longitude string) (m
 
 // GetShalatScheduleByCoordinate do get shalat schedule by coordinate
 func GetShalatScheduleByCoordinate(ctx context.Context, method string, latitude, longitude float64, month, year string) ([]map[string]interface{}, error) {
-	namespace := "repositories.aladhan.GetShalatScheduleByCoordinate"
+	namespace := models.Namespace("repositories.aladhan.GetShalatScheduleByCoordinate")
 	log := logger.New(namespace)
 
-	span := sentry.StartSpan(ctx, namespace)
-	span.Description = namespace
-	span.Finish()
+	ctx, span := otel.Tracer.Start(ctx, namespace)
+	defer span.End()
 
 	// dispatch query to open street map geocoding api
 	resp, err := resty.New().
 		SetDebug(os.Getenv("DEBUG") == "true").
 		R().
-		SetContext(span.Context()).
+		SetContext(ctx).
 		SetQueryParams(map[string]string{
 			"method":    method,
 			"latitude":  fmt.Sprintf("%v", latitude),

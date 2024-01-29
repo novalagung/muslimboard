@@ -8,11 +8,11 @@ import (
 	"net/url"
 	"strconv"
 
-	"github.com/getsentry/sentry-go"
 	"muslimboard-api.novalagung.com/models"
 	pkg_common "muslimboard-api.novalagung.com/pkg/common"
 	pkg_http "muslimboard-api.novalagung.com/pkg/http"
 	"muslimboard-api.novalagung.com/pkg/logger"
+	"muslimboard-api.novalagung.com/pkg/otel"
 	pkg_redis "muslimboard-api.novalagung.com/pkg/redis"
 	"muslimboard-api.novalagung.com/usecase"
 )
@@ -20,12 +20,11 @@ import (
 // HandleImage is handler of get image action
 // currently not isued
 func HandleImage(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	namespace := "handler.HandleImage"
+	namespace := models.Namespace("handler.HandleImage")
 	log := logger.New(namespace)
 
-	span := sentry.StartSpan(ctx, namespace)
-	span.Description = namespace
-	span.Finish()
+	ctx, span := otel.Tracer.Start(ctx, namespace)
+	defer span.End()
 
 	imageUrl, _ := url.QueryUnescape(r.URL.Query().Get("image"))
 	if imageUrl == "" {
@@ -35,7 +34,7 @@ func HandleImage(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	contentType, body, err := usecase.GetImage(span.Context(), imageUrl)
+	contentType, body, err := usecase.GetImage(ctx, imageUrl)
 	if body != nil {
 		defer body.Close()
 	}
@@ -58,21 +57,20 @@ func HandleImage(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 
 // HandleShalatScheduleByCoordinate is handler of get shalat schedule by coordinate action
 func HandleShalatScheduleByCoordinate(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	namespace := "handler.HandleShalatScheduleByCoordinate"
+	namespace := models.Namespace("handler.HandleShalatScheduleByCoordinate")
 	log := logger.New(namespace)
 
-	span := sentry.StartSpan(ctx, namespace)
-	span.Description = namespace
-	span.Finish()
+	ctx, span := otel.Tracer.Start(ctx, namespace)
+	defer span.End()
 
 	// check cache
 	cacheKey := r.URL.String()
-	cachedRes, err := pkg_redis.NewRedis().Get(span.Context(), cacheKey).Result()
+	cachedRes, err := pkg_redis.NewRedis().Get(ctx, cacheKey).Result()
 	if err == nil {
 		cachedResMap, err := pkg_common.ConvertToMap(cachedRes)
 		if len(cachedResMap) > 0 && err == nil {
 			// prolong the cache expiration date
-			pkg_redis.NewRedis().Set(span.Context(), cacheKey, cachedRes, models.RedisKeepAliveDuration).Err()
+			pkg_redis.NewRedis().Set(ctx, cacheKey, cachedRes, models.RedisKeepAliveDuration).Err()
 			log.Debug(ctx, "load from cache", cacheKey)
 			pkg_http.WriteRespose(w, r, http.StatusOK, cachedResMap, nil)
 			return
@@ -98,7 +96,7 @@ func HandleShalatScheduleByCoordinate(ctx context.Context, w http.ResponseWriter
 	}
 
 	// get data
-	res, err := usecase.GetShalatScheduleByCoordinate(span.Context(), method, latitude, longitude, month, year)
+	res, err := usecase.GetShalatScheduleByCoordinate(ctx, method, latitude, longitude, month, year)
 	if err != nil {
 		log.Error(ctx, fmt.Errorf("getShalatScheduleByCoordinate %w", err))
 		pkg_http.WriteRespose(w, r, http.StatusInternalServerError, nil, err)
@@ -109,7 +107,7 @@ func HandleShalatScheduleByCoordinate(ctx context.Context, w http.ResponseWriter
 	if schedulesRaw := res["schedules"]; schedulesRaw != nil {
 		if schedules := schedulesRaw.([]map[string]interface{}); len(schedules) > 0 {
 			log.Debug(ctx, "set cache", cacheKey)
-			pkg_redis.NewRedis().Set(span.Context(), cacheKey, pkg_common.ConvertToJson(res), models.RedisKeepAliveDuration).Err()
+			pkg_redis.NewRedis().Set(ctx, cacheKey, pkg_common.ConvertToJson(res), models.RedisKeepAliveDuration).Err()
 		}
 	}
 
@@ -119,21 +117,20 @@ func HandleShalatScheduleByCoordinate(ctx context.Context, w http.ResponseWriter
 // HandleShalatScheduleByLocation is handler of get shalat schedule by location action
 // for now, immediately use aladhan.com api coz kemenag backend still under development
 func HandleShalatScheduleByLocation(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	namespace := "handler.HandleShalatScheduleByLocation"
+	namespace := models.Namespace("handler.HandleShalatScheduleByLocation")
 	log := logger.New(namespace)
 
-	span := sentry.StartSpan(ctx, namespace)
-	span.Description = namespace
-	span.Finish()
+	ctx, span := otel.Tracer.Start(ctx, namespace)
+	defer span.End()
 
 	// check cache
 	cacheKey := r.URL.String()
-	cachedRes, err := pkg_redis.NewRedis().Get(span.Context(), cacheKey).Result()
+	cachedRes, err := pkg_redis.NewRedis().Get(ctx, cacheKey).Result()
 	if err == nil {
 		cachedResMap, err := pkg_common.ConvertToMap(cachedRes)
 		if len(cachedResMap) > 0 && err == nil {
 			// prolong the cache expiration date
-			pkg_redis.NewRedis().Set(span.Context(), cacheKey, cachedRes, models.RedisKeepAliveDuration).Err()
+			pkg_redis.NewRedis().Set(ctx, cacheKey, cachedRes, models.RedisKeepAliveDuration).Err()
 			log.Debug(ctx, "load from cache", cacheKey)
 			pkg_http.WriteRespose(w, r, http.StatusOK, cachedResMap, nil)
 			return
@@ -151,7 +148,7 @@ func HandleShalatScheduleByLocation(ctx context.Context, w http.ResponseWriter, 
 	city := r.URL.Query().Get("city")
 
 	// get data
-	res, err := usecase.GetShalatScheduleByLocation(span.Context(), method, province, city, month, year)
+	res, err := usecase.GetShalatScheduleByLocation(ctx, method, province, city, month, year)
 	if err != nil {
 		log.Error(ctx, fmt.Errorf("getShalatScheduleByCoordinate %w", err))
 		pkg_http.WriteRespose(w, r, http.StatusInternalServerError, nil, err)
@@ -162,7 +159,7 @@ func HandleShalatScheduleByLocation(ctx context.Context, w http.ResponseWriter, 
 	if schedulesRaw := res["schedules"]; schedulesRaw != nil {
 		if schedules := schedulesRaw.([]map[string]interface{}); len(schedules) > 0 {
 			log.Debug(ctx, "set cache", cacheKey)
-			pkg_redis.NewRedis().Set(span.Context(), cacheKey, pkg_common.ConvertToJson(res), models.RedisKeepAliveDuration).Err()
+			pkg_redis.NewRedis().Set(ctx, cacheKey, pkg_common.ConvertToJson(res), models.RedisKeepAliveDuration).Err()
 		}
 	}
 
