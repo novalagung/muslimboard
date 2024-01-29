@@ -4,16 +4,17 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"log/slog"
 	"os"
 
 	"github.com/getsentry/sentry-go"
 	"github.com/go-resty/resty/v2"
+	"muslimboard-api.novalagung.com/pkg/logger"
 )
 
 // GetImage gets image from unsplash
 func GetImage(ctx context.Context, url string) (string, io.ReadCloser, error) {
 	namespace := "repositories.unsplash.GetImage"
+	log := logger.New(namespace)
 
 	span := sentry.StartSpan(ctx, namespace)
 	span.Description = namespace
@@ -25,12 +26,12 @@ func GetImage(ctx context.Context, url string) (string, io.ReadCloser, error) {
 		SetContext(span.Context()).
 		Get(url)
 	if err != nil {
-		slog.Error(namespace, "resty.Get", err)
+		log.Error(ctx, fmt.Errorf("resty.Get %w", err))
 		return "", nil, err
 	}
 	if resp.IsError() {
 		err = fmt.Errorf("%v", resp)
-		slog.Error(namespace, "resp.IsError", err)
+		log.Error(ctx, fmt.Errorf("resp.IsError %w", err))
 		return "", nil, err
 	}
 

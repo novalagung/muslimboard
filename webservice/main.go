@@ -8,12 +8,14 @@ import (
 
 	sentryhttp "github.com/getsentry/sentry-go/http"
 	"github.com/joho/godotenv"
+	"muslimboard-api.novalagung.com/pkg/logger"
 	"muslimboard-api.novalagung.com/pkg/sentry"
 	router "muslimboard-api.novalagung.com/router"
 )
 
 func main() {
 	namespace := "main"
+	logger.Init(slog.LevelDebug)
 
 	err := godotenv.Load()
 	if err != nil {
@@ -31,7 +33,7 @@ func main() {
 	http.HandleFunc("/muslimboard-api", sentryHandler.HandleFunc(router.MuslimboardApi))
 
 	port := ":" + os.Getenv("WEBSERVER_PORT")
-	slog.Info(namespace, "listening to", port)
+	slog.Debug(namespace, "listening to", port)
 
 	handler := sentryhttp.New(sentryhttp.Options{}).Handle(http.DefaultServeMux)
 	err = http.ListenAndServe(port, handler)

@@ -4,13 +4,13 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"log/slog"
 	"strconv"
 	"strings"
 
 	"github.com/getsentry/sentry-go"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
+	"muslimboard-api.novalagung.com/pkg/logger"
 	"muslimboard-api.novalagung.com/repositories/aladhan"
 	"muslimboard-api.novalagung.com/repositories/unsplash"
 )
@@ -22,6 +22,7 @@ func GetImage(ctx context.Context, imageUrl string) (string, io.ReadCloser, erro
 // GetShalatScheduleByCoordinate is handler of get shalat schedule by coordinate
 func GetShalatScheduleByCoordinate(ctx context.Context, method, latitude, longitude, month, year string) (map[string]interface{}, error) {
 	namespace := "usecase.GetShalatScheduleByCoordinate"
+	log := logger.New(namespace)
 
 	span := sentry.StartSpan(ctx, namespace)
 	span.Description = namespace
@@ -33,7 +34,7 @@ func GetShalatScheduleByCoordinate(ctx context.Context, method, latitude, longit
 
 	schedules, err := aladhan.GetShalatScheduleByCoordinate(span.Context(), method, latInt, lonInt, month, year)
 	if err != nil {
-		slog.Error(namespace, "getShalatScheduleByCoordinate", err)
+		log.Error(ctx, fmt.Errorf("getShalatScheduleByCoordinate %w", err))
 		return nil, err
 	}
 
@@ -45,7 +46,7 @@ func GetShalatScheduleByCoordinate(ctx context.Context, method, latitude, longit
 
 	locationRes, err := aladhan.GetLocationByCoordinate(span.Context(), latitude, longitude)
 	if err != nil {
-		slog.Error(namespace, "getLocationByCoordinate", err)
+		log.Error(ctx, fmt.Errorf("getLocationByCoordinate %w", err))
 		return nil, err
 	}
 
@@ -59,6 +60,7 @@ func GetShalatScheduleByCoordinate(ctx context.Context, method, latitude, longit
 // for now, immediately use aladhan.com api coz kemenag backend still under development
 func GetShalatScheduleByLocation(ctx context.Context, method, province, city, month, year string) (map[string]interface{}, error) {
 	namespace := "handler.GetShalatScheduleByLocation"
+	log := logger.New(namespace)
 
 	span := sentry.StartSpan(ctx, namespace)
 	span.Description = namespace
@@ -74,7 +76,7 @@ func GetShalatScheduleByLocation(ctx context.Context, method, province, city, mo
 	// get coordinate by location
 	coordinate, err := aladhan.GetCoordinateByLocation(span.Context(), location)
 	if err != nil {
-		slog.Error(namespace, "getCoordinateByLocation", err)
+		log.Error(ctx, fmt.Errorf("getCoordinateByLocation %w", err))
 		return nil, err
 	}
 
@@ -84,7 +86,7 @@ func GetShalatScheduleByLocation(ctx context.Context, method, province, city, mo
 
 	schedules, err := aladhan.GetShalatScheduleByCoordinate(span.Context(), method, latitude, longitude, month, year)
 	if err != nil {
-		slog.Error(namespace, "getShalatScheduleByCoordinate", err)
+		log.Error(ctx, fmt.Errorf("getShalatScheduleByCoordinate %w", err))
 		return nil, err
 	}
 

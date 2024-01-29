@@ -4,17 +4,18 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"log/slog"
 	"os"
 	"strings"
 
 	"github.com/getsentry/sentry-go"
 	"github.com/go-resty/resty/v2"
+	"muslimboard-api.novalagung.com/pkg/logger"
 )
 
 // GetCoordinateByLocation do get coordinate by location details
 func GetCoordinateByLocation(ctx context.Context, location string) (map[string]interface{}, error) {
 	namespace := "repositories.aladhan.GetCoordinateByLocation"
+	log := logger.New(namespace)
 
 	span := sentry.StartSpan(ctx, namespace)
 	span.Description = namespace
@@ -32,12 +33,12 @@ func GetCoordinateByLocation(ctx context.Context, location string) (map[string]i
 		}).
 		Get("https://nominatim.openstreetmap.org/")
 	if err != nil {
-		slog.Error(namespace, "resty.Get", err)
+		log.Error(ctx, fmt.Errorf("resty.Get %w", err))
 		return nil, err
 	}
 	if resp.IsError() {
 		err = fmt.Errorf("%v", resp)
-		slog.Error(namespace, "resp.IsError", err)
+		log.Error(ctx, fmt.Errorf("resp.IsError %w", err))
 		return nil, err
 	}
 
@@ -58,18 +59,18 @@ func GetCoordinateByLocation(ctx context.Context, location string) (map[string]i
 	}{}
 	err = json.Unmarshal(resp.Body(), &coordinates)
 	if err != nil {
-		slog.Error(namespace, "json.Unmarshal", err)
+		log.Error(ctx, fmt.Errorf("json.Unmarshal %w", err))
 		return nil, err
 	}
 
 	if coordinates == nil {
 		err = fmt.Errorf("coordinates not found")
-		slog.Error(namespace, "coordinates", err)
+		log.Error(ctx, fmt.Errorf("coordinates %w", err))
 		return nil, err
 	}
 	if len(coordinates) == 0 {
 		err = fmt.Errorf("coordinates not found")
-		slog.Error(namespace, "len(coordinates) == 0", err)
+		log.Error(ctx, fmt.Errorf("len(coordinates) == 0 %w", err))
 		return nil, err
 	}
 
@@ -85,6 +86,7 @@ func GetCoordinateByLocation(ctx context.Context, location string) (map[string]i
 // GetLocationByCoordinate do get location details by coordinate
 func GetLocationByCoordinate(ctx context.Context, latitude, longitude string) (map[string]interface{}, error) {
 	namespace := "repositories.aladhan.GetLocationByCoordinate"
+	log := logger.New(namespace)
 
 	span := sentry.StartSpan(ctx, namespace)
 	span.Description = namespace
@@ -102,12 +104,12 @@ func GetLocationByCoordinate(ctx context.Context, latitude, longitude string) (m
 		}).
 		Get("https://nominatim.openstreetmap.org/reverse")
 	if err != nil {
-		slog.Error(namespace, "resty.Get", err)
+		log.Error(ctx, fmt.Errorf("resty.Get %w", err))
 		return nil, err
 	}
 	if resp.IsError() {
 		err = fmt.Errorf("%v", resp)
-		slog.Error(namespace, "resp.IsError", err)
+		log.Error(ctx, fmt.Errorf("resp.IsError %w", err))
 		return nil, err
 	}
 
@@ -137,7 +139,7 @@ func GetLocationByCoordinate(ctx context.Context, latitude, longitude string) (m
 	}{}
 	err = json.Unmarshal(resp.Body(), &location)
 	if err != nil {
-		slog.Error(namespace, "json.Unmarshal", err)
+		log.Error(ctx, fmt.Errorf("json.Unmarshal %w", err))
 		return nil, err
 	}
 
@@ -178,6 +180,7 @@ func GetLocationByCoordinate(ctx context.Context, latitude, longitude string) (m
 // GetShalatScheduleByCoordinate do get shalat schedule by coordinate
 func GetShalatScheduleByCoordinate(ctx context.Context, method string, latitude, longitude float64, month, year string) ([]map[string]interface{}, error) {
 	namespace := "repositories.aladhan.GetShalatScheduleByCoordinate"
+	log := logger.New(namespace)
 
 	span := sentry.StartSpan(ctx, namespace)
 	span.Description = namespace
@@ -197,12 +200,12 @@ func GetShalatScheduleByCoordinate(ctx context.Context, method string, latitude,
 		}).
 		Get("http://api.aladhan.com/v1/calendar")
 	if err != nil {
-		slog.Error(namespace, "resty.Get", err)
+		log.Error(ctx, fmt.Errorf("resty.Get %w", err))
 		return nil, err
 	}
 	if resp.IsError() {
 		err = fmt.Errorf("%v", resp)
-		slog.Error(namespace, "resp.IsError", err)
+		log.Error(ctx, fmt.Errorf("resp.IsError %w", err))
 		return nil, err
 	}
 
@@ -214,12 +217,12 @@ func GetShalatScheduleByCoordinate(ctx context.Context, method string, latitude,
 	}{}
 	err = json.Unmarshal(resp.Body(), &schedules)
 	if err != nil {
-		slog.Error(namespace, "json.Unmarshal", err)
+		log.Error(ctx, fmt.Errorf("json.Unmarshal %w", err))
 		return nil, err
 	}
 	if schedules.Code != 200 {
 		err = fmt.Errorf("%v", schedules.Status)
-		slog.Error(namespace, "schedules.Code != 200", err)
+		log.Error(ctx, fmt.Errorf("schedules.Code != 200 %w", err))
 		return nil, err
 	}
 

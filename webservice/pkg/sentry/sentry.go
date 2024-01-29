@@ -1,6 +1,7 @@
 package sentry
 
 import (
+	"log/slog"
 	"os"
 	"strconv"
 	"time"
@@ -9,14 +10,21 @@ import (
 )
 
 func Init() error {
-	cfg := sentry.ClientOptions{
-		Dsn:                os.Getenv("SENTRY_DSN"),
-		EnableTracing:      os.Getenv("SENTRY_TRACING") == "true",
-		TracesSampleRate:   func() float64 { f, _ := strconv.ParseFloat(os.Getenv("SENTRY_TRACES_SAMPLE_RATE"), 64); return f }(),
-		ProfilesSampleRate: func() float64 { f, _ := strconv.ParseFloat(os.Getenv("SENTRY_PROFILES_SAMPLE_RATE"), 64); return f }(),
-		Debug:              true,
-	}
-	err := sentry.Init(cfg)
+	namespace := "pkg.sentry"
+	slog.Debug(namespace, "action", "initializing sentry")
+
+	dsn := os.Getenv("SENTRY_DSN")
+	enableTracing := os.Getenv("SENTRY_TRACING") == "true"
+	tracesSampleRate := func() float64 { f, _ := strconv.ParseFloat(os.Getenv("SENTRY_TRACES_SAMPLE_RATE"), 64); return f }()
+	profilesSampleRate := func() float64 { f, _ := strconv.ParseFloat(os.Getenv("SENTRY_PROFILES_SAMPLE_RATE"), 64); return f }()
+
+	err := sentry.Init(sentry.ClientOptions{
+		Dsn:                dsn,
+		EnableTracing:      enableTracing,
+		TracesSampleRate:   tracesSampleRate,
+		ProfilesSampleRate: profilesSampleRate,
+		Debug:              false,
+	})
 	if err != nil {
 		return err
 	}
