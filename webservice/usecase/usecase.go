@@ -33,7 +33,7 @@ func GetShalatScheduleByCoordinate(ctx context.Context, method, latitude, longit
 
 	schedules, err := aladhan.GetShalatScheduleByCoordinate(span.Context(), method, latInt, lonInt, month, year)
 	if err != nil {
-		slog.Error(namespace, "getShalatScheduleByCoordinate", err.Error())
+		slog.Error(namespace, "getShalatScheduleByCoordinate", err)
 		return nil, err
 	}
 
@@ -45,7 +45,7 @@ func GetShalatScheduleByCoordinate(ctx context.Context, method, latitude, longit
 
 	locationRes, err := aladhan.GetLocationByCoordinate(span.Context(), latitude, longitude)
 	if err != nil {
-		slog.Error(namespace, "getLocationByCoordinate", err.Error())
+		slog.Error(namespace, "getLocationByCoordinate", err)
 		return nil, err
 	}
 
@@ -74,7 +74,7 @@ func GetShalatScheduleByLocation(ctx context.Context, method, province, city, mo
 	// get coordinate by location
 	coordinate, err := aladhan.GetCoordinateByLocation(span.Context(), location)
 	if err != nil {
-		slog.Error(namespace, "getCoordinateByLocation", err.Error())
+		slog.Error(namespace, "getCoordinateByLocation", err)
 		return nil, err
 	}
 
@@ -84,7 +84,7 @@ func GetShalatScheduleByLocation(ctx context.Context, method, province, city, mo
 
 	schedules, err := aladhan.GetShalatScheduleByCoordinate(span.Context(), method, latitude, longitude, month, year)
 	if err != nil {
-		slog.Error(namespace, "getShalatScheduleByCoordinate", err.Error())
+		slog.Error(namespace, "getShalatScheduleByCoordinate", err)
 		return nil, err
 	}
 

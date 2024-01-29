@@ -29,7 +29,7 @@ func HandleImage(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	imageUrl, _ := url.QueryUnescape(r.URL.Query().Get("image"))
 	if imageUrl == "" {
 		err := fmt.Errorf("missing image url")
-		slog.Error(namespace, "queryUnescape", err.Error())
+		slog.Error(namespace, "queryUnescape", err)
 		pkg_http.WriteRespose(w, r, http.StatusBadRequest, nil, err)
 		return
 	}
@@ -39,7 +39,7 @@ func HandleImage(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 		defer body.Close()
 	}
 	if err != nil {
-		slog.Error(namespace, "getImage", err.Error())
+		slog.Error(namespace, "getImage", err)
 		pkg_http.WriteRespose(w, r, http.StatusBadRequest, nil, err)
 		return
 	}
@@ -49,7 +49,7 @@ func HandleImage(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 
 	_, err = io.Copy(w, body)
 	if err != nil {
-		slog.Error(namespace, "io.Copy", err.Error())
+		slog.Error(namespace, "io.Copy", err)
 		pkg_http.WriteRespose(w, r, http.StatusBadRequest, nil, err)
 		return
 	}
@@ -99,7 +99,7 @@ func HandleShalatScheduleByCoordinate(ctx context.Context, w http.ResponseWriter
 	// get data
 	res, err := usecase.GetShalatScheduleByCoordinate(span.Context(), method, latitude, longitude, month, year)
 	if err != nil {
-		slog.Error(namespace, "getShalatScheduleByCoordinate", err.Error())
+		slog.Error(namespace, "getShalatScheduleByCoordinate", err)
 		pkg_http.WriteRespose(w, r, http.StatusInternalServerError, nil, err)
 		return
 	}
@@ -152,7 +152,7 @@ func HandleShalatScheduleByLocation(ctx context.Context, w http.ResponseWriter, 
 	// get data
 	res, err := usecase.GetShalatScheduleByLocation(span.Context(), method, province, city, month, year)
 	if err != nil {
-		slog.Error(namespace, "getShalatScheduleByCoordinate", err.Error())
+		slog.Error(namespace, "getShalatScheduleByCoordinate", err)
 		pkg_http.WriteRespose(w, r, http.StatusInternalServerError, nil, err)
 		return
 	}

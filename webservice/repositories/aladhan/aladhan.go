@@ -32,12 +32,12 @@ func GetCoordinateByLocation(ctx context.Context, location string) (map[string]i
 		}).
 		Get("https://nominatim.openstreetmap.org/")
 	if err != nil {
-		slog.Error(namespace, "resty.Get", err.Error())
+		slog.Error(namespace, "resty.Get", err)
 		return nil, err
 	}
 	if resp.IsError() {
-		err = fmt.Errorf("%v", resp.Error())
-		slog.Error(namespace, "resp.IsError", err.Error())
+		err = fmt.Errorf("%v", resp)
+		slog.Error(namespace, "resp.IsError", err)
 		return nil, err
 	}
 
@@ -58,18 +58,18 @@ func GetCoordinateByLocation(ctx context.Context, location string) (map[string]i
 	}{}
 	err = json.Unmarshal(resp.Body(), &coordinates)
 	if err != nil {
-		slog.Error(namespace, "json.Unmarshal", err.Error())
+		slog.Error(namespace, "json.Unmarshal", err)
 		return nil, err
 	}
 
 	if coordinates == nil {
 		err = fmt.Errorf("coordinates not found")
-		slog.Error(namespace, "coordinates", err.Error())
+		slog.Error(namespace, "coordinates", err)
 		return nil, err
 	}
 	if len(coordinates) == 0 {
 		err = fmt.Errorf("coordinates not found")
-		slog.Error(namespace, "len(coordinates) == 0", err.Error())
+		slog.Error(namespace, "len(coordinates) == 0", err)
 		return nil, err
 	}
 
@@ -102,12 +102,12 @@ func GetLocationByCoordinate(ctx context.Context, latitude, longitude string) (m
 		}).
 		Get("https://nominatim.openstreetmap.org/reverse")
 	if err != nil {
-		slog.Error(namespace, "resty.Get", err.Error())
+		slog.Error(namespace, "resty.Get", err)
 		return nil, err
 	}
 	if resp.IsError() {
-		err = fmt.Errorf("%v", resp.Error())
-		slog.Error(namespace, "resp.IsError", err.Error())
+		err = fmt.Errorf("%v", resp)
+		slog.Error(namespace, "resp.IsError", err)
 		return nil, err
 	}
 
@@ -137,7 +137,7 @@ func GetLocationByCoordinate(ctx context.Context, latitude, longitude string) (m
 	}{}
 	err = json.Unmarshal(resp.Body(), &location)
 	if err != nil {
-		slog.Error(namespace, "json.Unmarshal", err.Error())
+		slog.Error(namespace, "json.Unmarshal", err)
 		return nil, err
 	}
 
@@ -197,12 +197,12 @@ func GetShalatScheduleByCoordinate(ctx context.Context, method string, latitude,
 		}).
 		Get("http://api.aladhan.com/v1/calendar")
 	if err != nil {
-		slog.Error(namespace, "resty.Get", err.Error())
+		slog.Error(namespace, "resty.Get", err)
 		return nil, err
 	}
 	if resp.IsError() {
-		err = fmt.Errorf("%v", resp.Error())
-		slog.Error(namespace, "resp.IsError", err.Error())
+		err = fmt.Errorf("%v", resp)
+		slog.Error(namespace, "resp.IsError", err)
 		return nil, err
 	}
 
@@ -214,12 +214,12 @@ func GetShalatScheduleByCoordinate(ctx context.Context, method string, latitude,
 	}{}
 	err = json.Unmarshal(resp.Body(), &schedules)
 	if err != nil {
-		slog.Error(namespace, "json.Unmarshal", err.Error())
+		slog.Error(namespace, "json.Unmarshal", err)
 		return nil, err
 	}
 	if schedules.Code != 200 {
 		err = fmt.Errorf("%v", schedules.Status)
-		slog.Error(namespace, "schedules.Code != 200", err.Error())
+		slog.Error(namespace, "schedules.Code != 200", err)
 		return nil, err
 	}
 

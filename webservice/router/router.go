@@ -32,21 +32,20 @@ func MuslimboardApi(w http.ResponseWriter, r *http.Request) {
 		span.Description = op
 		span.Finish()
 
+		slog.Info(namespace, "action", "incoming request", "path", r.URL.String())
+
 		switch op {
 
 		case "ping":
 			pkg_http.WriteRespose(w, r, http.StatusOK, true, nil)
 
 		case "image":
-			slog.Info(namespace, "incoming request", "op="+op, r.URL.String())
 			handler.HandleImage(span.Context(), w, r)
 
 		case "shalat-schedule-by-coordinate":
-			slog.Info(namespace, "incoming request", "op="+op, r.URL.String())
 			handler.HandleShalatScheduleByCoordinate(span.Context(), w, r)
 
 		case "shalat-schedule-by-location":
-			slog.Info(namespace, "incoming request", "op="+op, r.URL.String())
 			handler.HandleShalatScheduleByLocation(span.Context(), w, r)
 
 		default:

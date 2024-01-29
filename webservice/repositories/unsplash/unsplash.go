@@ -25,12 +25,12 @@ func GetImage(ctx context.Context, url string) (string, io.ReadCloser, error) {
 		SetContext(span.Context()).
 		Get(url)
 	if err != nil {
-		slog.Error(namespace, "resty.Get", err.Error())
+		slog.Error(namespace, "resty.Get", err)
 		return "", nil, err
 	}
 	if resp.IsError() {
-		err = fmt.Errorf("%v", resp.Error())
-		slog.Error(namespace, "resp.IsError", err.Error())
+		err = fmt.Errorf("%v", resp)
+		slog.Error(namespace, "resp.IsError", err)
 		return "", nil, err
 	}
 
