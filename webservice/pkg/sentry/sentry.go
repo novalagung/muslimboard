@@ -24,7 +24,7 @@ func Init() error {
 		EnableTracing:      enableTracing,
 		TracesSampleRate:   tracesSampleRate,
 		ProfilesSampleRate: profilesSampleRate,
-		Debug:              false,
+		Debug:              true,
 	})
 	if err != nil {
 		return err

@@ -4,9 +4,11 @@ import (
 	"context"
 	"errors"
 	"log/slog"
+	"os"
 
 	sentryotel "github.com/getsentry/sentry-go/otel"
 	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/exporters/stdout/stdouttrace"
 	"go.opentelemetry.io/otel/propagation"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 	"go.opentelemetry.io/otel/trace"
@@ -31,10 +33,6 @@ func Init(ctx context.Context) (func(context.Context) error, error) {
 		return err
 	}
 
-	// Set up propagator.
-	prop := newPropagator()
-	otel.SetTextMapPropagator(prop)
-
 	// Set up trace provider.
 	tracerProvider, err := newTraceProvider()
 	if err != nil {
@@ -46,14 +44,9 @@ func Init(ctx context.Context) (func(context.Context) error, error) {
 	shutdownFuncs = append(shutdownFuncs, tracerProvider.Shutdown)
 	otel.SetTracerProvider(tracerProvider)
 
-	// // Set up meter provider.
-	// meterProvider, err := newMeterProvider()
-	// if err != nil {
-	// 	err = errors.Join(err, shutdown(ctx))
-	// 	return nil, err
-	// }
-	// shutdownFuncs = append(shutdownFuncs, meterProvider.Shutdown)
-	// otel.SetMeterProvider(meterProvider)
+	// Set up propagator.
+	prop := newPropagator()
+	otel.SetTextMapPropagator(prop)
 
 	return shutdown, err
 }
@@ -85,20 +78,19 @@ func newTraceProvider() (*sdktrace.TracerProvider, error) {
 
 	// ==== otel
 
-	traceProvider := sdktrace.NewTracerProvider(
+	opts := []sdktrace.TracerProviderOption{
 		sdktrace.WithSpanProcessor(sentryotel.NewSentrySpanProcessor()),
-	)
+		sdktrace.WithSampler(sdktrace.AlwaysSample()),
+	}
+
+	if os.Getenv("OPENTELEMETRY_DEBUG") == "true" {
+		traceExporter, err := stdouttrace.New(stdouttrace.WithPrettyPrint())
+		if err != nil {
+			return nil, err
+		}
+		opts = append(opts, sdktrace.WithBatcher(traceExporter))
+	}
+
+	traceProvider := sdktrace.NewTracerProvider(opts...)
 	return traceProvider, nil
 }
-
-// func newMeterProvider() (*metric.MeterProvider, error) {
-// 	metricExporter, err := stdoutmetric.New()
-// 	if err != nil {
-// 		return nil, err
-// 	}
-
-// 	meterProvider := metric.NewMeterProvider(
-// 		metric.WithReader(metric.NewPeriodicReader(metricExporter, metric.WithInterval(3*time.Second))),
-// 	)
-// 	return meterProvider, nil
-// }

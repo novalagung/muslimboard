@@ -10,6 +10,7 @@ import (
 
 	sentryhttp "github.com/getsentry/sentry-go/http"
 	"github.com/joho/godotenv"
+	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 	"muslimboard-api.novalagung.com/models"
 	"muslimboard-api.novalagung.com/pkg/logger"
 	"muslimboard-api.novalagung.com/pkg/otel"
@@ -21,9 +22,9 @@ func main() {
 	namespace := models.Namespace("main")
 	logger.Init(slog.LevelDebug)
 
-	// handle SIGINT (CTRL+C) gracefully
-	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
-	defer stop()
+	// SIGINT (CTRL+C) signal
+	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt)
+	defer cancel()
 
 	// load config
 	err := godotenv.Load()
@@ -38,7 +39,6 @@ func main() {
 		slog.Error(namespace, "sentry error", err)
 		return
 	}
-	defer sentry.Flush(2 * time.Second)
 
 	// init otel
 	shutdown, err := otel.Init(ctx)
@@ -46,16 +46,16 @@ func main() {
 		slog.Error(namespace, "otel error", err)
 		return
 	}
-	defer func() { shutdown(ctx) }()
 
-	// sentry middleware
-	sentryHandler := sentryhttp.New(sentryhttp.Options{})
-	http.HandleFunc("/muslimboard-api", sentryHandler.HandleFunc(router.MuslimboardApi))
+	// router & middleware
+	var handler http.Handler = http.DefaultServeMux
+	http.HandleFunc("/muslimboard-api", router.MuslimboardApi)
+	handler = sentryhttp.New(sentryhttp.Options{}).Handle(handler)
+	handler = otelhttp.NewHandler(handler, "/")
 
 	// start webserver
-	port := ":" + os.Getenv("WEBSERVER_PORT")
+	port := os.Getenv("WEBSERVER_HOST")
 	slog.Debug(namespace, "listening to", port)
-	handler := sentryhttp.New(sentryhttp.Options{}).Handle(http.DefaultServeMux)
 	srvErr := make(chan error, 1)
 	go func() {
 		srvErr <- http.ListenAndServe(port, handler)
@@ -67,6 +67,8 @@ func main() {
 		slog.Error(namespace, "http server error", err)
 		return
 	case <-ctx.Done():
-		stop()
+		sentry.Flush(2 * time.Second)
+		shutdown(ctx)
+		cancel()
 	}
 }

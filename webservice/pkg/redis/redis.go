@@ -1,10 +1,14 @@
 package redis
 
-import "github.com/redis/go-redis/v9"
+import (
+	"os"
+
+	"github.com/redis/go-redis/v9"
+)
 
 func NewRedis() *redis.Client {
 	return redis.NewClient(&redis.Options{
-		Addr:     "muslimboard-redis:6379",
+		Addr:     os.Getenv("REDIS_HOST"),
 		Password: "",
 		DB:       0,
 	})
