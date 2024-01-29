@@ -4,22 +4,27 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log/slog"
 	"os"
 	"strings"
 
+	"github.com/getsentry/sentry-go"
 	"github.com/go-resty/resty/v2"
-	log "github.com/sirupsen/logrus"
 )
 
 // GetCoordinateByLocation do get coordinate by location details
 func GetCoordinateByLocation(ctx context.Context, location string) (map[string]interface{}, error) {
-	logNamespace := "repositories.aladhan.GetCoordinateByLocation"
+	namespace := "repositories.aladhan.GetCoordinateByLocation"
+
+	span := sentry.StartSpan(ctx, namespace)
+	span.Description = namespace
+	span.Finish()
 
 	// dispatch query to open street map geocoding api
 	resp, err := resty.New().
 		SetDebug(os.Getenv("DEBUG") == "true").
 		R().
-		SetContext(ctx).
+		SetContext(span.Context()).
 		SetQueryParams(map[string]string{
 			"format": "json",
 			"q":      location,
@@ -27,12 +32,12 @@ func GetCoordinateByLocation(ctx context.Context, location string) (map[string]i
 		}).
 		Get("https://nominatim.openstreetmap.org/")
 	if err != nil {
-		log.Errorln(logNamespace, "resty.Get", err.Error())
+		slog.Error(namespace, "resty.Get", err.Error())
 		return nil, err
 	}
 	if resp.IsError() {
 		err = fmt.Errorf("%v", resp.Error())
-		log.Errorln(logNamespace, "resp.IsError", err.Error())
+		slog.Error(namespace, "resp.IsError", err.Error())
 		return nil, err
 	}
 
@@ -53,18 +58,18 @@ func GetCoordinateByLocation(ctx context.Context, location string) (map[string]i
 	}{}
 	err = json.Unmarshal(resp.Body(), &coordinates)
 	if err != nil {
-		log.Errorln(logNamespace, "json.Unmarshal", err.Error())
+		slog.Error(namespace, "json.Unmarshal", err.Error())
 		return nil, err
 	}
 
 	if coordinates == nil {
 		err = fmt.Errorf("coordinates not found")
-		log.Errorln(logNamespace, "coordinates", err.Error())
+		slog.Error(namespace, "coordinates", err.Error())
 		return nil, err
 	}
 	if len(coordinates) == 0 {
 		err = fmt.Errorf("coordinates not found")
-		log.Errorln(logNamespace, "len(coordinates) == 0", err.Error())
+		slog.Error(namespace, "len(coordinates) == 0", err.Error())
 		return nil, err
 	}
 
@@ -79,13 +84,17 @@ func GetCoordinateByLocation(ctx context.Context, location string) (map[string]i
 
 // GetLocationByCoordinate do get location details by coordinate
 func GetLocationByCoordinate(ctx context.Context, latitude, longitude string) (map[string]interface{}, error) {
-	logNamespace := "repositories.aladhan.GetLocationByCoordinate"
+	namespace := "repositories.aladhan.GetLocationByCoordinate"
+
+	span := sentry.StartSpan(ctx, namespace)
+	span.Description = namespace
+	span.Finish()
 
 	// dispatch query to open street map geocoding api
 	resp, err := resty.New().
 		SetDebug(os.Getenv("DEBUG") == "true").
 		R().
-		SetContext(ctx).
+		SetContext(span.Context()).
 		SetQueryParams(map[string]string{
 			"format": "json",
 			"lat":    latitude,
@@ -93,12 +102,12 @@ func GetLocationByCoordinate(ctx context.Context, latitude, longitude string) (m
 		}).
 		Get("https://nominatim.openstreetmap.org/reverse")
 	if err != nil {
-		log.Errorln(logNamespace, "resty.Get", err.Error())
+		slog.Error(namespace, "resty.Get", err.Error())
 		return nil, err
 	}
 	if resp.IsError() {
 		err = fmt.Errorf("%v", resp.Error())
-		log.Errorln(logNamespace, "resp.IsError", err.Error())
+		slog.Error(namespace, "resp.IsError", err.Error())
 		return nil, err
 	}
 
@@ -128,7 +137,7 @@ func GetLocationByCoordinate(ctx context.Context, latitude, longitude string) (m
 	}{}
 	err = json.Unmarshal(resp.Body(), &location)
 	if err != nil {
-		log.Errorln(logNamespace, "json.Unmarshal", err.Error())
+		slog.Error(namespace, "json.Unmarshal", err.Error())
 		return nil, err
 	}
 
@@ -168,13 +177,17 @@ func GetLocationByCoordinate(ctx context.Context, latitude, longitude string) (m
 
 // GetShalatScheduleByCoordinate do get shalat schedule by coordinate
 func GetShalatScheduleByCoordinate(ctx context.Context, method string, latitude, longitude float64, month, year string) ([]map[string]interface{}, error) {
-	logNamespace := "repositories.aladhan.GetShalatScheduleByCoordinate"
+	namespace := "repositories.aladhan.GetShalatScheduleByCoordinate"
+
+	span := sentry.StartSpan(ctx, namespace)
+	span.Description = namespace
+	span.Finish()
 
 	// dispatch query to open street map geocoding api
 	resp, err := resty.New().
 		SetDebug(os.Getenv("DEBUG") == "true").
 		R().
-		SetContext(ctx).
+		SetContext(span.Context()).
 		SetQueryParams(map[string]string{
 			"method":    method,
 			"latitude":  fmt.Sprintf("%v", latitude),
@@ -184,12 +197,12 @@ func GetShalatScheduleByCoordinate(ctx context.Context, method string, latitude,
 		}).
 		Get("http://api.aladhan.com/v1/calendar")
 	if err != nil {
-		log.Errorln(logNamespace, "resty.Get", err.Error())
+		slog.Error(namespace, "resty.Get", err.Error())
 		return nil, err
 	}
 	if resp.IsError() {
 		err = fmt.Errorf("%v", resp.Error())
-		log.Errorln(logNamespace, "resp.IsError", err.Error())
+		slog.Error(namespace, "resp.IsError", err.Error())
 		return nil, err
 	}
 
@@ -201,12 +214,12 @@ func GetShalatScheduleByCoordinate(ctx context.Context, method string, latitude,
 	}{}
 	err = json.Unmarshal(resp.Body(), &schedules)
 	if err != nil {
-		log.Errorln(logNamespace, "json.Unmarshal", err.Error())
+		slog.Error(namespace, "json.Unmarshal", err.Error())
 		return nil, err
 	}
 	if schedules.Code != 200 {
 		err = fmt.Errorf("%v", schedules.Status)
-		log.Errorln(logNamespace, "schedules.Code != 200", err.Error())
+		slog.Error(namespace, "schedules.Code != 200", err.Error())
 		return nil, err
 	}
 

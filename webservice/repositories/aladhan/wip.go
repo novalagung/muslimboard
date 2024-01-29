@@ -3,9 +3,9 @@ package aladhan
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"sync"
 
 	"github.com/go-resty/resty/v2"
@@ -28,7 +28,7 @@ func GetShalatScheduleByLocation(w http.ResponseWriter, r *http.Request) {
 	once.Do(func() {
 		p := "./data-location-id.json"
 		p = "./../extension/data/data-location-id.json"
-		buf, err := ioutil.ReadFile(p)
+		buf, err := os.ReadFile(p)
 		if err != nil {
 			log.Fatal(err)
 			return

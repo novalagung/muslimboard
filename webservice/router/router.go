@@ -2,16 +2,18 @@ package router
 
 import (
 	"fmt"
+	"log/slog"
 	"net/http"
 
-	log "github.com/sirupsen/logrus"
+	"github.com/getsentry/sentry-go"
 	"muslimboard-api.novalagung.com/handler"
 	pkg_http "muslimboard-api.novalagung.com/pkg/http"
 )
 
 // MuslimboardApi do get coordinate by location details
 func MuslimboardApi(w http.ResponseWriter, r *http.Request) {
-	logNamespace := "router.MuslimboardApi"
+	namespace := "router.MuslimboardApi"
+	ctx := r.Context()
 
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "OPTIONS, GET")
@@ -24,22 +26,28 @@ func MuslimboardApi(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if r.Method == http.MethodGet {
-		switch op := r.URL.Query().Get("op"); op {
+		op := r.URL.Query().Get("op")
+
+		span := sentry.StartSpan(ctx, op)
+		span.Description = op
+		span.Finish()
+
+		switch op {
 
 		case "ping":
 			pkg_http.WriteRespose(w, r, http.StatusOK, true, nil)
 
 		case "image":
-			log.Infoln(logNamespace, "incoming request", "op="+op, r.URL.String())
-			handler.HandleImage(w, r)
+			slog.Info(namespace, "incoming request", "op="+op, r.URL.String())
+			handler.HandleImage(span.Context(), w, r)
 
 		case "shalat-schedule-by-coordinate":
-			log.Infoln(logNamespace, "incoming request", "op="+op, r.URL.String())
-			handler.HandleShalatScheduleByCoordinate(w, r)
+			slog.Info(namespace, "incoming request", "op="+op, r.URL.String())
+			handler.HandleShalatScheduleByCoordinate(span.Context(), w, r)
 
 		case "shalat-schedule-by-location":
-			log.Infoln(logNamespace, "incoming request", "op="+op, r.URL.String())
-			handler.HandleShalatScheduleByLocation(w, r)
+			slog.Info(namespace, "incoming request", "op="+op, r.URL.String())
+			handler.HandleShalatScheduleByLocation(span.Context(), w, r)
 
 		default:
 			err := fmt.Errorf("bad request. unrecognized operation")

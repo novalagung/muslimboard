@@ -24,10 +24,10 @@ services:
     build:
       context: ./
       dockerfile: ./Dockerfile
-    environment:
-      - PORT=8012
     ports:
       - "8012:8012"
+    volumes:
+      - ./.env:/.env:ro
     networks:
       - muslimboard-network
     deploy:

@@ -1,23 +1,44 @@
 package main
 
 import (
+	"log/slog"
 	"net/http"
 	"os"
+	"time"
 
-	log "github.com/sirupsen/logrus"
+	sentryhttp "github.com/getsentry/sentry-go/http"
+	"github.com/joho/godotenv"
+	"muslimboard-api.novalagung.com/pkg/sentry"
 	router "muslimboard-api.novalagung.com/router"
 )
 
 func main() {
-	log.SetLevel(log.DebugLevel)
+	namespace := "main"
 
-	http.HandleFunc("/muslimboard-api", router.MuslimboardApi)
-
-	port := ":" + os.Getenv("PORT")
-	log.Infoln("listening to", port)
-
-	err := http.ListenAndServe(port, nil)
+	err := godotenv.Load()
 	if err != nil {
-		log.Fatal(err)
+		slog.Error(namespace, "env error", err)
+		return
 	}
+
+	err = sentry.Init()
+	if err != nil {
+		slog.Error(namespace, "sentry error", err)
+		return
+	}
+
+	sentryHandler := sentryhttp.New(sentryhttp.Options{})
+	http.HandleFunc("/muslimboard-api", sentryHandler.HandleFunc(router.MuslimboardApi))
+
+	port := ":" + os.Getenv("WEBSERVER_PORT")
+	slog.Info(namespace, "listening to", port)
+
+	handler := sentryhttp.New(sentryhttp.Options{}).Handle(http.DefaultServeMux)
+	err = http.ListenAndServe(port, handler)
+	if err != nil {
+		slog.Error(namespace, "http server error", err)
+		return
+	}
+
+	defer sentry.Flush(2 * time.Second)
 }
