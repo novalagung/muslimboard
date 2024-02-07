@@ -1,5 +1,5 @@
 {
-	"version": "2024.01.22",
+	"version": "2024.02.07",
 	"content": [{
 		"id": "1",
 		"matan": "فَاذْكُرُونِي أَذْكُرْكُمْ",
@@ -10,26 +10,22 @@
 		"id": "2",
 		"translation": "Waktu yang digunakan untuk menunggu atau antri, akan sia-sia jika tidak diisi dengan hal-hal yang bermanfaat",
 		"author": "@Dr_almosleh",
-		"type": "word of wisdom",
-		"reference": "http://www.twitulama.com/waktu-akan-jadi-sia-sia/"
+		"type": "word of wisdom"
 	}, {
 		"id": "3",
 		"translation": "Mata adalah panca indra yang paling cepat pengaruhnya terhadap hati seseorang",
 		"author": "@Dr_almosleh",
-		"type": "word of wisdom",
-		"reference": "http://www.twitulama.com/mata-pengaruh-tercepat-ke-hati/"
+		"type": "word of wisdom"
 	}, {
 		"id": "4",
 		"translation": "Bacalah sejarah karena di dalamnya ada banyak pelajaran, mereka yang tak paham sejarah akan alami kesesatan. Permisalan suatu kaum yang lupa sejarahnya adalah seperti anak pungut yang bernasab pada siapa saja manusia",
 		"author": "@dr_alyahya",
-		"type": "word of wisdom",
-		"reference": "http://www.twitulama.com/pentingnya-sejarah/"
+		"type": "word of wisdom"
 	}, {
 		"id": "5",
 		"translation": "Bersedekah dan memenuhi kebutuhan orang-orang miskin adalah sebab datangnya pertolongan dan rezeki. Rasulullah shallallahu ‘alaihi wa sallam bersabda, \"Sesungguhnya kalian akan dimenangkan dan diberikan rizki karena sebab orang-orang lemah di antara kalian\"",
 		"author": "@MohamadAlarefe",
-		"type": "word of wisdom",
-		"reference": "http://www.twitulama.com/sebab-datangnya-pertolongan-allah/"
+		"type": "word of wisdom"
 	}, {
 		"id": "6",
 		"matan": "لَا تَحْزَنْ إِنَّ اللَّهَ مَعَنَا",
@@ -46,14 +42,12 @@
 		"id": "8",
 		"translation": "Siapa yang tak rasakan pahit di awal, ia takkan rasa manisnya sebuah akhir",
 		"author": "@Dr_Alsadhan",
-		"type": "word of wisdom",
-		"reference": "http://www.twitulama.com/awal-yang-pahit-untuk-manisnya-sebuah-akhir/"
+		"type": "word of wisdom"
 	}, {
 		"id": "9",
 		"translation": "Jika seseorang berbuat kemunkaran, jangan Anda cela. Pujilah Allah karena anda selamat dari perbuatan itu, dan doakan dia agar mendapatkan hidayah",
 		"author": "@Dr_Alsadhan",
-		"type": "word of wisdom",
-		"reference": "https://twitter.com/twitulama/status/714215083853746176"
+		"type": "word of wisdom"
 	}, {
 		"id": "10",
 		"translation": "Menjaga janji adalah hal terpenting dalam tanggung jawab kepemimpinan",
