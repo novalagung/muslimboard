@@ -146,7 +146,7 @@ func HandleShalatScheduleByLocation(w http.ResponseWriter, r *http.Request) {
 	// get data
 	res, err := usecase.GetShalatScheduleByLocation(ctx, method, province, city, month, year)
 	if err != nil {
-		log.Errorln(logNamespace, "getShalatScheduleByCoordinate", err.Error())
+		log.Errorln(logNamespace, "getShalatScheduleByLocation", err.Error())
 		pkg_http.WriteRespose(w, r, http.StatusInternalServerError, nil, err)
 		return
 	}
