@@ -1,4 +1,4 @@
-package aladhan
+package location
 
 import (
 	"encoding/json"

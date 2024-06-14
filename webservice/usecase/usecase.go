@@ -9,6 +9,7 @@ import (
 
 	log "github.com/sirupsen/logrus"
 	"muslimboard-api.novalagung.com/repositories/aladhan"
+	"muslimboard-api.novalagung.com/repositories/openstreetmap"
 	"muslimboard-api.novalagung.com/repositories/unsplash"
 )
 
@@ -36,7 +37,7 @@ func GetShalatScheduleByCoordinate(ctx context.Context, method, latitude, longit
 		"countryCode": "id",
 	}
 
-	locationRes, err := aladhan.GetLocationByCoordinate(ctx, latitude, longitude)
+	locationRes, err := openstreetmap.GetLocationByCoordinate(ctx, latitude, longitude)
 	if err != nil {
 		log.Errorln(logNamespace, "getLocationByCoordinate", err.Error())
 		return nil, err
@@ -61,7 +62,7 @@ func GetShalatScheduleByLocation(ctx context.Context, method, province, city, mo
 	location = strings.TrimSpace(location)
 
 	// get coordinate by location
-	coordinate, err := aladhan.GetCoordinateByLocation(ctx, location)
+	coordinate, err := openstreetmap.GetCoordinateByLocation(ctx, location)
 	if err != nil {
 		log.Errorln(logNamespace, "getCoordinateByLocation", err.Error())
 		return nil, err
