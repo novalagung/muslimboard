@@ -4,12 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"os"
-	"strings"
-
 	"github.com/go-resty/resty/v2"
 	log "github.com/sirupsen/logrus"
+	"muslimboard-api.novalagung.com/dtos"
 	"muslimboard-api.novalagung.com/models"
+	"os"
+	"strings"
 )
 
 // GetCoordinateByLocation do get coordinate by location details
@@ -39,20 +39,7 @@ func GetCoordinateByLocation(ctx context.Context, location string) (map[string]i
 	}
 
 	// parse geocoding response
-	coordinates := []struct {
-		PlaceID     int      `json:"place_id"`
-		Licence     string   `json:"licence"`
-		OsmType     string   `json:"osm_type"`
-		OsmID       int      `json:"osm_id"`
-		Boundingbox []string `json:"boundingbox"`
-		Lat         string   `json:"lat"`
-		Lon         string   `json:"lon"`
-		DisplayName string   `json:"display_name"`
-		Class       string   `json:"class"`
-		Type        string   `json:"type"`
-		Importance  float64  `json:"importance"`
-		Icon        string   `json:"icon"`
-	}{}
+	var coordinates []dtos.GeocodingResponseDto
 	err = json.Unmarshal(resp.Body(), &coordinates)
 	if err != nil {
 		log.Errorln(logNamespace, "json.Unmarshal", err.Error())
@@ -64,6 +51,7 @@ func GetCoordinateByLocation(ctx context.Context, location string) (map[string]i
 		log.Errorln(logNamespace, "coordinates", err.Error())
 		return nil, err
 	}
+
 	if len(coordinates) == 0 {
 		err = fmt.Errorf("coordinates not found")
 		log.Errorln(logNamespace, "len(coordinates) == 0", err.Error())
@@ -90,11 +78,12 @@ func GetLocationByCoordinate(ctx context.Context, latitude, longitude string) (m
 		SetContext(ctx).
 		SetHeader("User-Agent", models.UserAgent).
 		SetQueryParams(map[string]string{
-			"format": "json",
-			"lat":    latitude,
-			"lon":    longitude,
+			"format":         "json",
+			"q":              fmt.Sprintf(`%s,%s`, latitude, longitude),
+			"addressdetails": "true",
+			"namedetails":    "true",
 		}).
-		Get("https://nominatim.openstreetmap.org/reverse")
+		Get("https://nominatim.openstreetmap.org/search")
 	if err != nil {
 		log.Errorln(logNamespace, "resty.Get", err.Error())
 		return nil, err
@@ -106,65 +95,54 @@ func GetLocationByCoordinate(ctx context.Context, latitude, longitude string) (m
 	}
 
 	// parse geocoding response
-	location := struct {
-		PlaceID     int    `json:"place_id"`
-		Licence     string `json:"licence"`
-		OsmType     string `json:"osm_type"`
-		OsmID       int    `json:"osm_id"`
-		Lat         string `json:"lat"`
-		Lon         string `json:"lon"`
-		DisplayName string `json:"display_name"`
-		Address     struct {
-			Amenity       string `json:"amenity"`
-			Road          string `json:"road"`
-			Neighbourhood string `json:"neighbourhood"`
-			Suburb        string `json:"suburb"`
-			Village       string `json:"village"`
-			County        string `json:"county"`
-			City          string `json:"city"`
-			State         string `json:"state"`
-			Postcode      string `json:"postcode"`
-			Country       string `json:"country"`
-			CountryCode   string `json:"country_code"`
-		} `json:"address"`
-		Boundingbox []string `json:"boundingbox"`
-	}{}
+	var location []dtos.GeocodingResponseDto
 	err = json.Unmarshal(resp.Body(), &location)
 	if err != nil {
 		log.Errorln(logNamespace, "json.Unmarshal", err.Error())
 		return nil, err
 	}
 
+	if location == nil {
+		err = fmt.Errorf("location not found")
+		log.Errorln(logNamespace, "location", err.Error())
+		return nil, err
+	}
+
+	if len(location) == 0 {
+		err = fmt.Errorf("location not found")
+		log.Errorln(logNamespace, "len(location) == 0", err.Error())
+		return nil, err
+	}
+
 	// construct readable address as output
 	addressParts := make([]string, 0)
-	if p := location.Address.Road; p != "" {
+	if p := location[0].Address.Road; p != "" {
 		addressParts = append(addressParts, p)
 	}
-	if p := location.Address.Postcode; p != "" {
+	if p := location[0].Address.Postcode; p != "" {
 		addressParts = append(addressParts, p)
 	}
-	if p := location.Address.City; p != "" {
+	if p := location[0].Address.City; p != "" {
 		addressParts = append(addressParts, p)
 	}
-	if p := location.Address.State; p != "" {
+	if p := location[0].Address.State; p != "" {
 		addressParts = append(addressParts, p)
 	}
-	if p := location.Address.Country; p != "" {
+	if p := location[0].Address.Country; p != "" {
 		addressParts = append(addressParts, p)
 	}
 	address := strings.Join(addressParts, ", ")
 
 	// use display name if address is too short
 	if len(addressParts) < 3 {
-		address = location.DisplayName
+		address = location[0].DisplayName
 	}
 
 	// write response
-	data := map[string]interface{}{
-		"lat":         location.Lat,
-		"lon":         location.Lon,
+	return map[string]interface{}{
+		"lat":         location[0].Lat,
+		"lon":         location[0].Lon,
 		"address":     address,
-		"countryCode": location.Address.CountryCode,
-	}
-	return data, nil
+		"countryCode": location[0].Address.CountryCode,
+	}, nil
 }
