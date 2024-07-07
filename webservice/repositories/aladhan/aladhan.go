@@ -13,7 +13,7 @@ import (
 
 // GetShalatScheduleByCoordinate do get shalat schedule by coordinate
 func GetShalatScheduleByCoordinate(ctx context.Context, method string, latitude, longitude float64, month, year string) ([]map[string]interface{}, error) {
-	logNamespace := "repositories.aladhan.GetShalatScheduleByCoordinate"
+	namespace := "repositories.aladhan.GetShalatScheduleByCoordinate"
 
 	// dispatch query to open street map geocoding api
 	resp, err := resty.New().
@@ -30,12 +30,12 @@ func GetShalatScheduleByCoordinate(ctx context.Context, method string, latitude,
 		}).
 		Get("http://api.aladhan.com/v1/calendar")
 	if err != nil {
-		log.Errorln(logNamespace, "resty.Get", err.Error())
+		log.Errorln(namespace, "resty.Get", err.Error())
 		return nil, err
 	}
 	if resp.IsError() {
 		err = fmt.Errorf("%v", resp.Error())
-		log.Errorln(logNamespace, "resp.IsError", err.Error())
+		log.Errorln(namespace, "resp.IsError", err.Error())
 		return nil, err
 	}
 
@@ -47,12 +47,12 @@ func GetShalatScheduleByCoordinate(ctx context.Context, method string, latitude,
 	}{}
 	err = json.Unmarshal(resp.Body(), &schedules)
 	if err != nil {
-		log.Errorln(logNamespace, "json.Unmarshal", err.Error())
+		log.Errorln(namespace, "json.Unmarshal", err.Error())
 		return nil, err
 	}
 	if schedules.Code != 200 {
 		err = fmt.Errorf("%v", schedules.Status)
-		log.Errorln(logNamespace, "schedules.Code != 200", err.Error())
+		log.Errorln(namespace, "schedules.Code != 200", err.Error())
 		return nil, err
 	}
 

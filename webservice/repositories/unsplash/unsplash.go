@@ -12,7 +12,7 @@ import (
 
 // GetImage gets image from unsplash
 func GetImage(ctx context.Context, url string) (string, io.ReadCloser, error) {
-	logNamespace := "repositories.unsplash.GetImage"
+	namespace := "repositories.unsplash.GetImage"
 
 	resp, err := resty.New().
 		SetDebug(os.Getenv("DEBUG") == "true").
@@ -20,12 +20,12 @@ func GetImage(ctx context.Context, url string) (string, io.ReadCloser, error) {
 		SetContext(ctx).
 		Get(url)
 	if err != nil {
-		log.Errorln(logNamespace, "resty.Get", err.Error())
+		log.Errorln(namespace, "resty.Get", err.Error())
 		return "", nil, err
 	}
 	if resp.IsError() {
 		err = fmt.Errorf("%v", resp.Error())
-		log.Errorln(logNamespace, "resp.IsError", err.Error())
+		log.Errorln(namespace, "resp.IsError", err.Error())
 		return "", nil, err
 	}
 

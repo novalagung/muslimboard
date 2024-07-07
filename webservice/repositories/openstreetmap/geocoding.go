@@ -1,4 +1,4 @@
-package dtos
+package openstreetmap
 
 type GeocodingAddress struct {
 	Amenity       string `json:"amenity"`
@@ -22,7 +22,7 @@ type GeocodingNameDetail struct {
 	Name string `json:"name"`
 }
 
-type GeocodingResponseDto struct {
+type Geocoding struct {
 	PlaceID     int                 `json:"place_id"`
 	Licence     string              `json:"licence"`
 	OsmType     string              `json:"osm_type"`
