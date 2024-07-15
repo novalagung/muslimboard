@@ -62,7 +62,8 @@ func HandleShalatScheduleByCoordinate(w http.ResponseWriter, r *http.Request) {
 	cacheKey := r.URL.String()
 	cachedRes, err := pkg_redis.NewRedis().Get(ctx, cacheKey).Result()
 	if err == nil {
-		cachedResMap, err := pkg_common.ConvertToMap(cachedRes)
+		cachedResMap := make(map[string]any)
+		err = pkg_common.ConvertTo(cachedRes, &cachedResMap)
 		if len(cachedResMap) > 0 && err == nil {
 			// prolong the cache expiration date
 			pkg_redis.NewRedis().Set(ctx, cacheKey, cachedRes, models.RedisKeepAliveDuration).Err()
@@ -98,9 +99,9 @@ func HandleShalatScheduleByCoordinate(w http.ResponseWriter, r *http.Request) {
 
 	// cache data
 	if schedulesRaw := res["schedules"]; schedulesRaw != nil {
-		if schedules := schedulesRaw.([]map[string]interface{}); len(schedules) > 0 {
+		if schedules := schedulesRaw.([]map[string]any); len(schedules) > 0 {
 			log.Debugln(namespace, "set cache", cacheKey)
-			pkg_redis.NewRedis().Set(ctx, cacheKey, pkg_common.ConvertToJson(res), models.RedisKeepAliveDuration).Err()
+			pkg_redis.NewRedis().Set(ctx, cacheKey, pkg_common.ConvertToJsonString(res), models.RedisKeepAliveDuration).Err()
 		}
 	}
 
@@ -119,7 +120,8 @@ func HandleShalatScheduleByLocation(w http.ResponseWriter, r *http.Request) {
 	cacheKey := r.URL.String()
 	cachedRes, err := pkg_redis.NewRedis().Get(ctx, cacheKey).Result()
 	if err == nil {
-		cachedResMap, err := pkg_common.ConvertToMap(cachedRes)
+		cachedResMap := make(map[string]any)
+		err = pkg_common.ConvertTo(cachedRes, &cachedResMap)
 		if len(cachedResMap) > 0 && err == nil {
 			// prolong the cache expiration date
 			pkg_redis.NewRedis().Set(ctx, cacheKey, cachedRes, models.RedisKeepAliveDuration).Err()
@@ -147,9 +149,9 @@ func HandleShalatScheduleByLocation(w http.ResponseWriter, r *http.Request) {
 
 	// cache data
 	if schedulesRaw := res["schedules"]; schedulesRaw != nil {
-		if schedules := schedulesRaw.([]map[string]interface{}); len(schedules) > 0 {
+		if schedules := schedulesRaw.([]map[string]any); len(schedules) > 0 {
 			log.Debugln(namespace, "set cache", cacheKey)
-			pkg_redis.NewRedis().Set(ctx, cacheKey, pkg_common.ConvertToJson(res), models.RedisKeepAliveDuration).Err()
+			pkg_redis.NewRedis().Set(ctx, cacheKey, pkg_common.ConvertToJsonString(res), models.RedisKeepAliveDuration).Err()
 		}
 	}
 

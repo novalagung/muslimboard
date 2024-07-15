@@ -12,7 +12,7 @@ import (
 )
 
 // GetShalatScheduleByCoordinate do get shalat schedule by coordinate
-func GetShalatScheduleByCoordinate(ctx context.Context, method string, latitude, longitude float64, month, year string) ([]map[string]interface{}, error) {
+func GetShalatScheduleByCoordinate(ctx context.Context, method string, latitude, longitude float64, month, year string) ([]PrayerTimeSchedule, error) {
 	namespace := "repositories.aladhan.GetShalatScheduleByCoordinate"
 
 	// dispatch query to open street map geocoding api
@@ -40,11 +40,7 @@ func GetShalatScheduleByCoordinate(ctx context.Context, method string, latitude,
 	}
 
 	// parse response
-	schedules := struct {
-		Code   int
-		Data   []map[string]interface{}
-		Status string
-	}{}
+	schedules := PrayerTime{}
 	err = json.Unmarshal(resp.Body(), &schedules)
 	if err != nil {
 		log.Errorln(namespace, "json.Unmarshal", err.Error())

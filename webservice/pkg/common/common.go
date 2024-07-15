@@ -2,13 +2,22 @@ package common
 
 import "encoding/json"
 
-func ConvertToJson(src interface{}) string {
+func ConvertToJsonString(src any) string {
 	buf, _ := json.Marshal(src)
 	return string(buf)
 }
 
-func ConvertToMap(src string) (map[string]interface{}, error) {
-	res := make(map[string]interface{})
-	err := json.Unmarshal([]byte(src), &res)
-	return res, err
+func ConvertTo(src any, dst any) error {
+	switch v := src.(type) {
+	case string:
+		err := json.Unmarshal([]byte(v), &dst)
+		return err
+	default:
+		buf, err := json.Marshal(src)
+		if err != nil {
+			return err
+		}
+		err = json.Unmarshal(buf, &dst)
+		return err
+	}
 }

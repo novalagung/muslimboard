@@ -13,7 +13,7 @@ import (
 )
 
 // GetCoordinateByLocation do get coordinate by location details
-func GetCoordinateByLocation(ctx context.Context, location string) (map[string]interface{}, error) {
+func GetCoordinateByLocation(ctx context.Context, location string) (map[string]any, error) {
 	namespace := "repositories.openstreetmap.GetCoordinateByLocation"
 
 	// dispatch query to open street map geocoding api
@@ -59,7 +59,7 @@ func GetCoordinateByLocation(ctx context.Context, location string) (map[string]i
 	}
 
 	// write response
-	data := map[string]interface{}{
+	data := map[string]any{
 		"lat":     coordinates[0].Lat,
 		"lon":     coordinates[0].Lon,
 		"address": location,
@@ -68,7 +68,7 @@ func GetCoordinateByLocation(ctx context.Context, location string) (map[string]i
 }
 
 // GetLocationByCoordinate do get location details by coordinate
-func GetLocationByCoordinate(ctx context.Context, latitude, longitude string) (map[string]interface{}, error) {
+func GetLocationByCoordinate(ctx context.Context, latitude, longitude string) (map[string]any, error) {
 	namespace := "repositories.openstreetmap.GetLocationByCoordinate"
 
 	// dispatch query to open street map geocoding api
@@ -139,7 +139,7 @@ func GetLocationByCoordinate(ctx context.Context, latitude, longitude string) (m
 	}
 
 	// write response
-	return map[string]interface{}{
+	return map[string]any{
 		"lat":         location[0].Lat,
 		"lon":         location[0].Lon,
 		"address":     address,
