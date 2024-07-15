@@ -6,7 +6,7 @@ import (
 )
 
 // writeResponse definition
-func WriteRespose(w http.ResponseWriter, r *http.Request, statusCode int, resp interface{}, err error) {
+func WriteRespose(w http.ResponseWriter, r *http.Request, statusCode int, resp any, err error) {
 
 	if statusCode == http.StatusOK {
 		RenderCacheHeader(w, r)
@@ -17,7 +17,7 @@ func WriteRespose(w http.ResponseWriter, r *http.Request, statusCode int, resp i
 		errMessage = err.Error()
 	}
 	w.Header().Set("Content-type", "application/json")
-	json.NewEncoder(w).Encode(map[string]interface{}{
+	json.NewEncoder(w).Encode(map[string]any{
 		"status_code":   statusCode,
 		"data":          resp,
 		"error_message": errMessage,

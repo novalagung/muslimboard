@@ -108,10 +108,9 @@
             }
 
             const data = await Utility.getLatestData(key, async (resolve) => {
-                const method = 1
                 const month = parseInt(Utility.now().format('MM'), 10)
                 const year = Utility.now().year()
-                const url = `${Constant.app.baseUrlWebService}/muslimboard-api?v=${Constant.meta.version}&op=shalat-schedule-by-coordinate&latitude=${latitude}&longitude=${longitude}&method=${method}&month=${month}&year=${year}`
+                const url = `${Constant.app.baseUrlWebService}/muslimboard-api?v=${Constant.meta.version}&op=shalat-schedule-by-coordinate&latitude=${latitude}&longitude=${longitude}&month=${month}&year=${year}`
                 const response = await Utility.fetch(url)
                 const result = await response.json()
         
@@ -156,10 +155,9 @@
             }
 
             const data = await Utility.getLatestData(key, async (resolve) => {
-                const method = 1
                 const month = parseInt(Utility.now().format('MM'), 10)
                 const year = Utility.now().year()
-                const url = `${Constant.app.baseUrlWebService}/muslimboard-api?v=${Constant.meta.version}&op=shalat-schedule-by-location&locationID=${locationID}&province=${province}&city=${kabko}&method=${method}&month=${month}&year=${year}`
+                const url = `${Constant.app.baseUrlWebService}/muslimboard-api?v=${Constant.meta.version}&op=shalat-schedule-by-location&locationID=${locationID}&province=${province}&city=${kabko}&month=${month}&year=${year}`
                 const response = await Utility.fetch(url)
                 const result = await response.json()
         

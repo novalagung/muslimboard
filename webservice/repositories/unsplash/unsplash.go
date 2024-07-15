@@ -7,7 +7,7 @@ import (
 	"os"
 
 	"github.com/go-resty/resty/v2"
-	log "github.com/sirupsen/logrus"
+	"muslimboard-api.novalagung.com/pkg/logger"
 )
 
 // GetImage gets image from unsplash
@@ -20,12 +20,12 @@ func GetImage(ctx context.Context, url string) (string, io.ReadCloser, error) {
 		SetContext(ctx).
 		Get(url)
 	if err != nil {
-		log.Errorln(namespace, "resty.Get", err.Error())
+		logger.Log.Errorln(namespace, "resty.Get", err)
 		return "", nil, err
 	}
 	if resp.IsError() {
 		err = fmt.Errorf("%v", resp.Error())
-		log.Errorln(namespace, "resp.IsError", err.Error())
+		logger.Log.Errorln(namespace, "resp.IsError", err)
 		return "", nil, err
 	}
 

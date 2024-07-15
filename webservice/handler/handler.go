@@ -8,10 +8,10 @@ import (
 	"net/url"
 	"strconv"
 
-	log "github.com/sirupsen/logrus"
 	"muslimboard-api.novalagung.com/models"
 	pkg_common "muslimboard-api.novalagung.com/pkg/common"
 	pkg_http "muslimboard-api.novalagung.com/pkg/http"
+	"muslimboard-api.novalagung.com/pkg/logger"
 	pkg_redis "muslimboard-api.novalagung.com/pkg/redis"
 	"muslimboard-api.novalagung.com/usecase"
 )
@@ -25,7 +25,7 @@ func HandleImage(w http.ResponseWriter, r *http.Request) {
 	imageUrl, _ := url.QueryUnescape(r.URL.Query().Get("image"))
 	if imageUrl == "" {
 		err := fmt.Errorf("missing image url")
-		log.Errorln(namespace, "queryUnescape", err.Error())
+		logger.Log.Errorln(namespace, "queryUnescape", err)
 		pkg_http.WriteRespose(w, r, http.StatusBadRequest, nil, err)
 		return
 	}
@@ -35,7 +35,7 @@ func HandleImage(w http.ResponseWriter, r *http.Request) {
 		defer body.Close()
 	}
 	if err != nil {
-		log.Errorln(namespace, "getImage", err.Error())
+		logger.Log.Errorln(namespace, "getImage", err)
 		pkg_http.WriteRespose(w, r, http.StatusBadRequest, nil, err)
 		return
 	}
@@ -45,7 +45,7 @@ func HandleImage(w http.ResponseWriter, r *http.Request) {
 
 	_, err = io.Copy(w, body)
 	if err != nil {
-		log.Errorln(namespace, "io.Copy", err.Error())
+		logger.Log.Errorln(namespace, "io.Copy", err)
 		pkg_http.WriteRespose(w, r, http.StatusBadRequest, nil, err)
 		return
 	}
@@ -62,22 +62,20 @@ func HandleShalatScheduleByCoordinate(w http.ResponseWriter, r *http.Request) {
 	cacheKey := r.URL.String()
 	cachedRes, err := pkg_redis.NewRedis().Get(ctx, cacheKey).Result()
 	if err == nil {
-		cachedResMap, err := pkg_common.ConvertToMap(cachedRes)
+		cachedResMap := make(map[string]any)
+		err = pkg_common.ConvertTo(cachedRes, &cachedResMap)
 		if len(cachedResMap) > 0 && err == nil {
 			// prolong the cache expiration date
 			pkg_redis.NewRedis().Set(ctx, cacheKey, cachedRes, models.RedisKeepAliveDuration).Err()
 
-			log.Debugln(namespace, "load from cache", cacheKey)
+			logger.Log.Debugln(namespace, "load from cache", cacheKey)
 			pkg_http.WriteRespose(w, r, http.StatusOK, cachedResMap, nil)
 			return
 		}
 	}
 
 	// parse params
-	method := r.URL.Query().Get("method")
-	if method == "" {
-		method = "1"
-	}
+	method := "3" // Muslim World League
 	month := r.URL.Query().Get("month")
 	year := r.URL.Query().Get("year")
 	latitude := r.URL.Query().Get("latitude")
@@ -94,16 +92,16 @@ func HandleShalatScheduleByCoordinate(w http.ResponseWriter, r *http.Request) {
 	// get data
 	res, err := usecase.GetShalatScheduleByCoordinate(ctx, method, latitude, longitude, month, year)
 	if err != nil {
-		log.Errorln(namespace, "getShalatScheduleByCoordinate", err.Error())
+		logger.Log.Errorln(namespace, "getShalatScheduleByCoordinate", err)
 		pkg_http.WriteRespose(w, r, http.StatusInternalServerError, nil, err)
 		return
 	}
 
 	// cache data
 	if schedulesRaw := res["schedules"]; schedulesRaw != nil {
-		if schedules := schedulesRaw.([]map[string]interface{}); len(schedules) > 0 {
-			log.Debugln(namespace, "set cache", cacheKey)
-			pkg_redis.NewRedis().Set(ctx, cacheKey, pkg_common.ConvertToJson(res), models.RedisKeepAliveDuration).Err()
+		if schedules := schedulesRaw.([]map[string]any); len(schedules) > 0 {
+			logger.Log.Debugln(namespace, "set cache", cacheKey)
+			pkg_redis.NewRedis().Set(ctx, cacheKey, pkg_common.ConvertToJsonString(res), models.RedisKeepAliveDuration).Err()
 		}
 	}
 
@@ -122,22 +120,20 @@ func HandleShalatScheduleByLocation(w http.ResponseWriter, r *http.Request) {
 	cacheKey := r.URL.String()
 	cachedRes, err := pkg_redis.NewRedis().Get(ctx, cacheKey).Result()
 	if err == nil {
-		cachedResMap, err := pkg_common.ConvertToMap(cachedRes)
+		cachedResMap := make(map[string]any)
+		err = pkg_common.ConvertTo(cachedRes, &cachedResMap)
 		if len(cachedResMap) > 0 && err == nil {
 			// prolong the cache expiration date
 			pkg_redis.NewRedis().Set(ctx, cacheKey, cachedRes, models.RedisKeepAliveDuration).Err()
 
-			log.Debugln(namespace, "load from cache", cacheKey)
+			logger.Log.Debugln(namespace, "load from cache", cacheKey)
 			pkg_http.WriteRespose(w, r, http.StatusOK, cachedResMap, nil)
 			return
 		}
 	}
 
 	// parse params
-	method := r.URL.Query().Get("method")
-	if method == "" {
-		method = "1"
-	}
+	method := "11" // Majlis Ugama Islam Singapura, Singapore
 	month := r.URL.Query().Get("month")
 	year := r.URL.Query().Get("year")
 	province := r.URL.Query().Get("province")
@@ -146,16 +142,16 @@ func HandleShalatScheduleByLocation(w http.ResponseWriter, r *http.Request) {
 	// get data
 	res, err := usecase.GetShalatScheduleByLocation(ctx, method, province, city, month, year)
 	if err != nil {
-		log.Errorln(namespace, "getShalatScheduleByLocation", err.Error())
+		logger.Log.Errorln(namespace, "getShalatScheduleByLocation", err)
 		pkg_http.WriteRespose(w, r, http.StatusInternalServerError, nil, err)
 		return
 	}
 
 	// cache data
 	if schedulesRaw := res["schedules"]; schedulesRaw != nil {
-		if schedules := schedulesRaw.([]map[string]interface{}); len(schedules) > 0 {
-			log.Debugln(namespace, "set cache", cacheKey)
-			pkg_redis.NewRedis().Set(ctx, cacheKey, pkg_common.ConvertToJson(res), models.RedisKeepAliveDuration).Err()
+		if schedules := schedulesRaw.([]map[string]any); len(schedules) > 0 {
+			logger.Log.Debugln(namespace, "set cache", cacheKey)
+			pkg_redis.NewRedis().Set(ctx, cacheKey, pkg_common.ConvertToJsonString(res), models.RedisKeepAliveDuration).Err()
 		}
 	}
 

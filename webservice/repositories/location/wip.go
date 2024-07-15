@@ -89,7 +89,7 @@ func GetShalatScheduleByLocation(w http.ResponseWriter, r *http.Request) {
 
 	// dispatch query to open street map geocoding api
 	resp, err := resty.New().R().
-		SetBody(map[string]interface{}{
+		SetBody(map[string]any{
 			"x":   `kFc%2BY164S6gfUMNsU50SOahN1WGW5Jc6F004lavj64EgxnmkNsk2rlLnga82p7JWsTmzDi98ZxH%2FLS1A%2BaLEvA%3D%3D`,
 			"y":   `KyAFNdsvCPtpvNr0JKIyEIrwjVJ3ndBq%2FipqrW%2BBIi%2BAcyaVja%2FOUJgDH7QqBfOQygoBE8Xy%2B1USSMcRp5VZFw%3D%3D`,
 			"bln": 12,
