@@ -134,10 +134,7 @@ func HandleShalatScheduleByLocation(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// parse params
-	method := r.URL.Query().Get("method")
-	if method == "" {
-		method = "1"
-	}
+	method := "11" // Majlis Ugama Islam Singapura, Singapore
 	month := r.URL.Query().Get("month")
 	year := r.URL.Query().Get("year")
 	province := r.URL.Query().Get("province")
