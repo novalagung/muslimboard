@@ -4,12 +4,15 @@ import (
 	"context"
 	"time"
 
+	"github.com/getsentry/sentry-go"
 	"github.com/hablullah/go-prayer"
 	"muslimboard-api.novalagung.com/pkg/logger"
 )
 
 func CalculatePrayerTimes(ctx context.Context, lat, long float64, timezone *time.Location, date time.Time, twilightConvention *prayer.TwilightConvention) ([]prayer.Schedule, error) {
 	namespace := "repositories.go-prayer.CalculatePrayerTimes"
+	span := sentry.StartSpan(ctx, namespace)
+	defer span.Finish()
 
 	cfg := prayer.Config{
 		Latitude:           lat,

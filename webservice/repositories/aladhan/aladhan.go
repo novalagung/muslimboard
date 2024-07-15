@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/getsentry/sentry-go"
 	"github.com/go-resty/resty/v2"
 	"muslimboard-api.novalagung.com/models"
 	"muslimboard-api.novalagung.com/pkg/logger"
@@ -14,12 +15,17 @@ import (
 // GetShalatScheduleByCoordinate do get shalat schedule by coordinate
 func GetShalatScheduleByCoordinate(ctx context.Context, method string, latitude, longitude float64, month, year string) ([]PrayerTimeSchedule, error) {
 	namespace := "repositories.aladhan.GetShalatScheduleByCoordinate"
+	span := sentry.StartSpan(ctx, namespace)
+	defer span.Finish()
+
+	ctxr, cancel := context.WithTimeout(ctx, models.ApiCallTimeoutDuration)
+	defer cancel()
 
 	// dispatch query to open street map geocoding api
 	resp, err := resty.New().
 		SetDebug(os.Getenv("DEBUG") == "true").
 		R().
-		SetContext(ctx).
+		SetContext(ctxr).
 		SetHeader("User-Agent", models.UserAgent).
 		SetQueryParams(map[string]string{
 			"method":    method,

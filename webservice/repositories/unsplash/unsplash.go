@@ -8,6 +8,7 @@ import (
 
 	"github.com/getsentry/sentry-go"
 	"github.com/go-resty/resty/v2"
+	"muslimboard-api.novalagung.com/models"
 	"muslimboard-api.novalagung.com/pkg/logger"
 )
 
@@ -17,10 +18,13 @@ func GetImage(ctx context.Context, url string) (string, io.ReadCloser, error) {
 	span := sentry.StartSpan(ctx, namespace)
 	defer span.Finish()
 
+	ctxr, cancel := context.WithTimeout(ctx, models.ApiCallTimeoutDuration)
+	defer cancel()
+
 	resp, err := resty.New().
 		SetDebug(os.Getenv("DEBUG") == "true").
 		R().
-		SetContext(ctx).
+		SetContext(ctxr).
 		Get(url)
 	if err != nil {
 		logger.Log.Errorln(namespace, "resty.Get", err)

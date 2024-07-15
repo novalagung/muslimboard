@@ -7,6 +7,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/getsentry/sentry-go"
 	"github.com/go-resty/resty/v2"
 	"muslimboard-api.novalagung.com/models"
 	"muslimboard-api.novalagung.com/pkg/logger"
@@ -15,12 +16,17 @@ import (
 // GetCoordinateByLocation do get coordinate by location details
 func GetCoordinateByLocation(ctx context.Context, location string) (map[string]any, error) {
 	namespace := "repositories.openstreetmap.GetCoordinateByLocation"
+	span := sentry.StartSpan(ctx, namespace)
+	defer span.Finish()
+
+	ctxr, cancel := context.WithTimeout(ctx, models.ApiCallTimeoutDuration)
+	defer cancel()
 
 	// dispatch query to open street map geocoding api
 	resp, err := resty.New().
 		SetDebug(os.Getenv("DEBUG") == "true").
 		R().
-		SetContext(ctx).
+		SetContext(ctxr).
 		SetHeader("User-Agent", models.UserAgent).
 		SetQueryParams(map[string]string{
 			"format": "json",
@@ -70,12 +76,17 @@ func GetCoordinateByLocation(ctx context.Context, location string) (map[string]a
 // GetLocationByCoordinate do get location details by coordinate
 func GetLocationByCoordinate(ctx context.Context, latitude, longitude string) (map[string]any, error) {
 	namespace := "repositories.openstreetmap.GetLocationByCoordinate"
+	span := sentry.StartSpan(ctx, namespace)
+	defer span.Finish()
+
+	ctxr, cancel := context.WithTimeout(ctx, models.ApiCallTimeoutDuration)
+	defer cancel()
 
 	// dispatch query to open street map geocoding api
 	resp, err := resty.New().
 		SetDebug(os.Getenv("DEBUG") == "true").
 		R().
-		SetContext(ctx).
+		SetContext(ctxr).
 		SetHeader("User-Agent", models.UserAgent).
 		SetQueryParams(map[string]string{
 			"format":         "json",
