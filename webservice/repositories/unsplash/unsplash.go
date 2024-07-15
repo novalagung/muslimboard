@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 
+	"github.com/getsentry/sentry-go"
 	"github.com/go-resty/resty/v2"
 	"muslimboard-api.novalagung.com/pkg/logger"
 )
@@ -13,6 +14,8 @@ import (
 // GetImage gets image from unsplash
 func GetImage(ctx context.Context, url string) (string, io.ReadCloser, error) {
 	namespace := "repositories.unsplash.GetImage"
+	span := sentry.StartSpan(ctx, namespace)
+	defer span.Finish()
 
 	resp, err := resty.New().
 		SetDebug(os.Getenv("DEBUG") == "true").

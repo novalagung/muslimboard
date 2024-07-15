@@ -11,7 +11,9 @@ import (
 	pkg_common "muslimboard-api.novalagung.com/pkg/common"
 	"muslimboard-api.novalagung.com/pkg/logger"
 
+	"github.com/getsentry/sentry-go"
 	"github.com/hablullah/go-prayer"
+	"github.com/ugjka/go-tz/v2"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 	"muslimboard-api.novalagung.com/repositories/aladhan"
@@ -27,6 +29,8 @@ func GetImage(ctx context.Context, imageUrl string) (string, io.ReadCloser, erro
 // GetShalatScheduleByCoordinate is handler of get shalat schedule by coordinate
 func GetShalatScheduleByCoordinate(ctx context.Context, method, latitude, longitude, month, year string) (map[string]any, error) {
 	namespace := "usecase.GetShalatScheduleByCoordinate"
+	span := sentry.StartSpan(ctx, namespace)
+	defer span.Finish()
 
 	// if lat long is invalid, then simply return true
 	latInt, _ := strconv.ParseFloat(latitude, 64)
@@ -35,7 +39,7 @@ func GetShalatScheduleByCoordinate(ctx context.Context, method, latitude, longit
 	schedules, err := aladhan.GetShalatScheduleByCoordinate(ctx, method, latInt, lonInt, month, year)
 	if err != nil {
 		logger.Log.Infoln(namespace, "aladhan api returned error data. recalculate prayer times using go-prayer")
-		schedules, err = calculatePrayerTimes(latInt, lonInt, time.Now(), prayer.MWL())
+		schedules, err = calculatePrayerTimes(ctx, latInt, lonInt, time.Now(), prayer.MWL())
 	}
 	if err != nil {
 		logger.Log.Errorln(namespace, "getShalatScheduleByCoordinate", err)
@@ -68,6 +72,8 @@ func GetShalatScheduleByCoordinate(ctx context.Context, method, latitude, longit
 // for now, immediately use aladhan.com api coz kemenag backend still under development
 func GetShalatScheduleByLocation(ctx context.Context, method, province, city, month, year string) (map[string]any, error) {
 	namespace := "usecase.GetShalatScheduleByLocation"
+	span := sentry.StartSpan(ctx, namespace)
+	defer span.Finish()
 
 	location := fmt.Sprintf("%s,%s", city, province)
 	location = strings.ToLower(location)
@@ -90,7 +96,7 @@ func GetShalatScheduleByLocation(ctx context.Context, method, province, city, mo
 	schedules, err := aladhan.GetShalatScheduleByCoordinate(ctx, method, latitude, longitude, month, year)
 	if err != nil {
 		logger.Log.Infoln(namespace, "aladhan api returned error data. recalculate prayer times using go-prayer")
-		schedules, err = calculatePrayerTimes(latitude, longitude, time.Now(), prayer.Kemenag())
+		schedules, err = calculatePrayerTimes(ctx, latitude, longitude, time.Now(), prayer.Kemenag())
 	}
 	if err != nil {
 		logger.Log.Errorln(namespace, "getShalatScheduleByCoordinate", err)
@@ -110,10 +116,23 @@ func GetShalatScheduleByLocation(ctx context.Context, method, province, city, mo
 	return res, nil
 }
 
-func calculatePrayerTimes(lat, lon float64, date time.Time, twilightConvention *prayer.TwilightConvention) ([]aladhan.PrayerTimeSchedule, error) {
+func calculatePrayerTimes(ctx context.Context, lat, lon float64, date time.Time, twilightConvention *prayer.TwilightConvention) ([]aladhan.PrayerTimeSchedule, error) {
 	namespace := "usecase.calculatePrayerTimes"
+	span := sentry.StartSpan(ctx, namespace)
+	defer span.Finish()
 
-	schedulesBackup, err := goprayer.CalculatePrayerTimes(lat, lon, date, twilightConvention)
+	var timezone *time.Location
+	zone, err := tz.GetZone(tz.Point{Lat: lat, Lon: lon})
+	if err != nil {
+		logger.Log.Errorln(namespace, "tz.GetZone", err)
+	} else {
+		timezone, err = time.LoadLocation(zone[0])
+		if err != nil {
+			logger.Log.Errorln(namespace, "time.LoadLocation", err)
+		}
+	}
+
+	schedulesBackup, err := goprayer.CalculatePrayerTimes(ctx, lat, lon, timezone, date, twilightConvention)
 	if err != nil {
 		logger.Log.Errorln(namespace, "goprayer.CalculatePrayerTimes", err)
 		return nil, err

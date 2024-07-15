@@ -1,6 +1,7 @@
 package goprayer
 
 import (
+	"context"
 	"fmt"
 	"testing"
 	"time"
@@ -9,11 +10,10 @@ import (
 )
 
 func TestPrayerTimes(t *testing.T) {
-	schedules, err := CalculatePrayerTimes(-7.983908, 112.621391, time.Now(), prayer.MWL())
+	tz, _ := time.LoadLocation("Asia/Jakarta")
+	schedules, err := CalculatePrayerTimes(context.TODO(), -7.983908, 112.621391, tz, time.Now(), prayer.MWL())
 	fmt.Println("err", err)
 	fmt.Println("schedules", schedules)
-
-	tz, _ := time.LoadLocation("Asia/Jakarta")
 
 	for _, each := range schedules {
 		fmt.Println("each.Date", each.Date)

@@ -1,26 +1,15 @@
 package goprayer
 
 import (
+	"context"
 	"time"
 
 	"github.com/hablullah/go-prayer"
-	"github.com/ugjka/go-tz/v2"
 	"muslimboard-api.novalagung.com/pkg/logger"
 )
 
-func CalculatePrayerTimes(lat, long float64, date time.Time, twilightConvention *prayer.TwilightConvention) ([]prayer.Schedule, error) {
+func CalculatePrayerTimes(ctx context.Context, lat, long float64, timezone *time.Location, date time.Time, twilightConvention *prayer.TwilightConvention) ([]prayer.Schedule, error) {
 	namespace := "repositories.go-prayer.CalculatePrayerTimes"
-
-	var timezone *time.Location
-	zone, err := tz.GetZone(tz.Point{Lat: lat, Lon: long})
-	if err != nil {
-		logger.Log.Errorln(namespace, "tz.GetZone", err)
-	} else {
-		timezone, err = time.LoadLocation(zone[0])
-		if err != nil {
-			logger.Log.Errorln(namespace, "time.LoadLocation", err)
-		}
-	}
 
 	cfg := prayer.Config{
 		Latitude:           lat,
