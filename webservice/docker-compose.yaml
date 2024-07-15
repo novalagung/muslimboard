@@ -34,8 +34,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.30'
-          memory: 30M
+          cpus: '0.60'
+          memory: 300M
 
 networks:
   muslimboard-network:
