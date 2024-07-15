@@ -74,10 +74,7 @@ func HandleShalatScheduleByCoordinate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// parse params
-	method := r.URL.Query().Get("method")
-	if method == "" {
-		method = "1"
-	}
+	method := "3" // Muslim World League
 	month := r.URL.Query().Get("month")
 	year := r.URL.Query().Get("year")
 	latitude := r.URL.Query().Get("latitude")
