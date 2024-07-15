@@ -8,10 +8,10 @@ import (
 	"net/url"
 	"strconv"
 
-	log "github.com/sirupsen/logrus"
 	"muslimboard-api.novalagung.com/models"
 	pkg_common "muslimboard-api.novalagung.com/pkg/common"
 	pkg_http "muslimboard-api.novalagung.com/pkg/http"
+	"muslimboard-api.novalagung.com/pkg/logger"
 	pkg_redis "muslimboard-api.novalagung.com/pkg/redis"
 	"muslimboard-api.novalagung.com/usecase"
 )
@@ -25,7 +25,7 @@ func HandleImage(w http.ResponseWriter, r *http.Request) {
 	imageUrl, _ := url.QueryUnescape(r.URL.Query().Get("image"))
 	if imageUrl == "" {
 		err := fmt.Errorf("missing image url")
-		log.Errorln(namespace, "queryUnescape", err)
+		logger.Log.Errorln(namespace, "queryUnescape", err)
 		pkg_http.WriteRespose(w, r, http.StatusBadRequest, nil, err)
 		return
 	}
@@ -35,7 +35,7 @@ func HandleImage(w http.ResponseWriter, r *http.Request) {
 		defer body.Close()
 	}
 	if err != nil {
-		log.Errorln(namespace, "getImage", err)
+		logger.Log.Errorln(namespace, "getImage", err)
 		pkg_http.WriteRespose(w, r, http.StatusBadRequest, nil, err)
 		return
 	}
@@ -45,7 +45,7 @@ func HandleImage(w http.ResponseWriter, r *http.Request) {
 
 	_, err = io.Copy(w, body)
 	if err != nil {
-		log.Errorln(namespace, "io.Copy", err)
+		logger.Log.Errorln(namespace, "io.Copy", err)
 		pkg_http.WriteRespose(w, r, http.StatusBadRequest, nil, err)
 		return
 	}
@@ -68,7 +68,7 @@ func HandleShalatScheduleByCoordinate(w http.ResponseWriter, r *http.Request) {
 			// prolong the cache expiration date
 			pkg_redis.NewRedis().Set(ctx, cacheKey, cachedRes, models.RedisKeepAliveDuration).Err()
 
-			log.Debugln(namespace, "load from cache", cacheKey)
+			logger.Log.Debugln(namespace, "load from cache", cacheKey)
 			pkg_http.WriteRespose(w, r, http.StatusOK, cachedResMap, nil)
 			return
 		}
@@ -92,7 +92,7 @@ func HandleShalatScheduleByCoordinate(w http.ResponseWriter, r *http.Request) {
 	// get data
 	res, err := usecase.GetShalatScheduleByCoordinate(ctx, method, latitude, longitude, month, year)
 	if err != nil {
-		log.Errorln(namespace, "getShalatScheduleByCoordinate", err)
+		logger.Log.Errorln(namespace, "getShalatScheduleByCoordinate", err)
 		pkg_http.WriteRespose(w, r, http.StatusInternalServerError, nil, err)
 		return
 	}
@@ -100,7 +100,7 @@ func HandleShalatScheduleByCoordinate(w http.ResponseWriter, r *http.Request) {
 	// cache data
 	if schedulesRaw := res["schedules"]; schedulesRaw != nil {
 		if schedules := schedulesRaw.([]map[string]any); len(schedules) > 0 {
-			log.Debugln(namespace, "set cache", cacheKey)
+			logger.Log.Debugln(namespace, "set cache", cacheKey)
 			pkg_redis.NewRedis().Set(ctx, cacheKey, pkg_common.ConvertToJsonString(res), models.RedisKeepAliveDuration).Err()
 		}
 	}
@@ -126,7 +126,7 @@ func HandleShalatScheduleByLocation(w http.ResponseWriter, r *http.Request) {
 			// prolong the cache expiration date
 			pkg_redis.NewRedis().Set(ctx, cacheKey, cachedRes, models.RedisKeepAliveDuration).Err()
 
-			log.Debugln(namespace, "load from cache", cacheKey)
+			logger.Log.Debugln(namespace, "load from cache", cacheKey)
 			pkg_http.WriteRespose(w, r, http.StatusOK, cachedResMap, nil)
 			return
 		}
@@ -142,7 +142,7 @@ func HandleShalatScheduleByLocation(w http.ResponseWriter, r *http.Request) {
 	// get data
 	res, err := usecase.GetShalatScheduleByLocation(ctx, method, province, city, month, year)
 	if err != nil {
-		log.Errorln(namespace, "getShalatScheduleByLocation", err)
+		logger.Log.Errorln(namespace, "getShalatScheduleByLocation", err)
 		pkg_http.WriteRespose(w, r, http.StatusInternalServerError, nil, err)
 		return
 	}
@@ -150,7 +150,7 @@ func HandleShalatScheduleByLocation(w http.ResponseWriter, r *http.Request) {
 	// cache data
 	if schedulesRaw := res["schedules"]; schedulesRaw != nil {
 		if schedules := schedulesRaw.([]map[string]any); len(schedules) > 0 {
-			log.Debugln(namespace, "set cache", cacheKey)
+			logger.Log.Debugln(namespace, "set cache", cacheKey)
 			pkg_redis.NewRedis().Set(ctx, cacheKey, pkg_common.ConvertToJsonString(res), models.RedisKeepAliveDuration).Err()
 		}
 	}

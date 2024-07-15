@@ -9,9 +9,9 @@ import (
 	"time"
 
 	pkg_common "muslimboard-api.novalagung.com/pkg/common"
+	"muslimboard-api.novalagung.com/pkg/logger"
 
 	"github.com/hablullah/go-prayer"
-	log "github.com/sirupsen/logrus"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 	"muslimboard-api.novalagung.com/repositories/aladhan"
@@ -34,11 +34,11 @@ func GetShalatScheduleByCoordinate(ctx context.Context, method, latitude, longit
 
 	schedules, err := aladhan.GetShalatScheduleByCoordinate(ctx, method, latInt, lonInt, month, year)
 	if err != nil {
-		log.Infoln(namespace, "aladhan api returned error data. recalculate prayer times using go-prayer")
+		logger.Log.Infoln(namespace, "aladhan api returned error data. recalculate prayer times using go-prayer")
 		schedules, err = calculatePrayerTimes(latInt, lonInt, time.Now(), prayer.MWL())
 	}
 	if err != nil {
-		log.Errorln(namespace, "getShalatScheduleByCoordinate", err)
+		logger.Log.Errorln(namespace, "getShalatScheduleByCoordinate", err)
 		return nil, err
 	}
 
@@ -53,7 +53,7 @@ func GetShalatScheduleByCoordinate(ctx context.Context, method, latitude, longit
 
 	locationRes, err := openstreetmap.GetLocationByCoordinate(ctx, latitude, longitude)
 	if err != nil {
-		log.Errorln(namespace, "getLocationByCoordinate", err)
+		logger.Log.Errorln(namespace, "getLocationByCoordinate", err)
 		res["address"] = fmt.Sprintf("Location %v, %v", latitude, longitude)
 		res["countryCode"] = ""
 	} else {
@@ -79,7 +79,7 @@ func GetShalatScheduleByLocation(ctx context.Context, method, province, city, mo
 	// get coordinate by location
 	coordinate, err := openstreetmap.GetCoordinateByLocation(ctx, location)
 	if err != nil {
-		log.Errorln(namespace, "getCoordinateByLocation", err)
+		logger.Log.Errorln(namespace, "getCoordinateByLocation", err)
 		return nil, err
 	}
 
@@ -89,11 +89,11 @@ func GetShalatScheduleByLocation(ctx context.Context, method, province, city, mo
 
 	schedules, err := aladhan.GetShalatScheduleByCoordinate(ctx, method, latitude, longitude, month, year)
 	if err != nil {
-		log.Infoln(namespace, "aladhan api returned error data. recalculate prayer times using go-prayer")
+		logger.Log.Infoln(namespace, "aladhan api returned error data. recalculate prayer times using go-prayer")
 		schedules, err = calculatePrayerTimes(latitude, longitude, time.Now(), prayer.Kemenag())
 	}
 	if err != nil {
-		log.Errorln(namespace, "getShalatScheduleByCoordinate", err)
+		logger.Log.Errorln(namespace, "getShalatScheduleByCoordinate", err)
 		return nil, err
 	}
 
@@ -115,7 +115,7 @@ func calculatePrayerTimes(lat, lon float64, date time.Time, twilightConvention *
 
 	schedulesBackup, err := goprayer.CalculatePrayerTimes(lat, lon, date, twilightConvention)
 	if err != nil {
-		log.Errorln(namespace, "goprayer.CalculatePrayerTimes", err)
+		logger.Log.Errorln(namespace, "goprayer.CalculatePrayerTimes", err)
 		return nil, err
 	}
 

@@ -7,8 +7,8 @@ import (
 	"os"
 
 	"github.com/go-resty/resty/v2"
-	log "github.com/sirupsen/logrus"
 	"muslimboard-api.novalagung.com/models"
+	"muslimboard-api.novalagung.com/pkg/logger"
 )
 
 // GetShalatScheduleByCoordinate do get shalat schedule by coordinate
@@ -30,12 +30,12 @@ func GetShalatScheduleByCoordinate(ctx context.Context, method string, latitude,
 		}).
 		Get("http://api.aladhan.com/v1/calendar")
 	if err != nil {
-		log.Errorln(namespace, "resty.Get", err.Error())
+		logger.Log.Errorln(namespace, "resty.Get", err.Error())
 		return nil, err
 	}
 	if resp.IsError() {
 		err = fmt.Errorf("%v", resp.Error())
-		log.Errorln(namespace, "resp.IsError", err.Error())
+		logger.Log.Errorln(namespace, "resp.IsError", err.Error())
 		return nil, err
 	}
 
@@ -43,12 +43,12 @@ func GetShalatScheduleByCoordinate(ctx context.Context, method string, latitude,
 	schedules := PrayerTime{}
 	err = json.Unmarshal(resp.Body(), &schedules)
 	if err != nil {
-		log.Errorln(namespace, "json.Unmarshal", err.Error())
+		logger.Log.Errorln(namespace, "json.Unmarshal", err.Error())
 		return nil, err
 	}
 	if schedules.Code != 200 {
 		err = fmt.Errorf("%v", schedules.Status)
-		log.Errorln(namespace, "schedules.Code != 200", err.Error())
+		logger.Log.Errorln(namespace, "schedules.Code != 200", err.Error())
 		return nil, err
 	}
 

@@ -3,15 +3,29 @@ package router
 import (
 	"fmt"
 	"net/http"
+	"time"
 
-	log "github.com/sirupsen/logrus"
+	"github.com/getsentry/sentry-go"
 	"muslimboard-api.novalagung.com/handler"
 	pkg_http "muslimboard-api.novalagung.com/pkg/http"
+	"muslimboard-api.novalagung.com/pkg/logger"
 )
 
 // MuslimboardApi do get coordinate by location details
 func MuslimboardApi(w http.ResponseWriter, r *http.Request) {
 	namespace := "router.MuslimboardApi"
+
+	defer func() {
+		err := recover()
+
+		if err != nil {
+			logger.Log.Errorln(namespace, err)
+			pkg_http.WriteRespose(w, r, http.StatusInternalServerError, nil, fmt.Errorf("unknown server error"))
+
+			sentry.CurrentHub().Recover(err)
+			sentry.Flush(time.Second * 2)
+		}
+	}()
 
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "OPTIONS, GET")
@@ -30,15 +44,15 @@ func MuslimboardApi(w http.ResponseWriter, r *http.Request) {
 			pkg_http.WriteRespose(w, r, http.StatusOK, true, nil)
 
 		case "image":
-			log.Infoln(namespace, "incoming request", "op="+op, r.URL.String())
+			logger.Log.Infoln(namespace, "incoming request", "op="+op, r.URL.String())
 			handler.HandleImage(w, r)
 
 		case "shalat-schedule-by-coordinate":
-			log.Infoln(namespace, "incoming request", "op="+op, r.URL.String())
+			logger.Log.Infoln(namespace, "incoming request", "op="+op, r.URL.String())
 			handler.HandleShalatScheduleByCoordinate(w, r)
 
 		case "shalat-schedule-by-location":
-			log.Infoln(namespace, "incoming request", "op="+op, r.URL.String())
+			logger.Log.Infoln(namespace, "incoming request", "op="+op, r.URL.String())
 			handler.HandleShalatScheduleByLocation(w, r)
 
 		default:

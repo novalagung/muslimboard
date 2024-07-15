@@ -8,8 +8,8 @@ import (
 	"strings"
 
 	"github.com/go-resty/resty/v2"
-	log "github.com/sirupsen/logrus"
 	"muslimboard-api.novalagung.com/models"
+	"muslimboard-api.novalagung.com/pkg/logger"
 )
 
 // GetCoordinateByLocation do get coordinate by location details
@@ -29,12 +29,12 @@ func GetCoordinateByLocation(ctx context.Context, location string) (map[string]a
 		}).
 		Get("https://nominatim.openstreetmap.org/")
 	if err != nil {
-		log.Errorln(namespace, "resty.Get", err)
+		logger.Log.Errorln(namespace, "resty.Get", err)
 		return nil, err
 	}
 	if resp.IsError() {
 		err = fmt.Errorf("%v", resp.Error())
-		log.Errorln(namespace, "resp.IsError", err)
+		logger.Log.Errorln(namespace, "resp.IsError", err)
 		return nil, err
 	}
 
@@ -42,19 +42,19 @@ func GetCoordinateByLocation(ctx context.Context, location string) (map[string]a
 	var coordinates []Geocoding
 	err = json.Unmarshal(resp.Body(), &coordinates)
 	if err != nil {
-		log.Errorln(namespace, "json.Unmarshal", err)
+		logger.Log.Errorln(namespace, "json.Unmarshal", err)
 		return nil, err
 	}
 
 	if coordinates == nil {
 		err = fmt.Errorf("coordinates not found")
-		log.Errorln(namespace, "coordinates", err)
+		logger.Log.Errorln(namespace, "coordinates", err)
 		return nil, err
 	}
 
 	if len(coordinates) == 0 {
 		err = fmt.Errorf("coordinates not found")
-		log.Errorln(namespace, "len(coordinates) == 0", err)
+		logger.Log.Errorln(namespace, "len(coordinates) == 0", err)
 		return nil, err
 	}
 
@@ -85,12 +85,12 @@ func GetLocationByCoordinate(ctx context.Context, latitude, longitude string) (m
 		}).
 		Get("https://nominatim.openstreetmap.org/search")
 	if err != nil {
-		log.Errorln(namespace, "resty.Get", err)
+		logger.Log.Errorln(namespace, "resty.Get", err)
 		return nil, err
 	}
 	if resp.IsError() {
 		err = fmt.Errorf("%v", resp.Error())
-		log.Errorln(namespace, "resp.IsError", err)
+		logger.Log.Errorln(namespace, "resp.IsError", err)
 		return nil, err
 	}
 
@@ -98,19 +98,19 @@ func GetLocationByCoordinate(ctx context.Context, latitude, longitude string) (m
 	var location []Geocoding
 	err = json.Unmarshal(resp.Body(), &location)
 	if err != nil {
-		log.Errorln(namespace, "json.Unmarshal", err)
+		logger.Log.Errorln(namespace, "json.Unmarshal", err)
 		return nil, err
 	}
 
 	if location == nil {
 		err = fmt.Errorf("location not found")
-		log.Errorln(namespace, "location", err)
+		logger.Log.Errorln(namespace, "location", err)
 		return nil, err
 	}
 
 	if len(location) == 0 {
 		err = fmt.Errorf("location not found")
-		log.Errorln(namespace, "len(location) == 0", err)
+		logger.Log.Errorln(namespace, "len(location) == 0", err)
 		return nil, err
 	}
 

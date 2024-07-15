@@ -4,8 +4,8 @@ import (
 	"time"
 
 	"github.com/hablullah/go-prayer"
-	log "github.com/sirupsen/logrus"
 	"github.com/ugjka/go-tz/v2"
+	"muslimboard-api.novalagung.com/pkg/logger"
 )
 
 func CalculatePrayerTimes(lat, long float64, date time.Time, twilightConvention *prayer.TwilightConvention) ([]prayer.Schedule, error) {
@@ -14,11 +14,11 @@ func CalculatePrayerTimes(lat, long float64, date time.Time, twilightConvention 
 	var timezone *time.Location
 	zone, err := tz.GetZone(tz.Point{Lat: lat, Lon: long})
 	if err != nil {
-		log.Errorln(namespace, "tz.GetZone", err)
+		logger.Log.Errorln(namespace, "tz.GetZone", err)
 	} else {
 		timezone, err = time.LoadLocation(zone[0])
 		if err != nil {
-			log.Errorln(namespace, "time.LoadLocation", err)
+			logger.Log.Errorln(namespace, "time.LoadLocation", err)
 		}
 	}
 
@@ -32,7 +32,7 @@ func CalculatePrayerTimes(lat, long float64, date time.Time, twilightConvention 
 	}
 	schedules, err := prayer.Calculate(cfg, date.Year())
 	if err != nil {
-		log.Errorln(namespace, "prayer.Calculate", err)
+		logger.Log.Errorln(namespace, "prayer.Calculate", err)
 		return nil, err
 	}
 
