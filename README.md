@@ -53,6 +53,7 @@ Muslim Board gratis untuk disebarluaskan secara bebas dibawah lisensi MIT Licens
 - [Moch. Sudharmono](https://github.com/moch-sudharmono) (adding Hijri calendar)
 - [Mohammed Ayman](https://github.com/MohammedAyman2018) (adding Arabic localization)
 - [Muhammad Ichsanul Fadhil](https://github.com/ichsanputr)
+- [Radhi Fadlillah](https://github.com/RadhiFadlillah) (making go-prayer lib)
 - [Rahadian Ardya](https://www.linkedin.com/in/rahadianardya) (adding remaining time info)
 - [Rochmad Nurul Fahmi](https://github.com/rochmadnf)
 - [Rosdyana Kusuma](https://github.com/rosdyana) (adding Traditional Chinese localization)
