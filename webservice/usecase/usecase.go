@@ -42,11 +42,12 @@ func GetShalatScheduleByCoordinate(ctx context.Context, method, latitude, longit
 	locationRes, err := openstreetmap.GetLocationByCoordinate(ctx, latitude, longitude)
 	if err != nil {
 		log.Errorln(namespace, "getLocationByCoordinate", err.Error())
-		return nil, err
+		res["address"] = fmt.Sprintf("Location %v, %v", latitude, longitude)
+		res["countryCode"] = ""
+	} else {
+		res["address"] = locationRes["address"]
+		res["countryCode"] = locationRes["countryCode"]
 	}
-
-	res["address"] = locationRes["address"]
-	res["countryCode"] = locationRes["countryCode"]
 
 	return res, nil
 }
