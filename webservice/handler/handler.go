@@ -25,7 +25,7 @@ func HandleImage(w http.ResponseWriter, r *http.Request) {
 	imageUrl, _ := url.QueryUnescape(r.URL.Query().Get("image"))
 	if imageUrl == "" {
 		err := fmt.Errorf("missing image url")
-		log.Errorln(namespace, "queryUnescape", err.Error())
+		log.Errorln(namespace, "queryUnescape", err)
 		pkg_http.WriteRespose(w, r, http.StatusBadRequest, nil, err)
 		return
 	}
@@ -35,7 +35,7 @@ func HandleImage(w http.ResponseWriter, r *http.Request) {
 		defer body.Close()
 	}
 	if err != nil {
-		log.Errorln(namespace, "getImage", err.Error())
+		log.Errorln(namespace, "getImage", err)
 		pkg_http.WriteRespose(w, r, http.StatusBadRequest, nil, err)
 		return
 	}
@@ -45,7 +45,7 @@ func HandleImage(w http.ResponseWriter, r *http.Request) {
 
 	_, err = io.Copy(w, body)
 	if err != nil {
-		log.Errorln(namespace, "io.Copy", err.Error())
+		log.Errorln(namespace, "io.Copy", err)
 		pkg_http.WriteRespose(w, r, http.StatusBadRequest, nil, err)
 		return
 	}
@@ -92,7 +92,7 @@ func HandleShalatScheduleByCoordinate(w http.ResponseWriter, r *http.Request) {
 	// get data
 	res, err := usecase.GetShalatScheduleByCoordinate(ctx, method, latitude, longitude, month, year)
 	if err != nil {
-		log.Errorln(namespace, "getShalatScheduleByCoordinate", err.Error())
+		log.Errorln(namespace, "getShalatScheduleByCoordinate", err)
 		pkg_http.WriteRespose(w, r, http.StatusInternalServerError, nil, err)
 		return
 	}
@@ -142,7 +142,7 @@ func HandleShalatScheduleByLocation(w http.ResponseWriter, r *http.Request) {
 	// get data
 	res, err := usecase.GetShalatScheduleByLocation(ctx, method, province, city, month, year)
 	if err != nil {
-		log.Errorln(namespace, "getShalatScheduleByLocation", err.Error())
+		log.Errorln(namespace, "getShalatScheduleByLocation", err)
 		pkg_http.WriteRespose(w, r, http.StatusInternalServerError, nil, err)
 		return
 	}

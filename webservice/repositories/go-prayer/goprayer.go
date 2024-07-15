@@ -5,22 +5,46 @@ import (
 
 	"github.com/hablullah/go-prayer"
 	log "github.com/sirupsen/logrus"
+	"github.com/ugjka/go-tz/v2"
 )
 
 func CalculatePrayerTimes(lat, long float64, date time.Time, twilightConvention *prayer.TwilightConvention) ([]prayer.Schedule, error) {
 	namespace := "repositories.go-prayer.CalculatePrayerTimes"
+
+	var timezone *time.Location
+	zone, err := tz.GetZone(tz.Point{Lat: lat, Lon: long})
+	if err != nil {
+		log.Errorln(namespace, "tz.GetZone", err)
+	} else {
+		timezone, err = time.LoadLocation(zone[0])
+		if err != nil {
+			log.Errorln(namespace, "time.LoadLocation", err)
+		}
+	}
+
 	cfg := prayer.Config{
 		Latitude:           lat,
 		Longitude:          long,
+		Timezone:           timezone,
 		TwilightConvention: twilightConvention,
 		AsrConvention:      prayer.Shafii,
 		PreciseToSeconds:   false,
 	}
-	schedules, err := prayer.Calculate(cfg, time.Now().Year())
+	schedules, err := prayer.Calculate(cfg, date.Year())
 	if err != nil {
-		log.Errorln(namespace, "prayer.Calculate", err.Error())
+		log.Errorln(namespace, "prayer.Calculate", err)
 		return nil, err
 	}
 
-	return schedules, nil
+	// filter by current month
+	filteredSchedules := make([]prayer.Schedule, 0)
+	for _, each := range schedules {
+		dt, _ := time.Parse("2006-01-02", each.Date)
+		if dt.Month() != date.Month() {
+			continue
+		}
+		filteredSchedules = append(filteredSchedules, each)
+	}
+
+	return filteredSchedules, nil
 }
