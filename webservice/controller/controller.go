@@ -20,6 +20,9 @@ import (
 func HandleImage(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	namespace := "controller.HandleImage"
 	span := sentry.StartSpan(ctx, namespace)
+	span.Data = map[string]any{
+		"image": r.URL.Query().Get("image"),
+	}
 	defer span.Finish()
 
 	imageUrl, _ := url.QueryUnescape(r.URL.Query().Get("image"))
@@ -55,6 +58,12 @@ func HandleImage(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 func HandleShalatScheduleByCoordinate(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	namespace := "controller.HandleShalatScheduleByCoordinate"
 	span := sentry.StartSpan(ctx, namespace)
+	span.Data = map[string]any{
+		"month":     r.URL.Query().Get("month"),
+		"year":      r.URL.Query().Get("year"),
+		"latitude":  r.URL.Query().Get("latitude"),
+		"longitude": r.URL.Query().Get("longitude"),
+	}
 	defer span.Finish()
 
 	// check cache
@@ -112,6 +121,12 @@ func HandleShalatScheduleByCoordinate(ctx context.Context, w http.ResponseWriter
 func HandleShalatScheduleByLocation(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	namespace := "controller.HandleShalatScheduleByLocation"
 	span := sentry.StartSpan(ctx, namespace)
+	span.Data = map[string]any{
+		"month":    r.URL.Query().Get("month"),
+		"year":     r.URL.Query().Get("year"),
+		"province": r.URL.Query().Get("province"),
+		"city":     r.URL.Query().Get("city"),
+	}
 	defer span.Finish()
 
 	// check cache

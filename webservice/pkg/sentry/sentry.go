@@ -49,17 +49,14 @@ func CreateSpan(r *http.Request) *sentry.Span {
 		ctx = sentry.SetHubOnContext(ctx, hub)
 	}
 
+	txName := fmt.Sprintf("%s %s %s", r.Method, r.URL.Path, r.URL.Query().Get("op"))
 	options := []sentry.SpanOption{
 		// Set the OP based on values from https://develop.sentry.dev/sdk/performance/span-operations/
 		sentry.WithOpName("http.server"),
 		sentry.ContinueFromRequest(r),
 		sentry.WithTransactionSource(sentry.SourceURL),
 	}
-
-	transaction := sentry.StartTransaction(ctx,
-		fmt.Sprintf("%s %s", r.Method, r.URL.Path),
-		options...,
-	)
+	transaction := sentry.StartTransaction(ctx, txName, options...)
 
 	return transaction
 }

@@ -43,6 +43,7 @@ func MuslimboardApi(w http.ResponseWriter, r *http.Request) {
 func DoRoute(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	namespace := "router.DoRoute"
 	span := sentry.StartSpan(ctx, namespace)
+	span.Data = map[string]any{"op": r.URL.Query().Get("op")}
 	defer span.Finish()
 
 	if r.Method == http.MethodOptions {
