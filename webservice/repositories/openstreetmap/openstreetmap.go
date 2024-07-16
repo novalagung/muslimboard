@@ -35,7 +35,7 @@ func GetCoordinateByLocation(ctx context.Context, location string) (map[string]a
 		}
 	}
 
-	ctxr, cancel := context.WithTimeout(ctx, models.ApiCallTimeoutDuration)
+	ctxr, cancel := context.WithTimeout(context.TODO(), models.ApiCallTimeoutDuration)
 	defer cancel()
 
 	// dispatch query to open street map geocoding api
@@ -113,7 +113,7 @@ func GetLocationByCoordinate(ctx context.Context, latitude, longitude string) (m
 		}
 	}
 
-	ctxr, cancel := context.WithTimeout(ctx, models.ApiCallTimeoutDuration)
+	ctxr, cancel := context.WithTimeout(context.TODO(), models.ApiCallTimeoutDuration)
 	defer cancel()
 
 	// dispatch query to open street map geocoding api

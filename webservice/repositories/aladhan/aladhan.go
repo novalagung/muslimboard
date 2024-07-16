@@ -34,7 +34,7 @@ func GetShalatScheduleByCoordinate(ctx context.Context, method string, latitude,
 		}
 	}
 
-	ctxr, cancel := context.WithTimeout(ctx, models.ApiCallTimeoutDuration)
+	ctxr, cancel := context.WithTimeout(context.TODO(), models.ApiCallTimeoutDuration)
 	defer cancel()
 
 	// dispatch query to open street map geocoding api
