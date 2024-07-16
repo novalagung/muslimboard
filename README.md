@@ -55,6 +55,7 @@ Muslim Board gratis untuk disebarluaskan secara bebas dibawah lisensi MIT Licens
 - [Muhammad Ichsanul Fadhil](https://github.com/ichsanputr)
 - [Radhi Fadlillah](https://github.com/RadhiFadlillah) (making go-prayer lib)
 - [Rahadian Ardya](https://www.linkedin.com/in/rahadianardya) (adding remaining time info)
+- [Dr. Eng. Rinto Anugraha NQZ](https://rintoanugraha.staff.ugm.ac.id/saya/) (authoring [**Mekanika Benda Langit** book](https://simpan.ugm.ac.id/s/GcxKuyZWn8Rshnn#pdfviewer))
 - [Rochmad Nurul Fahmi](https://github.com/rochmadnf)
 - [Rosdyana Kusuma](https://github.com/rosdyana) (adding Traditional Chinese localization)
 - [王艺凯](https://github.com/redundan3y) (adding Simplified Chinese localization)
