@@ -9,7 +9,9 @@ import (
 	"github.com/getsentry/sentry-go"
 	"github.com/go-resty/resty/v2"
 	"muslimboard-api.novalagung.com/models"
+	pkg_common "muslimboard-api.novalagung.com/pkg/common"
 	"muslimboard-api.novalagung.com/pkg/logger"
+	pkg_redis "muslimboard-api.novalagung.com/pkg/redis"
 )
 
 // GetShalatScheduleByCoordinate do get shalat schedule by coordinate
@@ -17,6 +19,20 @@ func GetShalatScheduleByCoordinate(ctx context.Context, method string, latitude,
 	namespace := "repositories.aladhan.GetShalatScheduleByCoordinate"
 	span := sentry.StartSpan(ctx, namespace)
 	defer span.Finish()
+
+	// check cache
+	cacheKey := fmt.Sprintf("%v %v %v %v %v %v", namespace, method, latitude, longitude, month, year)
+	cachedRes, err := pkg_redis.NewRedis().Get(ctx, cacheKey).Result()
+	if err == nil {
+		cachedResData := make([]PrayerTimeSchedule, 0)
+		err = pkg_common.ConvertTo(cachedRes, &cachedResData)
+		if len(cachedResData) > 0 && err == nil {
+			// prolong the cache expiration date
+			pkg_redis.NewRedis().Set(ctx, cacheKey, cachedRes, models.RedisKeepAliveDuration).Err()
+			logger.Log.Debugln(namespace, "load from cache", cacheKey)
+			return cachedResData, nil
+		}
+	}
 
 	ctxr, cancel := context.WithTimeout(ctx, models.ApiCallTimeoutDuration)
 	defer cancel()
@@ -57,6 +73,10 @@ func GetShalatScheduleByCoordinate(ctx context.Context, method string, latitude,
 		logger.Log.Errorln(namespace, "schedules.Code != 200", err.Error())
 		return nil, err
 	}
+
+	// store cache
+	logger.Log.Debugln(namespace, "set cache", cacheKey)
+	pkg_redis.NewRedis().Set(ctx, cacheKey, pkg_common.ConvertToJsonString(schedules.Data), models.RedisKeepAliveDuration).Err()
 
 	return schedules.Data, nil
 }

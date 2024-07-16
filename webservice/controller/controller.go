@@ -9,11 +9,8 @@ import (
 	"strconv"
 
 	"github.com/getsentry/sentry-go"
-	"muslimboard-api.novalagung.com/models"
-	pkg_common "muslimboard-api.novalagung.com/pkg/common"
 	pkg_http "muslimboard-api.novalagung.com/pkg/http"
 	"muslimboard-api.novalagung.com/pkg/logger"
-	pkg_redis "muslimboard-api.novalagung.com/pkg/redis"
 	"muslimboard-api.novalagung.com/usecase"
 )
 
@@ -66,22 +63,6 @@ func HandleShalatScheduleByCoordinate(ctx context.Context, w http.ResponseWriter
 	}
 	defer span.Finish()
 
-	// check cache
-	cacheKey := r.URL.String()
-	cachedRes, err := pkg_redis.NewRedis().Get(ctx, cacheKey).Result()
-	if err == nil {
-		cachedResMap := make(map[string]any)
-		err = pkg_common.ConvertTo(cachedRes, &cachedResMap)
-		if len(cachedResMap) > 0 && err == nil {
-			// prolong the cache expiration date
-			pkg_redis.NewRedis().Set(ctx, cacheKey, cachedRes, models.RedisKeepAliveDuration).Err()
-
-			logger.Log.Debugln(namespace, "load from cache", cacheKey)
-			pkg_http.WriteRespose(ctx, w, r, http.StatusOK, cachedResMap, nil)
-			return
-		}
-	}
-
 	// parse params
 	method := "3" // Muslim World League
 	month := r.URL.Query().Get("month")
@@ -105,14 +86,6 @@ func HandleShalatScheduleByCoordinate(ctx context.Context, w http.ResponseWriter
 		return
 	}
 
-	// cache data
-	if schedulesRaw := res["schedules"]; schedulesRaw != nil {
-		if schedules := schedulesRaw.([]map[string]any); len(schedules) > 0 {
-			logger.Log.Debugln(namespace, "set cache", cacheKey)
-			pkg_redis.NewRedis().Set(ctx, cacheKey, pkg_common.ConvertToJsonString(res), models.RedisKeepAliveDuration).Err()
-		}
-	}
-
 	pkg_http.WriteRespose(ctx, w, r, http.StatusOK, res, nil)
 }
 
@@ -129,22 +102,6 @@ func HandleShalatScheduleByLocation(ctx context.Context, w http.ResponseWriter, 
 	}
 	defer span.Finish()
 
-	// check cache
-	cacheKey := r.URL.String()
-	cachedRes, err := pkg_redis.NewRedis().Get(ctx, cacheKey).Result()
-	if err == nil {
-		cachedResMap := make(map[string]any)
-		err = pkg_common.ConvertTo(cachedRes, &cachedResMap)
-		if len(cachedResMap) > 0 && err == nil {
-			// prolong the cache expiration date
-			pkg_redis.NewRedis().Set(ctx, cacheKey, cachedRes, models.RedisKeepAliveDuration).Err()
-
-			logger.Log.Debugln(namespace, "load from cache", cacheKey)
-			pkg_http.WriteRespose(ctx, w, r, http.StatusOK, cachedResMap, nil)
-			return
-		}
-	}
-
 	// parse params
 	method := "11" // Majlis Ugama Islam Singapura, Singapore
 	month := r.URL.Query().Get("month")
@@ -158,14 +115,6 @@ func HandleShalatScheduleByLocation(ctx context.Context, w http.ResponseWriter, 
 		logger.Log.Errorln(namespace, "getShalatScheduleByLocation", err)
 		pkg_http.WriteRespose(ctx, w, r, http.StatusInternalServerError, nil, err)
 		return
-	}
-
-	// cache data
-	if schedulesRaw := res["schedules"]; schedulesRaw != nil {
-		if schedules := schedulesRaw.([]map[string]any); len(schedules) > 0 {
-			logger.Log.Debugln(namespace, "set cache", cacheKey)
-			pkg_redis.NewRedis().Set(ctx, cacheKey, pkg_common.ConvertToJsonString(res), models.RedisKeepAliveDuration).Err()
-		}
 	}
 
 	pkg_http.WriteRespose(ctx, w, r, http.StatusOK, res, nil)

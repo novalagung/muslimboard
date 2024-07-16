@@ -10,7 +10,9 @@ import (
 	"github.com/getsentry/sentry-go"
 	"github.com/go-resty/resty/v2"
 	"muslimboard-api.novalagung.com/models"
+	pkg_common "muslimboard-api.novalagung.com/pkg/common"
 	"muslimboard-api.novalagung.com/pkg/logger"
+	pkg_redis "muslimboard-api.novalagung.com/pkg/redis"
 )
 
 // GetCoordinateByLocation do get coordinate by location details
@@ -18,6 +20,20 @@ func GetCoordinateByLocation(ctx context.Context, location string) (map[string]a
 	namespace := "repositories.openstreetmap.GetCoordinateByLocation"
 	span := sentry.StartSpan(ctx, namespace)
 	defer span.Finish()
+
+	// check cache
+	cacheKey := fmt.Sprintf("%v %v", namespace, location)
+	cachedRes, err := pkg_redis.NewRedis().Get(ctx, cacheKey).Result()
+	if err == nil {
+		cachedResData := make(map[string]any)
+		err = pkg_common.ConvertTo(cachedRes, &cachedResData)
+		if len(cachedResData) > 0 && err == nil {
+			// prolong the cache expiration date
+			pkg_redis.NewRedis().Set(ctx, cacheKey, cachedRes, models.RedisKeepAliveDuration).Err()
+			logger.Log.Debugln(namespace, "load from cache", cacheKey)
+			return cachedResData, nil
+		}
+	}
 
 	ctxr, cancel := context.WithTimeout(ctx, models.ApiCallTimeoutDuration)
 	defer cancel()
@@ -64,12 +80,16 @@ func GetCoordinateByLocation(ctx context.Context, location string) (map[string]a
 		return nil, err
 	}
 
-	// write response
 	data := map[string]any{
 		"lat":     coordinates[0].Lat,
 		"lon":     coordinates[0].Lon,
 		"address": location,
 	}
+
+	// store cache
+	logger.Log.Debugln(namespace, "set cache", cacheKey)
+	pkg_redis.NewRedis().Set(ctx, cacheKey, pkg_common.ConvertToJsonString(data), models.RedisKeepAliveDuration).Err()
+
 	return data, nil
 }
 
@@ -78,6 +98,20 @@ func GetLocationByCoordinate(ctx context.Context, latitude, longitude string) (m
 	namespace := "repositories.openstreetmap.GetLocationByCoordinate"
 	span := sentry.StartSpan(ctx, namespace)
 	defer span.Finish()
+
+	// check cache
+	cacheKey := fmt.Sprintf("%v %v %v", namespace, latitude, longitude)
+	cachedRes, err := pkg_redis.NewRedis().Get(ctx, cacheKey).Result()
+	if err == nil {
+		cachedResData := make(map[string]any)
+		err = pkg_common.ConvertTo(cachedRes, &cachedResData)
+		if len(cachedResData) > 0 && err == nil {
+			// prolong the cache expiration date
+			pkg_redis.NewRedis().Set(ctx, cacheKey, cachedRes, models.RedisKeepAliveDuration).Err()
+			logger.Log.Debugln(namespace, "load from cache", cacheKey)
+			return cachedResData, nil
+		}
+	}
 
 	ctxr, cancel := context.WithTimeout(ctx, models.ApiCallTimeoutDuration)
 	defer cancel()
@@ -149,11 +183,17 @@ func GetLocationByCoordinate(ctx context.Context, latitude, longitude string) (m
 		address = location[0].DisplayName
 	}
 
-	// write response
-	return map[string]any{
+	data := map[string]any{
 		"lat":         location[0].Lat,
 		"lon":         location[0].Lon,
 		"address":     address,
 		"countryCode": location[0].Address.CountryCode,
-	}, nil
+	}
+
+	// store cache
+	logger.Log.Debugln(namespace, "set cache", cacheKey)
+	pkg_redis.NewRedis().Set(ctx, cacheKey, pkg_common.ConvertToJsonString(data), models.RedisKeepAliveDuration).Err()
+
+	// write response
+	return data, nil
 }
