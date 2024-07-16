@@ -712,14 +712,7 @@
                 }
             } catch (err) {
                 Utility.error(err)
-                Swal.fire({
-                    type: 'error',
-                    title: I18n.getText('promptErrorFailToGetDataTitle'),
-                    html: err.message,
-                    confirmButtonText: 'OK',
-                    showConfirmButton: true,
-                    allowOutsideClick: true
-                });
+                Component.Toast(I18n.getText('promptErrorFailToGetDataTitle'), 'error', 'Error')
             }
         },
 
