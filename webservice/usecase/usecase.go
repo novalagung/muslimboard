@@ -38,7 +38,7 @@ func GetShalatScheduleByCoordinate(ctx context.Context, method, latitude, longit
 
 	schedules, err := aladhan.GetShalatScheduleByCoordinate(ctx, method, latInt, lonInt, month, year)
 	if err != nil {
-		logger.Log.Infoln(namespace, "aladhan api returned error data. recalculate prayer times using go-prayer")
+		logger.Log.Infoln(namespace, "aladhan api returned error data. recalculate prayer times using go-prayer", latInt, lonInt)
 		schedules, err = calculatePrayerTimes(ctx, latInt, lonInt, time.Now(), prayer.MWL())
 	}
 	if err != nil {
@@ -95,7 +95,7 @@ func GetShalatScheduleByLocation(ctx context.Context, method, province, city, mo
 
 	schedules, err := aladhan.GetShalatScheduleByCoordinate(ctx, method, latitude, longitude, month, year)
 	if err != nil {
-		logger.Log.Infoln(namespace, "aladhan api returned error data. recalculate prayer times using go-prayer")
+		logger.Log.Infoln(namespace, "aladhan api returned error data. recalculate prayer times using go-prayer", latitude, longitude)
 		schedules, err = calculatePrayerTimes(ctx, latitude, longitude, time.Now(), prayer.Kemenag())
 	}
 	if err != nil {

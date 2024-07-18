@@ -12,6 +12,10 @@ import (
 func WriteRespose(ctx context.Context, w http.ResponseWriter, r *http.Request, statusCode int, resp any, err error) {
 	namespace := "pkg.http.WriteRespose"
 	span := sentry.StartSpan(ctx, namespace)
+	span.Data = map[string]any{
+		"statusCode": http.StatusOK,
+		"error":      err,
+	}
 	defer span.Finish()
 
 	if statusCode == http.StatusOK {
