@@ -747,7 +747,7 @@
                     showHideTransition: 'fade',
                     icon: 'error',
                     position: 'top-center',
-                    hideAfter: 5000
+                    hideAfter: 10000
                 })
             }
         },
