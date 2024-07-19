@@ -82,10 +82,12 @@
         // =========== PRAYER TIME
 
         activePrayerTimeDurationInMinute: 10,
+        isLocationAndPrayerTimeError: false,
 
         // render player time placeholder.
         // used on the screen during loading data process
         renderPrayerTimePlaceholder() {
+            this.isLocationAndPrayerTimeError = false
             $('.location .text').text('Loading ...')
             // $(`.prayer-time tbody`).css('visibility', 'hidden')
 
@@ -97,7 +99,26 @@
             })
             
             // $(`.prayer-time tbody tr.prayer-time-row:eq(0)`).css('visibility', 'visible')
-            $(`.prayer-time tbody tr.prayer-time-row:eq(0) td:eq(0)`).html('<span class="placeholder">Loading ...</span>')
+            $(`.prayer-time tbody tr.prayer-time-row:eq(0) td:eq(0)`).html('<span class="placeholder">&nbsp;Loading ...</span>')
+
+            $(`.prayer-time tbody tr.prayer-time-row.active`).removeClass('active')
+            
+            $('.prayer-time tbody tr.remaining-time td').html('');
+            $('.prayer-time tbody tr.remaining-time').hide();
+        },
+
+        // render player time error.
+        renderPrayerTimeError(err) {
+            this.isLocationAndPrayerTimeError = true
+            $('.location .text').text('Error ❌')
+
+            Array(6).fill(0).forEach((each, i) => {
+                $(`.prayer-time tbody tr.prayer-time-row:eq(${i}) td:eq(0)`).html('')
+                $(`.prayer-time tbody tr.prayer-time-row:eq(${i}) td:eq(1)`).html('')
+                $(`.prayer-time tbody tr.prayer-time-row:eq(${i}) td:eq(2)`).html('')
+            })
+            
+            $(`.prayer-time tbody tr.prayer-time-row:eq(0) td:eq(0)`).html(`<span class="placeholder">&nbsp;Error ❌</span>`)
         },
 
         // get automatic prayer time
@@ -238,6 +259,10 @@
             let isAlarmEverSet = false
 
             const doRenderPrayerTime = () => {
+                if (this.isLocationAndPrayerTimeError) {
+                    return
+                }
+
                 const hmFormatter = (str) => parseInt(str.slice(0, 5).replace(':', ''), 10)
                 const nowHM = parseInt(Utility.now().add(-1 * this.activePrayerTimeDurationInMinute, 'minutes').format('HHmm'), 10)
                 const fajrHM = hmFormatter(schedule.Fajr)
@@ -460,7 +485,7 @@
                     }, Constant.app.updateBackgroundDelayDuration)
                 }
                 preloader.onerror = (err) => {
-                        this.nextSelectedBackground = Utility.randomFromArray('background', data.content, this.selectedBackground)
+                    this.nextSelectedBackground = Utility.randomFromArray('background', data.content, this.selectedBackground)
                     preloader.src = doGetBackgroundURL(this.nextSelectedBackground)
                 }
             }
@@ -711,15 +736,19 @@
                     this.renderPrayerTime.call(this, schedule)
                 }
             } catch (err) {
+                if (err instanceof Error) {
+                    err = err.message
+                }
                 Utility.error(err)
-                Swal.fire({
-                    type: 'error',
-                    title: I18n.getText('promptErrorFailToGetDataTitle'),
-                    html: err.message,
-                    confirmButtonText: 'OK',
-                    showConfirmButton: true,
-                    allowOutsideClick: true
-                });
+                this.renderPrayerTimeError.call(this, err)
+                $.toast({
+                    heading: 'Error',
+                    text: err,
+                    showHideTransition: 'fade',
+                    icon: 'error',
+                    position: 'top-center',
+                    hideAfter: 10000
+                })
             }
         },
 

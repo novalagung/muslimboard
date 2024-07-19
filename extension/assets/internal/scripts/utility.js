@@ -44,14 +44,7 @@ const Utility = {
                 resolve(coordinateCache)
             } else {
                 localStorage.removeItem('data-coordinate-cache')
-                reject(new Error(`
-                    <br />Gagal mendeteksi lokasi user secara otomatis.
-                    <br />
-                    <br />Pastikan "location permission" untuk ekstensi
-                    <br />Muslim Board adalah "allowed" dan ada akses internet.
-                    <br />
-                    <br />Atau silakan gunakan fitur atur manual pilihan lokasi.
-                `))
+                reject(new Error(I18n.getText('promptErrorFailToGetLocationInfo')))
             }
         }
 

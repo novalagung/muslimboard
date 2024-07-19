@@ -248,15 +248,15 @@ const I18n = {
             'zh-cn': `almost|距离 $1 祈祷还有 10 分钟|在 $2`
         },
         
-        promptErrorFailToGetDataTitle: {
-            ar: 'مشكلة في جلب البيانات',
-            en: 'Error fetching data',
-            ru: 'Ошибка при получении данных',
-            bn: 'ডেটা আনতে সমস্যা হচ্ছে', 
-            hi: 'डेटा लाने में परेशानी हो रही है',
-            id: 'Error koneksi pengambilan data',
-            'zh-tw': '取得資料錯誤',
-            'zh-cn': '获取数据错误'
+        promptErrorFailToGetLocationInfo: {
+            ar: 'تم حظر الاكتشاف التلقائي لخطأ الموقع بسبب "إذن الموقع". يرجى التأكد من تمكينه على المتصفح الخاص بك',
+            en: 'Auto-detect location error due to "location permission" is blocked. Please ensure to enable it on your browser',
+            ru: 'Ошибка автоматического определения местоположения из-за «разрешения на определение местоположения» заблокирована. Обязательно включите его в вашем браузере',
+            bn: '"অবস্থান অনুমতি" এর কারণে স্বয়ংক্রিয়ভাবে সনাক্তকরণের অবস্থানের ত্রুটি ব্লক করা হয়েছে। আপনার ব্রাউজারে এটি সক্ষম করা নিশ্চিত করুন', 
+            hi: '"स्थान अनुमति" के कारण स्थान का स्वतः पता लगाने वाली त्रुटि अवरुद्ध है। कृपया अपने ब्राउज़र पर इसे सक्षम करना सुनिश्चित करें',
+            id: 'Terjadi error saat pengambilan informasi lokasi. Pastikan untuk membolehkan akses "location" di browser anda',
+            'zh-tw': '由於“位置權限”被阻止而導致自動檢測位置錯誤。請確保在您的瀏覽器上啟用它',
+            'zh-cn': '由于“位置权限”被阻止而导致自动检测位置错误。请确保在您的浏览器上启用它'
         },
         promptErrorFailToGetPrayerTimesMessage: {
             ar: 'تعذر الحصول على مواقيت الصلاة بسبب خطأ. يرجى التأكد من توفر اتصال بالإنترنت ثم قم بتحديث الصفحة',
