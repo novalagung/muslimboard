@@ -9,7 +9,7 @@ const Constant = {
         email: 'hello@novalagung.com',
     },
     app: {
-        baseUrlWebService: 'https://muslimboard-api.novalagung.com', // 'http://localhost:8012',
+        baseUrlWebService: 'https://muslimboard-api.novalagung.com',
         baseUrlGithub: 'https://muslimboard.novalagung.com/extension/data',
         debug: (() => !('update_url' in chrome.runtime.getManifest()))(),
         timeoutDuration: Utility.seconds(5),
