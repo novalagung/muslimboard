@@ -16,8 +16,7 @@ const Constant = {
         updateBackgroundDelayDuration: Utility.seconds(40),
         updateContentDelayDuration: Utility.seconds(60),
         changelogs: [
-            'Display the remaining time info',
-            'Add support to several languages: Hindi, Bengali, Russian, Simplified Chinese'
+            'Error UI improvement'
         ]
     },
 }
