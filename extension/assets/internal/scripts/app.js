@@ -97,7 +97,25 @@
             })
             
             // $(`.prayer-time tbody tr.prayer-time-row:eq(0)`).css('visibility', 'visible')
-            $(`.prayer-time tbody tr.prayer-time-row:eq(0) td:eq(0)`).html('<span class="placeholder">Loading ...</span>')
+            $(`.prayer-time tbody tr.prayer-time-row:eq(0) td:eq(0)`).html('<span class="placeholder">&nbsp;Loading ...</span>')
+
+            $(`.prayer-time tbody tr.prayer-time-row.active`).removeClass('active')
+            
+            $('.prayer-time tbody tr.remaining-time td').html('');
+            $('.prayer-time tbody tr.remaining-time').hide();
+        },
+
+        // render player time error.
+        renderPrayerTimeError(err) {
+            $('.location .text').text('Error ❌')
+
+            Array(6).fill(0).forEach((each, i) => {
+                $(`.prayer-time tbody tr.prayer-time-row:eq(${i}) td:eq(0)`).html('')
+                $(`.prayer-time tbody tr.prayer-time-row:eq(${i}) td:eq(1)`).html('')
+                $(`.prayer-time tbody tr.prayer-time-row:eq(${i}) td:eq(2)`).html('')
+            })
+            
+            $(`.prayer-time tbody tr.prayer-time-row:eq(0) td:eq(0)`).html(`<span class="placeholder">&nbsp;Error ❌ ${err}</span>`)
         },
 
         // get automatic prayer time
@@ -460,7 +478,7 @@
                     }, Constant.app.updateBackgroundDelayDuration)
                 }
                 preloader.onerror = (err) => {
-                        this.nextSelectedBackground = Utility.randomFromArray('background', data.content, this.selectedBackground)
+                    this.nextSelectedBackground = Utility.randomFromArray('background', data.content, this.selectedBackground)
                     preloader.src = doGetBackgroundURL(this.nextSelectedBackground)
                 }
             }
@@ -712,7 +730,15 @@
                 }
             } catch (err) {
                 Utility.error(err)
-                Component.Toast(I18n.getText('promptErrorFailToGetDataTitle'), 'error', 'Error')
+                this.renderPrayerTimeError.call(this, I18n.getText('promptErrorFailToGetDataTitle'))
+                $.toast({
+                    heading: 'Error',
+                    text: I18n.getText('promptErrorFailToGetDataTitle'),
+                    showHideTransition: 'fade',
+                    icon: 'error',
+                    position: 'top-center',
+                    hideAfter: 5000
+                })
             }
         },
 
