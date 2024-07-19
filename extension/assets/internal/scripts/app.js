@@ -82,10 +82,12 @@
         // =========== PRAYER TIME
 
         activePrayerTimeDurationInMinute: 10,
+        isLocationAndPrayerTimeError: false,
 
         // render player time placeholder.
         // used on the screen during loading data process
         renderPrayerTimePlaceholder() {
+            this.isLocationAndPrayerTimeError = false
             $('.location .text').text('Loading ...')
             // $(`.prayer-time tbody`).css('visibility', 'hidden')
 
@@ -107,6 +109,7 @@
 
         // render player time error.
         renderPrayerTimeError(err) {
+            this.isLocationAndPrayerTimeError = true
             $('.location .text').text('Error ❌')
 
             Array(6).fill(0).forEach((each, i) => {
@@ -256,6 +259,10 @@
             let isAlarmEverSet = false
 
             const doRenderPrayerTime = () => {
+                if (this.isLocationAndPrayerTimeError) {
+                    return
+                }
+
                 const hmFormatter = (str) => parseInt(str.slice(0, 5).replace(':', ''), 10)
                 const nowHM = parseInt(Utility.now().add(-1 * this.activePrayerTimeDurationInMinute, 'minutes').format('HHmm'), 10)
                 const fajrHM = hmFormatter(schedule.Fajr)
