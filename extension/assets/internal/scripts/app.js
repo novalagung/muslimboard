@@ -736,6 +736,9 @@
                     this.renderPrayerTime.call(this, schedule)
                 }
             } catch (err) {
+                if (err instanceof Error) {
+                    err = err.message
+                }
                 Utility.error(err)
                 this.renderPrayerTimeError.call(this, err)
                 $.toast({
