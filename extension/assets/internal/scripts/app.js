@@ -118,7 +118,7 @@
                 $(`.prayer-time tbody tr.prayer-time-row:eq(${i}) td:eq(2)`).html('')
             })
             
-            $(`.prayer-time tbody tr.prayer-time-row:eq(0) td:eq(0)`).html(`<span class="placeholder">&nbsp;Error ❌ ${err}</span>`)
+            $(`.prayer-time tbody tr.prayer-time-row:eq(0) td:eq(0)`).html(`<span class="placeholder">&nbsp;Error ❌</span>`)
         },
 
         // get automatic prayer time
@@ -737,10 +737,10 @@
                 }
             } catch (err) {
                 Utility.error(err)
-                this.renderPrayerTimeError.call(this, I18n.getText('promptErrorFailToGetDataTitle'))
+                this.renderPrayerTimeError.call(this, err)
                 $.toast({
                     heading: 'Error',
-                    text: I18n.getText('promptErrorFailToGetDataTitle'),
+                    text: err,
                     showHideTransition: 'fade',
                     icon: 'error',
                     position: 'top-center',
