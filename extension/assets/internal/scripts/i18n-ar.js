@@ -8,7 +8,7 @@ const I18n = {
             hi: 'मुसलमानों के लिए व्यक्तिगत डैशबोर्ड',
             id: 'Personal Dashboard untuk umat Islam',
             'zh-tw': '穆斯林個人儀表板',
-            'zh-cn': '穆斯林个人仪表板'
+            'zh-cn': 'الجدول الشخصي للمسلم'
         },
         languageName: {
             ar: {
