@@ -2,8 +2,8 @@
 	"version": "2024.02.07",
 	"content": [{
 		"id": "1",
-		"matan": "فَاذْكُرُونِي أَذْكُرْكُمْ",
-		"translation": "Ingatlah kamu kepada-Ku niscaya Aku ingat (pula) kepadamu",
+		"matan": "فَاذْكُرُوْنِيْٓ اَذْكُرْكُمْ وَاشْكُرُوْا لِيْ وَلَا تَكْفُرُوْنِ ࣖ",
+		"translation": "Maka, ingatlah kepada-Ku, Aku pun akan ingat kepadamu. Bersyukurlah kepada-Ku dan janganlah kamu ingkar kepada-Ku.",
 		"reference": "QS. Al Baqarah: 152",
 		"type": "verse"
 	}, {
@@ -29,13 +29,13 @@
 	}, {
 		"id": "6",
 		"matan": "لَا تَحْزَنْ إِنَّ اللَّهَ مَعَنَا",
-		"translation": "Janganlah bersedih, karena sungguh Allah bersama kita",
+		"translation": "Janganlah engkau bersedih, sesungguhnya Allah bersama kita.",
 		"reference": "QS. At Taubah: 40",
 		"type": "verse"
 	}, {
 		"id": "7",
-		"matan": "وَاصْبِرُوا ۚ إِنَّ اللَّهَ مَعَ الصَّابِرِينَ",
-		"translation": "Bersabarlah kalian, karena Allah bersama orang-orang yang bersabar",
+		"matan": "وَاصْبِرُوْاۗ اِنَّ اللّٰهَ مَعَ الصّٰبِرِيْنَۚ",
+		"translation": "... Serta bersabarlah. Sesungguhnya Allah bersama orang-orang yang sabar.",
 		"reference": "QS. Al-Anfal: 46",
 		"type": "verse"
 	}, {
@@ -62,8 +62,8 @@
 		"reference": "https://t.co/WefZFinYYV"
 	}, {
 		"id": "12",
-		"matan": "وَلْيَتَلَطَّفْ",
-		"translation": "Dan hendaklah dia berlaku lemah lembut",
+		"matan": "وَلْيَتَلَطَّفْ",
+		"translation": "Hendaklah pula dia berlaku lemah lembut.",
 		"reference": "QS. Al-Kahfi: 19",
 		"type": "verse"
 	}, {
@@ -80,8 +80,8 @@
 		"reference": "https://t.co/EFyobWRsyw"
 	}, {
 		"id": "15",
-		"matan": "وَاذْكُر رَّبَّكَ إِذَا نَسِيتَ",
-		"translation": "Dan ingatlah Rabb-mu jika kamu lupa",
+		"matan": "وَاذْكُرْ رَّبَّكَ اِذَا نَسِيْتَ",
+		"translation": "Ingatlah kepada Tuhanmu apabila engkau lupa.",
 		"reference": "QS. Al-Kahfi: 24",
 		"type": "verse"
 	}, {
@@ -140,9 +140,9 @@
 		"reference": "https://t.co/J3p2y7HfII"
 	}, {
 		"id": "25",
-		"matan": "اللَّـهُ نُورُ السَّمَاوَاتِ وَالْأَرْضِ",
-		"translation": "Allah lah cahaya langit dan bumi",
-		"reference": "QS. An Nur: 35",
+		"matan": "اَللّٰهُ نُوْرُ السَّمٰوٰتِ وَالْاَرْضِۗ",
+		"translation": "Allah (pemberi) cahaya (pada) langit dan bumi.",
+		"reference": "QS. An-Nur: 35",
 		"type": "verse"
 	}, {
 		"id": "26",
@@ -229,7 +229,7 @@
 		"id": "40",
 		"matan": "مَا نَقَصَتْ صَدَقَةٌ مِنْ مَالٍ، وَمَا زَادَ اللهُ عَبْدًا بِعَفْوٍ، إِلَّا عِزًّا، وَمَا تَوَاضَعَ أَحَدٌ لِلَّهِ إِلَّا رَفَعَهُ اللهُ",
 		"translation": "Tidaklah sedekah itu mengurangi harta, tidaklah Allah menambahkan kepada seorang hamba yang memaafkan kecuali keperkasaan, dan tidaklah seseorang merendah karena Allah kecuali Allah akan mengangkatnya",
-		"reference": "HR. Muslim no 2588",
+		"reference": "HR. Muslim no. 2588",
 		"type": "verse"
 	}, {
 		"id": "41",
@@ -290,10 +290,10 @@
 		"reference": "Bisyr ibnul Harits"
 	}, {
 		"id": "52",
-		"matan": "وَمَن يَتَّقِ اللَّهَ يَجْعَل لَّهُ مَخْرَجًا﴿٢﴾ وَيَرْزُقْهُ مِنْ حَيْثُ لَا يَحْتَسِبُ",
-		"translation": "Barangsiapa bertakwa kepada Allah niscaya Dia akan mengadakan baginya jalan keluar. Dan memberinya rezeki dari arah yang tiada disangka-sangkanya",
+		"matan": "وَمَنْ يَّتَّقِ اللّٰهَ يَجْعَلْ لَّهٗ مَخْرَجًا وَّيَرْزُقْهُ مِنْ حَيْثُ لَا يَحْتَسِبُ",
+		"translation": "Siapa yang bertakwa kepada Allah, niscaya Dia akan membukakan jalan keluar baginya dan menganugerahkan kepadanya rezeki dari arah yang tidak dia duga.",
 		"type": "verse",
-		"reference": "QS. Ath Thalaq: 2-3"
+		"reference": "QS. Ath-Thalaq: 2-3"
 	}, {
 		"id": "53",
 		"translation": "Musibah besar itu adalah seseorang mengetahui kekurangan dirinya, tapi tak peduli dan tak mau memperbaiki kekurangannya tersebut",
@@ -336,10 +336,10 @@
 		"author": "@alhalaby2010"
 	}, {
 		"id": "61",
-		"matan": "وَرَحْمَتِي وَسِعَتْ كُلَّ شَيْءٍ ۚفَسَأَكْتُبُهَا لِلَّذِينَ يَتَّقُونَ",
-		"translation": "Dan rahmat-Ku luas meliputi segala sesuatu, maka aku akan memberikannya bagi mereka yang bertaqwa",
+		"matan": "وَرَحْمَتِيْ وَسِعَتْ كُلَّ شَيْءٍۗ فَسَاَكْتُبُهَا لِلَّذِيْنَ يَتَّقُوْنَ وَيُؤْتُوْنَ",
+		"translation": "Siksa-Ku akan Aku timpakan kepada siapa yang Aku kehendaki dan rahmat-Ku meliputi segala sesuatu.",
 		"type": "verse",
-		"reference": "QS. Al A’raf: 156"
+		"reference": "QS. Al-A’raf: 156"
 	}, {
 		"id": "62",
 		"translation": "Jika Anda diuji, ingat tiga hal: 1. Ada orang yang musibahnya lebih berat 2. Dekatnya pertolongan Allah 3. Besarnya pahala sabar",
@@ -347,8 +347,8 @@
 		"author": "@q8azm"
 	}, {
 		"id": "63",
-		"matan": "كُلُّ نَفْسٍ ذَآئِقَةُ ٱلْمَوْتِ",
-		"translation": "Setiap yang bernyawa akan merasakan kematian",
+		"matan": "كُلُّ نَفْسٍ ذَاۤىِٕقَةُ الْمَوْتِۗ",
+		"translation": "Setiap yang bernyawa akan merasakan mati.",
 		"type": "verse",
 		"reference": "QS. Ali Imran: 185"
 	}, {
@@ -358,16 +358,16 @@
 		"author": "@saudAlfunaysan"
 	}, {
 		"id": "65",
-		"matan": "إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ",
-		"translation": "Hanya kepada-Mu kami beribadah dan hanya kepada-Mu kami memohon pertolongan",
+		"matan": "اِيَّاكَ نَعْبُدُ وَاِيَّاكَ نَسْتَعِيْنُ",
+		"translation": "Hanya kepada Engkaulah kami menyembah dan hanya kepada Engkaulah kami memohon pertolongan.",
 		"type": "verse",
-		"reference": "QS. Al fatihah: 5"
+		"reference": "QS. Al Fatihah: 5"
 	}, {
 		"id": "66",
-		"matan": "فَٱذْكُرُونِىٓ أَذْكُرْكُمْ",
-		"translation": "Ingatlah kamu kepada-Ku, niscaya Aku ingat (pula) kepadamu",
+		"matan": "فَاذْكُرُوْنِيْٓ اَذْكُرْكُمْ",
+		"translation": "Maka, ingatlah kepada-Ku, Aku pun akan ingat kepadamu.",
 		"type": "verse",
-		"reference": "QS. al Baqarah: 152"
+		"reference": "QS. Al Baqarah: 152"
 	}, {
 		"id": "67",
 		"translation": "Sebagian salaf berkata, “Menyedihkan nasib orang pelit. Dia hidup di dunia seperti orang-orang miskin dan dihisab di akhirat seperti hisabnya orang kaya”",
@@ -414,7 +414,7 @@
 		"matan": "إِنَّ الرِّفْقَ لاَ يَكُونُ فِى شَىْءٍ إِلاَّ زَانَهُ وَلاَ يُنْزَعُ مِنْ شَىْءٍ إِلاَّ شَانَهُ",
 		"translation": "Sesungguhnya kelembutan tidaklah diberikan pada segala urusan melainkan akan menghiasinya, dan tidaklah kelembutan ditarik dari tiap urusan kecuali akan menjadikannya buruk.",
 		"type": "verse",
-		"reference": "HR Muslim no: 2594"
+		"reference": "HR Muslim no. 2594"
 	}, {
 		"id": "76",
 		"matan": "مَا نُزِّلَ بَلاَءٌ إِلاَّ بِذَنْبٍ وَلاَ رُفِعَ بَلاَءٌ إِلاَّ بِتَوْبَةٍ",
@@ -429,8 +429,8 @@
 		"reference": "HR. Muslim, no. 2699"
 	}, {
 		"id": "78",
-		"matan": "وَلَوْ بَسَطَ اللَّهُ الرِّزْقَ لِعِبَادِهِ لَبَغَوْا فِي الْأَرْضِ وَلَكِنْ يُنَزِّلُ بِقَدَرٍ مَا يَشَاءُ إِنَّهُ بِعِبَادِهِ خَبِيرٌ بَصِيرٌ",
-		"translation": "Dan jikalau Allah melapangkan rezeki kepada hamba-hamba-Nya tentulah mereka akan melampaui batas di muka bumi, tetapi Allah menurunkan apa yang dikehendaki-Nya dengan ukuran. Sesungguhnya Dia Maha Mengetahui (keadaan) hamba-hamba-Nya lagi Maha Melihat.",
+		"matan": "وَلَوْ بَسَطَ اللّٰهُ الرِّزْقَ لِعِبَادِهٖ لَبَغَوْا فِى الْاَرْضِ وَلٰكِنْ يُّنَزِّلُ بِقَدَرٍ مَّا يَشَاۤءُ ۗاِنَّهٗ بِعِبَادِهٖ خَبِيْرٌۢ بَصِيْرٌ",
+		"translation": "Seandainya Allah melapangkan rezeki kepada hamba-hamba-Nya, niscaya mereka akan berbuat melampaui batas di bumi. Akan tetapi, Dia menurunkan apa yang Dia kehendaki dengan ukuran (tertentu). Sesungguhnya Dia Maha Teliti lagi Maha Melihat (keadaan) hamba-hamba-Nya.",
 		"type": "verse",
 		"reference": "QS. Asy Syuraa: 27"
 	}, {
@@ -455,7 +455,7 @@
 		"id": "82",
 		"translation": "Kegelisahan, kesusahan, dan kesedihan datang dari dua hal: pertama, menginginkan dan berambisi terhadap dunia; kedua, kurangnya melakukan amal kebaikan dan ketaatan",
 		"type": "word of wisdom",
-		"reference": "Uddatus Shabirin, hlm 258"
+		"reference": "Uddatus Shabirin, hal. 258"
 	}, {
 		"id": "83",
 		"matan": "انْظُرُوا إِلَى مَنْ أَسْفَلَ مِنْكُمْ وَلاَ تَنْظُرُوا إِلَى مَنْ هُوَ فَوْقَكُمْ فَهُوَ أَجْدَرُ أَنْ لاَ تَزْدَرُوا نِعْمَةَ اللَّهِ",
@@ -465,97 +465,97 @@
 	}, {
 		"id": "84",
 		"matan": "وَلَنَبْلُوَنَّكُمْ بِشَيْءٍ مِّنَ الْخَوْفِ وَالْجُوْعِ وَنَقْصٍ مِّنَ الْاَمْوَالِ وَالْاَنْفُسِ وَالثَّمَرٰتِۗ وَبَشِّرِ الصّٰبِرِيْنَ",
-		"translation": "Kami pasti akan mengujimu dengan sedikit ketakutan dan kelaparan, kekurangan harta, jiwa, dan buah-buahan. Sampaikanlah (wahai Nabi Muhammad) kabar gembira kepada orang-orang sabar.",
+		"translation": "Kami pasti akan mengujimu dengan sedikit ketakutan dan kelaparan, kekurangan harta, jiwa, dan buah-buahan. Sampaikanlah (wahai Nabi Muhammad,) kabar gembira kepada orang-orang sabar.",
 		"type": "verse",
 		"reference": "QS. Al Baqarah: 155"
 	}, {
 		"id": "85",
 		"matan": "لَا يُكَلِّفُ اللّٰهُ نَفْسًا اِلَّا وُسْعَهَا",
-		"translation": "Allah tidak membebani seseorang melainkan sesuai dengan kesanggupannya.",
+		"translation": "Allah tidak membebani seseorang, kecuali menurut kesanggupannya.",
 		"type": "verse",
 		"reference": "QS. Al Baqarah: 286"
 	},{
 		"id": "86",
 		"matan": "لَىِٕنْ شَكَرْتُمْ لَاَزِيْدَنَّكُمْ وَلَىِٕنْ كَفَرْتُمْ اِنَّ عَذَابِيْ لَشَدِيْدٌ",
-		"translation": "Sesungguhnya jika kamu bersyukur, pasti Kami akan menambah (nikmat) kepadamu, namun jika kamu mengingkari (nikmat-Ku), maka sesungguhnya azab-Ku sangatlah pedih.",
+		"translation": "Sesungguhnya jika kamu bersyukur, niscaya Aku akan menambah (nikmat) kepadamu, tetapi jika kamu mengingkari (nikmat-Ku), sesungguhnya azab-Ku benar-benar sangat keras.",
 		"type": "verse",
 		"reference": "QS. Ibrahim: 7"
 	},{
 		"id": "87",
 		"matan": "اِنَّ الْحَسَنٰتِ يُذْهِبْنَ السَّيِّاٰتِۗ ذٰلِكَ ذِكْرٰى لِلذّٰكِرِيْنَ",
-		"translation": "Sesungguhnya perbuatan-perbuatan yang baik itu menghapuskan (dosa) perbuatan-perbuatan yang buruk.",
+		"translation": "Sesungguhnya perbuatan-perbuatan baik menghapus kesalahan-kesalahan. Itu adalah peringatan bagi orang-orang yang selalu mengingat (Allah).",
 		"type": "verse",
 		"reference": "QS. Hud: 114"
 	},{
 		"id": "88",
 		"matan": "وَقُوْلُوْا لِلنَّاسِ حُسْنًا",
-		"translation": "Dan ucapkanlah kata-kata yang baik kepada manusia.",
+		"translation": "Bertutur katalah yang baik kepada manusia.",
 		"type": "verse",
 		"reference": "QS. Al Baqarah: 83"
 	},{
 		"id": "89",
 		"matan": "فَاِذَا عَزَمْتَ فَتَوَكَّلْ عَلَى اللّٰهِ ۗ اِنَّ اللّٰهَ يُحِبُّ الْمُتَوَكِّلِيْنَ",
-		"translation": "Kemudian apabila kamu telah membulatkan tekad, maka bertawakkallah kepada Allah. Sesungguhnya Allah menyukai orang-orang yang bertawakkal kepada-Nya.",
+		"translation": "Kemudian, apabila engkau telah membulatkan tekad, bertawakallah kepada Allah. Sesungguhnya Allah mencintai orang-orang yang bertawakal.",
 		"type": "verse",
 		"reference": "QS. Ali Imran: 159"
 	},{
 		"id": "90",
 		"matan": "الَّذِيْ خَلَقَ سَبْعَ سَمٰوٰتٍ طِبَاقًاۗ مَا تَرٰى فِيْ خَلْقِ الرَّحْمٰنِ مِنْ تَفٰوُتٍۗ فَارْجِعِ الْبَصَرَۙ هَلْ تَرٰى مِنْ فُطُوْرٍ",
-		"translation": "Yang menciptakan tujuh langit berlapis-lapis. Tidak akan kamu lihat sesuatu yang tidak seimbang pada ciptaan Tuhan Yang Maha Pengasih. Maka lihatlah sekali lagi, adakah kamu lihat sesuatu yang cacat?",
+		"translation": "(Dia juga) yang menciptakan tujuh langit berlapis-lapis. Kamu tidak akan melihat pada ciptaan Tuhan Yang Maha Pengasih ketidakseimbangan sedikit pun. Maka, lihatlah sekali lagi! Adakah kamu melihat suatu cela?",
 		"type": "verse",
 		"reference": "QS. Al Mulk: 3"
 	},{
 		"id": "91",
 		"matan": "وَابْتَغِ فِيْمَآ اٰتٰىكَ اللّٰهُ الدَّارَ الْاٰخِرَةَ وَلَا تَنْسَ نَصِيْبَكَ مِنَ الدُّنْيَا",
-		"translation": "Dan carilah pada apa yang telah dianugerahkan kepadamu (kebahagiaan) negeri akhirat, dan janganlah kamu melupakan bagianmu dari (kenikmatan) duniawi.",
+		"translation": "Dan, carilah pada apa yang telah dianugerahkan Allah kepadamu (pahala) negeri akhirat, tetapi janganlah kamu lupakan bagianmu di dunia.",
 		"type": "verse",
 		"reference": "QS. Al Qasas: 77"
 	},{
 		"id": "92",
 		"matan": "وَلَا تَسْتَوِى الْحَسَنَةُ وَلَا السَّيِّئَةُ ۗاِدْفَعْ بِالَّتِيْ هِيَ اَحْسَنُ فَاِذَا الَّذِيْ بَيْنَكَ وَبَيْنَهٗ عَدَاوَةٌ كَاَنَّهٗ وَلِيٌّ حَمِيْمٌ",
-		"translation": "Kebaikan tidak sama dengan kejahatan. Tolaklah kejahatan itu dengan cara yang lebih baik, sehingga yang memusuhimu akan seperti teman yang setia.",
+		"translation": "Tidaklah sama kebaikan dengan kejahatan. Tolaklah (kejahatan) dengan perilaku yang lebih baik sehingga orang yang ada permusuhan denganmu serta-merta menjadi seperti teman yang sangat setia.",
 		"type": "verse",
 		"reference": "QS. Fussilat: 34"
 	},{
 		"id": "93",
 		"matan": "اِنَّمَا يُوَفَّى الصّٰبِرُوْنَ اَجْرَهُمْ بِغَيْرِ حِسَابٍ",
-		"translation": "Sesungguhnya hanya orang-orang yang bersabarlah yang dicukupkan pahala mereka tanpa batas.",
+		"translation": "Sesungguhnya hanya orang-orang yang bersabarlah yang disempurnakan pahalanya tanpa perhitungan.",
 		"type": "verse",
 		"reference": "QS. Azumar: 10"
 	},{
 		"id": "94",
 		"matan": "فَمَنْ يَّعْمَلْ مِثْقَالَ ذَرَّةٍ خَيْرًا يَّرَهٗۚ",
-		"translation": "Barangsiapa yang mengerjakan kebaikan sekecil apapun, niscaya dia akan melihat (balasan)nya.",
+		"translation": "Siapa yang mengerjakan kebaikan seberat zarah, dia akan melihat (balasan)-nya.",
 		"type": "verse",
 		"reference": "QS. Az Zalzalah: 7"
 	},{
 		"id": "95",
-		"matan": "وَمَنْ يَّعْمَلْ مِثْقَالَ ذَرَّةٍ شَرًّا يَّرَهٗ",
-		"translation": "Barangsiapa yang mengerjakan kejahatan sekecil apapun, niscaya dia akan melihat (balasan)nya.",
+		"matan": "وَمَنْ يَّعْمَلْ مِثْقَالَ ذَرَّةٍ شَرًّا يَّرَهٗ ࣖ",
+		"translation": "Siapa yang mengerjakan kejahatan seberat zarah, dia akan melihat (balasan)-nya.",
 		"type": "verse",
 		"reference": "QS. Az Zalzalah: 8"
 	},{
 		"id": "96",
 		"matan": "يٰٓاَيُّهَا الَّذِيْنَ اٰمَنُوْا لَا تَدْخُلُوْا بُيُوْتًا غَيْرَ بُيُوْتِكُمْ حَتّٰى تَسْتَأْنِسُوْا وَتُسَلِّمُوْا عَلٰٓى اَهْلِهَاۗ ذٰلِكُمْ خَيْرٌ لَّكُمْ لَعَلَّكُمْ تَذَكَّرُوْنَ",
-		"translation": "Wahai orang beriman, janganlah kamu memasuki rumah yang bukan rumahmu sebelum meminta izin dan memberi salam kepada penghuninya. Yang demikian itu lebih baik agar kamu selalu ingat.",
+		"translation": "Wahai orang-orang yang beriman, janganlah memasuki rumah yang bukan rumahmu sebelum meminta izin dan memberi salam kepada penghuninya. Demikian itu lebih baik bagimu agar kamu mengambil pelajaran.",
 		"type": "verse",
 		"reference": "QS. An Nur: 27"
 	},{
 		"id": "97",
 		"matan": "وَاَمَّا مَنْ خَافَ مَقَامَ رَبِّهٖ وَنَهَى النَّفْسَ عَنِ الْهَوٰىۙ فَاِنَّ الْجَنَّةَ هِيَ الْمَأْوٰىۗ",
-		"translation": "Dan adapun orang-orang yang takut pada kebesaran Tuhannya dan menahan diri dari keinginan hawa nafsunya, maka sesungguhnya surgalah tempat tinggal mereka.",
+		"translation": "Adapun orang-orang yang takut pada kebesaran Tuhannya dan menahan diri dari (keinginan) hawa nafsunya, sesungguhnya surgalah tempat tinggal(-nya).",
 		"type": "verse",
 		"reference": "QS. An Naziat: 40-41"
 	},{
 		"id": "98",
 		"matan": "يٰٓاَيُّهَا النَّاسُ اِنَّا خَلَقْنٰكُمْ مِّنْ ذَكَرٍ وَّاُنْثٰى وَجَعَلْنٰكُمْ شُعُوْبًا وَّقَبَاۤىِٕلَ لِتَعَارَفُوْا ۚ اِنَّ اَكْرَمَكُمْ عِنْدَ اللّٰهِ اَتْقٰىكُمْ ۗاِنَّ اللّٰهَ عَلِيْمٌ خَبِيْرٌ",
-		"translation": "Hai manusia, sesungguhnya Kami menciptakan kamu dari seorang laki-laki dan seorang perempuan dan menjadikan kamu berbangsa-bangsa dan bersuku-suku supaya kamu saling mengenal. Sesungguhnya yang paling mulia di antara kamu di sisi Allah adalah orang yang paling bertakwa. Sesungguhnya Allah Maha Mengetahui lagi Maha Teliti.",
+		"translation": "Wahai manusia, sesungguhnya Kami telah menciptakan kamu dari seorang laki-laki dan perempuan. Kemudian, Kami menjadikan kamu berbangsa-bangsa dan bersuku-suku agar kamu saling mengenal. Sesungguhnya yang paling mulia di antara kamu di sisi Allah adalah orang yang paling bertakwa. Sesungguhnya Allah Maha Mengetahui lagi Maha Teliti.",
 		"type": "verse",
 		"reference": "QS. Al Hujurat: 13"
 	},{
 		"id": "99",
-		"matan": "ۨوَيْلٌ لِّكُلِّ هُمَزَةٍ لُّمَزَةٍۙ الَّذِيْ جَمَعَ مَالًا وَّعَدَّدَهٗۙ يَحْسَبُ اَنَّ مَالَهٗٓ اَخْلَدَهٗۚ",
-		"translation": "Kecelakaanlah bagi setiap pengumpat dan pencela, yang mengumpulkan harta dan menghitung-hitungnya. Dia mengira bahwa hartanya dapat menyelamatkannya.",
+		"matan": "وَيْلٌ لِّكُلِّ هُمَزَةٍ لُّمَزَةٍۙ الَّذِيْ جَمَعَ مَالًا وَّعَدَّدَهٗۙ يَحْسَبُ اَنَّ مَالَهٗٓ اَخْلَدَهٗۚ",
+		"translation": "Celakalah setiap pengumpat lagi pencela yang mengumpulkan harta dan menghitung-hitungnya. Dia (manusia) mengira bahwa hartanya dapat mengekalkannya.",
 		"type": "verse",
 		"reference": "QS. Al Humazah: 1-3"
 	},{
