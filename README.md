@@ -50,6 +50,7 @@ Muslim Board gratis untuk disebarluaskan secara bebas dibawah lisensi MIT Licens
 - [Eky Pradhana](https://www.linkedin.com/in/eky-pradhana-a7aa6143)
 - [Elena Dobrolyubova](https://github.com/eid23) (adding Russian localization)
 - [Ferdina Kusumah](https://github.com/FerdinaKusumah)
+- [Kenji Hikmatullah](https://github.com/kenjihikmatullah)
 - [Moch. Sudharmono](https://github.com/moch-sudharmono) (adding Hijri calendar)
 - [Mohammed Ayman](https://github.com/MohammedAyman2018) (adding Arabic localization)
 - [Muhammad Ichsanul Fadhil](https://github.com/ichsanputr)
