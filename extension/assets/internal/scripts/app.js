@@ -131,7 +131,7 @@
             const data = await Utility.getLatestData(key, async (resolve) => {
                 const month = parseInt(Utility.now().format('MM'), 10)
                 const year = Utility.now().year()
-                const url = `${Constant.app.baseUrlWebService}/muslimboard-api?v=${Constant.meta.version}&op=shalat-schedule-by-coordinate&latitude=${latitude}&longitude=${longitude}&month=${month}&year=${year}`
+                const url = `${Constant.app.baseUrlWebService}/muslimboard-api?v=${Constant.meta.version}&op=shalat-schedule-by-coordinate&latitude=${latitude}&longitude=${longitude}&month=${month}&year=${year}&browserID=${Utility.getBrowserUuid()}`
                 const response = await Utility.fetch(url)
                 const result = await response.json()
         
@@ -178,7 +178,7 @@
             const data = await Utility.getLatestData(key, async (resolve) => {
                 const month = parseInt(Utility.now().format('MM'), 10)
                 const year = Utility.now().year()
-                const url = `${Constant.app.baseUrlWebService}/muslimboard-api?v=${Constant.meta.version}&op=shalat-schedule-by-location&locationID=${locationID}&province=${province}&city=${kabko}&month=${month}&year=${year}`
+                const url = `${Constant.app.baseUrlWebService}/muslimboard-api?v=${Constant.meta.version}&op=shalat-schedule-by-location&locationID=${locationID}&province=${province}&city=${kabko}&month=${month}&year=${year}&browserID=${Utility.getBrowserUuid()}`
                 const response = await Utility.fetch(url)
                 const result = await response.json()
         
@@ -936,7 +936,7 @@
 
             $.ajax({
                 type: 'GET',
-                url: `${Constant.app.baseUrlWebService}/muslimboard-api?v=${Constant.meta.version}&op=ping`,
+                url: `${Constant.app.baseUrlWebService}/muslimboard-api?v=${Constant.meta.version}&op=ping&browserID=${Utility.getBrowserUuid()}`,
                 success: () => {
                     internetStatus(navigator.onLine ? 'online' : 'offline')()
                     window.addEventListener('online', internetStatus('online'))

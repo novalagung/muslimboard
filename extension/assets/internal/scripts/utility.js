@@ -187,19 +187,17 @@ const Utility = {
     getBrowserUuid() {
         let key = `browser-uuid-${Constant.meta.version}`
         let browserUuid = localStorage.getItem(key) || ''
-        if (browserUuid.length < 50) {
+        if (browserUuid) {
             return browserUuid;
         }
 
         if (self.crypto.randomUUID) {
             browserUuid = `${self.crypto.randomUUID()}-${new Date().getTime()}`
+            localStorage.setItem(key, browserUuid)
+            return browserUuid
         }
-        if (browserUuid.length < 50) {
-            return '';
-        }
-
-        localStorage.setItem(key, browserUuid)
-        return browserUuid
+        
+        return '';
     },
     versionAsFloat: (s) => parseFloat(s.replace('v', '').replace('.', '')),
     now: () => moment()
