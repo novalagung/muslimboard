@@ -108,7 +108,7 @@ func TestCacheExtensionMethodSignature(t *testing.T) {
 	}
 
 	// Test that the cache key generation still works correctly
-	cacheKey := cacheManager.GenerateLocationCacheKeyGenerateLocationCacheKey(key)
+	cacheKey := cacheManager.GenerateLocationCacheKey(key)
 	if len(cacheKey) == 0 {
 		t.Error("Cache key should not be empty")
 	}
