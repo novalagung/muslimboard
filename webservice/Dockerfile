@@ -1,5 +1,5 @@
 # build stage
-FROM golang:1.21 as stage-builder
+FROM golang:1.24.3 as stage-builder
 WORKDIR /app
 COPY go.mod go.mod
 COPY go.sum go.sum
