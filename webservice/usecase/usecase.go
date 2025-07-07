@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -17,17 +18,21 @@ import (
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 	"muslimboard-api.novalagung.com/repositories/aladhan"
+	"muslimboard-api.novalagung.com/repositories/cache"
 	goprayer "muslimboard-api.novalagung.com/repositories/go-prayer"
 	"muslimboard-api.novalagung.com/repositories/openstreetmap"
 	"muslimboard-api.novalagung.com/repositories/unsplash"
 )
+
+// Cache manager instance (could be injected via dependency injection in a more complex setup)
+var cacheManager = cache.NewCacheManager()
 
 func GetImage(ctx context.Context, imageUrl string) (string, io.ReadCloser, error) {
 	return unsplash.GetImage(ctx, imageUrl)
 }
 
 // GetShalatScheduleByCoordinate is handler of get shalat schedule by coordinate
-func GetShalatScheduleByCoordinate(ctx context.Context, method, latitude, longitude, month, year string) (map[string]any, error) {
+func GetShalatScheduleByCoordinate(ctx context.Context, browserID, method, latitude, longitude, month, year string) (map[string]any, error) {
 	namespace := "usecase.GetShalatScheduleByCoordinate"
 	span := sentry.StartSpan(ctx, namespace)
 	defer span.Finish()
@@ -35,6 +40,29 @@ func GetShalatScheduleByCoordinate(ctx context.Context, method, latitude, longit
 	// if lat long is invalid, then simply return true
 	latInt, _ := strconv.ParseFloat(latitude, 64)
 	lonInt, _ := strconv.ParseFloat(longitude, 64)
+
+	// Create cache key for location-based caching
+	cacheKey := cacheManager.GenerateLocationCacheKey(cache.LocationCacheKey{
+		BrowserID: browserID,
+		Latitude:  latInt,
+		Longitude: lonInt,
+		Month:     month,
+		Year:      year,
+	})
+
+	// Try to get from cache first and extend expiration on hit
+	var cachedResult map[string]any
+	cacheDuration, err := strconv.Atoi(os.Getenv("CACHE_DURATION_IN_HOURS"))
+	if err != nil {
+		logger.Log.Errorln(namespace, "strconv.Atoi", err)
+		cacheDuration = 24
+	}
+	if err := cacheManager.GetLocationCacheAndExtend(ctx, cacheKey, &cachedResult, time.Duration(cacheDuration)*time.Hour); err == nil {
+		logger.Log.Infoln(namespace, "cache hit for browserID:", browserID, "location:", latitude, longitude, "cache key:", cacheKey, "- extended cache duration")
+		return cachedResult, nil
+	}
+
+	logger.Log.Infoln(namespace, "cache miss for browserID:", browserID, "location:", latitude, longitude, "cache key:", cacheKey)
 
 	schedules, err := aladhan.GetShalatScheduleByCoordinate(ctx, method, latInt, lonInt, month, year)
 	if err != nil {
@@ -65,12 +93,20 @@ func GetShalatScheduleByCoordinate(ctx context.Context, method, latitude, longit
 		res["countryCode"] = locationRes["countryCode"]
 	}
 
+	// Cache the result for 24 hours
+	if err := cacheManager.SetLocationCache(ctx, cacheKey, res, 24*time.Hour); err != nil {
+		logger.Log.Errorln(namespace, "failed to cache result:", err, "cache key:", cacheKey)
+		// Don't return error here, just log it since caching failure shouldn't break the functionality
+	} else {
+		logger.Log.Infoln(namespace, "cached result for browserID:", browserID, "location:", latitude, longitude, "cache key:", cacheKey)
+	}
+
 	return res, nil
 }
 
 // GetShalatScheduleByLocation is handler of get shalat schedule by location
 // for now, immediately use aladhan.com api coz kemenag backend still under development
-func GetShalatScheduleByLocation(ctx context.Context, method, province, city, month, year string) (map[string]any, error) {
+func GetShalatScheduleByLocation(ctx context.Context, browserID, method, province, city, month, year string) (map[string]any, error) {
 	namespace := "usecase.GetShalatScheduleByLocation"
 	span := sentry.StartSpan(ctx, namespace)
 	defer span.Finish()
@@ -93,6 +129,29 @@ func GetShalatScheduleByLocation(ctx context.Context, method, province, city, mo
 	latitude, _ := strconv.ParseFloat(coordinate["lat"].(string), 64)
 	longitude, _ := strconv.ParseFloat(coordinate["lon"].(string), 64)
 
+	// Create cache key for location-based caching
+	cacheKey := cacheManager.GenerateLocationCacheKey(cache.LocationCacheKey{
+		BrowserID: browserID,
+		Latitude:  latitude,
+		Longitude: longitude,
+		Month:     month,
+		Year:      year,
+	})
+
+	// Try to get from cache first and extend expiration on hit
+	var cachedResult map[string]any
+	cacheDuration, err := strconv.Atoi(os.Getenv("CACHE_DURATION_IN_HOURS"))
+	if err != nil {
+		logger.Log.Errorln(namespace, "strconv.Atoi", err)
+		cacheDuration = 24
+	}
+	if err := cacheManager.GetLocationCacheAndExtend(ctx, cacheKey, &cachedResult, time.Duration(cacheDuration)*time.Hour); err == nil {
+		logger.Log.Infoln(namespace, "cache hit for browserID:", browserID, "location:", province, city, "- extended cache duration")
+		return cachedResult, nil
+	}
+
+	logger.Log.Infoln(namespace, "cache miss for browserID:", browserID, "location:", province, city)
+
 	schedules, err := aladhan.GetShalatScheduleByCoordinate(ctx, method, latitude, longitude, month, year)
 	if err != nil {
 		logger.Log.Infoln(namespace, "aladhan api returned error data. recalculate prayer times using go-prayer", latitude, longitude)
@@ -111,6 +170,14 @@ func GetShalatScheduleByLocation(ctx context.Context, method, province, city, mo
 		"schedules":   schedulesMap,
 		"address":     address,
 		"countryCode": "id",
+	}
+
+	// Cache the result for 24 hours
+	if err := cacheManager.SetLocationCache(ctx, cacheKey, res, 24*time.Hour); err != nil {
+		logger.Log.Errorln(namespace, "failed to cache result:", err, "cache key:", cacheKey)
+		// Don't return error here, just log it since caching failure shouldn't break the functionality
+	} else {
+		logger.Log.Infoln(namespace, "cached result for browserID:", browserID, "location:", latitude, longitude, "cache key:", cacheKey)
 	}
 
 	return res, nil

@@ -56,6 +56,7 @@ func HandleShalatScheduleByCoordinate(ctx context.Context, w http.ResponseWriter
 	namespace := "controller.HandleShalatScheduleByCoordinate"
 	span := sentry.StartSpan(ctx, namespace)
 	span.Data = map[string]any{
+		"browserID": r.URL.Query().Get("browserID"),
 		"month":     r.URL.Query().Get("month"),
 		"year":      r.URL.Query().Get("year"),
 		"latitude":  r.URL.Query().Get("latitude"),
@@ -64,6 +65,7 @@ func HandleShalatScheduleByCoordinate(ctx context.Context, w http.ResponseWriter
 	defer span.Finish()
 
 	// parse params
+	browserID := r.URL.Query().Get("browserID")
 	method := "3" // Muslim World League
 	month := r.URL.Query().Get("month")
 	year := r.URL.Query().Get("year")
@@ -79,7 +81,7 @@ func HandleShalatScheduleByCoordinate(ctx context.Context, w http.ResponseWriter
 	}
 
 	// get data
-	res, err := usecase.GetShalatScheduleByCoordinate(ctx, method, latitude, longitude, month, year)
+	res, err := usecase.GetShalatScheduleByCoordinate(ctx, browserID, method, latitude, longitude, month, year)
 	if err != nil {
 		logger.Log.Errorln(namespace, "getShalatScheduleByCoordinate", err)
 		pkg_http.WriteRespose(ctx, w, r, http.StatusInternalServerError, nil, err)
@@ -95,14 +97,16 @@ func HandleShalatScheduleByLocation(ctx context.Context, w http.ResponseWriter, 
 	namespace := "controller.HandleShalatScheduleByLocation"
 	span := sentry.StartSpan(ctx, namespace)
 	span.Data = map[string]any{
-		"month":    r.URL.Query().Get("month"),
-		"year":     r.URL.Query().Get("year"),
-		"province": r.URL.Query().Get("province"),
-		"city":     r.URL.Query().Get("city"),
+		"browserID": r.URL.Query().Get("browserID"),
+		"month":     r.URL.Query().Get("month"),
+		"year":      r.URL.Query().Get("year"),
+		"province":  r.URL.Query().Get("province"),
+		"city":      r.URL.Query().Get("city"),
 	}
 	defer span.Finish()
 
 	// parse params
+	browserID := r.URL.Query().Get("browserID")
 	method := "11" // Majlis Ugama Islam Singapura, Singapore
 	month := r.URL.Query().Get("month")
 	year := r.URL.Query().Get("year")
@@ -110,7 +114,7 @@ func HandleShalatScheduleByLocation(ctx context.Context, w http.ResponseWriter, 
 	city := r.URL.Query().Get("city")
 
 	// get data
-	res, err := usecase.GetShalatScheduleByLocation(ctx, method, province, city, month, year)
+	res, err := usecase.GetShalatScheduleByLocation(ctx, browserID, method, province, city, month, year)
 	if err != nil {
 		logger.Log.Errorln(namespace, "getShalatScheduleByLocation", err)
 		pkg_http.WriteRespose(ctx, w, r, http.StatusInternalServerError, nil, err)

@@ -27,6 +27,9 @@ services:
     environment:
       - PORT=8012
       - SENTRY_DSN=https://46eb3d7abc35aa698971c1413e695b23@o4506627037790208.ingest.us.sentry.io/4506627059810304
+      - REDIS_HOST=muslimboard-redis:6379
+      - LOG_LEVEL=debug
+      - CACHE_DURATION_IN_HOURS=48
     ports:
       - "8012:8012"
     networks:
