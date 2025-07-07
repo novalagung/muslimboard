@@ -95,10 +95,10 @@ func GetShalatScheduleByCoordinate(ctx context.Context, browserID, method, latit
 
 	// Cache the result for 24 hours
 	if err := cacheManager.SetLocationCache(ctx, cacheKey, res, 24*time.Hour); err != nil {
-		logger.Log.Errorln(namespace, "failed to cache result:", err)
+		logger.Log.Errorln(namespace, "failed to cache result:", err, "cache key:", cacheKey)
 		// Don't return error here, just log it since caching failure shouldn't break the functionality
 	} else {
-		logger.Log.Infoln(namespace, "cached result for browserID:", browserID, "location:", latitude, longitude)
+		logger.Log.Infoln(namespace, "cached result for browserID:", browserID, "location:", latitude, longitude, "cache key:", cacheKey)
 	}
 
 	return res, nil
@@ -174,10 +174,10 @@ func GetShalatScheduleByLocation(ctx context.Context, browserID, method, provinc
 
 	// Cache the result for 24 hours
 	if err := cacheManager.SetLocationCache(ctx, cacheKey, res, 24*time.Hour); err != nil {
-		logger.Log.Errorln(namespace, "failed to cache result:", err)
+		logger.Log.Errorln(namespace, "failed to cache result:", err, "cache key:", cacheKey)
 		// Don't return error here, just log it since caching failure shouldn't break the functionality
 	} else {
-		logger.Log.Infoln(namespace, "cached result for browserID:", browserID, "location:", province, city)
+		logger.Log.Infoln(namespace, "cached result for browserID:", browserID, "location:", latitude, longitude, "cache key:", cacheKey)
 	}
 
 	return res, nil
