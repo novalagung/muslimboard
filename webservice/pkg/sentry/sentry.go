@@ -20,11 +20,11 @@ func Init() {
 	}
 
 	err := sentry.Init(sentry.ClientOptions{
-		Dsn:                sentryDSN,
-		EnableTracing:      true,
-		TracesSampleRate:   0.3,
-		ProfilesSampleRate: 0.3,
-		Debug:              false,
+		Dsn:              sentryDSN,
+		EnableTracing:    true,
+		TracesSampleRate: 0.3,
+		SampleRate:       0.3,
+		Debug:            false,
 	})
 	if err != nil {
 		logger.Log.Fatalf("sentry.Init: %s", err)
