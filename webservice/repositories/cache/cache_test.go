@@ -24,8 +24,8 @@ func TestLocationCacheKey(t *testing.T) {
 		Year:      "2024",
 	}
 
-	cacheKey1 := cacheManager.generateLocationCacheKey(key1)
-	cacheKey2 := cacheManager.generateLocationCacheKey(key2)
+	cacheKey1 := cacheManager.GenerateLocationCacheKey(key1)
+	cacheKey2 := cacheManager.GenerateLocationCacheKey(key2)
 
 	if cacheKey1 != cacheKey2 {
 		t.Errorf("Expected same cache key for nearby coordinates, got %s and %s", cacheKey1, cacheKey2)
@@ -40,7 +40,7 @@ func TestLocationCacheKey(t *testing.T) {
 		Year:      "2024",
 	}
 
-	cacheKey3 := cacheManager.generateLocationCacheKey(key3)
+	cacheKey3 := cacheManager.GenerateLocationCacheKey(key3)
 
 	if cacheKey1 == cacheKey3 {
 		t.Errorf("Expected different cache keys for different browserIDs, got same key: %s", cacheKey1)
@@ -55,7 +55,7 @@ func TestLocationCacheKey(t *testing.T) {
 		Year:      "2024",
 	}
 
-	cacheKey4 := cacheManager.generateLocationCacheKey(key4)
+	cacheKey4 := cacheManager.GenerateLocationCacheKey(key4)
 
 	if cacheKey1 == cacheKey4 {
 		t.Errorf("Expected different cache keys for distant coordinates, got same key: %s", cacheKey1)
@@ -73,7 +73,7 @@ func TestLocationCacheKeyFormat(t *testing.T) {
 		Year:      "2024",
 	}
 
-	cacheKey := cacheManager.generateLocationCacheKey(key)
+	cacheKey := cacheManager.GenerateLocationCacheKey(key)
 
 	// Verify the cache key starts with "cache:" prefix
 	if len(cacheKey) < 6 || cacheKey[:6] != "cache:" {
@@ -108,7 +108,7 @@ func TestCacheExtensionMethodSignature(t *testing.T) {
 	}
 
 	// Test that the cache key generation still works correctly
-	cacheKey := cacheManager.generateLocationCacheKey(key)
+	cacheKey := cacheManager.GenerateLocationCacheKeyGenerateLocationCacheKey(key)
 	if len(cacheKey) == 0 {
 		t.Error("Cache key should not be empty")
 	}
@@ -134,8 +134,8 @@ func TestLocationCacheKeyDecimalPrecision(t *testing.T) {
 		Year:      "2024",
 	}
 
-	cacheKey1 := cacheManager.generateLocationCacheKey(key1)
-	cacheKey2 := cacheManager.generateLocationCacheKey(key2)
+	cacheKey1 := cacheManager.GenerateLocationCacheKey(key1)
+	cacheKey2 := cacheManager.GenerateLocationCacheKey(key2)
 
 	if cacheKey1 != cacheKey2 {
 		t.Errorf("Expected same cache key for coordinates with different decimal precision, got %s and %s", cacheKey1, cacheKey2)
@@ -158,8 +158,8 @@ func TestLocationCacheKeyDecimalPrecision(t *testing.T) {
 		Year:      "2024",
 	}
 
-	cacheKey3 := cacheManager.generateLocationCacheKey(key3)
-	cacheKey4 := cacheManager.generateLocationCacheKey(key4)
+	cacheKey3 := cacheManager.GenerateLocationCacheKey(key3)
+	cacheKey4 := cacheManager.GenerateLocationCacheKey(key4)
 
 	if cacheKey3 != cacheKey4 {
 		t.Errorf("Expected same cache key for coordinates with different decimal precision (user example), got %s and %s", cacheKey3, cacheKey4)

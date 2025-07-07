@@ -32,9 +32,9 @@ type LocationCacheKey struct {
 	Year      string
 }
 
-// generateLocationCacheKey creates a cache key based on browserID and normalized coordinates
+// GenerateLocationCacheKey creates a cache key based on browserID and normalized coordinates
 // Coordinates are normalized to ~1km grid to allow cache hits for nearby locations
-func (c *CacheManager) generateLocationCacheKey(key LocationCacheKey) string {
+func (c *CacheManager) GenerateLocationCacheKey(key LocationCacheKey) string {
 	// Normalize coordinates to ~1km precision
 	// 1 degree latitude ≈ 111km, so 0.01 degree ≈ 1.11km
 	// We'll use 0.01 degree precision for both lat and lng for simplicity
@@ -53,9 +53,7 @@ func (c *CacheManager) generateLocationCacheKey(key LocationCacheKey) string {
 }
 
 // SetLocationCache stores data in cache with location-based key
-func (c *CacheManager) SetLocationCache(ctx context.Context, key LocationCacheKey, data interface{}, expiration time.Duration) error {
-	cacheKey := c.generateLocationCacheKey(key)
-
+func (c *CacheManager) SetLocationCache(ctx context.Context, cacheKey string, data interface{}, expiration time.Duration) error {
 	jsonData, err := json.Marshal(data)
 	if err != nil {
 		return fmt.Errorf("failed to marshal data: %w", err)
@@ -65,9 +63,7 @@ func (c *CacheManager) SetLocationCache(ctx context.Context, key LocationCacheKe
 }
 
 // GetLocationCacheAndExtend retrieves data from cache and extends expiration time
-func (c *CacheManager) GetLocationCacheAndExtend(ctx context.Context, key LocationCacheKey, result interface{}, expiration time.Duration) error {
-	cacheKey := c.generateLocationCacheKey(key)
-
+func (c *CacheManager) GetLocationCacheAndExtend(ctx context.Context, cacheKey string, result interface{}, expiration time.Duration) error {
 	data, err := c.client.Get(ctx, cacheKey).Result()
 	if err != nil {
 		return err
@@ -84,8 +80,7 @@ func (c *CacheManager) GetLocationCacheAndExtend(ctx context.Context, key Locati
 }
 
 // HasLocationCache checks if cache exists for the given location-based key
-func (c *CacheManager) HasLocationCache(ctx context.Context, key LocationCacheKey) bool {
-	cacheKey := c.generateLocationCacheKey(key)
+func (c *CacheManager) HasLocationCache(ctx context.Context, cacheKey string) bool {
 	exists, err := c.client.Exists(ctx, cacheKey).Result()
 	return err == nil && exists > 0
 }

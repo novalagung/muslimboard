@@ -42,13 +42,13 @@ func GetShalatScheduleByCoordinate(ctx context.Context, browserID, method, latit
 	lonInt, _ := strconv.ParseFloat(longitude, 64)
 
 	// Create cache key for location-based caching
-	cacheKey := cache.LocationCacheKey{
+	cacheKey := cacheManager.GenerateLocationCacheKey(cache.LocationCacheKey{
 		BrowserID: browserID,
 		Latitude:  latInt,
 		Longitude: lonInt,
 		Month:     month,
 		Year:      year,
-	}
+	})
 
 	// Try to get from cache first and extend expiration on hit
 	var cachedResult map[string]any
@@ -58,11 +58,11 @@ func GetShalatScheduleByCoordinate(ctx context.Context, browserID, method, latit
 		cacheDuration = 24
 	}
 	if err := cacheManager.GetLocationCacheAndExtend(ctx, cacheKey, &cachedResult, time.Duration(cacheDuration)*time.Hour); err == nil {
-		logger.Log.Infoln(namespace, "cache hit for browserID:", browserID, "location:", latitude, longitude, "- extended cache duration")
+		logger.Log.Infoln(namespace, "cache hit for browserID:", browserID, "location:", latitude, longitude, "cache key:", cacheKey, "- extended cache duration")
 		return cachedResult, nil
 	}
 
-	logger.Log.Infoln(namespace, "cache miss for browserID:", browserID, "location:", latitude, longitude)
+	logger.Log.Infoln(namespace, "cache miss for browserID:", browserID, "location:", latitude, longitude, "cache key:", cacheKey)
 
 	schedules, err := aladhan.GetShalatScheduleByCoordinate(ctx, method, latInt, lonInt, month, year)
 	if err != nil {
@@ -130,13 +130,13 @@ func GetShalatScheduleByLocation(ctx context.Context, browserID, method, provinc
 	longitude, _ := strconv.ParseFloat(coordinate["lon"].(string), 64)
 
 	// Create cache key for location-based caching
-	cacheKey := cache.LocationCacheKey{
+	cacheKey := cacheManager.GenerateLocationCacheKey(cache.LocationCacheKey{
 		BrowserID: browserID,
 		Latitude:  latitude,
 		Longitude: longitude,
 		Month:     month,
 		Year:      year,
-	}
+	})
 
 	// Try to get from cache first and extend expiration on hit
 	var cachedResult map[string]any
