@@ -113,3 +113,55 @@ func TestCacheExtensionMethodSignature(t *testing.T) {
 		t.Error("Cache key should not be empty")
 	}
 }
+
+func TestLocationCacheKeyDecimalPrecision(t *testing.T) {
+	cacheManager := &CacheManager{}
+
+	// Test that coordinates with different decimal precision generate the same cache key
+	key1 := LocationCacheKey{
+		BrowserID: "browser123",
+		Latitude:  106.8337782562446,
+		Longitude: -6.2088123456789,
+		Month:     "12",
+		Year:      "2024",
+	}
+
+	key2 := LocationCacheKey{
+		BrowserID: "browser123",
+		Latitude:  106.83377825624460000, // Same coordinate with more decimal places
+		Longitude: -6.21,                 // Same coordinate with more decimal places
+		Month:     "12",
+		Year:      "2024",
+	}
+
+	cacheKey1 := cacheManager.generateLocationCacheKey(key1)
+	cacheKey2 := cacheManager.generateLocationCacheKey(key2)
+
+	if cacheKey1 != cacheKey2 {
+		t.Errorf("Expected same cache key for coordinates with different decimal precision, got %s and %s", cacheKey1, cacheKey2)
+	}
+
+	// Test with the exact example from the user
+	key3 := LocationCacheKey{
+		BrowserID: "browser123",
+		Latitude:  106.8337782562446,
+		Longitude: -6.2088,
+		Month:     "12",
+		Year:      "2024",
+	}
+
+	key4 := LocationCacheKey{
+		BrowserID: "browser123",
+		Latitude:  106.83377825624460000, // Same coordinate with more decimal places
+		Longitude: -6.2088,
+		Month:     "12",
+		Year:      "2024",
+	}
+
+	cacheKey3 := cacheManager.generateLocationCacheKey(key3)
+	cacheKey4 := cacheManager.generateLocationCacheKey(key4)
+
+	if cacheKey3 != cacheKey4 {
+		t.Errorf("Expected same cache key for coordinates with different decimal precision (user example), got %s and %s", cacheKey3, cacheKey4)
+	}
+}

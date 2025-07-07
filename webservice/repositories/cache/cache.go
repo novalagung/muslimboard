@@ -5,7 +5,6 @@ import (
 	"crypto/md5"
 	"encoding/json"
 	"fmt"
-	"math"
 	"time"
 
 	redisClient "github.com/redis/go-redis/v9"
@@ -39,12 +38,14 @@ func (c *CacheManager) generateLocationCacheKey(key LocationCacheKey) string {
 	// Normalize coordinates to ~1km precision
 	// 1 degree latitude ≈ 111km, so 0.01 degree ≈ 1.11km
 	// We'll use 0.01 degree precision for both lat and lng for simplicity
-	normalizedLat := math.Round(key.Latitude*100) / 100
-	normalizedLng := math.Round(key.Longitude*100) / 100
+	// Format coordinates with exactly 2 decimal places to ensure consistency
+	// This prevents floating-point precision issues like 106.83 vs 106.83000000000000
+	latStr := fmt.Sprintf("%.2f", key.Latitude)
+	lngStr := fmt.Sprintf("%.2f", key.Longitude)
 
 	// Create a deterministic key
-	keyStr := fmt.Sprintf("shalat_schedule:%s:%.2f:%.2f:%s:%s",
-		key.BrowserID, normalizedLat, normalizedLng, key.Month, key.Year)
+	keyStr := fmt.Sprintf("shalat_schedule:%s:%s:%s:%s:%s",
+		key.BrowserID, latStr, lngStr, key.Month, key.Year)
 
 	// Use MD5 hash to create a shorter, consistent key
 	hash := md5.Sum([]byte(keyStr))
