@@ -43,7 +43,7 @@ func GetShalatScheduleByCoordinate(ctx context.Context, browserID, method, latit
 
 	// Create cache key for location-based caching
 	cacheKey := cacheManager.GenerateLocationCacheKey(cache.LocationCacheKey{
-		BrowserID: browserID,
+		BrowserID: "", // use empty browserID for coordinate-based cache
 		Latitude:  latInt,
 		Longitude: lonInt,
 		Month:     month,
@@ -131,7 +131,7 @@ func GetShalatScheduleByLocation(ctx context.Context, browserID, method, provinc
 
 	// Create cache key for location-based caching
 	cacheKey := cacheManager.GenerateLocationCacheKey(cache.LocationCacheKey{
-		BrowserID: browserID,
+		BrowserID: "", // use empty browserID for coordinate-based cache
 		Latitude:  latitude,
 		Longitude: longitude,
 		Month:     month,
