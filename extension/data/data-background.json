@@ -1,5 +1,5 @@
 {
-	"version": "2024.01.29",
+    "version": "2025.08.06",
     "content": [{
         "id": "1",
         "url": "https://images.unsplash.com/photo-1552585907-521c3dac511c?q=40&fm=jpg&w=3440&fit=max",
@@ -226,14 +226,6 @@
         "author": {
             "name": "William Bout",
             "profile": "https://unsplash.com/@williambout"
-        }
-    }, {
-        "id": "26",
-        "url": "https://images.unsplash.com/photo-1470214304380-aadaedcfff84?q=40&fm=jpg&w=3440&fit=max",
-        "source": "https://unsplash.com/photos/MqJX_8EaStM",
-        "author": {
-            "name": "Ishan @seefromthesky",
-            "profile": "https://unsplash.com/@seefromthesky"
         }
     }, {
         "id": "27",
