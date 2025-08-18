@@ -463,9 +463,8 @@ body.show-todo-list #todo-list .wrapper .items .item {
     position: absolute;
     margin-top: -6.5px;
     top: 50%;
-    transform: scale(1.5);
-    width: 30px;
-    height: 30px;
+    width: 1.75rem;
+    height: 1.75rem;
     cursor: pointer;
     font-size: 17px;
     visibility: hidden;
