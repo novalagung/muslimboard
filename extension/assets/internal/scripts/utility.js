@@ -36,16 +36,77 @@ const Utility = {
             if (callNow) func.apply(context, args);
         };
     },
-    getCurrentLocationCoordinate: () => new Promise((resolve, reject) => {
-        const useCoordinateCache = () => {
-            const coordinateCache = JSON.parse(localStorage.getItem('data-coordinate-cache') || '{}')
-            Utility.log('timeout. use last cached location', coordinateCache)
-            if (Object.keys(coordinateCache).length > 0) {
-                resolve(coordinateCache)
-            } else {
-                localStorage.removeItem('data-coordinate-cache')
-                reject(new Error(I18n.getText('promptErrorFailToGetLocationInfo')))
-            }
+    _textEncoder: new TextEncoder(),
+    _textDecoder: new TextDecoder(),
+    _bytesToBase64: (bytes) => btoa(String.fromCharCode(...bytes)),
+    _base64ToBytes: (base64) => Uint8Array.from(atob(base64), (c) => c.charCodeAt(0)),
+    getCoordinateCacheCryptoKey: async () => {
+        const keyMaterial = await crypto.subtle.importKey(
+            'raw',
+            Utility._textEncoder.encode('coordinate-cache-key-v1'),
+            { name: 'PBKDF2' },
+            false,
+            ['deriveKey']
+        )
+        return crypto.subtle.deriveKey(
+            {
+                name: 'PBKDF2',
+                salt: Utility._textEncoder.encode('extension-coordinate-cache-salt-v1'),
+                iterations: 100000,
+                hash: 'SHA-256'
+            },
+            keyMaterial,
+            { name: 'AES-GCM', length: 256 },
+            false,
+            ['encrypt', 'decrypt']
+        )
+    },
+    encryptCoordinateCache: async (plainText) => {
+        const key = await Utility.getCoordinateCacheCryptoKey()
+        const iv = crypto.getRandomValues(new Uint8Array(12))
+        const encrypted = await crypto.subtle.encrypt(
+            { name: 'AES-GCM', iv },
+            key,
+            Utility._textEncoder.encode(plainText)
+        )
+        return JSON.stringify({
+            iv: Utility._bytesToBase64(iv),
+            data: Utility._bytesToBase64(new Uint8Array(encrypted))
+        })
+    },
+    decryptCoordinateCache: async (cipherPayload) => {
+        const payload = JSON.parse(cipherPayload)
+        const key = await Utility.getCoordinateCacheCryptoKey()
+        const decrypted = await crypto.subtle.decrypt(
+            { name: 'AES-GCM', iv: Utility._base64ToBytes(payload.iv) },
+            key,
+            Utility._base64ToBytes(payload.data)
+        )
+        return Utility._textDecoder.decode(decrypted)
+    },
+    getCurrentLocationCoordinate: () => new Promise(async (resolve, reject) => {
+        const useCoordinateCache = async () => {
+            try {
+                const rawCache = localStorage.getItem('data-coordinate-cache')
+                if (!rawCache) throw new Error('empty cache')
+
+                let coordinateCache = {}
+                try {
+                    const decryptedCache = await Utility.decryptCoordinateCache(rawCache)
+                    coordinateCache = JSON.parse(decryptedCache || '{}')
+                } catch (decryptErr) {
+                    coordinateCache = JSON.parse(rawCache || '{}')
+                }
+
+                Utility.log('timeout. use last cached location', coordinateCache)
+                if (Object.keys(coordinateCache).length > 0) {
+                    resolve(coordinateCache)
+                    return
+                }
+            } catch (e) {}
+
+            localStorage.removeItem('data-coordinate-cache')
+            reject(new Error(I18n.getText('promptErrorFailToGetLocationInfo')))
         }
 
         if (!navigator.geolocation) {
@@ -56,7 +117,7 @@ const Utility = {
         navigator.geolocation.clearWatch(this.geoLocationWatchObject)
         navigator.geolocation.getCurrentPosition($.noop, $.noop, {})
         navigator.geolocation.getCurrentPosition(
-            (result) => {
+            async (result) => {
                 const coordinate = {
                     coords: {
                         latitude: result.coords.latitude,
@@ -64,7 +125,8 @@ const Utility = {
                     }
                 }
                 Utility.log('current coordinate found at', coordinate.coords)
-                localStorage.setItem('data-coordinate-cache', JSON.stringify(coordinate))
+                const encryptedCoordinate = await Utility.encryptCoordinateCache(JSON.stringify(coordinate))
+                localStorage.setItem('data-coordinate-cache', encryptedCoordinate)
                 resolve(coordinate)
             }, 
             useCoordinateCache,
