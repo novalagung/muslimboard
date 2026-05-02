@@ -1192,14 +1192,28 @@
                     each.text = I18n.getText('todoListPlaceholder')
                 }
 
-                $('#todo-list .items').prepend($(`
-                    <div class="item ${each.checked ? 'checked' : ''}">
-                        <input type="checkbox" class="item-checkbox" ${each.checked ? 'checked' : ''}>
-                        <span class="item-textbox" contenteditable="true" data-placeholder="${I18n.getText('todoListEntryPlaceholder')}">${each.text.replace(/\n/gi, '<br>')}</span>
-                        <button class="move"><i class="fa fa-arrows"></i></button>
-                        <button class="delete"><i class="fa fa-close"></i></button>
-                    </div>
-                `))
+                const $item = $('<div class="item"></div>')
+                if (each.checked) {
+                    $item.addClass('checked')
+                }
+
+                const $checkbox = $('<input type="checkbox" class="item-checkbox">').prop('checked', !!each.checked)
+                const $textbox = $('<span class="item-textbox" contenteditable="true"></span>')
+                    .attr('data-placeholder', I18n.getText('todoListEntryPlaceholder'))
+
+                const lines = String(each.text || '').split(/\n/gi)
+                lines.forEach((line, index) => {
+                    if (index > 0) {
+                        $textbox.append('<br>')
+                    }
+                    $textbox.append(document.createTextNode(line))
+                })
+
+                const $moveButton = $('<button class="move"><i class="fa fa-arrows"></i></button>')
+                const $deleteButton = $('<button class="delete"><i class="fa fa-close"></i></button>')
+
+                $item.append($checkbox, $textbox, $moveButton, $deleteButton)
+                $('#todo-list .items').prepend($item)
             })
         },
 
