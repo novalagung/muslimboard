@@ -145,6 +145,16 @@ const I18n = {
             'zh-tw': '永遠感恩，並傳播善意',
             'zh-cn': '永远感恩，传播善意'
         },
+        todoListLinkExample: {
+            ar: 'يمكنك أيضاً حفظ الرابط هنا، مثل https://muslimboard.novalagung.com',
+            en: 'You can also save link here, like https://muslimboard.novalagung.com',
+            ru: 'Вы также можете сохранить здесь ссылку, например https://muslimboard.novalagung.com',
+            bn: 'আপনি এখানে লিংকও সংরক্ষণ করতে পারেন, যেমন https://muslimboard.novalagung.com',
+            hi: 'आप यहां लिंक भी सहेज सकते हैं, जैसे https://muslimboard.novalagung.com',
+            id: 'Anda juga bisa menyimpan tautan di sini, seperti https://muslimboard.novalagung.com',
+            'zh-tw': '你也可以在這裡儲存連結，例如 https://muslimboard.novalagung.com',
+            'zh-cn': '你也可以在这里保存链接，例如 https://muslimboard.novalagung.com'
+        },
         todoListEditHint: {
             ar: 'اضغط على الملاحظة مرتين للتعديل',
             en: 'Double tap note to edit',

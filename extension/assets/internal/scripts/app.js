@@ -122,11 +122,55 @@
         },
 
         // get automatic prayer time
+        prayerCoordinateCacheIndexKey: 'data-prayer-time-by-coordinate-index',
+        prayerCoordinateCachePrefix: 'data-prayer-time-by-coordinate-',
+        prayerCoordinateCacheLimit: 20,
+        normalizePrayerCoordinateCacheIndex() {
+            const allCoordinateKeys = Object.keys(localStorage)
+                .filter((each) => each.indexOf(this.prayerCoordinateCachePrefix) == 0)
+            let indexedKeys = []
+            try {
+                indexedKeys = JSON.parse(localStorage.getItem(this.prayerCoordinateCacheIndexKey) || '[]')
+            } catch (err) {
+                indexedKeys = []
+            }
+
+            const normalized = indexedKeys.filter((each) => allCoordinateKeys.includes(each))
+            allCoordinateKeys.forEach((each) => {
+                if (!normalized.includes(each)) {
+                    normalized.push(each)
+                }
+            })
+
+            return normalized
+        },
+        retainLastPrayerCoordinateCaches(latestKey = '') {
+            const normalized = this.normalizePrayerCoordinateCacheIndex.call(this)
+            const ordered = normalized.filter((each) => each != latestKey)
+            if (latestKey) {
+                ordered.push(latestKey)
+            }
+
+            const removeCount = Math.max(0, ordered.length - this.prayerCoordinateCacheLimit)
+            const keysToRemove = ordered.slice(0, removeCount)
+            keysToRemove.forEach((each) => localStorage.removeItem(each))
+
+            const retained = ordered.slice(removeCount)
+            localStorage.setItem(this.prayerCoordinateCacheIndexKey, JSON.stringify(retained))
+        },
+        removePrayerCoordinateCacheIndexItem(key) {
+            const normalized = this.normalizePrayerCoordinateCacheIndex.call(this)
+            const retained = normalized.filter((each) => each != key)
+            localStorage.setItem(this.prayerCoordinateCacheIndexKey, JSON.stringify(retained))
+        },
         async getPrayerTimesByCoordinate(latitude, longitude) {
             const key = `data-prayer-time-by-coordinate-${latitude}-${longitude}`
             if (latitude == 0 && longitude == 0) {
                 localStorage.removeItem(key)
+                this.removePrayerCoordinateCacheIndexItem.call(this, key)
             }
+
+            this.retainLastPrayerCoordinateCaches.call(this, key)
 
             const data = await Utility.getLatestData(key, async (resolve) => {
                 const month = parseInt(Utility.now().format('MM'), 10)
@@ -149,6 +193,7 @@
             }
             if (!isDataFound) {
                 localStorage.removeItem(key)
+                this.removePrayerCoordinateCacheIndexItem.call(this, key)
                 return false
             }
 
@@ -162,9 +207,11 @@
             }
             if (!isDataFound) {
                 localStorage.removeItem(key)
+                this.removePrayerCoordinateCacheIndexItem.call(this, key)
                 return false
             }
 
+            this.retainLastPrayerCoordinateCaches.call(this, key)
             return data
         },
 
@@ -220,6 +267,7 @@
 
             // remove coordinate cache
             localStorage.removeItem('data-coordinate-cache')
+            localStorage.removeItem(this.prayerCoordinateCacheIndexKey)
 
             // remove prayer time cache
             Utility.removeLocalStorageItemsByPrefix((d) => d.indexOf('data-prayer-time') > -1)
@@ -1270,6 +1318,23 @@
             }
         },
 
+        normalizeTodoListLink(text) {
+            const raw = String(text || '').trim()
+            if (!raw) {
+                return null
+            }
+
+            const href = /^https?:\/\//i.test(raw) ? raw : `https://${raw}`
+            if (!this.isSafeTodoListLink.call(this, href)) {
+                return null
+            }
+
+            return {
+                href,
+                text: raw
+            }
+        },
+
         renderTodoListTextboxViewMode($textbox, rawText) {
             const text = String(rawText || '')
             $textbox
@@ -1279,7 +1344,8 @@
                 .empty()
 
             const lines = text.split(/\n/g)
-            const linkRegex = /(https?:\/\/[^\s<]+)/g
+            const linkRegex = /((?:https?:\/\/|www\.)[^\s<]+)/gi
+            const strictLinkChunkRegex = /^(?:https?:\/\/|www\.)[^\s<]+$/i
             lines.forEach((line, lineIndex) => {
                 if (lineIndex > 0) {
                     $textbox.append('<br>')
@@ -1291,12 +1357,18 @@
                         return
                     }
 
-                    if (this.isSafeTodoListLink.call(this, chunk)) {
+                    if (!strictLinkChunkRegex.test(chunk)) {
+                        $textbox.append(document.createTextNode(chunk))
+                        return
+                    }
+
+                    const normalizedLink = this.normalizeTodoListLink.call(this, chunk)
+                    if (normalizedLink) {
                         const $link = $('<a></a>')
-                            .attr('href', chunk)
+                            .attr('href', normalizedLink.href)
                             .attr('target', '_blank')
                             .attr('rel', 'noopener noreferrer')
-                            .text(chunk)
+                            .text(normalizedLink.text)
                         $textbox.append($link)
                         return
                     }
@@ -1358,6 +1430,9 @@
                     items = [{
                         text: I18n.mapping.todoListPlaceholder.id,
                         checked: true
+                    }, {
+                        text: I18n.getText('todoListLinkExample'),
+                        checked: false
                     }, {
                         text: '',
                         checked: false
