@@ -21,7 +21,7 @@ services:
   webservice:
     restart: always
     container_name: muslimboard-api
-    image: ghcr.io/novalagung/muslimboard-webservice:latest
+    image: ghcr.io/novalagung/muslimboard-api:latest
     # build:
     #   context: ./
     #   dockerfile: ./Dockerfile
