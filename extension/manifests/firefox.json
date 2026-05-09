@@ -4,6 +4,16 @@
   "short_name": "muslimboard",
   "version": "2.13.0",
   "description": "Personal Dashboard for Muslim",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "muslimboard@novalagung.com",
+      "data_collection_permissions": {
+        "required": [
+          "none"
+        ]
+      }
+    }
+  },
   "chrome_url_overrides": {
     "newtab": "index.html"
   },
