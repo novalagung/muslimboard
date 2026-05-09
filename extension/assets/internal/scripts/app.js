@@ -1432,7 +1432,9 @@
                     localStorage.setItem('todo-list-items', JSON.stringify(items))
                 } else if (action === 'insert') {
                     const existingItems = this.parseTodoListItems.call(this, localStorage.getItem('todo-list-items'))
-                    const merged = existingItems.concat(items)
+                    const merged = existingItems
+                        .concat(items)
+                        .filter((each) => String(each.text || '').trim())
                     localStorage.setItem('todo-list-items', JSON.stringify(merged))
                 } else {
                     return false
