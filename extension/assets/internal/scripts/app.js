@@ -125,6 +125,22 @@
         prayerCoordinateCacheIndexKey: 'data-prayer-time-by-coordinate-index',
         prayerCoordinateCachePrefix: 'data-prayer-time-by-coordinate-',
         prayerCoordinateCacheLimit: 20,
+        getPrayerCoordinateCacheKey(latitude, longitude) {
+            const normalizedLatitude = Number.parseFloat(latitude).toFixed(4)
+            const normalizedLongitude = Number.parseFloat(longitude).toFixed(4)
+            return `data-prayer-time-by-coordinate-${normalizedLatitude}-${normalizedLongitude}`
+        },
+        parsePrayerCoordinateCacheKey(key) {
+            const match = String(key || '').match(/^data-prayer-time-by-coordinate-(-?\d+(?:\.\d+)?)-(-?\d+(?:\.\d+)?)$/)
+            if (!match) {
+                return false
+            }
+
+            return {
+                latitude: Number.parseFloat(match[1]),
+                longitude: Number.parseFloat(match[2]),
+            }
+        },
         normalizePrayerCoordinateCacheIndex() {
             const allCoordinateKeys = Object.keys(localStorage)
                 .filter((each) => each.indexOf(this.prayerCoordinateCachePrefix) == 0)
@@ -163,8 +179,60 @@
             const retained = normalized.filter((each) => each != key)
             localStorage.setItem(this.prayerCoordinateCacheIndexKey, JSON.stringify(retained))
         },
+        getCachedPrayerTimesByCoordinate(latitude, longitude) {
+            const key = this.getPrayerCoordinateCacheKey.call(this, latitude, longitude)
+            const exactCache = localStorage.getItem(key)
+            if (exactCache) {
+                try {
+                    return JSON.parse(exactCache)
+                } catch (err) {
+                    Utility.error(err)
+                }
+            }
+
+            const targetLatitude = Number.parseFloat(latitude)
+            const targetLongitude = Number.parseFloat(longitude)
+            const cachedItems = this.normalizePrayerCoordinateCacheIndex.call(this)
+                .map((each) => {
+                    const location = this.parsePrayerCoordinateCacheKey.call(this, each)
+                    if (!location) {
+                        return false
+                    }
+
+                    const cachedData = localStorage.getItem(each)
+                    if (!cachedData) {
+                        return false
+                    }
+
+                    try {
+                        return {
+                            key: each,
+                            location,
+                            distance: Utility.distanceBetween(
+                                targetLatitude,
+                                targetLongitude,
+                                location.latitude,
+                                location.longitude
+                            ),
+                            data: JSON.parse(cachedData),
+                        }
+                    } catch (err) {
+                        Utility.error(err)
+                        return false
+                    }
+                })
+                .filter(Boolean)
+                .filter((each) => !!each.data?.content?.data)
+
+            if (cachedItems.length == 0) {
+                return false
+            }
+
+            cachedItems.sort((a, b) => a.distance - b.distance)
+            return cachedItems[0].data
+        },
         async getPrayerTimesByCoordinate(latitude, longitude) {
-            const key = `data-prayer-time-by-coordinate-${latitude}-${longitude}`
+            const key = this.getPrayerCoordinateCacheKey.call(this, latitude, longitude)
             if (latitude == 0 && longitude == 0) {
                 localStorage.removeItem(key)
                 this.removePrayerCoordinateCacheIndexItem.call(this, key)
@@ -192,6 +260,13 @@
                 isDataFound = false
             }
             if (!isDataFound) {
+                const cachedData = this.getCachedPrayerTimesByCoordinate.call(this, latitude, longitude)
+                if (cachedData && cachedData.content && cachedData.content.data) {
+                    localStorage.setItem(key, JSON.stringify(cachedData))
+                    this.retainLastPrayerCoordinateCaches.call(this, key)
+                    return cachedData
+                }
+
                 localStorage.removeItem(key)
                 this.removePrayerCoordinateCacheIndexItem.call(this, key)
                 return false
@@ -206,6 +281,13 @@
                 isDataFound = false
             }
             if (!isDataFound) {
+                const cachedData = this.getCachedPrayerTimesByCoordinate.call(this, latitude, longitude)
+                if (cachedData && cachedData.content && cachedData.content.data) {
+                    localStorage.setItem(key, JSON.stringify(cachedData))
+                    this.retainLastPrayerCoordinateCaches.call(this, key)
+                    return cachedData
+                }
+
                 localStorage.removeItem(key)
                 this.removePrayerCoordinateCacheIndexItem.call(this, key)
                 return false
@@ -887,7 +969,7 @@
                     // remove automatic location cache
                     const location = await Utility.getCurrentLocationCoordinate()
                     const { latitude, longitude } = location.coords
-                    localStorage.removeItem(`data-prayer-time-by-coordinate-${latitude}-${longitude}`)
+                    localStorage.removeItem(this.getPrayerCoordinateCacheKey.call(this, latitude, longitude))
 
                     // force to not use cached coordinate when refreshing finding coordinate.
                     // not really sure whether this one is good approach

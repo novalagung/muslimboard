@@ -84,12 +84,25 @@ const Utility = {
 
         const cacheData = localStorage.getItem(key)
         if (cacheData) {
-            data = JSON.parse(cacheData)
+            try {
+                data = JSON.parse(cacheData)
+            } catch (err) {
+                Utility.error(err)
+                localStorage.removeItem(key)
+            }
         }
         
         const isFirstTime = Object.keys(data.content).length == 0
         const isNotToday = data.lastUpdated != nowYYYYMMDD
         Utility.log('isFirstTime:', isFirstTime, 'isNotToday:', isNotToday)
+        const isOffline = typeof navigator !== 'undefined' && navigator.onLine === false
+
+        if (isOffline && !isFirstTime) {
+            Utility.log('offline. use cached data immediately', key)
+            resolve(data)
+            return
+        }
+
         if (isFirstTime || isNotToday) {
             try {
                 await callback((result) => {
@@ -102,6 +115,7 @@ const Utility = {
                 Utility.error(err)
                 Utility.log('use cached data instead')
                 resolve(data)
+                return
             }
         }
 
