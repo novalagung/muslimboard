@@ -541,16 +541,20 @@
             }
 
             // the doUpdateBackgroundAndPreloadNextImage below is used to manage the image and text transition
-            const doUpdateBackgroundAndPreloadNextImage = () => {
+            const doUpdateBackgroundAndPreloadNextImage = (delayBeforeTransitionMs = Constant.app.updateBackgroundDelayDuration) => {
                 Utility.log('preparing next image')
 
                 this.preloadBackgroundImage.call(this, doGetBackgroundURL(this.nextSelectedBackground))
                     .then(() => {
                         Utility.log('next image preloaded', doGetBackgroundURL(this.nextSelectedBackground))
 
-                        setTimeout(() => {
+                        if (delayBeforeTransitionMs > 0) {
+                            setTimeout(() => {
+                                this.updateBackground.call(this, data)
+                            }, delayBeforeTransitionMs)
+                        } else {
                             this.updateBackground.call(this, data)
-                        }, Constant.app.updateBackgroundDelayDuration)
+                        }
                     })
                     .catch((err) => {
                         Utility.error(err)
@@ -592,7 +596,7 @@
                 })
             } else {
                 const localBackgrounds = data.content.filter((d) => doGetBackgroundURL(d).indexOf('http') == -1)
-                const doUpdateBackgroundForTheFirstTime = () => {
+                const doUpdateBackgroundForTheFirstTime = (delayBeforeTransitionMs = 0) => {
                     $('#background .content').css('background-image', `url("${doGetBackgroundURL(this.selectedBackground)}")`)
         
                     const position = this.selectedBackground.position
@@ -602,7 +606,7 @@
                         $('#background .content').css('background-position', '')
                     }
 
-                    doUpdateBackgroundAndPreloadNextImage()
+                    doUpdateBackgroundAndPreloadNextImage(delayBeforeTransitionMs)
                     updateBackgroundAthorName(this.selectedBackground)
                 }
 
@@ -611,32 +615,33 @@
                     // The remote background will be preloaded in the background and used for the next transition.
                     this.selectedBackground = Utility.randomFromArray('background', localBackgrounds)
                     this.nextSelectedBackground = Utility.randomFromArray('background', data.content, this.selectedBackground)
-                    doUpdateBackgroundForTheFirstTime()
+                    doUpdateBackgroundForTheFirstTime(Utility.seconds(0.1))
+                    return
                 } else {
-                this.selectedBackground = Utility.randomFromArray('background', data.content)
-                this.nextSelectedBackground = Utility.randomFromArray('background', data.content, this.selectedBackground)
+                    this.selectedBackground = Utility.randomFromArray('background', data.content)
+                    this.nextSelectedBackground = Utility.randomFromArray('background', data.content, this.selectedBackground)
 
-                // right after certain image loaded, trigger preload for next image,
-                // this approach is to ensure when the next image transition is happening,
-                // it's need to happen smoothly.
-                // on rare occasion the preload might failing due to various reason such slow internet,
-                // and if that situation is happening, use the local image
-                this.preloadBackgroundImage.call(this, doGetBackgroundURL(this.selectedBackground))
-                    .then(() => {
-                        Utility.log('next image preloaded', doGetBackgroundURL(this.selectedBackground))
-                        doUpdateBackgroundForTheFirstTime()
-                    })
-                    .catch((err) => {
-                        Utility.error(err)
-                        this.selectedBackground = Utility.randomFromArray(
-                            'background',
-                            data.content.filter((d) => doGetBackgroundURL(d).indexOf('http') == -1),
-                            this.selectedBackground
-                        )
-                        this.nextSelectedBackground = Utility.randomFromArray('background', data.content, this.selectedBackground)
-                        doUpdateBackgroundForTheFirstTime()
-                    })
-            }
+                    // right after certain image loaded, trigger preload for next image,
+                    // this approach is to ensure when the next image transition is happening,
+                    // it's need to happen smoothly.
+                    // on rare occasion the preload might failing due to various reason such slow internet,
+                    // and if that situation is happening, use the local image
+                    this.preloadBackgroundImage.call(this, doGetBackgroundURL(this.selectedBackground))
+                        .then(() => {
+                            Utility.log('next image preloaded', doGetBackgroundURL(this.selectedBackground))
+                            doUpdateBackgroundForTheFirstTime()
+                        })
+                        .catch((err) => {
+                            Utility.error(err)
+                            this.selectedBackground = Utility.randomFromArray(
+                                'background',
+                                data.content.filter((d) => doGetBackgroundURL(d).indexOf('http') == -1),
+                                this.selectedBackground
+                            )
+                            this.nextSelectedBackground = Utility.randomFromArray('background', data.content, this.selectedBackground)
+                            doUpdateBackgroundForTheFirstTime()
+                        })
+                }
             }
         },
     
