@@ -673,7 +673,7 @@ body.show-todo-list #todo-list .wrapper .items .item {
 }
 #swal2-html-container .modal-change-language {
     padding-top: 10px;
-    padding-bottom: 40px;
+    padding-bottom: 0px;
 }
 #swal2-html-container .modal-change-language ul {
     list-style-type: none;
@@ -686,11 +686,15 @@ body.show-todo-list #todo-list .wrapper .items .item {
     margin: 0px auto;
     display: block;
     color: white;
-    border-radius: 1px;
+    border-radius: 6px;
     padding: 12px 17px;
     text-decoration: none;
     background-color: #00b16a;
     width: 270px;
+    font-weight: 600;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18);
+    transition: opacity 100ms ease-in-out, transform 100ms ease-in-out, box-shadow 100ms ease-in-out;
 }
 #swal2-html-container .modal-change-language hr {
     width: 199px;
@@ -701,7 +705,15 @@ body.show-todo-list #todo-list .wrapper .items .item {
     margin-bottom: 5px;
 }
 #swal2-html-container .modal-change-language a:hover {
-    opacity: 0.6;
+    opacity: 0.9;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.22);
+}
+#swal2-html-container .modal-change-language a:focus {
+    opacity: 0.9;
+    transform: translateY(-1px);
+    box-shadow: 0 0 0 3px rgba(0, 177, 106, 0.3), 0 6px 14px rgba(0, 0, 0, 0.22);
+    outline: none;
 }
 #swal2-html-container .manual-geolocation div.row {
     margin-bottom: 5px;
