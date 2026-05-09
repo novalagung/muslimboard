@@ -472,6 +472,86 @@
 
         // store next background image
         nextSelectedBackground: false,
+        backgroundImageCacheInFlight: new Set(),
+        backgroundImageCacheUrlMap: {},
+        revokeCachedBackgroundImageUrl(url) {
+            if (!url || String(url).indexOf('blob:') !== 0) {
+                return
+            }
+
+            try {
+                URL.revokeObjectURL(url)
+            } catch (err) {
+                Utility.error(err)
+            }
+        },
+        isRemoteBackground(background) {
+            return String(background?.url || '').indexOf('http') === 0 && !background.urlLocal
+        },
+        async hydrateCachedBackgroundImages(data) {
+            const content = Array.isArray(data?.content) ? data.content : []
+            const hydratedContent = await Promise.all(content.map(async (background) => {
+                if (!this.isRemoteBackground.call(this, background)) {
+                    return background
+                }
+
+                const cached = await Utility.indexedDb.get(background.url)
+                if (!cached?.blob) {
+                    return background
+                }
+
+                try {
+                    const cacheKey = background.url
+                    const urlLocal = this.backgroundImageCacheUrlMap[cacheKey] || URL.createObjectURL(cached.blob)
+                    this.backgroundImageCacheUrlMap[cacheKey] = urlLocal
+                    return {
+                        ...background,
+                        urlLocal,
+                    }
+                } catch (err) {
+                    Utility.error(err)
+                    return background
+                }
+            }))
+
+            return {
+                ...data,
+                content: hydratedContent,
+            }
+        },
+        async cacheBackgroundImages(backgrounds) {
+            const content = Array.isArray(backgrounds) ? backgrounds : []
+            for (const background of content) {
+                if (!this.isRemoteBackground.call(this, background)) {
+                    continue
+                }
+
+                const cacheKey = background.url
+                if (this.backgroundImageCacheInFlight.has(cacheKey)) {
+                    continue
+                }
+
+                this.backgroundImageCacheInFlight.add(cacheKey)
+                try {
+                    const cached = await Utility.indexedDb.get(cacheKey)
+                    if (cached?.blob) {
+                        continue
+                    }
+
+                    Utility.log('caching background image', background.id)
+                    const response = await Utility.fetch(background.url)
+                    if (!response.ok) {
+                        throw new Error(`background image fetch failed: ${background.url}`)
+                    }
+                    const blob = await response.blob()
+                    await Utility.indexedDb.set(cacheKey, blob)
+                } catch (err) {
+                    Utility.error(err)
+                } finally {
+                    this.backgroundImageCacheInFlight.delete(cacheKey)
+                }
+            }
+        },
 
         preloadBackgroundImage(url) {
             return new Promise((resolve, reject) => {
@@ -498,30 +578,89 @@
         // if background image data ever been loaded once, then the cache will be used on next call
         async getDataBackgroundThenRender() {
 
-            // load data from remote url
+            // load local data first so the first paint can use packaged images immediately.
+            // remote data is then merged in the background for the next cycle.
             try {
-                Utility.log('fetching remote data background')
-                const key = `data-background-remote-${Constant.meta.version}`
-                const data = await Utility.getLatestData(key, async (resolve) => {
-                    const url = `${Constant.app.baseUrlGithub}/data-background.json?v=${Constant.meta.version}.${Utility.now().format('YYYY-MM-DD')}`
-                    const response = await Utility.fetch(url)
-                    const result = await response.json()
-                    resolve(result)
-                })
-                if (Object.keys(data?.content || {}).length > 0) {
-                    this.updateBackground.call(this, data.content)
-                    return
-                } 
+                Utility.log('fetching local data background')
+                const url = `data/data-background.json`
+                const response = await Utility.fetch(url)
+                const data = await response.json()
+                const hydratedData = await this.hydrateCachedBackgroundImages.call(this, data)
+                this.updateBackground.call(this, hydratedData)
+                this.cacheBackgroundImages.call(this, hydratedData.content)
+
+                ;(async () => {
+                    try {
+                        Utility.log('fetching remote data background')
+                        const key = `data-background-remote-${Constant.meta.version}`
+                        const remoteData = await Utility.getLatestData(key, async (resolve) => {
+                            const remoteUrl = `${Constant.app.baseUrlGithub}/data-background.json?v=${Constant.meta.version}.${Utility.now().format('YYYY-MM-DD')}`
+                            const remoteResponse = await Utility.fetch(remoteUrl)
+                            const result = await remoteResponse.json()
+                            resolve(result)
+                        })
+
+                        if (Object.keys(remoteData?.content || {}).length > 0) {
+                            const hydratedRemoteData = await this.hydrateCachedBackgroundImages.call(this, remoteData)
+                            const currentSelectedBackgroundId = this.selectedBackground?.id
+                            const currentNextSelectedBackgroundId = this.nextSelectedBackground?.id
+                            const nextBackgroundUrls = new Set((hydratedRemoteData.content || []).map((each) => each.url))
+
+                            data.version = hydratedRemoteData.version || data.version
+                            data.content = hydratedRemoteData.content
+
+                            Object.keys(this.backgroundImageCacheUrlMap).forEach((cacheKey) => {
+                                const cachedUrl = this.backgroundImageCacheUrlMap[cacheKey]
+                                if (!nextBackgroundUrls.has(cacheKey)) {
+                                    this.revokeCachedBackgroundImageUrl.call(this, cachedUrl)
+                                    delete this.backgroundImageCacheUrlMap[cacheKey]
+                                }
+                            })
+
+                            if (currentSelectedBackgroundId) {
+                                const currentSelectedBackground = data.content.find((each) => each.id == currentSelectedBackgroundId)
+                                if (currentSelectedBackground) {
+                                    this.selectedBackground = currentSelectedBackground
+                                }
+                            }
+
+                            if (currentNextSelectedBackgroundId) {
+                                const currentNextSelectedBackground = data.content.find((each) => each.id == currentNextSelectedBackgroundId)
+                                if (currentNextSelectedBackground) {
+                                    this.nextSelectedBackground = currentNextSelectedBackground
+                                }
+                            }
+
+                            this.cacheBackgroundImages.call(this, hydratedRemoteData.content)
+                        }
+                    } catch (err) {
+                        Utility.error(err)
+                    }
+                })()
+                return
             } catch (err) {
                 Utility.error(err)
             }
 
-            // in case of failure, use local data
-            Utility.log('fetching local data background')
-            const url = `data/data-background.json`
-            const response = await Utility.fetch(url)
-            const data = await response.json()
-            this.updateBackground.call(this, data)
+            // in case of failure, use remote data
+            try {
+                Utility.log('fetching remote data background')
+                const key = `data-background-remote-${Constant.meta.version}`
+                        const data = await Utility.getLatestData(key, async (resolve) => {
+                    const remoteUrl = `${Constant.app.baseUrlGithub}/data-background.json?v=${Constant.meta.version}.${Utility.now().format('YYYY-MM-DD')}`
+                    const remoteResponse = await Utility.fetch(remoteUrl)
+                    const result = await remoteResponse.json()
+                    resolve(result)
+                })
+                if (Object.keys(data?.content || {}).length > 0) {
+                    const hydratedData = await this.hydrateCachedBackgroundImages.call(this, data)
+                    this.updateBackground.call(this, hydratedData)
+                    this.cacheBackgroundImages.call(this, hydratedData.content)
+                    return
+                }
+            } catch (err) {
+                Utility.error(err)
+            }
         },
 
         // update background images randomly on every X interval
@@ -613,30 +752,39 @@
                     this.nextSelectedBackground = Utility.randomFromArray('background', data.content, this.selectedBackground)
                     doUpdateBackgroundForTheFirstTime()
                 } else {
-                this.selectedBackground = Utility.randomFromArray('background', data.content)
-                this.nextSelectedBackground = Utility.randomFromArray('background', data.content, this.selectedBackground)
+                    this.selectedBackground = Utility.randomFromArray('background', data.content)
+                    if (!this.selectedBackground) {
+                        return
+                    }
+                    this.nextSelectedBackground = Utility.randomFromArray('background', data.content, this.selectedBackground)
 
-                // right after certain image loaded, trigger preload for next image,
-                // this approach is to ensure when the next image transition is happening,
-                // it's need to happen smoothly.
-                // on rare occasion the preload might failing due to various reason such slow internet,
-                // and if that situation is happening, use the local image
-                this.preloadBackgroundImage.call(this, doGetBackgroundURL(this.selectedBackground))
-                    .then(() => {
-                        Utility.log('next image preloaded', doGetBackgroundURL(this.selectedBackground))
-                        doUpdateBackgroundForTheFirstTime()
-                    })
-                    .catch((err) => {
-                        Utility.error(err)
-                        this.selectedBackground = Utility.randomFromArray(
-                            'background',
-                            data.content.filter((d) => doGetBackgroundURL(d).indexOf('http') == -1),
-                            this.selectedBackground
-                        )
-                        this.nextSelectedBackground = Utility.randomFromArray('background', data.content, this.selectedBackground)
-                        doUpdateBackgroundForTheFirstTime()
-                    })
-            }
+                    // right after certain image loaded, trigger preload for next image,
+                    // this approach is to ensure when the next image transition is happening,
+                    // it's need to happen smoothly.
+                    // on rare occasion the preload might failing due to various reason such slow internet,
+                    // and if that situation is happening, use the local image when one exists.
+                    this.preloadBackgroundImage.call(this, doGetBackgroundURL(this.selectedBackground))
+                        .then(() => {
+                            Utility.log('next image preloaded', doGetBackgroundURL(this.selectedBackground))
+                            doUpdateBackgroundForTheFirstTime()
+                        })
+                        .catch((err) => {
+                            Utility.error(err)
+
+                            const fallbackBackground = Utility.randomFromArray(
+                                'background',
+                                data.content.filter((d) => doGetBackgroundURL(d).indexOf('http') == -1),
+                                this.selectedBackground
+                            )
+
+                            if (fallbackBackground) {
+                                this.selectedBackground = fallbackBackground
+                                this.nextSelectedBackground = Utility.randomFromArray('background', data.content, this.selectedBackground)
+                            }
+
+                            doUpdateBackgroundForTheFirstTime()
+                        })
+                }
             }
         },
     

@@ -1,4 +1,77 @@
 const Utility = {
+    indexedDb: {
+        dbName: 'muslimboard-background-cache',
+        dbVersion: 1,
+        storeName: 'background-images',
+        dbPromise: null,
+        open() {
+            if (this.dbPromise) {
+                return this.dbPromise
+            }
+
+            this.dbPromise = new Promise((resolve, reject) => {
+                if (typeof indexedDB === 'undefined') {
+                    this.dbPromise = null
+                    reject(new Error('indexedDB is not available'))
+                    return
+                }
+
+                const request = indexedDB.open(this.dbName, this.dbVersion)
+                request.onupgradeneeded = () => {
+                    const db = request.result
+                    if (!db.objectStoreNames.contains(this.storeName)) {
+                        db.createObjectStore(this.storeName, { keyPath: 'url' })
+                    }
+                }
+                request.onsuccess = () => resolve(request.result)
+                request.onerror = () => {
+                    this.dbPromise = null
+                    reject(request.error || new Error('failed to open indexedDB'))
+                }
+            })
+
+            return this.dbPromise
+        },
+        async get(url) {
+            if (!url) {
+                return null
+            }
+
+            try {
+                const db = await this.open()
+                return await new Promise((resolve, reject) => {
+                    const transaction = db.transaction(this.storeName, 'readonly')
+                    const request = transaction.objectStore(this.storeName).get(url)
+                    request.onsuccess = () => resolve(request.result || null)
+                    request.onerror = () => reject(request.error || new Error(`failed to get indexedDB item: ${url}`))
+                })
+            } catch (err) {
+                Utility.error(err)
+                return null
+            }
+        },
+        async set(url, blob) {
+            if (!url || !blob) {
+                return
+            }
+
+            try {
+                const db = await this.open()
+                await new Promise((resolve, reject) => {
+                    const transaction = db.transaction(this.storeName, 'readwrite')
+                    const request = transaction.objectStore(this.storeName).put({
+                        url,
+                        blob,
+                        updatedAt: Utility.now().valueOf(),
+                    })
+                    request.onsuccess = () => resolve()
+                    request.onerror = () => reject(request.error || new Error(`failed to store indexedDB item: ${url}`))
+                })
+            } catch (err) {
+                Utility.error(err)
+            }
+        },
+    },
     chromeStorage: {
         set: (key, value) => new Promise((resolve) => {
             let item = {}
@@ -113,6 +186,9 @@ const Utility = {
     },
     randomFromArray(key, arr, exclusion) {
         const cacheKey = `data-cache-${key}`
+        if (!Array.isArray(arr) || arr.length == 0) {
+            return false
+        }
         
         let arrExcluded = JSON.parse(localStorage.getItem(cacheKey) || '[]')
         if (exclusion) {
