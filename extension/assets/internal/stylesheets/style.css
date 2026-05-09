@@ -146,7 +146,7 @@ html {
     cursor: default;
 }
 #sidebar .prayer-time table tr.prayer-time-row.active {
-    background-color: #00B16A;
+    background-color: #00b16a;
 }
 #sidebar .prayer-time table tr.prayer-time-row:not(.active):hover {
     background-color: rgba(255, 255, 255, 0.2);
@@ -193,7 +193,7 @@ html {
     display: none;
 }
 #sidebar .prayer-time table tr.remaining-time td {
-    background-color: #00B16A;
+    background-color: #00b16a;
 }
 #sidebar .prayer-time table tr.remaining-time td div {
     font-style: italic;
@@ -201,7 +201,7 @@ html {
     padding-top: 4px;
     padding-bottom: 4px;
     text-align: center;
-    border-top: 1px solid #00a362;
+    border-top: 1px solid #00b16a;
 }
 
 #wise-word {
@@ -396,6 +396,10 @@ body.show-todo-list #todo-list {
     color: #404040;
     font-size: 12px;
 }
+body.show-todo-list #todo-list .wrapper .toggler {
+    height: 40px;
+    padding: 11px 10px;
+}
 #todo-list .wrapper .toggler .true {
     display: inline;
 }
@@ -418,22 +422,24 @@ body.show-todo-list #todo-list .wrapper .toggler .false {
 #todo-list .wrapper .items .export {
     cursor: pointer;
     border: none;
-    padding: 13px 12px 11px;
-    width: 48px;
-    height: 48px;
+    padding: 10px;
+    width: 40px;
+    height: 40px;
     text-align: center;
     color: white;
     border-radius: 50%;
-    font-size: 21px;
+    font-size: 18px;
     box-shadow: 0 1px 6px 0 rgba(32,33,36,0.28);
     position: absolute;
     top: 10px;
     right: 10px;
     display: none;
     z-index: 6;
+    opacity: 0.9;
+    transition: opacity 100ms ease-in-out;
 }
 #todo-list .wrapper .items .add {
-    right: 68px;
+    right: 58px;
     background-color: #00b16a;
 }
 #todo-list .wrapper .items .export {
@@ -444,12 +450,19 @@ body.show-todo-list #todo-list .wrapper .items .add,
 body.show-todo-list #todo-list .wrapper .items .export {
     display: block;   
 }
+#todo-list .wrapper .items .add:hover,
+#todo-list .wrapper .items .add:focus,
+#todo-list .wrapper .items .export:hover,
+#todo-list .wrapper .items .export:focus {
+    opacity: 1;
+}
 #todo-list .wrapper .items .item {
     padding: 16px;
     border-bottom: 1px solid #dedede;
     position: relative;
     cursor: pointer;
     display: none;
+    width: 100%;
 }
 /* #todo-list .wrapper .items .item.checked {
     background-color: #00b16a;
@@ -462,7 +475,7 @@ body.show-todo-list #todo-list .wrapper .items .item {
 }
 #todo-list .wrapper .items .item.draggable-source--is-dragging,
 #todo-list .wrapper .items .item.draggable-mirror {
-    width: 403px;
+    width: 100%;
     background-color: #00b16a !important;
 }
 #todo-list .wrapper .items .item.draggable-mirror {
@@ -530,7 +543,7 @@ body.show-todo-list #todo-list .wrapper .items .item {
     margin-top: -12.5px;
     z-index: 7;
     display: none;
-    opacity: 0.65;
+    opacity: 0.9;
     transition: opacity 100ms ease-in-out;
 }
 #todo-list .wrapper .items .item .delete {
@@ -576,7 +589,7 @@ body.show-todo-list #todo-list .wrapper .items .item {
     height: 1px;
 }
 #footer .menu a .connection-status.happy:after {
-    background-color: #00B16A;
+    background-color: #00b16a;
 }
 #footer .menu a .connection-status.sad:after {
     background-color: #EF4836;

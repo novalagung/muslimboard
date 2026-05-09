@@ -107,21 +107,21 @@ const I18n = {
         
         todoListHeaderShow: {
             ar: 'إظهار لائحة المهام',
-            en: 'Show TODO list panel',
+            en: 'Show todo list panel',
             ru: 'Показать панель списка дел',
             bn: 'কি করণীয় এর তালিকা দেখুন', 
             hi: 'करने योग्य कार्यों की सूची देखें',
-            id: 'Tampilkan TODO list',
+            id: 'Tampilkan todo list',
             'zh-tw': '顯示待辦事項清單',
             'zh-cn': '显示待办事项清单'
         },
         todoListHeaderHide: {
             ar: 'إخفاء لائحة المهام',
-            en: 'Hide TODO list panel',
+            en: 'Hide todo list panel',
             ru: 'Скрыть панель списка дел',
             bn: 'কি করণীয় এর তালিকা লুকিয়ে ফেলুন', 
             hi: 'कार्य सूची छिपाएँ',
-            id: 'Sembunyikan TODO list',
+            id: 'Sembunyikan todo list',
             'zh-tw': '隱藏待辦事項清單',
             'zh-cn': '隐藏待办事项清单'
         },

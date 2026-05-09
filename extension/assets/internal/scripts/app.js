@@ -1125,9 +1125,9 @@
             }
         },
 
-        // =========== TODO LIST
+        // =========== Todo List
 
-        // toggle TODO list visibility based on previously cached state
+        // toggle todo list visibility based on previously cached state
         ensureTodoListBoxVisibility() {
             const value = localStorage.getItem('todo-list-status') || 'false'
             if (value === 'true') {
@@ -1137,34 +1137,55 @@
             }
         },
 
+        parseTodoListItems(rawItems) {
+            try {
+                const items = Array.isArray(rawItems) ? rawItems : JSON.parse(rawItems || '[]')
+                if (!Array.isArray(items)) {
+                    return []
+                }
+
+                return items
+                    .filter((each) => each && typeof each === 'object')
+                    .map((each) => ({
+                        text: String(each.text || ''),
+                        checked: !!each.checked
+                    }))
+            } catch (err) {
+                Utility.error('failed to parse todo list items', err)
+                return []
+            }
+        },
+
+        hasTodoListContent: (items) => items.some((d) => String(d.text || '').trim()),
+
         // this function contains several things:
-        // - setup default TODO items data.
-        // - ensure TODO list visibility baseed on previously cached state.
-        // - and render TODO items
+        // - setup default todo items data.
+        // - ensure todo list visibility baseed on previously cached state.
+        // - and render todo items
         async ensureTodoListBoxVisibilityOnPageActive() {
             // migrate chrome.storage.sync storage data to localStorage
             const localStorageUsed = localStorage.getItem('todo-list-box-ever-loaded') || 'false'
             Utility.log('local storage used', localStorageUsed)
 
             if (localStorageUsed === 'false') {
-                let items = Utility.parseTodoListItems(localStorage.getItem('todo-list-items'))
+                let items = this.parseTodoListItems.call(this, localStorage.getItem('todo-list-items'))
 
-                if (items.filter((d) => d.text).length === 0) {
+                if (!this.hasTodoListContent(items)) {
                     // Migrate old todo data from chrome.storage.sync when localStorage is still empty.
                     let syncedItems = []
                     try {
-                        syncedItems = Utility.parseTodoListItems(await Utility.chromeStorage.get('todo-list-items'))
+                        syncedItems = this.parseTodoListItems.call(this, await Utility.chromeStorage.get('todo-list-items'))
                     } catch (err) {
                         Utility.error('failed to migrate todo list items from chrome storage', err)
                     }
-                    if (syncedItems.filter((d) => d.text).length > 0) {
+                    if (this.hasTodoListContent(syncedItems)) {
                         items = syncedItems
                     }
                 }
 
                 Utility.log('found cached todo list items', items)
 
-                if (items.filter((d) => d.text).length === 0) {
+                if (!this.hasTodoListContent(items)) {
                     items = [{
                         text: I18n.mapping.todoListPlaceholder.id,
                         checked: true
@@ -1182,7 +1203,7 @@
             this.ensureTodoListBoxVisibility.call(this)
             this.ensureTodoListItemsAppear.call(this)
 
-            if (chrome.tabs) {
+            if (chrome.tabs && chrome.tabs.onActivated) {
                 chrome.tabs.onActivated.addListener(() => {
                     this.ensureTodoListBoxVisibility.call(this)
                     this.ensureTodoListItemsAppear.call(this)
@@ -1190,13 +1211,13 @@
             }
         },
 
-        // render TODO list items
+        // render todo list items
         ensureTodoListItemsAppear() {
             $('#todo-list .items .item').remove()
 
             this.insertTodoListItem.call(this)
 
-            let items = Utility.parseTodoListItems(localStorage.getItem('todo-list-items'))
+            const items = this.parseTodoListItems.call(this, localStorage.getItem('todo-list-items'))
             items.forEach((each) => {
                 if (each.text === I18n.mapping.todoListPlaceholder.id) {
                     each.text = I18n.getText('todoListPlaceholder')
@@ -1219,15 +1240,17 @@
                     $textbox.append(document.createTextNode(line))
                 })
 
-                const $moveButton = $('<button class="move"><i class="fa fa-arrows"></i></button>')
-                const $deleteButton = $('<button class="delete"><i class="fa fa-close"></i></button>')
+                const $moveButton = $('<button class="move" title="Reorder todo item"><i class="fa fa-arrows"></i></button>')
+                const $deleteButton = $('<button class="delete" title="Delete todo item"><i class="fa fa-close"></i></button>')
 
                 $item.append($checkbox, $textbox, $moveButton, $deleteButton)
                 $('#todo-list .items').prepend($item)
             })
+
+            this.registerTodoListTooltips.call(this)
         },
 
-        // ensure the TODO list items is always stored on cache
+        // ensure the todo list items is always stored on cache
         ensureTodoListItemsStored() {
             const items = $('#todo-list .items .item').toArray().reverse().map((each) => ({
                 text: $(each).find('span[contenteditable]')[0].innerText,
@@ -1239,15 +1262,13 @@
             // await Utility.chromeStorage.set('todo-list-items', JSON.stringify(items))
         },
 
-        // insert new TODO item
+        // insert new todo item
         insertTodoListItem() {
-            let items = Utility.parseTodoListItems(localStorage.getItem('todo-list-items'))
+            const items = this.parseTodoListItems.call(this, localStorage.getItem('todo-list-items'))
 
             // ensure to have only one row of empty text on top
-            if (items.length > 0) {
-                if (!items[items.length - 1].text) {
-                    return
-                }
+            if (items.length > 0 && !items[items.length - 1].text.trim()) {
+                return
             }
 
             items.push({ checked: false, text: '' })
@@ -1261,7 +1282,7 @@
             this.ensureTodoListItemsStored.call(this)
 
             const exportedAt = Utility.now()
-            const items = Utility.parseTodoListItems(localStorage.getItem('todo-list-items'))
+            const items = this.parseTodoListItems.call(this, localStorage.getItem('todo-list-items'))
                 .filter((each) => each.text.trim())
             const lines = items.map((each) => {
                 const text = each.text.replace(/\s+/g, ' ').trim()
@@ -1277,13 +1298,30 @@
             $('body').append($link)
             $link[0].click()
             $link.remove()
-            URL.revokeObjectURL(url)
+            setTimeout(() => { URL.revokeObjectURL(url) }, 0)
         },
 
-        // contains event declarations for many TODO list operation
+        registerTodoListTooltips() {
+            if (!$.fn.tooltipster) {
+                return
+            }
+
+            $('#todo-list button[title]')
+                .not('.tooltipstered')
+                .tooltipster({
+                    theme: 'tooltipster-custom-theme',
+                    animation: 'grow',
+                    delay: 0,
+                    touchDevices: false,
+                    trigger: 'hover',
+                    position: 'bottom'
+                })
+        },
+
+        // contains event declarations for many todo list operation
         registerEventTodoList() {
 
-            // event for hiding or showing the TODO list pane
+            // event for hiding or showing the todo list pane
             $('#todo-list .toggler').on('click', () => {
                 const value = localStorage.getItem('todo-list-status') || 'false'
                 if (value === 'true') {
@@ -1302,12 +1340,12 @@
                 $('#todo-list .items .item:eq(0) span[contenteditable]').focus()
             })
 
-            // event for exporting TODO list items
+            // event for exporting todo list items
             $('#todo-list .export').on('click', () => {
                 this.exportTodoListItems.call(this)
             })
 
-            // calculate TODO list item based on screen size
+            // calculate todo list item based on screen size
             $('#todo-list .items').height($(window).height() - 97 - 37)
             $('#todo-list .items').on('input', '.item span[contenteditable]', Utility.debounce(() => {
                 this.ensureTodoListItemsStored.call(this)
@@ -1316,7 +1354,7 @@
                 this.ensureTodoListItemsStored.call(this)
             })
 
-            // event for deleting TODO item
+            // event for deleting todo item
             $('#todo-list .items').on('click', '.item button.delete', (event) => {
                 event.stopPropagation()
                 $(event.currentTarget).closest('.item').remove()
@@ -1339,12 +1377,12 @@
                 }
             })
 
-            // // event for auto highlight/select text on TODO item click 
+            // // event for auto highlight/select text on todo item click
             // $('#todo-list .items').on('click', '.item span[contenteditable]', (event) => {
             //     Utility.selectElementContents(event.currentTarget)
             // })
 
-            // event handler for checking/unchecking TODO item
+            // event handler for checking/unchecking todo item
             $('#todo-list .items').on('change', '.item-checkbox', () => {
                 this.ensureTodoListItemsStored.call(this)
             })
@@ -1358,6 +1396,8 @@
                 // add delay to ensure DOM completelly finished it's process before updating the local storage
                 setTimeout(() => { this.ensureTodoListItemsStored.call(this) }, 300)
             });
+
+            this.registerTodoListTooltips.call(this)
         },
 
         // =========== UPDATE MESSAGE
