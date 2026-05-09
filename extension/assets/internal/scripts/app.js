@@ -122,11 +122,55 @@
         },
 
         // get automatic prayer time
+        prayerCoordinateCacheIndexKey: 'data-prayer-time-by-coordinate-index',
+        prayerCoordinateCachePrefix: 'data-prayer-time-by-coordinate-',
+        prayerCoordinateCacheLimit: 20,
+        normalizePrayerCoordinateCacheIndex() {
+            const allCoordinateKeys = Object.keys(localStorage)
+                .filter((each) => each.indexOf(this.prayerCoordinateCachePrefix) == 0)
+            let indexedKeys = []
+            try {
+                indexedKeys = JSON.parse(localStorage.getItem(this.prayerCoordinateCacheIndexKey) || '[]')
+            } catch (err) {
+                indexedKeys = []
+            }
+
+            const normalized = indexedKeys.filter((each) => allCoordinateKeys.includes(each))
+            allCoordinateKeys.forEach((each) => {
+                if (!normalized.includes(each)) {
+                    normalized.push(each)
+                }
+            })
+
+            return normalized
+        },
+        retainLastPrayerCoordinateCaches(latestKey = '') {
+            const normalized = this.normalizePrayerCoordinateCacheIndex.call(this)
+            const ordered = normalized.filter((each) => each != latestKey)
+            if (latestKey) {
+                ordered.push(latestKey)
+            }
+
+            const removeCount = Math.max(0, ordered.length - this.prayerCoordinateCacheLimit)
+            const keysToRemove = ordered.slice(0, removeCount)
+            keysToRemove.forEach((each) => localStorage.removeItem(each))
+
+            const retained = ordered.slice(removeCount)
+            localStorage.setItem(this.prayerCoordinateCacheIndexKey, JSON.stringify(retained))
+        },
+        removePrayerCoordinateCacheIndexItem(key) {
+            const normalized = this.normalizePrayerCoordinateCacheIndex.call(this)
+            const retained = normalized.filter((each) => each != key)
+            localStorage.setItem(this.prayerCoordinateCacheIndexKey, JSON.stringify(retained))
+        },
         async getPrayerTimesByCoordinate(latitude, longitude) {
             const key = `data-prayer-time-by-coordinate-${latitude}-${longitude}`
             if (latitude == 0 && longitude == 0) {
                 localStorage.removeItem(key)
+                this.removePrayerCoordinateCacheIndexItem.call(this, key)
             }
+
+            this.retainLastPrayerCoordinateCaches.call(this, key)
 
             const data = await Utility.getLatestData(key, async (resolve) => {
                 const month = parseInt(Utility.now().format('MM'), 10)
@@ -149,6 +193,7 @@
             }
             if (!isDataFound) {
                 localStorage.removeItem(key)
+                this.removePrayerCoordinateCacheIndexItem.call(this, key)
                 return false
             }
 
@@ -162,9 +207,11 @@
             }
             if (!isDataFound) {
                 localStorage.removeItem(key)
+                this.removePrayerCoordinateCacheIndexItem.call(this, key)
                 return false
             }
 
+            this.retainLastPrayerCoordinateCaches.call(this, key)
             return data
         },
 
@@ -220,6 +267,7 @@
 
             // remove coordinate cache
             localStorage.removeItem('data-coordinate-cache')
+            localStorage.removeItem(this.prayerCoordinateCacheIndexKey)
 
             // remove prayer time cache
             Utility.removeLocalStorageItemsByPrefix((d) => d.indexOf('data-prayer-time') > -1)
@@ -425,6 +473,27 @@
         // store next background image
         nextSelectedBackground: false,
 
+        preloadBackgroundImage(url) {
+            return new Promise((resolve, reject) => {
+                const preloader = new Image()
+                const timeout = setTimeout(() => {
+                    preloader.onload = null
+                    preloader.onerror = null
+                    reject(new Error(`background image load timeout: ${url}`))
+                }, Constant.app.timeoutDuration)
+
+                preloader.onload = () => {
+                    clearTimeout(timeout)
+                    resolve(url)
+                }
+                preloader.onerror = () => {
+                    clearTimeout(timeout)
+                    reject(new Error(`background image failed to load: ${url}`))
+                }
+                preloader.src = url
+            })
+        },
+
         // get background image data then render it to screen.
         // if background image data ever been loaded once, then the cache will be used on next call
         async getDataBackgroundThenRender() {
@@ -475,21 +544,21 @@
             const doUpdateBackgroundAndPreloadNextImage = () => {
                 Utility.log('preparing next image')
 
-                const preloader = new Image()
-                preloader.src = doGetBackgroundURL(this.nextSelectedBackground)
-                preloader.onload = () => {
-                    Utility.log('next image preloaded', preloader.src)
-    
-                    setTimeout(() => {
-                        this.updateBackground.call(this, data)
-                    }, Constant.app.updateBackgroundDelayDuration)
-                }
-                preloader.onerror = (err) => {
-                    this.nextSelectedBackground = Utility.randomFromArray('background', data.content, this.selectedBackground)
-                    preloader.src = doGetBackgroundURL(this.nextSelectedBackground)
-                }
+                this.preloadBackgroundImage.call(this, doGetBackgroundURL(this.nextSelectedBackground))
+                    .then(() => {
+                        Utility.log('next image preloaded', doGetBackgroundURL(this.nextSelectedBackground))
+
+                        setTimeout(() => {
+                            this.updateBackground.call(this, data)
+                        }, Constant.app.updateBackgroundDelayDuration)
+                    })
+                    .catch((err) => {
+                        Utility.error(err)
+                        this.nextSelectedBackground = Utility.randomFromArray('background', data.content, this.selectedBackground)
+                        doUpdateBackgroundAndPreloadNextImage()
+                    })
             }
-    
+
             // if certain image is currently appearing on screen,
             // then the transition need to be smooth.
             // meanwhile at first load, local image will be used to make the image loading process faster
@@ -544,21 +613,21 @@
                 // it's need to happen smoothly.
                 // on rare occasion the preload might failing due to various reason such slow internet,
                 // and if that situation is happening, use the local image
-                const preloader = new Image()
-                preloader.src = doGetBackgroundURL(this.selectedBackground)
-                preloader.onload = () => {
-                    Utility.log('next image preloaded', preloader.src)
-                    doUpdateBackgroundForTheFirstTime()
-                }
-                preloader.onerror = () => {
-                    this.selectedBackground = Utility.randomFromArray(
-                        'background', 
-                        data.content.filter((d) => doGetBackgroundURL(d).indexOf('http') == -1),
-                        this.selectedBackground
-                    )
-                    this.nextSelectedBackground = Utility.randomFromArray('background', data.content, this.selectedBackground)
-                    doUpdateBackgroundForTheFirstTime()
-                }
+                this.preloadBackgroundImage.call(this, doGetBackgroundURL(this.selectedBackground))
+                    .then(() => {
+                        Utility.log('next image preloaded', doGetBackgroundURL(this.selectedBackground))
+                        doUpdateBackgroundForTheFirstTime()
+                    })
+                    .catch((err) => {
+                        Utility.error(err)
+                        this.selectedBackground = Utility.randomFromArray(
+                            'background',
+                            data.content.filter((d) => doGetBackgroundURL(d).indexOf('http') == -1),
+                            this.selectedBackground
+                        )
+                        this.nextSelectedBackground = Utility.randomFromArray('background', data.content, this.selectedBackground)
+                        doUpdateBackgroundForTheFirstTime()
+                    })
             }
         },
     
@@ -794,15 +863,15 @@
                 }
 
                 Swal.fire({
-                    type: 'info',
+                    icon: 'info',
                     title: I18n.getText('footerMenuAutomaticLocationDetection'),
                     html: text,
                     showConfirmButton: true,
                     showCancelButton: true,
                     confirmButtonText: buttonText,
                     cancelButtonText: I18n.getText('promptConfirmationCancel')
-                }).then(async (e) => {
-                    if (!e.value) {
+                }).then(async (result) => {
+                    if (!result.isConfirmed) {
                         return
                     }
 
@@ -851,7 +920,7 @@
 
                 // show the manual location picker
                 Swal.fire({
-                    type: 'info',
+                    icon: 'info',
                     title: I18n.getText('footerMenuManualLocationSelection'),
                     html: text,
                     showConfirmButton: true,
@@ -865,8 +934,8 @@
 
                         return Promise.resolve()
                     }
-                }).then((e) => {
-                    if (!e.value) {
+                }).then((result) => {
+                    if (!result.isConfirmed) {
                         return
                     }
 
@@ -963,7 +1032,7 @@
                 const items = Object.keys(I18n.mapping.languageName).filter((d) => d !== 'en' && d !== 'id').map((d) => {
                     const lang = I18n.mapping.languageName[d]
                     if (lang.native) {
-                        return `<li><a href='#' data-locale='${d}'><span>${lang.english}</span><br /><span>${lang.native}</span></a></li>`
+                        return `<li><a href='#' data-locale='${d}'><span>${lang.english} - ${lang.native}</span></a></li>`
                     } else {
                         return `<li><a href='#' data-locale='${d}'><span>${lang.english}</span></a></li>`
                     }
@@ -985,7 +1054,7 @@
                     ? `Change language`
                     : `Change language\n${I18n.getText('modalChangeLanguageHeader')}`
                 swalChangeLanguage = Swal.fire({
-                    type: 'info',
+                    icon: 'info',
                     title: modalTitle,
                     html: text,
                     showConfirmButton: false,
@@ -1019,6 +1088,46 @@
             $('.info').on('click', (e) => {
                 e.preventDefault();
                 const shareText = `${Constant.meta.appName} - ${I18n.getText('appDescription')}`;
+                const shareUrl = Constant.meta.homepageLink
+                const encodedShareText = encodeURIComponent(shareText)
+                const encodedShareUrl = encodeURIComponent(shareUrl)
+                const shareTargets = [{
+                    className: 'facebook',
+                    title: 'Facebook share',
+                    icon: 'fa-facebook-square',
+                    href: `https://www.facebook.com/sharer/sharer.php?u=${encodedShareUrl}&quote=${encodedShareText}`
+                }, {
+                    className: 'x-twitter',
+                    title: 'X share',
+                    icon: 'fa-twitter',
+                    href: `https://twitter.com/intent/tweet?text=${encodedShareText}&url=${encodedShareUrl}`
+                }, {
+                    className: 'linkedin',
+                    title: 'LinkedIn share',
+                    icon: 'fa-linkedin',
+                    href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedShareUrl}`
+                }, {
+                    className: 'whatsapp',
+                    title: 'WhatsApp share',
+                    icon: 'fa-whatsapp',
+                    href: `https://wa.me/?text=${encodedShareText}%20${encodedShareUrl}`
+                }, {
+                    className: 'telegram',
+                    title: 'Telegram share',
+                    icon: 'fa-telegram',
+                    href: `https://t.me/share/url?url=${encodedShareUrl}&text=${encodedShareText}`
+                }]
+                const shareButtons = shareTargets.map((target) => `
+                    <a
+                        class="btn-share ${target.className}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        href="${target.href}"
+                        title="${target.title}"
+                    >
+                        <i class="fa ${target.icon}"></i>
+                    </a>
+                `).join('')
 
                 const keyOfNewVersionMessage = `new-version-${Constant.meta.version}}`
                 const newVersion = localStorage.getItem(keyOfNewVersionMessage) || ''
@@ -1052,22 +1161,7 @@
                         <p>${I18n.getText('modalShareText')}</p>
                         <div class="share-container">
                             <div>
-                                <a 
-                                    class="btn-share facebook" 
-                                    target="_blank" 
-                                    href="https://www.facebook.com/sharer/sharer.php?u=${encodeURI(Constant.meta.homepageLink)}&title=${encodeURI(shareText)}" 
-                                    title="Facebook share"
-                                >
-                                    <i class="fa fa-facebook-square"></i>
-                                </a>
-                                <a 
-                                    class="btn-share twitter" 
-                                    target="_blank" 
-                                    href="http://twitter.com/share?text=${shareText}&url=${encodeURI(Constant.meta.homepageLink)}" 
-                                    title="Twitter share"
-                                >
-                                    <i class="fa fa-twitter"></i>
-                                </a>
+                                ${shareButtons}
                             </div>
                         </div>
                         <hr class='separator'>
@@ -1081,7 +1175,7 @@
                 `
 
                 Swal.fire({
-                    type: 'info',
+                    icon: 'info',
                     title: [Constant.meta.appName, Constant.meta.version].join(" "),
                     html: text,
                     showConfirmButton: false,
@@ -1125,9 +1219,9 @@
             }
         },
 
-        // =========== TODO LIST
+        // =========== Todo List
 
-        // toggle TODO list visibility based on previously cached state
+        // toggle todo list visibility based on previously cached state
         ensureTodoListBoxVisibility() {
             const value = localStorage.getItem('todo-list-status') || 'false'
             if (value === 'true') {
@@ -1137,27 +1231,219 @@
             }
         },
 
-        // this function contains several things:
-        // - setup default TODO items data.
-        // - ensure TODO list visibility baseed on previously cached state.
-        // - and render TODO items
-        ensureTodoListBoxVisibilityOnPageActive() {
+        parseTodoListItems(rawItems) {
+            try {
+                const items = Array.isArray(rawItems) ? rawItems : JSON.parse(rawItems || '[]')
+                if (!Array.isArray(items)) {
+                    return []
+                }
 
+                return items
+                    .filter((each) => each && typeof each === 'object')
+                    .map((each) => ({
+                        text: String(each.text || ''),
+                        checked: !!each.checked
+                    }))
+            } catch (err) {
+                Utility.error('failed to parse todo list items', err)
+                return []
+            }
+        },
+
+        parseTodoListImportItems(rawContent) {
+            const content = String(rawContent || '').replace(/^\uFEFF/, '')
+            const lines = content.split(/\r?\n/g)
+
+            const unescapeTodoText = (text) => String(text || '')
+                .replace(/\\\\/g, '\\')
+                .replace(/\\n/g, '\n')
+                .replace(/\\r/g, '\r')
+
+            return lines.map((line) => String(line || '')).filter((line) => line.trim() !== '').map((line) => {
+                const checkedMatch = line.match(/^\[(x|X)\]\s*(.*)$/)
+                if (checkedMatch) {
+                    return {
+                        checked: true,
+                        text: unescapeTodoText(checkedMatch[2])
+                    }
+                }
+
+                const uncheckedMatch = line.match(/^\[\s*\]\s*(.*)$/)
+                if (uncheckedMatch) {
+                    return {
+                        checked: false,
+                        text: unescapeTodoText(uncheckedMatch[1])
+                    }
+                }
+
+                return {
+                    checked: false,
+                    text: unescapeTodoText(line)
+                }
+            }).filter((each) => !!String(each.text || '').trim())
+        },
+
+        async promptTodoListImportAction(itemCount) {
+            const title = I18n.getText('todoListImportPromptTitle')
+            const text = I18n.getText('todoListImportPromptText').replace('$1', itemCount)
+            const replaceText = I18n.getText('todoListImportReplaceAll')
+            const insertText = I18n.getText('todoListImportInsert')
+            const cancelText = I18n.getText('promptConfirmationCancel')
+
+            const result = await Swal.fire({
+                icon: 'question',
+                title,
+                text,
+                showDenyButton: true,
+                showCancelButton: true,
+                confirmButtonText: replaceText,
+                denyButtonText: insertText,
+                cancelButtonText: cancelText,
+                confirmButtonColor: '#7066e0',
+                denyButtonColor: '#7066e0'
+            })
+
+            if (result.isConfirmed) {
+                return 'replace'
+            }
+            if (result.isDenied) {
+                return 'insert'
+            }
+            return 'cancel'
+        },
+
+        hasTodoListContent: (items) => items.some((d) => String(d.text || '').trim()),
+
+        isSafeTodoListLink(text) {
+            try {
+                const url = new URL(String(text || '').trim())
+                return url.protocol === 'http:' || url.protocol === 'https:'
+            } catch (err) {
+                return false
+            }
+        },
+
+        normalizeTodoListLink(text) {
+            const raw = String(text || '').trim()
+            if (!raw) {
+                return null
+            }
+
+            const href = /^https?:\/\//i.test(raw) ? raw : `https://${raw}`
+            if (!this.isSafeTodoListLink.call(this, href)) {
+                return null
+            }
+
+            return {
+                href,
+                text: raw
+            }
+        },
+
+        renderTodoListTextboxViewMode($textbox, rawText) {
+            const text = String(rawText || '')
+            $textbox
+                .attr('contenteditable', 'false')
+                .attr('data-raw-text', text)
+                .removeClass('is-editing')
+                .empty()
+
+            const lines = text.split(/\n/g)
+            const linkRegex = /((?:https?:\/\/|www\.)[^\s<]+)/gi
+            const strictLinkChunkRegex = /^(?:https?:\/\/|www\.)[^\s<]+$/i
+            lines.forEach((line, lineIndex) => {
+                if (lineIndex > 0) {
+                    $textbox.append('<br>')
+                }
+
+                const chunks = line.split(linkRegex)
+                chunks.forEach((chunk) => {
+                    if (!chunk) {
+                        return
+                    }
+
+                    if (!strictLinkChunkRegex.test(chunk)) {
+                        $textbox.append(document.createTextNode(chunk))
+                        return
+                    }
+
+                    const normalizedLink = this.normalizeTodoListLink.call(this, chunk)
+                    if (normalizedLink) {
+                        const $link = $('<a></a>')
+                            .attr('href', normalizedLink.href)
+                            .attr('target', '_blank')
+                            .attr('rel', 'noopener noreferrer')
+                            .text(normalizedLink.text)
+                        $textbox.append($link)
+                        return
+                    }
+
+                    $textbox.append(document.createTextNode(chunk))
+                })
+            })
+        },
+
+        enableTodoListTextboxEditMode($textbox) {
+            const pendingLinkTimer = $textbox.data('link-open-timer')
+            if (pendingLinkTimer) {
+                clearTimeout(pendingLinkTimer)
+                $textbox.removeData('link-open-timer')
+            }
+
+            const rawText = String($textbox.attr('data-raw-text') || $textbox.text() || '')
+            $textbox
+                .attr('contenteditable', 'true')
+                .addClass('is-editing')
+                .text(rawText)
+
+            const element = $textbox[0]
+            if (element) {
+                element.focus()
+                const selection = window.getSelection()
+                if (selection && document.createRange) {
+                    const range = document.createRange()
+                    range.selectNodeContents(element)
+                    range.collapse(false)
+                    selection.removeAllRanges()
+                    selection.addRange(range)
+                }
+            }
+        },
+
+        // this function contains several things:
+        // - setup default todo items data.
+        // - ensure todo list visibility baseed on previously cached state.
+        // - and render todo items
+        async ensureTodoListBoxVisibilityOnPageActive() {
             // migrate chrome.storage.sync storage data to localStorage
             const localStorageUsed = localStorage.getItem('todo-list-box-ever-loaded') || 'false'
             Utility.log('local storage used', localStorageUsed)
 
             if (localStorageUsed === 'false') {
-                // disabling chrome storage. refer to https://stackoverflow.com/questions/28465384/how-is-chrome-storage-affected-when-an-extension-is-updated
-                // const rawItems = JSON.parse((await Utility.chromeStorage.get('todo-list-items')) || '[]')
+                let items = this.parseTodoListItems.call(this, localStorage.getItem('todo-list-items'))
 
-                let items = JSON.parse(localStorage.getItem('todo-list-items') || '[]').filter((d) => d.text)
-                Utility.log('found cached sync storage todo list items', items)
+                if (!this.hasTodoListContent(items)) {
+                    // Migrate old todo data from chrome.storage.sync when localStorage is still empty.
+                    let syncedItems = []
+                    try {
+                        syncedItems = this.parseTodoListItems.call(this, await Utility.chromeStorage.get('todo-list-items'))
+                    } catch (err) {
+                        Utility.error('failed to migrate todo list items from chrome storage', err)
+                    }
+                    if (this.hasTodoListContent(syncedItems)) {
+                        items = syncedItems
+                    }
+                }
 
-                if (items.length === 0) {
+                Utility.log('found cached todo list items', items)
+
+                if (!this.hasTodoListContent(items)) {
                     items = [{
                         text: I18n.mapping.todoListPlaceholder.id,
                         checked: true
+                    }, {
+                        text: I18n.getText('todoListLinkExample'),
+                        checked: false
                     }, {
                         text: '',
                         checked: false
@@ -1168,11 +1454,11 @@
                 localStorage.setItem('todo-list-status', 'true')
                 localStorage.setItem('todo-list-box-ever-loaded', 'true')
             }
-   
+
             this.ensureTodoListBoxVisibility.call(this)
             this.ensureTodoListItemsAppear.call(this)
 
-            if (chrome.tabs) {
+            if (chrome.tabs && chrome.tabs.onActivated) {
                 chrome.tabs.onActivated.addListener(() => {
                     this.ensureTodoListBoxVisibility.call(this)
                     this.ensureTodoListItemsAppear.call(this)
@@ -1180,13 +1466,13 @@
             }
         },
 
-        // render TODO list items
+        // render todo list items
         ensureTodoListItemsAppear() {
             $('#todo-list .items .item').remove()
 
             this.insertTodoListItem.call(this)
 
-            let items = JSON.parse(localStorage.getItem('todo-list-items') || '[]')
+            const items = this.parseTodoListItems.call(this, localStorage.getItem('todo-list-items'))
             items.forEach((each) => {
                 if (each.text === I18n.mapping.todoListPlaceholder.id) {
                     each.text = I18n.getText('todoListPlaceholder')
@@ -1198,26 +1484,21 @@
                 }
 
                 const $checkbox = $('<input type="checkbox" class="item-checkbox">').prop('checked', !!each.checked)
-                const $textbox = $('<span class="item-textbox" contenteditable="true"></span>')
+                const $textbox = $('<span class="item-textbox" contenteditable="false"></span>')
                     .attr('data-placeholder', I18n.getText('todoListEntryPlaceholder'))
+                this.renderTodoListTextboxViewMode.call(this, $textbox, each.text)
 
-                const lines = String(each.text || '').split(/\n/gi)
-                lines.forEach((line, index) => {
-                    if (index > 0) {
-                        $textbox.append('<br>')
-                    }
-                    $textbox.append(document.createTextNode(line))
-                })
-
-                const $moveButton = $('<button class="move"><i class="fa fa-arrows"></i></button>')
-                const $deleteButton = $('<button class="delete"><i class="fa fa-close"></i></button>')
+                const $moveButton = $('<button class="move" title="Reorder todo item"><i class="fa fa-arrows"></i></button>')
+                const $deleteButton = $('<button class="delete" title="Delete todo item"><i class="fa fa-close"></i></button>')
 
                 $item.append($checkbox, $textbox, $moveButton, $deleteButton)
                 $('#todo-list .items').prepend($item)
             })
+
+            this.registerTodoListTooltips.call(this)
         },
 
-        // ensure the TODO list items is always stored on cache
+        // ensure the todo list items is always stored on cache
         ensureTodoListItemsStored() {
             const items = $('#todo-list .items .item').toArray().reverse().map((each) => ({
                 text: $(each).find('span[contenteditable]')[0].innerText,
@@ -1229,15 +1510,13 @@
             // await Utility.chromeStorage.set('todo-list-items', JSON.stringify(items))
         },
 
-        // insert new TODO item
+        // insert new todo item
         insertTodoListItem() {
-            let items = JSON.parse(localStorage.getItem('todo-list-items') || '[]')
+            const items = this.parseTodoListItems.call(this, localStorage.getItem('todo-list-items'))
 
             // ensure to have only one row of empty text on top
-            if (items.length > 0) {
-                if (!items[items.length - 1].text) {
-                    return
-                }
+            if (items.length > 0 && !items[items.length - 1].text.trim()) {
+                return
             }
 
             items.push({ checked: false, text: '' })
@@ -1247,10 +1526,106 @@
             // await Utility.chromeStorage.set('todo-list-items', JSON.stringify(items))
         },
 
-        // contains event declarations for many TODO list operation
+        exportTodoListItems() {
+            this.ensureTodoListItemsStored.call(this)
+
+            const escapeTodoText = (text) => String(text || '')
+                .replace(/\\/g, '\\\\')
+                .replace(/\r/g, '\\r')
+                .replace(/\n/g, '\\n')
+
+            const exportedAt = Utility.now()
+            const items = this.parseTodoListItems.call(this, localStorage.getItem('todo-list-items'))
+                .filter((each) => each.text.trim())
+            const lines = items.map((each) => {
+                const text = escapeTodoText(each.text)
+                return `${each.checked ? '[x]' : '[ ]'} ${text}`
+            })
+            const content = `${lines.join('\n')}\n`
+            const blob = new Blob([content], { type: 'text/plain' })
+            const url = URL.createObjectURL(blob)
+            const $link = $('<a></a>')
+                .attr('href', url)
+                .attr('download', `muslimboard-todo-list-${exportedAt.format('YYYY-MM-DD-HH-mm-ss')}.txt`)
+
+            $('body').append($link)
+            $link[0].click()
+            $link.remove()
+            setTimeout(() => { URL.revokeObjectURL(url) }, 0)
+        },
+
+        readTodoListImportFile(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader()
+                reader.onload = () => resolve(String(reader.result || ''))
+                reader.onerror = () => reject(reader.error || new Error('failed to read todo list file'))
+                reader.readAsText(file)
+            })
+        },
+
+        async importTodoListItems(file) {
+            try {
+                const content = await this.readTodoListImportFile.call(this, file)
+                const items = this.parseTodoListImportItems.call(this, content)
+
+                if (!this.hasTodoListContent(items)) {
+                    await Swal.fire({
+                        icon: 'error',
+                        title: I18n.getText('todoListImportFailedTitle'),
+                        text: I18n.getText('todoListImportFailedText')
+                    })
+                    return false
+                }
+
+                const action = await this.promptTodoListImportAction.call(this, items.length)
+                if (action === 'replace') {
+                    localStorage.setItem('todo-list-items', JSON.stringify(items))
+                } else if (action === 'insert') {
+                    const existingItems = this.parseTodoListItems.call(this, localStorage.getItem('todo-list-items'))
+                    const merged = existingItems
+                        .concat(items)
+                        .filter((each) => String(each.text || '').trim())
+                    localStorage.setItem('todo-list-items', JSON.stringify(merged))
+                } else {
+                    return false
+                }
+
+                localStorage.setItem('todo-list-box-ever-loaded', 'true')
+                this.ensureTodoListItemsAppear.call(this)
+                this.ensureTodoListBoxVisibility.call(this)
+                return true
+            } catch (err) {
+                Utility.error('failed to import todo list items', err)
+                await Swal.fire({
+                    icon: 'error',
+                    title: I18n.getText('todoListImportFailedTitle'),
+                    text: I18n.getText('todoListImportReadErrorText')
+                })
+                return false
+            }
+        },
+
+        registerTodoListTooltips() {
+            if (!$.fn.tooltipster) {
+                return
+            }
+
+            $('#todo-list button[title]')
+                .not('.tooltipstered')
+                .tooltipster({
+                    theme: 'tooltipster-custom-theme',
+                    animation: 'grow',
+                    delay: 0,
+                    touchDevices: false,
+                    trigger: 'hover',
+                    position: 'bottom'
+                })
+        },
+
+        // contains event declarations for many todo list operation
         registerEventTodoList() {
 
-            // event for hiding or showing the TODO list pane
+            // event for hiding or showing the todo list pane
             $('#todo-list .toggler').on('click', () => {
                 const value = localStorage.getItem('todo-list-status') || 'false'
                 if (value === 'true') {
@@ -1266,46 +1641,71 @@
             $('#todo-list .add').on('click', (event) => {
                 this.insertTodoListItem.call(this)
                 this.ensureTodoListItemsAppear.call(this)
-                $('#todo-list .items .item:eq(0) span[contenteditable]').focus()
+                const $textbox = $('#todo-list .items .item:eq(0) .item-textbox')
+                this.enableTodoListTextboxEditMode.call(this, $textbox)
             })
 
-            // calculate TODO list item based on screen size
-            $('#todo-list .items').height($(window).height() - 97 - 37)
-            $('#todo-list .items').on('keyup', '.item span[contenteditable]', Utility.debounce(() => {
+            const $todoListImportInput = $('<input type="file" accept=".txt,text/plain" />').css('display', 'none')
+            $('body').append($todoListImportInput)
+            $todoListImportInput.on('change', async (event) => {
+                const file = event.currentTarget.files && event.currentTarget.files[0]
+                $todoListImportInput.val('')
+                if (!file) {
+                    return
+                }
+
+                await this.importTodoListItems.call(this, file)
+            })
+
+            // event for importing todo list items
+            $('#todo-list .import').on('click', () => {
+                $todoListImportInput[0].click()
+            })
+
+            // event for exporting todo list items
+            $('#todo-list .export').on('click', () => {
+                this.exportTodoListItems.call(this)
+            })
+
+            // calculate todo list item based on screen size
+            $('#todo-list .items').height($(window).height() - 97 - 37 - 9)
+            $('#todo-list .items').on('input', '.item span[contenteditable]', Utility.debounce(() => {
                 this.ensureTodoListItemsStored.call(this)
             }, 300))
-
-            // event for deleting TODO item
-            $('#todo-list .items').on('click', '.item button', (event) => {
+            $('#todo-list .items').on('blur', '.item span[contenteditable="true"]', (event) => {
+                this.ensureTodoListItemsStored.call(this)
+                const $textbox = $(event.currentTarget)
+                this.renderTodoListTextboxViewMode.call(this, $textbox, $textbox[0].innerText)
+            })
+            // event for deleting todo item
+            $('#todo-list .items').on('click', '.item button.delete', (event) => {
+                event.stopPropagation()
                 $(event.currentTarget).closest('.item').remove()
                 this.ensureTodoListItemsStored.call(this)
             })
 
-            // event handler for textbox click
-            let lastClickedElement = null
-            $('#todo-list .items').on('click', '.item', (event) => {
-                const $textbox = $(event.target).find('span[contenteditable]')
-                if ($textbox.length) {
-                    $textbox.focus()
-                    lastClickedElement = $textbox[0]
-                } else {
-                    if (lastClickedElement !== event.target) {
-                        $(event.currentTarget).focus()
-                        Utility.selectElementContents(event.target)
-                    }
-                    lastClickedElement = event.target
-                }
+            // open todo links immediately in view mode
+            $('#todo-list .items').on('click', '.item .item-textbox a', (event) => {
+                event.stopPropagation()
             })
 
-            // // event for auto highlight/select text on TODO item click 
+            // click outside links to edit todo item
+            $('#todo-list .items').on('click', '.item', (event) => {
+                if ($(event.target).closest('button, input, a').length > 0) {
+                    return
+                }
+
+                const $textbox = $(event.currentTarget).find('.item-textbox')
+                this.enableTodoListTextboxEditMode.call(this, $textbox)
+            })
+
+            // // event for auto highlight/select text on todo item click
             // $('#todo-list .items').on('click', '.item span[contenteditable]', (event) => {
             //     Utility.selectElementContents(event.currentTarget)
             // })
 
-            // event handler for checking/unchecking TODO item
-            $('#todo-list .items').on('click', '.item-checkbox', (event) => {
-                const $checkbox = $(event.currentTarget).find('input[type="checkbox"]')
-                $checkbox.prop('checked', !$checkbox.prop('checked'))
+            // event handler for checking/unchecking todo item
+            $('#todo-list .items').on('change', '.item-checkbox', () => {
                 this.ensureTodoListItemsStored.call(this)
             })
 
@@ -1318,6 +1718,8 @@
                 // add delay to ensure DOM completelly finished it's process before updating the local storage
                 setTimeout(() => { this.ensureTodoListItemsStored.call(this) }, 300)
             });
+
+            this.registerTodoListTooltips.call(this)
         },
 
         // =========== UPDATE MESSAGE
@@ -1351,7 +1753,7 @@
             `
 
             Swal.fire({
-                type: 'info',
+                icon: 'info',
                 title: `${Constant.meta.appName} ${Constant.meta.version}`,
                 html: text,
                 showConfirmButton: false,
@@ -1404,7 +1806,7 @@
             `
 
             Swal.fire({
-                type: 'info',
+                icon: 'info',
                 title: `New version! ${result[0].tag_name}`,
                 html: text,
                 showConfirmButton: false,
@@ -1415,8 +1817,9 @@
         // =========== INIT
 
         // orchestrate everything
-        init() {
-            console.log(`${Constant.meta.appName} ${Constant.meta.version}`)
+        async init() {
+            const t0 = performance.now()
+            Utility.log(`${Constant.meta.appName} ${Constant.meta.version}`)
 
             this.renderDateTime.call(this)
             this.getDataBackgroundThenRender.call(this)
@@ -1428,10 +1831,12 @@
             this.registerEventForAboutUsButton.call(this)
             this.registerEventForAlarm.call(this)
             this.registerEventTodoList.call(this)
-            this.ensureTodoListBoxVisibilityOnPageActive.call(this)
-            this.ensureTodoListItemsAppear.call(this)
+            await this.ensureTodoListBoxVisibilityOnPageActive.call(this)
             this.showExtensionWelcomeModal.call(this)
             this.checkNewVersion.call(this)
+
+            const t1 = performance.now()
+            Utility.log(`init() took ${t1 - t0} milliseconds.`)
         }
     }
 

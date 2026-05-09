@@ -16,7 +16,10 @@ const Constant = {
         updateBackgroundDelayDuration: Utility.seconds(40),
         updateContentDelayDuration: Utility.seconds(60),
         changelogs: [
-            'Error UI improvement'
+            'Todo list import/export support',
+            'Clickable links in todo items',
+            'Improved todo editing and tooltips',
+            'New share options and UI refinements'
         ]
     },
 }

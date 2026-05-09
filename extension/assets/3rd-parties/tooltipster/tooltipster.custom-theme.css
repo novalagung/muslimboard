@@ -1,8 +1,9 @@
 .tooltipster-custom-theme {
 	border-radius: 5px; 
-	border: 1px solid #00B16A;
-	background: #00B16A;
-	color: #000;
+	border: 1px solid #d8d8d8;
+	background: #fff;
+	color: #252525;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16);
 }
 .tooltipster-custom-theme .tooltipster-content {
 	font-family: 'Lato', Arial, sans-serif;
@@ -22,5 +23,5 @@
 .tooltipster-custom-theme .tooltipster-content ul li a {
 	font-weight: bold;
 	text-decoration: none;
-	color: #00B16A;
+	color: #008c9e;
 }
