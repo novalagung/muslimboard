@@ -145,6 +145,86 @@ const I18n = {
             'zh-tw': '永遠感恩，並傳播善意',
             'zh-cn': '永远感恩，传播善意'
         },
+        todoListImportFailedTitle: {
+            ar: 'فشل الاستيراد',
+            en: 'Import failed',
+            ru: 'Не удалось импортировать',
+            bn: 'ইম্পোর্ট ব্যর্থ হয়েছে',
+            hi: 'आयात विफल',
+            id: 'Impor gagal',
+            'zh-tw': '匯入失敗',
+            'zh-cn': '导入失败'
+        },
+        todoListImportFailedText: {
+            ar: 'الملف المحدد لا يحتوي على عناصر قائمة المهام.',
+            en: 'The selected file does not contain todo items.',
+            ru: 'Выбранный файл не содержит элементы списка дел.',
+            bn: 'নির্বাচিত ফাইলে টুডু আইটেম নেই।',
+            hi: 'चयनित फ़ाइल में टोडू आइटम नहीं हैं।',
+            id: 'File yang dipilih tidak berisi item todo.',
+            'zh-tw': '所選檔案不包含待辦事項。',
+            'zh-cn': '所选文件不包含待办事项。'
+        },
+        todoListImportPromptTitle: {
+            ar: 'استيراد عناصر قائمة المهام؟',
+            en: 'Import todo list items?',
+            ru: 'Импортировать элементы списка дел?',
+            bn: 'টুডু আইটেম আমদানি করবেন?',
+            hi: 'टोडू आइटम आयात करें?',
+            id: 'Impor item todo?',
+            'zh-tw': '匯入待辦事項項目？',
+            'zh-cn': '导入待办事项项？'
+        },
+        todoListImportPromptText: {
+            ar: 'تم العثور على $1 عنصر(عناصر). اختر ما إذا كنت تريد استبدال جميع عناصر القائمة الحالية أو إدراجها.',
+            en: 'Found $1 item(s). Choose whether to replace all current items or insert them.',
+            ru: 'Найдено $1 элемент(ов). Выберите, заменить все текущие элементы или вставить их.',
+            bn: '$1 আইটেম পাওয়া গেছে। নির্বাচন করুন আপনি সমস্ত বর্তমান আইটেম প্রতিস্থাপন করতে চান নাকি সেগুলো ঢোকাতে চান।',
+            hi: '$1 आइटम पाए गए। चुनें कि क्या सभी वर्तमान आइटम बदलना है या इन्हें सम्मिलित करना है।',
+            id: 'Ditemukan $1 item. Pilih apakah ingin mengganti semua item saat ini atau menyisipkannya.',
+            'zh-tw': '找到 $1 個項目。選擇是否替換所有當前項目或插入它們。',
+            'zh-cn': '找到 $1 个项目。请选择是替换所有当前项目还是插入它们。'
+        },
+        todoListImportReplaceAll: {
+            ar: 'استبدال الكل',
+            en: 'Replace all',
+            ru: 'Заменить все',
+            bn: 'সবগুলো প্রতিস্থাপন',
+            hi: 'सभी बदलें',
+            id: 'Ganti semua',
+            'zh-tw': '替換全部',
+            'zh-cn': '替换全部'
+        },
+        todoListImportReplace: {
+            ar: 'استبدال',
+            en: 'Replace',
+            ru: 'Заменить',
+            bn: 'প্রতিস্থাপন',
+            hi: 'बदलिए',
+            id: 'Ganti',
+            'zh-tw': '替換',
+            'zh-cn': '替换'
+        },
+        todoListImportInsert: {
+            ar: 'إدراج',
+            en: 'Insert',
+            ru: 'Вставить',
+            bn: 'প্রবেশ করান',
+            hi: 'सम्मिलित करें',
+            id: 'Sisipkan',
+            'zh-tw': '插入',
+            'zh-cn': '插入'
+        },
+        todoListImportReadErrorText: {
+            ar: 'تعذر قراءة الملف المحدد.',
+            en: 'The selected file could not be read.',
+            ru: 'Не удалось прочитать выбранный файл.',
+            bn: 'নির্বাচিত ফাইল পড়া যায়নি।',
+            hi: 'चयनित फ़ाइल को पढ़ा नहीं जा सका।',
+            id: 'File yang dipilih tidak bisa dibaca.',
+            'zh-tw': '無法讀取所選檔案。',
+            'zh-cn': '无法读取所选文件。'
+        },
 
         footerMenuAutomaticLocationDetection: {
             ar: 'تحديد المكان تلقائياً (حول العالم)',

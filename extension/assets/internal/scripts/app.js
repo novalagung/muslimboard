@@ -815,15 +815,15 @@
                 }
 
                 Swal.fire({
-                    type: 'info',
+                    icon: 'info',
                     title: I18n.getText('footerMenuAutomaticLocationDetection'),
                     html: text,
                     showConfirmButton: true,
                     showCancelButton: true,
                     confirmButtonText: buttonText,
                     cancelButtonText: I18n.getText('promptConfirmationCancel')
-                }).then(async (e) => {
-                    if (!e.value) {
+                }).then(async (result) => {
+                    if (!result.isConfirmed) {
                         return
                     }
 
@@ -872,7 +872,7 @@
 
                 // show the manual location picker
                 Swal.fire({
-                    type: 'info',
+                    icon: 'info',
                     title: I18n.getText('footerMenuManualLocationSelection'),
                     html: text,
                     showConfirmButton: true,
@@ -886,8 +886,8 @@
 
                         return Promise.resolve()
                     }
-                }).then((e) => {
-                    if (!e.value) {
+                }).then((result) => {
+                    if (!result.isConfirmed) {
                         return
                     }
 
@@ -1006,7 +1006,7 @@
                     ? `Change language`
                     : `Change language\n${I18n.getText('modalChangeLanguageHeader')}`
                 swalChangeLanguage = Swal.fire({
-                    type: 'info',
+                    icon: 'info',
                     title: modalTitle,
                     html: text,
                     showConfirmButton: false,
@@ -1040,6 +1040,46 @@
             $('.info').on('click', (e) => {
                 e.preventDefault();
                 const shareText = `${Constant.meta.appName} - ${I18n.getText('appDescription')}`;
+                const shareUrl = Constant.meta.homepageLink
+                const encodedShareText = encodeURIComponent(shareText)
+                const encodedShareUrl = encodeURIComponent(shareUrl)
+                const shareTargets = [{
+                    className: 'facebook',
+                    title: 'Facebook share',
+                    icon: 'fa-facebook-square',
+                    href: `https://www.facebook.com/sharer/sharer.php?u=${encodedShareUrl}&quote=${encodedShareText}`
+                }, {
+                    className: 'x-twitter',
+                    title: 'X share',
+                    icon: 'fa-twitter',
+                    href: `https://twitter.com/intent/tweet?text=${encodedShareText}&url=${encodedShareUrl}`
+                }, {
+                    className: 'linkedin',
+                    title: 'LinkedIn share',
+                    icon: 'fa-linkedin',
+                    href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedShareUrl}`
+                }, {
+                    className: 'whatsapp',
+                    title: 'WhatsApp share',
+                    icon: 'fa-whatsapp',
+                    href: `https://wa.me/?text=${encodedShareText}%20${encodedShareUrl}`
+                }, {
+                    className: 'telegram',
+                    title: 'Telegram share',
+                    icon: 'fa-telegram',
+                    href: `https://t.me/share/url?url=${encodedShareUrl}&text=${encodedShareText}`
+                }]
+                const shareButtons = shareTargets.map((target) => `
+                    <a
+                        class="btn-share ${target.className}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        href="${target.href}"
+                        title="${target.title}"
+                    >
+                        <i class="fa ${target.icon}"></i>
+                    </a>
+                `).join('')
 
                 const keyOfNewVersionMessage = `new-version-${Constant.meta.version}}`
                 const newVersion = localStorage.getItem(keyOfNewVersionMessage) || ''
@@ -1073,22 +1113,7 @@
                         <p>${I18n.getText('modalShareText')}</p>
                         <div class="share-container">
                             <div>
-                                <a 
-                                    class="btn-share facebook" 
-                                    target="_blank" 
-                                    href="https://www.facebook.com/sharer/sharer.php?u=${encodeURI(Constant.meta.homepageLink)}&title=${encodeURI(shareText)}" 
-                                    title="Facebook share"
-                                >
-                                    <i class="fa fa-facebook-square"></i>
-                                </a>
-                                <a 
-                                    class="btn-share twitter" 
-                                    target="_blank" 
-                                    href="http://twitter.com/share?text=${shareText}&url=${encodeURI(Constant.meta.homepageLink)}" 
-                                    title="Twitter share"
-                                >
-                                    <i class="fa fa-twitter"></i>
-                                </a>
+                                ${shareButtons}
                             </div>
                         </div>
                         <hr class='separator'>
@@ -1102,7 +1127,7 @@
                 `
 
                 Swal.fire({
-                    type: 'info',
+                    icon: 'info',
                     title: [Constant.meta.appName, Constant.meta.version].join(" "),
                     html: text,
                     showConfirmButton: false,
@@ -1175,6 +1200,63 @@
                 Utility.error('failed to parse todo list items', err)
                 return []
             }
+        },
+
+        parseTodoListImportItems(rawContent) {
+            const content = String(rawContent || '').replace(/^\uFEFF/, '')
+            const lines = content.split(/\r?\n/g)
+
+            return lines.map((line) => line.trim()).filter((line) => !!line).map((line) => {
+                const checkedMatch = line.match(/^\[(x|X)\]\s*(.*)$/)
+                if (checkedMatch) {
+                    return {
+                        checked: true,
+                        text: checkedMatch[2].trim()
+                    }
+                }
+
+                const uncheckedMatch = line.match(/^\[\s*\]\s*(.*)$/)
+                if (uncheckedMatch) {
+                    return {
+                        checked: false,
+                        text: uncheckedMatch[1].trim()
+                    }
+                }
+
+                return {
+                    checked: false,
+                    text: line.trim()
+                }
+            }).filter((each) => !!String(each.text || '').trim())
+        },
+
+        async promptTodoListImportAction(itemCount) {
+            const title = I18n.getText('todoListImportPromptTitle')
+            const text = I18n.getText('todoListImportPromptText').replace('$1', itemCount)
+            const replaceText = I18n.getText('todoListImportReplaceAll')
+            const insertText = I18n.getText('todoListImportInsert')
+            const cancelText = I18n.getText('promptConfirmationCancel')
+
+            const result = await Swal.fire({
+                icon: 'question',
+                title,
+                text,
+                showDenyButton: true,
+                showCancelButton: true,
+                confirmButtonText: replaceText,
+                denyButtonText: insertText,
+                cancelButtonText: cancelText,
+                confirmButtonColor: '#7066e0',
+                denyButtonColor: '#7066e0'
+            })
+
+            if (result.isConfirmed) {
+                return 'replace'
+            }
+            if (result.isDenied) {
+                return 'insert'
+            }
+            return 'cancel'
         },
 
         hasTodoListContent: (items) => items.some((d) => String(d.text || '').trim()),
@@ -1322,6 +1404,55 @@
             setTimeout(() => { URL.revokeObjectURL(url) }, 0)
         },
 
+        readTodoListImportFile(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader()
+                reader.onload = () => resolve(String(reader.result || ''))
+                reader.onerror = () => reject(reader.error || new Error('failed to read todo list file'))
+                reader.readAsText(file)
+            })
+        },
+
+        async importTodoListItems(file) {
+            try {
+                const content = await this.readTodoListImportFile.call(this, file)
+                const items = this.parseTodoListImportItems.call(this, content)
+
+                if (!this.hasTodoListContent(items)) {
+                    await Swal.fire({
+                        icon: 'error',
+                        title: I18n.getText('todoListImportFailedTitle'),
+                        text: I18n.getText('todoListImportFailedText')
+                    })
+                    return false
+                }
+
+                const action = await this.promptTodoListImportAction.call(this, items.length)
+                if (action === 'replace') {
+                    localStorage.setItem('todo-list-items', JSON.stringify(items))
+                } else if (action === 'insert') {
+                    const existingItems = this.parseTodoListItems.call(this, localStorage.getItem('todo-list-items'))
+                    const merged = existingItems.concat(items)
+                    localStorage.setItem('todo-list-items', JSON.stringify(merged))
+                } else {
+                    return false
+                }
+
+                localStorage.setItem('todo-list-box-ever-loaded', 'true')
+                this.ensureTodoListItemsAppear.call(this)
+                this.ensureTodoListBoxVisibility.call(this)
+                return true
+            } catch (err) {
+                Utility.error('failed to import todo list items', err)
+                await Swal.fire({
+                    icon: 'error',
+                    title: I18n.getText('todoListImportFailedTitle'),
+                    text: I18n.getText('todoListImportReadErrorText')
+                })
+                return false
+            }
+        },
+
         registerTodoListTooltips() {
             if (!$.fn.tooltipster) {
                 return
@@ -1359,6 +1490,23 @@
                 this.insertTodoListItem.call(this)
                 this.ensureTodoListItemsAppear.call(this)
                 $('#todo-list .items .item:eq(0) span[contenteditable]').focus()
+            })
+
+            const $todoListImportInput = $('<input type="file" accept=".txt,text/plain" />').css('display', 'none')
+            $('body').append($todoListImportInput)
+            $todoListImportInput.on('change', async (event) => {
+                const file = event.currentTarget.files && event.currentTarget.files[0]
+                $todoListImportInput.val('')
+                if (!file) {
+                    return
+                }
+
+                await this.importTodoListItems.call(this, file)
+            })
+
+            // event for importing todo list items
+            $('#todo-list .import').on('click', () => {
+                $todoListImportInput[0].click()
             })
 
             // event for exporting todo list items
@@ -1452,7 +1600,7 @@
             `
 
             Swal.fire({
-                type: 'info',
+                icon: 'info',
                 title: `${Constant.meta.appName} ${Constant.meta.version}`,
                 html: text,
                 showConfirmButton: false,
@@ -1505,7 +1653,7 @@
             `
 
             Swal.fire({
-                type: 'info',
+                icon: 'info',
                 title: `New version! ${result[0].tag_name}`,
                 html: text,
                 showConfirmButton: false,

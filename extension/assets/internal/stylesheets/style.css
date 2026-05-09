@@ -419,6 +419,7 @@ body.show-todo-list #todo-list .wrapper .toggler .false {
     overflow-y: auto;
 }
 #todo-list .wrapper .items .add,
+#todo-list .wrapper .items .import,
 #todo-list .wrapper .items .export {
     cursor: pointer;
     border: none;
@@ -439,19 +440,26 @@ body.show-todo-list #todo-list .wrapper .toggler .false {
     transition: opacity 100ms ease-in-out;
 }
 #todo-list .wrapper .items .add {
-    right: 58px;
+    right: 106px;
     background-color: #00b16a;
+}
+#todo-list .wrapper .items .import {
+    right: 58px;
+    background-color: #f39c12;
 }
 #todo-list .wrapper .items .export {
     right: 10px;
     background-color: #008c9e;
 }
 body.show-todo-list #todo-list .wrapper .items .add,
+body.show-todo-list #todo-list .wrapper .items .import,
 body.show-todo-list #todo-list .wrapper .items .export {
     display: block;   
 }
 #todo-list .wrapper .items .add:hover,
 #todo-list .wrapper .items .add:focus,
+#todo-list .wrapper .items .import:hover,
+#todo-list .wrapper .items .import:focus,
 #todo-list .wrapper .items .export:hover,
 #todo-list .wrapper .items .export:focus {
     opacity: 1;
@@ -476,7 +484,7 @@ body.show-todo-list #todo-list .wrapper .items .item {
 #todo-list .wrapper .items .item.draggable-source--is-dragging,
 #todo-list .wrapper .items .item.draggable-mirror {
     width: 100%;
-    background-color: #00b16a !important;
+    background-color: #f1f1f1 !important; 
 }
 #todo-list .wrapper .items .item.draggable-mirror {
     opacity: 0.1;
@@ -598,38 +606,39 @@ body.show-todo-list #todo-list .wrapper .items .item {
     color: white;
 }
 
-#swal2-content p,
-#swal2-content li,
-#swal2-content label {
+#swal2-html-container p,
+#swal2-html-container li,
+#swal2-html-container label {
     font-size: 15px
 }
-#swal2-content ul {
+#swal2-html-container ul {
     padding-left: 25px;
 }
-#swal2-content .modal-info * {
+#swal2-html-container .modal-info * {
     text-align: left;
 }
-#swal2-content .modal-info p:not(:last-child) {
+#swal2-html-container .modal-info p:not(:last-child) {
     margin-bottom: 10px;
 }
-#swal2-content .modal-info p a {
+#swal2-html-container .modal-info p a {
     text-decoration: none;
     color: inherit;
     font-weight: bold;
 }
-#swal2-content .modal-info p b {
+#swal2-html-container .modal-info p b {
     font-weight: bold;
 }
-#swal2-content .modal-info p.copyright {
+#swal2-html-container .modal-info p.copyright {
     margin-top: 20px;
+    margin-bottom: 0px;
 }
-#swal2-content .modal-info hr.separator {
+#swal2-html-container .modal-info hr.separator {
     border-top: none;
     border-color: #e1e1e1;
     margin-top: 22px;
     display: block;
 }
-#swal2-content .modal-info .share-container .btn-share {
+#swal2-html-container .modal-info .share-container .btn-share {
     text-decoration: none;
     display: inline-block;
     color: #fff;
@@ -640,25 +649,40 @@ body.show-todo-list #todo-list .wrapper .items .item {
     border-radius: 4px;
     overflow: hidden;
     text-align: center;
+    opacity: 1;
+    transition: opacity 100ms ease-in-out;
 }
-#swal2-content .modal-info .share-container .btn-share.facebook {
+#swal2-html-container .modal-info .share-container .btn-share:hover,
+#swal2-html-container .modal-info .share-container .btn-share:focus {
+    opacity: 0.7;
+}
+#swal2-html-container .modal-info .share-container .btn-share.facebook {
     background-color: #405D9B;
 }
-#swal2-content .modal-info .share-container .btn-share.twitter {
+#swal2-html-container .modal-info .share-container .btn-share.x-twitter {
     background-color: #1DA1F2;
 }
-#swal2-content .modal-change-language {
+#swal2-html-container .modal-info .share-container .btn-share.linkedin {
+    background-color: #0A66C2;
+}
+#swal2-html-container .modal-info .share-container .btn-share.whatsapp {
+    background-color: #25D366;
+}
+#swal2-html-container .modal-info .share-container .btn-share.telegram {
+    background-color: #229ED9;
+}
+#swal2-html-container .modal-change-language {
     padding-top: 10px;
     padding-bottom: 40px;
 }
-#swal2-content .modal-change-language ul {
+#swal2-html-container .modal-change-language ul {
     list-style-type: none;
     padding-left: 0;
 }
-#swal2-content .modal-change-language ul li {
+#swal2-html-container .modal-change-language ul li {
     margin-top: 10px;
 }
-#swal2-content .modal-change-language a {
+#swal2-html-container .modal-change-language a {
     margin: 0px auto;
     display: block;
     color: white;
@@ -668,7 +692,7 @@ body.show-todo-list #todo-list .wrapper .items .item {
     background-color: #00b16a;
     width: 270px;
 }
-#swal2-content .modal-change-language hr {
+#swal2-html-container .modal-change-language hr {
     width: 199px;
     height: 1px;
     background-color: #f1f1f1;
@@ -676,21 +700,30 @@ body.show-todo-list #todo-list .wrapper .items .item {
     margin-top: 5px;
     margin-bottom: 5px;
 }
-#swal2-content .modal-change-language a:hover {
+#swal2-html-container .modal-change-language a:hover {
     opacity: 0.6;
 }
-#swal2-content .manual-geolocation div.row {
+#swal2-html-container .manual-geolocation div.row {
     margin-bottom: 5px;
 }
-#swal2-content .manual-geolocation select {
+#swal2-html-container .manual-geolocation select {
     width: 300px;
     font-size: 15px;
 }
-#swal2-content .manual-geolocation label {
+#swal2-html-container .manual-geolocation label {
     width: 100px;
     display: inline-block;
     text-align: right;
     padding-right: 5px;
+}
+
+/* hide big SweetAlert info icon circle on popup */
+.swal2-popup .swal2-icon.swal2-info {
+    display: none !important;
+}
+.swal2-container.swal2-backdrop-show,
+.swal2-container.swal2-noanimation {
+    background: rgba(0, 0, 0, 0.6) !important;
 }
 
 /* background blur shadow */

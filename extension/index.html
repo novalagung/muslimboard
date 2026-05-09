@@ -8,7 +8,7 @@
     <title>Muslim Board</title>
 
     <link rel="stylesheet" href="assets/3rd-parties/normalize/normalize.min.css" />
-    <link rel="stylesheet" href="assets/3rd-parties/sweetalert2/sweetalert2.min.css">
+    <link rel="stylesheet" href="assets/3rd-parties/sweetalert2/sweetalert2.min.css?nochache=1">
     <link rel="stylesheet" href="assets/3rd-parties/toast/toast.min.css">
     <link rel="stylesheet" href="assets/3rd-parties/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="assets/3rd-parties/tooltipster/tooltipster.main.min.css" />
@@ -139,11 +139,14 @@
                 <span class="false" data-i18n="todoListHeaderHide">Klik untuk menyembunyikan todo list</span>
             </div>
             <div class="items">
-                <button class="export" title="Export todo list">
-                    <i class="fa fa-download"></i>
-                </button>
-                <button class="add" title="Add todo item">
+                <button type="button" class="add" title="Add todo item">
                     <i class="fa fa-plus"></i>
+                </button>
+                <button type="button" class="import" title="Import todo list">
+                    <i class="fa fa-upload"></i>
+                </button>
+                <button type="button" class="export" title="Export todo list">
+                    <i class="fa fa-download"></i>
                 </button>
             </div>
         </div>
@@ -191,7 +194,7 @@
     <script src="assets/3rd-parties/moment/moment.min.js"></script>
     <script src="assets/3rd-parties/moment/moment-hijri.min.js"></script>
     <script src="assets/3rd-parties/moment/moment-timezone-with-data-1970-2030.min.js"></script>
-    <script src="assets/3rd-parties/sweetalert2/sweetalert2.all.min.js"></script>
+    <script src="assets/3rd-parties/sweetalert2/sweetalert2.all.min.js?nochache=1"></script>
     <script src="assets/3rd-parties/toast/toast.min.js"></script>
     <script src="assets/3rd-parties/tooltipster/tooltipster.bundle.min.js"></script>
     <script src="assets/3rd-parties/draggable/draggable.bundle.min.js"></script>
