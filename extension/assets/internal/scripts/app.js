@@ -1261,6 +1261,72 @@
 
         hasTodoListContent: (items) => items.some((d) => String(d.text || '').trim()),
 
+        isSafeTodoListLink(text) {
+            try {
+                const url = new URL(String(text || '').trim())
+                return url.protocol === 'http:' || url.protocol === 'https:'
+            } catch (err) {
+                return false
+            }
+        },
+
+        renderTodoListTextboxViewMode($textbox, rawText) {
+            const text = String(rawText || '')
+            $textbox
+                .attr('contenteditable', 'false')
+                .attr('data-raw-text', text)
+                .removeClass('is-editing')
+                .empty()
+
+            const lines = text.split(/\n/g)
+            const linkRegex = /(https?:\/\/[^\s<]+)/g
+            lines.forEach((line, lineIndex) => {
+                if (lineIndex > 0) {
+                    $textbox.append('<br>')
+                }
+
+                const chunks = line.split(linkRegex)
+                chunks.forEach((chunk) => {
+                    if (!chunk) {
+                        return
+                    }
+
+                    if (this.isSafeTodoListLink.call(this, chunk)) {
+                        const $link = $('<a></a>')
+                            .attr('href', chunk)
+                            .attr('target', '_blank')
+                            .attr('rel', 'noopener noreferrer')
+                            .text(chunk)
+                        $textbox.append($link)
+                        return
+                    }
+
+                    $textbox.append(document.createTextNode(chunk))
+                })
+            })
+        },
+
+        enableTodoListTextboxEditMode($textbox) {
+            const rawText = String($textbox.attr('data-raw-text') || $textbox.text() || '')
+            $textbox
+                .attr('contenteditable', 'true')
+                .addClass('is-editing')
+                .text(rawText)
+
+            const element = $textbox[0]
+            if (element) {
+                element.focus()
+                const selection = window.getSelection()
+                if (selection && document.createRange) {
+                    const range = document.createRange()
+                    range.selectNodeContents(element)
+                    range.collapse(false)
+                    selection.removeAllRanges()
+                    selection.addRange(range)
+                }
+            }
+        },
+
         // this function contains several things:
         // - setup default todo items data.
         // - ensure todo list visibility baseed on previously cached state.
@@ -1332,16 +1398,9 @@
                 }
 
                 const $checkbox = $('<input type="checkbox" class="item-checkbox">').prop('checked', !!each.checked)
-                const $textbox = $('<span class="item-textbox" contenteditable="true"></span>')
+                const $textbox = $('<span class="item-textbox" contenteditable="false"></span>')
                     .attr('data-placeholder', I18n.getText('todoListEntryPlaceholder'))
-
-                const lines = String(each.text || '').split(/\n/gi)
-                lines.forEach((line, index) => {
-                    if (index > 0) {
-                        $textbox.append('<br>')
-                    }
-                    $textbox.append(document.createTextNode(line))
-                })
+                this.renderTodoListTextboxViewMode.call(this, $textbox, each.text)
 
                 const $moveButton = $('<button class="move" title="Reorder todo item"><i class="fa fa-arrows"></i></button>')
                 const $deleteButton = $('<button class="delete" title="Delete todo item"><i class="fa fa-close"></i></button>')
@@ -1491,7 +1550,8 @@
             $('#todo-list .add').on('click', (event) => {
                 this.insertTodoListItem.call(this)
                 this.ensureTodoListItemsAppear.call(this)
-                $('#todo-list .items .item:eq(0) span[contenteditable]').focus()
+                const $textbox = $('#todo-list .items .item:eq(0) .item-textbox')
+                this.enableTodoListTextboxEditMode.call(this, $textbox)
             })
 
             const $todoListImportInput = $('<input type="file" accept=".txt,text/plain" />').css('display', 'none')
@@ -1517,12 +1577,21 @@
             })
 
             // calculate todo list item based on screen size
-            $('#todo-list .items').height($(window).height() - 97 - 37)
+            $('#todo-list .items').height($(window).height() - 97 - 37 - 9)
             $('#todo-list .items').on('input', '.item span[contenteditable]', Utility.debounce(() => {
                 this.ensureTodoListItemsStored.call(this)
             }, 300))
-            $('#todo-list .items').on('blur', '.item span[contenteditable]', () => {
+            $('#todo-list .items').on('blur', '.item span[contenteditable="true"]', (event) => {
                 this.ensureTodoListItemsStored.call(this)
+                const $textbox = $(event.currentTarget)
+                this.renderTodoListTextboxViewMode.call(this, $textbox, $textbox[0].innerText)
+            })
+            $('#todo-list .items').on('dblclick', '.item', (event) => {
+                if ($(event.target).closest('button, input, a').length > 0) {
+                    return
+                }
+                const $textbox = $(event.currentTarget).find('.item-textbox')
+                this.enableTodoListTextboxEditMode.call(this, $textbox)
             })
 
             // event for deleting todo item
@@ -1532,20 +1601,9 @@
                 this.ensureTodoListItemsStored.call(this)
             })
 
-            // event handler for textbox click
-            let lastClickedElement = null
-            $('#todo-list .items').on('click', '.item', (event) => {
-                const $textbox = $(event.target).find('span[contenteditable]')
-                if ($textbox.length) {
-                    $textbox.focus()
-                    lastClickedElement = $textbox[0]
-                } else {
-                    if (lastClickedElement !== event.target) {
-                        $(event.currentTarget).focus()
-                        Utility.selectElementContents(event.target)
-                    }
-                    lastClickedElement = event.target
-                }
+            // prevent item-level interactions when clicking links in view mode
+            $('#todo-list .items').on('click', '.item .item-textbox a', (event) => {
+                event.stopPropagation()
             })
 
             // // event for auto highlight/select text on todo item click

@@ -126,14 +126,14 @@ const I18n = {
             'zh-cn': '隐藏待办事项清单'
         },
         todoListEntryPlaceholder: {
-            ar: 'أكتب شيئاً',
-            en: 'Write something',
-            ru: 'Напишите что-нибудь',
-            bn: 'কিছু লিখুন', 
-            hi: 'कुछ लिखना',
-            id: 'Tulis sesuatu',
-            'zh-tw': '寫點什麼',
-            'zh-cn': '写点什么'
+            ar: 'اضغط مرتين لكتابة ملاحظة',
+            en: 'Double tap to write note',
+            ru: 'Нажмите дважды, чтобы написать заметку',
+            bn: 'নোট লিখতে দুবার ট্যাপ করুন',
+            hi: 'नोट लिखने के लिए दो बार टैप करें',
+            id: 'Ketuk 2x untuk menulis catatan',
+            'zh-tw': '輕點兩下以撰寫筆記',
+            'zh-cn': '双击以撰写备注'
         },
         todoListPlaceholder: {
             ar: 'كن شاكراً دوماً وانشر البهجة',
@@ -144,6 +144,16 @@ const I18n = {
             id: 'Senantiasa bersyukur dan berbuat baik',
             'zh-tw': '永遠感恩，並傳播善意',
             'zh-cn': '永远感恩，传播善意'
+        },
+        todoListEditHint: {
+            ar: 'اضغط على الملاحظة مرتين للتعديل',
+            en: 'Double tap note to edit',
+            ru: 'Нажмите заметку дважды, чтобы отредактировать',
+            bn: 'সম্পাদনা করতে নোটে দুইবার ট্যাপ করুন',
+            hi: 'संपादित करने के लिए नोट को दो बार टैप करें',
+            id: 'Ketuk catatan 2x untuk mengedit',
+            'zh-tw': '輕點筆記兩下即可編輯',
+            'zh-cn': '双击备注即可编辑'
         },
         todoListImportFailedTitle: {
             ar: 'فشل الاستيراد',
@@ -614,7 +624,13 @@ const I18n = {
         $('[data-i18n]').each((i, e) => {
             const $e = $(e)
             const key = $e.attr('data-i18n')
-            $e.text(I18n.getText(key))
+            const text = I18n.getText(key)
+            const $textTarget = $e.find('.text:first')
+            if ($textTarget.length > 0) {
+                $textTarget.text(text)
+            } else {
+                $e.text(text)
+            }
         })
     }
 }

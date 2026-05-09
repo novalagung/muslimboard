@@ -489,7 +489,7 @@ body.show-todo-list #todo-list .wrapper .items .item {
 }
 #todo-list .wrapper .items .item input[type=checkbox] {
     position: absolute;
-    margin-top: -6.5px;
+    margin-top: -6px;
     top: 50%;
     transform: scale(1.5);
     width: 30px;
@@ -528,9 +528,62 @@ body.show-todo-list #todo-list .wrapper .items .item {
     font-size: 16px;
     outline: none;
 }
+#todo-list .wrapper .items .item .item-textbox {
+    margin-left: 40px;
+    display: block;
+    font-size: 16px;
+    min-height: 20px;
+    line-height: 1.35;
+}
+#todo-list .wrapper .items .item .item-textbox.is-editing {
+    background-color: rgba(0, 177, 106, 0.08);
+    border: 1px solid rgba(0, 177, 106, 0.45);
+    border-radius: 6px;
+    padding: 8px 10px;
+    margin-left: 34px;
+    box-shadow: 0 0 0 3px rgba(0, 177, 106, 0.15);
+    transition: box-shadow 100ms ease-in-out, background-color 100ms ease-in-out, border-color 100ms ease-in-out;
+}
+#todo-list .wrapper .items .item .item-textbox a {
+    color: #008c9e;
+    text-decoration: underline;
+    word-break: break-word;
+}
+#todo-list .wrapper .items .item .item-textbox.is-editing a {
+    color: inherit;
+    text-decoration: none;
+    pointer-events: none;
+}
 #todo-list .wrapper .items .item span[contentEditable=true]:empty:not(:focus):before{
     content: attr(data-placeholder);
     color: #b1b1b1;
+}
+#todo-list .wrapper .items .item .item-textbox[contenteditable="false"]:empty:before {
+    content: attr(data-placeholder);
+    color: #b1b1b1;
+}
+#todo-list .wrapper .items .edit-hint {
+    display: none;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 12px;
+    margin: 0 auto;
+    width: fit-content;
+    max-width: calc(100% - 24px);
+    padding: 8px 12px;
+    font-size: 12px;
+    color: #1b5e46;
+    text-align: center;
+    background: rgba(0, 177, 106, 0.14);
+    border: 1px solid rgba(0, 177, 106, 0.35);
+    border-radius: 999px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+    z-index: 5;
+    pointer-events: none;
+}
+body.show-todo-list #todo-list .wrapper .items .edit-hint {
+    display: block;
 }
 #todo-list .wrapper .items .item .delete,
 #todo-list .wrapper .items .item .move {
