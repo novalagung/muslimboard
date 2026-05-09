@@ -613,30 +613,30 @@
                     this.nextSelectedBackground = Utility.randomFromArray('background', data.content, this.selectedBackground)
                     doUpdateBackgroundForTheFirstTime()
                 } else {
-                this.selectedBackground = Utility.randomFromArray('background', data.content)
-                this.nextSelectedBackground = Utility.randomFromArray('background', data.content, this.selectedBackground)
+                    this.selectedBackground = Utility.randomFromArray('background', data.content)
+                    this.nextSelectedBackground = Utility.randomFromArray('background', data.content, this.selectedBackground)
 
-                // right after certain image loaded, trigger preload for next image,
-                // this approach is to ensure when the next image transition is happening,
-                // it's need to happen smoothly.
-                // on rare occasion the preload might failing due to various reason such slow internet,
-                // and if that situation is happening, use the local image
-                this.preloadBackgroundImage.call(this, doGetBackgroundURL(this.selectedBackground))
-                    .then(() => {
-                        Utility.log('next image preloaded', doGetBackgroundURL(this.selectedBackground))
-                        doUpdateBackgroundForTheFirstTime()
-                    })
-                    .catch((err) => {
-                        Utility.error(err)
-                        this.selectedBackground = Utility.randomFromArray(
-                            'background',
-                            data.content.filter((d) => doGetBackgroundURL(d).indexOf('http') == -1),
-                            this.selectedBackground
-                        )
-                        this.nextSelectedBackground = Utility.randomFromArray('background', data.content, this.selectedBackground)
-                        doUpdateBackgroundForTheFirstTime()
-                    })
-            }
+                    // right after certain image loaded, trigger preload for next image,
+                    // this approach is to ensure when the next image transition is happening,
+                    // it's need to happen smoothly.
+                    // on rare occasion the preload might failing due to various reason such slow internet,
+                    // and if that situation is happening, use the local image
+                    this.preloadBackgroundImage.call(this, doGetBackgroundURL(this.selectedBackground))
+                        .then(() => {
+                            Utility.log('next image preloaded', doGetBackgroundURL(this.selectedBackground))
+                            doUpdateBackgroundForTheFirstTime()
+                        })
+                        .catch((err) => {
+                            Utility.error(err)
+                            this.selectedBackground = Utility.randomFromArray(
+                                'background',
+                                data.content.filter((d) => doGetBackgroundURL(d).indexOf('http') == -1),
+                                this.selectedBackground
+                            )
+                            this.nextSelectedBackground = Utility.randomFromArray('background', data.content, this.selectedBackground)
+                            doUpdateBackgroundForTheFirstTime()
+                        })
+                }
             }
         },
     
@@ -1263,31 +1263,40 @@
             const content = String(rawContent || '').replace(/^\uFEFF/, '')
             const lines = content.split(/\r?\n/g)
 
-            const unescapeTodoText = (text) => String(text || '')
-                .replace(/\\\\/g, '\\')
-                .replace(/\\n/g, '\n')
-                .replace(/\\r/g, '\r')
-
-            return lines.map((line) => String(line || '')).filter((line) => line.trim() !== '').map((line) => {
-                const checkedMatch = line.match(/^\[(x|X)\]\s*(.*)$/)
-                if (checkedMatch) {
-                    return {
-                        checked: true,
-                        text: unescapeTodoText(checkedMatch[2])
+            const decodeTodoText = (text) => {
+                const rawText = String(text || '')
+                const legacyText = rawText.startsWith(' ') ? rawText.slice(1) : rawText
+                if (legacyText.indexOf('json:') === 0) {
+                    try {
+                        return JSON.parse(legacyText.slice(5))
+                    } catch (err) {
+                        Utility.error('failed to decode imported todo text', err)
                     }
                 }
 
-                const uncheckedMatch = line.match(/^\[\s*\]\s*(.*)$/)
+                return legacyText
+            }
+
+            return lines.map((line) => String(line || '')).filter((line) => line.trim() !== '').map((line) => {
+                const checkedMatch = line.match(/^\[(x|X)\](.*)$/)
+                if (checkedMatch) {
+                    return {
+                        checked: true,
+                        text: decodeTodoText(checkedMatch[2])
+                    }
+                }
+
+                const uncheckedMatch = line.match(/^\[\s*\](.*)$/)
                 if (uncheckedMatch) {
                     return {
                         checked: false,
-                        text: unescapeTodoText(uncheckedMatch[1])
+                        text: decodeTodoText(uncheckedMatch[1])
                     }
                 }
 
                 return {
                     checked: false,
-                    text: unescapeTodoText(line)
+                    text: decodeTodoText(line)
                 }
             }).filter((each) => !!String(each.text || '').trim())
         },
@@ -1538,16 +1547,13 @@
         exportTodoListItems() {
             this.ensureTodoListItemsStored.call(this)
 
-            const escapeTodoText = (text) => String(text || '')
-                .replace(/\\/g, '\\\\')
-                .replace(/\r/g, '\\r')
-                .replace(/\n/g, '\\n')
+            const encodeTodoText = (text) => `json:${JSON.stringify(String(text || ''))}`
 
             const exportedAt = Utility.now()
             const items = this.parseTodoListItems.call(this, localStorage.getItem('todo-list-items'))
                 .filter((each) => each.text.trim())
             const lines = items.map((each) => {
-                const text = escapeTodoText(each.text)
+                const text = encodeTodoText(each.text)
                 return `${each.checked ? '[x]' : '[ ]'} ${text}`
             })
             const content = `${lines.join('\n')}\n`
