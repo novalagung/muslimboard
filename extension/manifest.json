@@ -2,8 +2,18 @@
   "manifest_version": 3,
   "name": "Muslim Board",
   "short_name": "muslimboard",
-  "version": "2.13.0",
+  "version": "2.13.1",
   "description": "Personal Dashboard for Muslim",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "muslimboard@novalagung.com",
+      "data_collection_permissions": {
+        "required": [
+          "locationInfo"
+        ]
+      }
+    }
+  },
   "chrome_url_overrides": {
     "newtab": "index.html"
   },

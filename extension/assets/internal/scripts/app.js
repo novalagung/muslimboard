@@ -591,6 +591,7 @@
                     updateBackgroundAthorName(this.selectedBackground)
                 })
             } else {
+                const localBackgrounds = data.content.filter((d) => doGetBackgroundURL(d).indexOf('http') == -1)
                 const doUpdateBackgroundForTheFirstTime = () => {
                     $('#background .content').css('background-image', `url("${doGetBackgroundURL(this.selectedBackground)}")`)
         
@@ -605,6 +606,13 @@
                     updateBackgroundAthorName(this.selectedBackground)
                 }
 
+                if (localBackgrounds.length > 0) {
+                    // Show a local background immediately on the first load.
+                    // The remote background will be preloaded in the background and used for the next transition.
+                    this.selectedBackground = Utility.randomFromArray('background', localBackgrounds)
+                    this.nextSelectedBackground = Utility.randomFromArray('background', data.content, this.selectedBackground)
+                    doUpdateBackgroundForTheFirstTime()
+                } else {
                 this.selectedBackground = Utility.randomFromArray('background', data.content)
                 this.nextSelectedBackground = Utility.randomFromArray('background', data.content, this.selectedBackground)
 
@@ -628,6 +636,7 @@
                         this.nextSelectedBackground = Utility.randomFromArray('background', data.content, this.selectedBackground)
                         doUpdateBackgroundForTheFirstTime()
                     })
+            }
             }
         },
     
