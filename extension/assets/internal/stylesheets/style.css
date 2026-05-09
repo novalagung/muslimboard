@@ -337,7 +337,7 @@ body.show-todo-list #wise-word {
     bottom: 10px;
     text-align: right;
     margin: 0px;
-    transition: opacity 100ms ease-in-out;
+    transition: opacity 100ms ease-in-out, transform 100ms ease-in-out;
     opacity: 0.2;
 }
 #footer p.dev a {
@@ -437,7 +437,7 @@ body.show-todo-list #todo-list .wrapper .toggler .false {
     display: none;
     z-index: 6;
     opacity: 0.9;
-    transition: opacity 100ms ease-in-out;
+    transition: opacity 100ms ease-in-out, transform 100ms ease-in-out;
 }
 #todo-list .wrapper .items .add {
     right: 106px;
@@ -457,12 +457,10 @@ body.show-todo-list #todo-list .wrapper .items .export {
     display: block;   
 }
 #todo-list .wrapper .items .add:hover,
-#todo-list .wrapper .items .add:focus,
 #todo-list .wrapper .items .import:hover,
-#todo-list .wrapper .items .import:focus,
-#todo-list .wrapper .items .export:hover,
-#todo-list .wrapper .items .export:focus {
+#todo-list .wrapper .items .export:hover {
     opacity: 1;
+    transform: translateY(-1px);
 }
 #todo-list .wrapper .items .item {
     padding: 16px;
@@ -568,10 +566,9 @@ body.show-todo-list #todo-list .wrapper .items .item {
     display: block;
 }
 #todo-list .wrapper .items .item .delete:hover,
-#todo-list .wrapper .items .item .delete:focus,
-#todo-list .wrapper .items .item .move:hover,
-#todo-list .wrapper .items .item .move:focus {
+#todo-list .wrapper .items .item .move:hover {
     opacity: 1;
+    transform: translateY(-1px);
 }
 
 #footer .menu a {
@@ -632,6 +629,12 @@ body.show-todo-list #todo-list .wrapper .items .item {
     margin-top: 20px;
     margin-bottom: 0px;
 }
+.swal2-popup .swal2-actions .swal2-styled {
+    transition: transform 100ms ease-in-out, opacity 100ms ease-in-out, box-shadow 100ms ease-in-out;
+}
+.swal2-popup .swal2-actions .swal2-styled:hover {
+    transform: translateY(-1px);
+}
 #swal2-html-container .modal-info hr.separator {
     border-top: none;
     border-color: #e1e1e1;
@@ -652,8 +655,7 @@ body.show-todo-list #todo-list .wrapper .items .item {
     opacity: 1;
     transition: opacity 100ms ease-in-out;
 }
-#swal2-html-container .modal-info .share-container .btn-share:hover,
-#swal2-html-container .modal-info .share-container .btn-share:focus {
+#swal2-html-container .modal-info .share-container .btn-share:hover {
     opacity: 0.7;
 }
 #swal2-html-container .modal-info .share-container .btn-share.facebook {
@@ -708,12 +710,6 @@ body.show-todo-list #todo-list .wrapper .items .item {
     opacity: 0.9;
     transform: translateY(-1px);
     box-shadow: 0 6px 14px rgba(0, 0, 0, 0.22);
-}
-#swal2-html-container .modal-change-language a:focus {
-    opacity: 0.9;
-    transform: translateY(-1px);
-    box-shadow: 0 0 0 3px rgba(0, 177, 106, 0.3), 0 6px 14px rgba(0, 0, 0, 0.22);
-    outline: none;
 }
 #swal2-html-container .manual-geolocation div.row {
     margin-bottom: 5px;
