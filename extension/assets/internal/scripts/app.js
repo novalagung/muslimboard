@@ -1259,7 +1259,7 @@
                 .replace(/\\n/g, '\n')
                 .replace(/\\r/g, '\r')
 
-            return lines.map((line) => line.trim()).filter((line) => !!line).map((line) => {
+            return lines.map((line) => String(line || '')).filter((line) => line.trim() !== '').map((line) => {
                 const checkedMatch = line.match(/^\[(x|X)\]\s*(.*)$/)
                 if (checkedMatch) {
                     return {
