@@ -425,6 +425,27 @@
         // store next background image
         nextSelectedBackground: false,
 
+        preloadBackgroundImage(url) {
+            return new Promise((resolve, reject) => {
+                const preloader = new Image()
+                const timeout = setTimeout(() => {
+                    preloader.onload = null
+                    preloader.onerror = null
+                    reject(new Error(`background image load timeout: ${url}`))
+                }, Constant.app.timeoutDuration)
+
+                preloader.onload = () => {
+                    clearTimeout(timeout)
+                    resolve(url)
+                }
+                preloader.onerror = () => {
+                    clearTimeout(timeout)
+                    reject(new Error(`background image failed to load: ${url}`))
+                }
+                preloader.src = url
+            })
+        },
+
         // get background image data then render it to screen.
         // if background image data ever been loaded once, then the cache will be used on next call
         async getDataBackgroundThenRender() {
@@ -475,21 +496,21 @@
             const doUpdateBackgroundAndPreloadNextImage = () => {
                 Utility.log('preparing next image')
 
-                const preloader = new Image()
-                preloader.src = doGetBackgroundURL(this.nextSelectedBackground)
-                preloader.onload = () => {
-                    Utility.log('next image preloaded', preloader.src)
-    
-                    setTimeout(() => {
-                        this.updateBackground.call(this, data)
-                    }, Constant.app.updateBackgroundDelayDuration)
-                }
-                preloader.onerror = (err) => {
-                    this.nextSelectedBackground = Utility.randomFromArray('background', data.content, this.selectedBackground)
-                    preloader.src = doGetBackgroundURL(this.nextSelectedBackground)
-                }
+                this.preloadBackgroundImage.call(this, doGetBackgroundURL(this.nextSelectedBackground))
+                    .then(() => {
+                        Utility.log('next image preloaded', doGetBackgroundURL(this.nextSelectedBackground))
+
+                        setTimeout(() => {
+                            this.updateBackground.call(this, data)
+                        }, Constant.app.updateBackgroundDelayDuration)
+                    })
+                    .catch((err) => {
+                        Utility.error(err)
+                        this.nextSelectedBackground = Utility.randomFromArray('background', data.content, this.selectedBackground)
+                        doUpdateBackgroundAndPreloadNextImage()
+                    })
             }
-    
+
             // if certain image is currently appearing on screen,
             // then the transition need to be smooth.
             // meanwhile at first load, local image will be used to make the image loading process faster
@@ -544,21 +565,21 @@
                 // it's need to happen smoothly.
                 // on rare occasion the preload might failing due to various reason such slow internet,
                 // and if that situation is happening, use the local image
-                const preloader = new Image()
-                preloader.src = doGetBackgroundURL(this.selectedBackground)
-                preloader.onload = () => {
-                    Utility.log('next image preloaded', preloader.src)
-                    doUpdateBackgroundForTheFirstTime()
-                }
-                preloader.onerror = () => {
-                    this.selectedBackground = Utility.randomFromArray(
-                        'background', 
-                        data.content.filter((d) => doGetBackgroundURL(d).indexOf('http') == -1),
-                        this.selectedBackground
-                    )
-                    this.nextSelectedBackground = Utility.randomFromArray('background', data.content, this.selectedBackground)
-                    doUpdateBackgroundForTheFirstTime()
-                }
+                this.preloadBackgroundImage.call(this, doGetBackgroundURL(this.selectedBackground))
+                    .then(() => {
+                        Utility.log('next image preloaded', doGetBackgroundURL(this.selectedBackground))
+                        doUpdateBackgroundForTheFirstTime()
+                    })
+                    .catch((err) => {
+                        Utility.error(err)
+                        this.selectedBackground = Utility.randomFromArray(
+                            'background',
+                            data.content.filter((d) => doGetBackgroundURL(d).indexOf('http') == -1),
+                            this.selectedBackground
+                        )
+                        this.nextSelectedBackground = Utility.randomFromArray('background', data.content, this.selectedBackground)
+                        doUpdateBackgroundForTheFirstTime()
+                    })
             }
         },
     

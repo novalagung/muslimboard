@@ -146,7 +146,7 @@ html {
     cursor: default;
 }
 #sidebar .prayer-time table tr.prayer-time-row.active {
-    background-color: #00b16a;
+    background-color: rgba(255, 255, 255, 0.18);
 }
 #sidebar .prayer-time table tr.prayer-time-row:not(.active):hover {
     background-color: rgba(255, 255, 255, 0.2);
@@ -193,7 +193,7 @@ html {
     display: none;
 }
 #sidebar .prayer-time table tr.remaining-time td {
-    background-color: #00b16a;
+    background-color: rgba(255, 255, 255, 0.18);
 }
 #sidebar .prayer-time table tr.remaining-time td div {
     font-style: italic;
@@ -201,7 +201,7 @@ html {
     padding-top: 4px;
     padding-bottom: 4px;
     text-align: center;
-    border-top: 1px solid #00b16a;
+    border-top: 1px solid rgba(255, 255, 255, 0.28);
 }
 
 #wise-word {
