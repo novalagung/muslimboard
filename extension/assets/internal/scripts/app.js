@@ -533,6 +533,11 @@
 
                 this.backgroundImageCacheInFlight.add(cacheKey)
                 try {
+                    const urlObject = new URL(background.url)
+                    if (urlObject.origin !== window.location.origin && urlObject.origin !== new URL(Constant.app.baseUrlGithub).origin) {
+                        continue
+                    }
+
                     const cached = await Utility.indexedDb.get(cacheKey)
                     if (cached?.blob) {
                         continue
