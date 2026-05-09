@@ -692,9 +692,12 @@ body.show-todo-list #todo-list .wrapper .items .item {
     padding: 12px 17px;
     text-decoration: none;
     background-color: #00b16a;
-    width: 270px;
+    width: 320px;
     font-weight: 600;
     text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18);
     transition: opacity 100ms ease-in-out, transform 100ms ease-in-out, box-shadow 100ms ease-in-out;
 }

@@ -984,7 +984,7 @@
                 const items = Object.keys(I18n.mapping.languageName).filter((d) => d !== 'en' && d !== 'id').map((d) => {
                     const lang = I18n.mapping.languageName[d]
                     if (lang.native) {
-                        return `<li><a href='#' data-locale='${d}'><span>${lang.english}</span><br /><span>${lang.native}</span></a></li>`
+                        return `<li><a href='#' data-locale='${d}'><span>${lang.english} - ${lang.native}</span></a></li>`
                     } else {
                         return `<li><a href='#' data-locale='${d}'><span>${lang.english}</span></a></li>`
                     }
