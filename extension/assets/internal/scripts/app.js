@@ -1254,12 +1254,17 @@
             const content = String(rawContent || '').replace(/^\uFEFF/, '')
             const lines = content.split(/\r?\n/g)
 
+            const unescapeTodoText = (text) => String(text || '')
+                .replace(/\\\\/g, '\\')
+                .replace(/\\n/g, '\n')
+                .replace(/\\r/g, '\r')
+
             return lines.map((line) => line.trim()).filter((line) => !!line).map((line) => {
                 const checkedMatch = line.match(/^\[(x|X)\]\s*(.*)$/)
                 if (checkedMatch) {
                     return {
                         checked: true,
-                        text: checkedMatch[2].trim()
+                        text: unescapeTodoText(checkedMatch[2])
                     }
                 }
 
@@ -1267,13 +1272,13 @@
                 if (uncheckedMatch) {
                     return {
                         checked: false,
-                        text: uncheckedMatch[1].trim()
+                        text: unescapeTodoText(uncheckedMatch[1])
                     }
                 }
 
                 return {
                     checked: false,
-                    text: line.trim()
+                    text: unescapeTodoText(line)
                 }
             }).filter((each) => !!String(each.text || '').trim())
         },
@@ -1379,6 +1384,12 @@
         },
 
         enableTodoListTextboxEditMode($textbox) {
+            const pendingLinkTimer = $textbox.data('link-open-timer')
+            if (pendingLinkTimer) {
+                clearTimeout(pendingLinkTimer)
+                $textbox.removeData('link-open-timer')
+            }
+
             const rawText = String($textbox.attr('data-raw-text') || $textbox.text() || '')
             $textbox
                 .attr('contenteditable', 'true')
@@ -1518,11 +1529,16 @@
         exportTodoListItems() {
             this.ensureTodoListItemsStored.call(this)
 
+            const escapeTodoText = (text) => String(text || '')
+                .replace(/\\/g, '\\\\')
+                .replace(/\r/g, '\\r')
+                .replace(/\n/g, '\\n')
+
             const exportedAt = Utility.now()
             const items = this.parseTodoListItems.call(this, localStorage.getItem('todo-list-items'))
                 .filter((each) => each.text.trim())
             const lines = items.map((each) => {
-                const text = each.text.replace(/\s+/g, ' ').trim()
+                const text = escapeTodoText(each.text)
                 return `${each.checked ? '[x]' : '[ ]'} ${text}`
             })
             const content = `${lines.join('\n')}\n`
@@ -1661,14 +1677,6 @@
                 const $textbox = $(event.currentTarget)
                 this.renderTodoListTextboxViewMode.call(this, $textbox, $textbox[0].innerText)
             })
-            $('#todo-list .items').on('dblclick', '.item', (event) => {
-                if ($(event.target).closest('button, input, a').length > 0) {
-                    return
-                }
-                const $textbox = $(event.currentTarget).find('.item-textbox')
-                this.enableTodoListTextboxEditMode.call(this, $textbox)
-            })
-
             // event for deleting todo item
             $('#todo-list .items').on('click', '.item button.delete', (event) => {
                 event.stopPropagation()
@@ -1676,9 +1684,19 @@
                 this.ensureTodoListItemsStored.call(this)
             })
 
-            // prevent item-level interactions when clicking links in view mode
+            // open todo links immediately in view mode
             $('#todo-list .items').on('click', '.item .item-textbox a', (event) => {
                 event.stopPropagation()
+            })
+
+            // click outside links to edit todo item
+            $('#todo-list .items').on('click', '.item', (event) => {
+                if ($(event.target).closest('button, input, a').length > 0) {
+                    return
+                }
+
+                const $textbox = $(event.currentTarget).find('.item-textbox')
+                this.enableTodoListTextboxEditMode.call(this, $textbox)
             })
 
             // // event for auto highlight/select text on todo item click

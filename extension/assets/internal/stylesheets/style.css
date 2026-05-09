@@ -545,17 +545,18 @@ body.show-todo-list #todo-list .wrapper .items .item {
     transition: box-shadow 100ms ease-in-out, background-color 100ms ease-in-out, border-color 100ms ease-in-out;
 }
 #todo-list .wrapper .items .item .item-textbox a {
-    color: #0a6f9c;
+    color: #00b16a;
+    font-style: italic;
     text-decoration: none;
-    border-bottom: 1px solid rgba(10, 111, 156, 0.45);
+    border-bottom: 1px solid rgba(0, 177, 106, 0.45);
     padding-bottom: 1px;
     word-break: break-word;
     transition: color 100ms ease-in-out, border-color 100ms ease-in-out, background-color 100ms ease-in-out;
 }
 #todo-list .wrapper .items .item .item-textbox a:hover {
-    color: #07577a;
-    border-bottom-color: rgba(7, 87, 122, 0.85);
-    background-color: rgba(7, 87, 122, 0.08);
+    color: #009955;
+    border-bottom-color: rgba(0, 153, 85, 0.85);
+    background-color: rgba(0, 177, 106, 0.08);
 }
 #todo-list .wrapper .items .item .item-textbox.is-editing a {
     color: inherit;

@@ -5,7 +5,7 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 EXTENSION_DIR="${ROOT_DIR}/extension"
 MANIFESTS_DIR="${EXTENSION_DIR}/manifests"
 OUTPUT_DIR="${ROOT_DIR}/release"
-TARGETS=(chrome safari edge firefox)
+TARGETS=(chrome edge firefox)
 
 command -v rsync >/dev/null 2>&1 || {
   echo "error: rsync is required" >&2
