@@ -337,7 +337,7 @@ body.show-todo-list #wise-word {
     bottom: 10px;
     text-align: right;
     margin: 0px;
-    transition: opacity 300ms ease-in-out;
+    transition: opacity 100ms ease-in-out;
     opacity: 0.2;
 }
 #footer p.dev a {
@@ -414,9 +414,9 @@ body.show-todo-list #todo-list .wrapper .toggler .false {
 #todo-list .wrapper .items {
     overflow-y: auto;
 }
-#todo-list .wrapper .items .add {
+#todo-list .wrapper .items .add,
+#todo-list .wrapper .items .export {
     cursor: pointer;
-    background-color: #00b16a;
     border: none;
     padding: 13px 12px 11px;
     width: 48px;
@@ -432,7 +432,16 @@ body.show-todo-list #todo-list .wrapper .toggler .false {
     display: none;
     z-index: 6;
 }
-body.show-todo-list #todo-list .wrapper .items .add {
+#todo-list .wrapper .items .add {
+    right: 68px;
+    background-color: #00b16a;
+}
+#todo-list .wrapper .items .export {
+    right: 10px;
+    background-color: #008c9e;
+}
+body.show-todo-list #todo-list .wrapper .items .add,
+body.show-todo-list #todo-list .wrapper .items .export {
     display: block;   
 }
 #todo-list .wrapper .items .item {
@@ -521,6 +530,8 @@ body.show-todo-list #todo-list .wrapper .items .item {
     margin-top: -12.5px;
     z-index: 7;
     display: none;
+    opacity: 0.65;
+    transition: opacity 100ms ease-in-out;
 }
 #todo-list .wrapper .items .item .delete {
     right: 14px;
@@ -534,6 +545,12 @@ body.show-todo-list #todo-list .wrapper .items .item {
 #todo-list .wrapper .items .item:hover .delete,
 #todo-list .wrapper .items .item:hover .move {
     display: block;
+}
+#todo-list .wrapper .items .item .delete:hover,
+#todo-list .wrapper .items .item .delete:focus,
+#todo-list .wrapper .items .item .move:hover,
+#todo-list .wrapper .items .item .move:focus {
+    opacity: 1;
 }
 
 #footer .menu a {

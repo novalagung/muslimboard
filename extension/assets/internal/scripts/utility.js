@@ -200,5 +200,23 @@ const Utility = {
         return '';
     },
     versionAsFloat: (s) => parseFloat(s.replace('v', '').replace('.', '')),
+    parseTodoListItems(rawItems) {
+        try {
+            const items = Array.isArray(rawItems) ? rawItems : JSON.parse(rawItems || '[]')
+            if (!Array.isArray(items)) {
+                return []
+            }
+
+            return items
+                .filter((each) => each && typeof each === 'object')
+                .map((each) => ({
+                    text: String(each.text || ''),
+                    checked: !!each.checked
+                }))
+        } catch (err) {
+            Utility.error('failed to parse todo list items', err)
+            return []
+        }
+    },
     now: () => moment()
 }

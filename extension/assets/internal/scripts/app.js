@@ -1141,20 +1141,30 @@
         // - setup default TODO items data.
         // - ensure TODO list visibility baseed on previously cached state.
         // - and render TODO items
-        ensureTodoListBoxVisibilityOnPageActive() {
-
+        async ensureTodoListBoxVisibilityOnPageActive() {
             // migrate chrome.storage.sync storage data to localStorage
             const localStorageUsed = localStorage.getItem('todo-list-box-ever-loaded') || 'false'
             Utility.log('local storage used', localStorageUsed)
 
             if (localStorageUsed === 'false') {
-                // disabling chrome storage. refer to https://stackoverflow.com/questions/28465384/how-is-chrome-storage-affected-when-an-extension-is-updated
-                // const rawItems = JSON.parse((await Utility.chromeStorage.get('todo-list-items')) || '[]')
+                let items = Utility.parseTodoListItems(localStorage.getItem('todo-list-items'))
 
-                let items = JSON.parse(localStorage.getItem('todo-list-items') || '[]').filter((d) => d.text)
-                Utility.log('found cached sync storage todo list items', items)
+                if (items.filter((d) => d.text).length === 0) {
+                    // Migrate old todo data from chrome.storage.sync when localStorage is still empty.
+                    let syncedItems = []
+                    try {
+                        syncedItems = Utility.parseTodoListItems(await Utility.chromeStorage.get('todo-list-items'))
+                    } catch (err) {
+                        Utility.error('failed to migrate todo list items from chrome storage', err)
+                    }
+                    if (syncedItems.filter((d) => d.text).length > 0) {
+                        items = syncedItems
+                    }
+                }
 
-                if (items.length === 0) {
+                Utility.log('found cached todo list items', items)
+
+                if (items.filter((d) => d.text).length === 0) {
                     items = [{
                         text: I18n.mapping.todoListPlaceholder.id,
                         checked: true
@@ -1168,7 +1178,7 @@
                 localStorage.setItem('todo-list-status', 'true')
                 localStorage.setItem('todo-list-box-ever-loaded', 'true')
             }
-   
+
             this.ensureTodoListBoxVisibility.call(this)
             this.ensureTodoListItemsAppear.call(this)
 
@@ -1186,7 +1196,7 @@
 
             this.insertTodoListItem.call(this)
 
-            let items = JSON.parse(localStorage.getItem('todo-list-items') || '[]')
+            let items = Utility.parseTodoListItems(localStorage.getItem('todo-list-items'))
             items.forEach((each) => {
                 if (each.text === I18n.mapping.todoListPlaceholder.id) {
                     each.text = I18n.getText('todoListPlaceholder')
@@ -1231,7 +1241,7 @@
 
         // insert new TODO item
         insertTodoListItem() {
-            let items = JSON.parse(localStorage.getItem('todo-list-items') || '[]')
+            let items = Utility.parseTodoListItems(localStorage.getItem('todo-list-items'))
 
             // ensure to have only one row of empty text on top
             if (items.length > 0) {
@@ -1245,6 +1255,29 @@
 
             // disabling chrome storage. refer to https://stackoverflow.com/questions/28465384/how-is-chrome-storage-affected-when-an-extension-is-updated
             // await Utility.chromeStorage.set('todo-list-items', JSON.stringify(items))
+        },
+
+        exportTodoListItems() {
+            this.ensureTodoListItemsStored.call(this)
+
+            const exportedAt = Utility.now()
+            const items = Utility.parseTodoListItems(localStorage.getItem('todo-list-items'))
+                .filter((each) => each.text.trim())
+            const lines = items.map((each) => {
+                const text = each.text.replace(/\s+/g, ' ').trim()
+                return `${each.checked ? '[x]' : '[ ]'} ${text}`
+            })
+            const content = `${lines.join('\n')}\n`
+            const blob = new Blob([content], { type: 'text/plain' })
+            const url = URL.createObjectURL(blob)
+            const $link = $('<a></a>')
+                .attr('href', url)
+                .attr('download', `muslimboard-todo-list-${exportedAt.format('YYYY-MM-DD-HH-mm-ss')}.txt`)
+
+            $('body').append($link)
+            $link[0].click()
+            $link.remove()
+            URL.revokeObjectURL(url)
         },
 
         // contains event declarations for many TODO list operation
@@ -1269,14 +1302,23 @@
                 $('#todo-list .items .item:eq(0) span[contenteditable]').focus()
             })
 
+            // event for exporting TODO list items
+            $('#todo-list .export').on('click', () => {
+                this.exportTodoListItems.call(this)
+            })
+
             // calculate TODO list item based on screen size
             $('#todo-list .items').height($(window).height() - 97 - 37)
-            $('#todo-list .items').on('keyup', '.item span[contenteditable]', Utility.debounce(() => {
+            $('#todo-list .items').on('input', '.item span[contenteditable]', Utility.debounce(() => {
                 this.ensureTodoListItemsStored.call(this)
             }, 300))
+            $('#todo-list .items').on('blur', '.item span[contenteditable]', () => {
+                this.ensureTodoListItemsStored.call(this)
+            })
 
             // event for deleting TODO item
-            $('#todo-list .items').on('click', '.item button', (event) => {
+            $('#todo-list .items').on('click', '.item button.delete', (event) => {
+                event.stopPropagation()
                 $(event.currentTarget).closest('.item').remove()
                 this.ensureTodoListItemsStored.call(this)
             })
@@ -1303,9 +1345,7 @@
             // })
 
             // event handler for checking/unchecking TODO item
-            $('#todo-list .items').on('click', '.item-checkbox', (event) => {
-                const $checkbox = $(event.currentTarget).find('input[type="checkbox"]')
-                $checkbox.prop('checked', !$checkbox.prop('checked'))
+            $('#todo-list .items').on('change', '.item-checkbox', () => {
                 this.ensureTodoListItemsStored.call(this)
             })
 
@@ -1415,8 +1455,9 @@
         // =========== INIT
 
         // orchestrate everything
-        init() {
-            console.log(`${Constant.meta.appName} ${Constant.meta.version}`)
+        async init() {
+            const t0 = performance.now()
+            Utility.log(`${Constant.meta.appName} ${Constant.meta.version}`)
 
             this.renderDateTime.call(this)
             this.getDataBackgroundThenRender.call(this)
@@ -1428,10 +1469,12 @@
             this.registerEventForAboutUsButton.call(this)
             this.registerEventForAlarm.call(this)
             this.registerEventTodoList.call(this)
-            this.ensureTodoListBoxVisibilityOnPageActive.call(this)
-            this.ensureTodoListItemsAppear.call(this)
+            await this.ensureTodoListBoxVisibilityOnPageActive.call(this)
             this.showExtensionWelcomeModal.call(this)
             this.checkNewVersion.call(this)
+
+            const t1 = performance.now()
+            Utility.log(`init() took ${t1 - t0} milliseconds.`)
         }
     }
 
