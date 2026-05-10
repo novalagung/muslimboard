@@ -286,6 +286,16 @@ const I18n = {
             'zh-tw': '圖片來自',
             'zh-cn': '图片来自'
         },
+        footerMenuUseOwnImage: {
+            ar: 'استخدم صورتك الخاصة',
+            en: 'Use your own image',
+            ru: 'Используйте своё изображение',
+            bn: 'আপনার নিজের ছবি ব্যবহার করুন',
+            hi: 'अपनी खुद की छवि उपयोग करें',
+            id: 'Gunakan gambar sendiri',
+            'zh-tw': '使用自己的圖片',
+            'zh-cn': '使用你自己的图片'
+        },
         footerMenuChangeLanguage: {
             ar: 'اللغة',
             en: 'Language',
@@ -326,6 +336,187 @@ const I18n = {
             'zh-tw': '關於我們',
             'zh-cn': '关于我们'
         },        
+
+        modalCustomImageHeader: {
+            ar: 'استخدم صورتك الخاصة',
+            en: 'Use your own image',
+            ru: 'Используйте своё изображение',
+            bn: 'আপনার নিজের ছবি ব্যবহার করুন',
+            hi: 'अपनी खुद की छवि उपयोग करें',
+            id: 'Gunakan gambar sendiri',
+            'zh-tw': '使用自己的圖片',
+            'zh-cn': '使用你自己的图片'
+        },
+        modalCustomImageDescription: {
+            ar: 'ارفع صورتك واحتفظ بها داخل هذا المتصفح فقط.',
+            en: 'Upload your image and keep it stored only in this browser.',
+            ru: 'Загрузите изображение и храните его только в этом браузере.',
+            bn: 'আপনার ছবি আপলোড করুন এবং শুধু এই ব্রাউজারেই সংরক্ষণ করুন।',
+            hi: 'अपनी छवि अपलोड करें और इसे केवल इसी ब्राउज़र में सहेजकर रखें।',
+            id: 'Unggah gambar Anda dan simpan hanya di browser ini.',
+            'zh-tw': '上傳你的圖片，並只保存在這個瀏覽器中。',
+            'zh-cn': '上传你的图片，并仅保存在这个浏览器中。'
+        },
+        modalCustomImageStorageNote: {
+            ar: 'يتم حفظها في قاعدة بيانات المتصفح المحلية (Browser IndexedDB)، ولا تُرفع إلى أي خادم. لذلك سيؤدي حذف بيانات المتصفح إلى حذفها أيضاً.',
+            en: 'It is saved in the browser local database (Browser IndexedDB) and is not uploaded to any server. Clearing browser data will remove it too.',
+            ru: 'Оно сохраняется в локальной базе данных браузера (Browser IndexedDB) и не отправляется на какой-либо сервер. Поэтому очистка данных браузера тоже его удалит.',
+            bn: 'এটি ব্রাউজারের লোকাল ডাটাবেসে (Browser IndexedDB) রাখা থাকে এবং কোনো সার্ভারে আপলোড করা হয় না। তাই ব্রাউজারের ডেটা মুছে ফেললে সেটিও মুছে যাবে।',
+            hi: 'यह ब्राउज़र के स्थानीय डेटाबेस (Browser IndexedDB) में सुरक्षित रहता है और किसी भी सर्वर पर अपलोड नहीं किया जाता। इसलिए ब्राउज़र डेटा साफ़ करने पर यह भी हट जाएगा।',
+            id: 'Gambar disimpan di database lokal browser (Browser IndexedDB) dan tidak diunggah ke server mana pun. Saat data browser dihapus, gambar juga ikut terhapus.',
+            'zh-tw': '圖片會儲存在瀏覽器的本機資料庫（Browser IndexedDB）中，不會上傳到任何伺服器。因此清除瀏覽器資料也會一併刪除。',
+            'zh-cn': '图片会保存在浏览器的本地数据库（Browser IndexedDB）中，不会上传到任何服务器。因此清除浏览器数据也会将其删除。'
+        },
+        modalCustomImageModeLabel: {
+            ar: 'اختر مصدر الصورة',
+            en: 'Choose image source',
+            ru: 'Выберите источник изображения',
+            bn: 'ছবির উৎস নির্বাচন করুন',
+            hi: 'छवि स्रोत चुनें',
+            id: 'Pilih sumber gambar',
+            'zh-tw': '選擇圖片來源',
+            'zh-cn': '选择图片来源'
+        },
+        modalCustomImageModeMuslimboard: {
+            ar: 'صور مسلمبورد',
+            en: 'Muslimboard images',
+            ru: 'Изображения Muslimboard',
+            bn: 'মুসলিমবোর্ডের ছবি',
+            hi: 'Muslimboard छवियाँ',
+            id: 'Gambar Muslim Board',
+            'zh-tw': 'Muslimboard 圖片',
+            'zh-cn': 'Muslimboard 图片'
+        },
+        modalCustomImageModeCustom: {
+            ar: 'صورك الخاصة',
+            en: 'Your own images',
+            ru: 'Ваши собственные изображения',
+            bn: 'আপনার নিজের ছবি',
+            hi: 'आपकी अपनी छवियाँ',
+            id: 'Gambar sendiri',
+            'zh-tw': '你自己的圖片',
+            'zh-cn': '你自己的图片'
+        },
+        modalCustomImageModeBoth: {
+            ar: 'الاثنان معاً',
+            en: 'Both',
+            ru: 'Оба варианта',
+            bn: 'দুটোই',
+            hi: 'दोनों',
+            id: 'Keduanya',
+            'zh-tw': '兩者皆可',
+            'zh-cn': '两者都用'
+        },
+        modalCustomImageUploadButton: {
+            ar: 'حدد صورة للرفع',
+            en: 'Select image to upload',
+            ru: 'Выберите изображение для загрузки',
+            bn: 'আপলোডের জন্য ছবি নির্বাচন করুন',
+            hi: 'अपलोड करने के लिए छवि चुनें',
+            id: 'Pilih gambar untuk diunggah',
+            'zh-tw': '選擇要上傳的圖片',
+            'zh-cn': '选择要上传的图片'
+        },
+        modalCustomImageUploadHint: {
+            ar: 'حتى 25 صورة. يُنصح ألا يتجاوز حجم الصورة 5 ميجابايت.',
+            en: 'Up to 25 images. Recommended maximum size is 5 MB.',
+            ru: 'До 25 изображений. Рекомендуемый максимальный размер — 5 МБ.',
+            bn: 'সর্বোচ্চ ২৫টি ছবি। প্রস্তাবিত সর্বোচ্চ আকার ৫ এমবি।',
+            hi: 'अधिकतम 25 छवियाँ। अनुशंसित अधिकतम आकार 5 MB है।',
+            id: 'Maksimal 25 gambar. Ukuran yang disarankan maksimal 5 MB.',
+            'zh-tw': '最多 25 張圖片。建議最大大小為 5 MB。',
+            'zh-cn': '最多 25 张图片。建议最大大小为 5 MB。'
+        },
+        modalCustomImageUploadedTitle: {
+            ar: 'الصور المرفوعة',
+            en: 'Uploaded images',
+            ru: 'Загруженные изображения',
+            bn: 'আপলোড করা ছবি',
+            hi: 'अपलोड की गई छवियाँ',
+            id: 'Gambar yang diunggah',
+            'zh-tw': '已上傳的圖片',
+            'zh-cn': '已上传的图片'
+        },
+        modalCustomImageUploadedEmpty: {
+            ar: 'لا توجد صور خاصة حتى الآن.',
+            en: 'No custom images uploaded yet.',
+            ru: 'Пока нет загруженных пользовательских изображений.',
+            bn: 'এখনও কোনো কাস্টম ছবি আপলোড করা হয়নি।',
+            hi: 'अभी तक कोई कस्टम छवि अपलोड नहीं की गई है।',
+            id: 'Belum ada gambar sendiri yang diunggah.',
+            'zh-tw': '目前尚未上傳任何自訂圖片。',
+            'zh-cn': '目前还没有上传任何自定义图片。'
+        },
+        modalCustomImageUploadedEmptyFallback: {
+            ar: 'سيستخدم التطبيق الآن صور مسلمبورد كبديل حتى تضيف صورك الخاصة.',
+            en: 'Muslimboard images will be used as a fallback until you upload your own images.',
+            ru: 'Изображения Muslimboard будут использоваться как запасной вариант, пока вы не загрузите свои.',
+            bn: 'আপনি নিজের ছবি আপলোড না করা পর্যন্ত মুসলিমবোর্ডের ছবি ব্যাকআপ হিসেবে ব্যবহার হবে।',
+            hi: 'जब तक आप अपनी खुद की छवियाँ अपलोड नहीं करते, तब तक Muslimboard छवियाँ fallback के रूप में उपयोग होंगी।',
+            id: 'Gambar Muslimboard akan dipakai sebagai cadangan sampai Anda mengunggah gambar sendiri.',
+            'zh-tw': '在您上傳自己的圖片之前，將改用 Muslimboard 圖片作為備援。',
+            'zh-cn': '在你上传自己的图片之前，将使用 Muslimboard 图片作为备用。'
+        },
+        modalCustomImageDelete: {
+            ar: 'حذف',
+            en: 'Delete',
+            ru: 'Удалить',
+            bn: 'মুছুন',
+            hi: 'हटाएँ',
+            id: 'Hapus',
+            'zh-tw': '刪除',
+            'zh-cn': '删除'
+        },
+        modalCustomImageDeleteConfirm: {
+            ar: 'حذف هذه الصورة؟',
+            en: 'Delete this image?',
+            ru: 'Удалить это изображение?',
+            bn: 'এই ছবিটি মুছবেন?',
+            hi: 'क्या यह छवि हटाएँ?',
+            id: 'Hapus gambar ini?',
+            'zh-tw': '刪除這張圖片？',
+            'zh-cn': '删除这张图片？'
+        },
+        modalCustomImageInvalidFile: {
+            ar: 'الملف المحدد ليس صورة صالحة.',
+            en: 'The selected file is not a valid image.',
+            ru: 'Выбранный файл не является допустимым изображением.',
+            bn: 'নির্বাচিত ফাইলটি একটি বৈধ ছবি নয়।',
+            hi: 'चयनित फ़ाइल मान्य छवि नहीं है।',
+            id: 'File yang dipilih bukan gambar yang valid.',
+            'zh-tw': '所選檔案不是有效的圖片。',
+            'zh-cn': '所选文件不是有效图片。'
+        },
+        modalCustomImageTooLarge: {
+            ar: 'حجم الصورة كبير جداً. يرجى اختيار صورة أصغر من 5 ميجابايت.',
+            en: 'The image is too large. Please choose an image smaller than 5 MB.',
+            ru: 'Изображение слишком большое. Выберите файл меньше 5 МБ.',
+            bn: 'ছবিটি খুব বড়। অনুগ্রহ করে ৫ এমবি-এর কম একটি ছবি বেছে নিন।',
+            hi: 'छवि बहुत बड़ी है। कृपया 5 MB से छोटी छवि चुनें।',
+            id: 'Ukuran gambar terlalu besar. Pilih gambar yang lebih kecil dari 5 MB.',
+            'zh-tw': '圖片太大，請選擇小於 5 MB 的圖片。',
+            'zh-cn': '图片太大，请选择小于 5 MB 的图片。'
+        },
+        modalCustomImageLimitReached: {
+            ar: 'تم الوصول إلى الحد الأقصى البالغ 25 صورة.',
+            en: 'You have reached the 25 image limit.',
+            ru: 'Достигнут лимит в 25 изображений.',
+            bn: 'আপনি ২৫টি ছবির সীমা অতিক্রম করেছেন।',
+            hi: 'आप 25 छवियों की सीमा तक पहुँच गए हैं।',
+            id: 'Anda telah mencapai batas 25 gambar.',
+            'zh-tw': '已達到 25 張圖片的上限。',
+            'zh-cn': '你已达到 25 张图片的上限。'
+        },
+        modalCustomImageStorageError: {
+            ar: 'تعذر حفظ الصور أو حذفها في التخزين المحلي لهذا المتصفح.',
+            en: 'Unable to save or delete images in this browser local storage.',
+            ru: 'Не удалось сохранить или удалить изображения в локальном хранилище браузера.',
+            bn: 'এই ব্রাউজারের লোকাল স্টোরেজে ছবি সংরক্ষণ বা মুছতে পারা যায়নি।',
+            hi: 'इस ब्राउज़र के स्थानीय संग्रह में छवियों को सहेजना या हटाना संभव नहीं है।',
+            id: 'Tidak bisa menyimpan atau menghapus gambar di penyimpanan lokal browser ini.',
+            'zh-tw': '無法在此瀏覽器的本機儲存中儲存或刪除圖片。',
+            'zh-cn': '无法在此浏览器的本地存储中保存或删除图片。'
+        },
 
         alarmExactPrayerTimeMessageTemplate: {
             ar: `exact|انه وقت صلاة $1 |في $2`,
