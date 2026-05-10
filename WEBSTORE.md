@@ -6,7 +6,7 @@ Personal Dashboard for Muslim
 
 Muslim Board is a personal dashboard for Muslims anywhere in the world, available on many languages. This plugin is inspired by Momentum.
 
-Muslim Board provides several useful features to improve productivity, such as prayer schedule, islamic quotes, and TODO list.
+Muslim Board provides several useful features to improve productivity, such as prayer schedule, islamic quotes, TODO list, and custom background images stored locally in the browser.
 
 Supported languages:
 - English language
@@ -25,7 +25,9 @@ Usage:
 Features:
 - Prayer schedule information is available in the top left section. The prayer time is generated based on user location.
 - Motivational quotes are displayed randomly in the middle section. It's shuffled automatically every few seconds.
-- Muslim Board contains the TODO list feature in the right section. Users can write any notes and set the completion there.
+- Muslim Board contains the TODO list feature in the right section. Users can write any notes, add clickable links, and set the completion there.
+- Users can upload their own background images and keep them stored locally in Browser IndexedDB.
+- Background and content data can be updated from the cloud without needing a new extension release.
 - Internet availability info is displayed in the bottom section. You will be notified when the internet is offline.
 - Popup notification will appear whenever prayer time is near.
 - Multi language support.
@@ -34,7 +36,7 @@ Features:
 
 Muslim Board adalah personal dashboard khusus untuk muslim, terseda dalam banyak bahasa. Plugin ini terinspirasi dari Momentum.
 
-Muslim Board menyediakan banyak fitur berguna untuk meningkatkan produktifitas, diantaranya seperti jadwal sholat, quote islami, dan TODO list.
+Muslim Board menyediakan banyak fitur berguna untuk meningkatkan produktifitas, diantaranya seperti jadwal sholat, quote islami, TODO list, dan gambar latar kustom yang disimpan secara lokal di browser.
 
 Penggunaan:
 - Cukup buka tab baru di browser, maka plugin akan muncul secara otomatis.
@@ -43,7 +45,9 @@ Penggunaan:
 Fitur:
 - Menampilkan informasi jadwal sholat sesuai lokasi (bisa lewat deteksi lokasi otomatis, maupun set secara manual).
 - Menampilkan quote atau kata-kata mutiara islami.
-- Ada fasilitas TODO list untuk catatan.
+- Ada fasilitas TODO list untuk catatan, termasuk tautan yang bisa diklik.
+- Pengguna bisa mengunggah gambar latar sendiri dan menyimpannya secara lokal di Browser IndexedDB.
+- Data background dan konten bisa diperbarui dari cloud tanpa perlu rilis ekstensi baru.
 - Indikator penanda internet offline/online.
 - Popup notifikasi ketika mendekati waktu sholat.
 - Mendukung banyak bahasa.
@@ -68,7 +72,7 @@ Fitur:
 
 5. Storage
 
-    The storage is used to cache several data such as todo list, prayer times, and coordinates.
+    The storage is used to cache several data such as todo list, prayer times, coordinates, and uploaded background images.
 
 6. Active Tab
 
@@ -76,7 +80,7 @@ Fitur:
 
 7. Remote Codes
 
-    Muslim board do not use any remote codes. Aside of that, there are three JSON files that are loaded through AJAX.
+    Muslim board do not use any remote codes. Aside of that, several JSON files are loaded through AJAX to keep backgrounds and content up to date without a new extension release.
 
 ## Links
 

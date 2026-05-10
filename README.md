@@ -19,6 +19,15 @@ Personal Dashboard for Muslims anywhere in the world, available on many language
 
 ![preview](resources/guide/preview-1.png)
 
+## Features
+
+- Prayer schedule based on location, with automatic and manual location modes
+- Random Islamic quotes and smooth background rotation
+- Todo list with clickable links, import/export, editing, and tooltips
+- Upload your own background images and keep them stored locally in browser IndexedDB
+- Cloud-backed background and content JSON updates without needing a new extension release
+- Multi-language support
+
 ## Installation via Official Page
 
 - MacOS **Safari** via [App Store](https://apps.apple.com/us/app/muslim-board/id1659445206)
