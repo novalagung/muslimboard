@@ -2208,6 +2208,9 @@
             const t0 = performance.now()
             Utility.log(`${Constant.meta.appName} ${Constant.meta.version}`)
             $('body').addClass('is-background-loading')
+            if (Utility.isFirefoxBrowser()) {
+                $('body').addClass('is-firefox-browser')
+            }
             if (Utility.isSafariBrowser() && (!window.matchMedia || !window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                 $('body').addClass('is-safari-browser')
             }

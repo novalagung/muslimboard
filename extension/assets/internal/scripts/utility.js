@@ -135,6 +135,10 @@ const Utility = {
             if (callNow) func.apply(context, args);
         };
     },
+    isFirefoxBrowser: () => {
+        const ua = navigator.userAgent || ''
+        return /Firefox/i.test(ua) && !/Seamonkey/i.test(ua)
+    },
     isSafariBrowser: () => {
         const ua = navigator.userAgent || ''
         return /Safari/i.test(ua) && !/(Chrome|Chromium|CriOS|FxiOS|Edg|OPR)/i.test(ua)

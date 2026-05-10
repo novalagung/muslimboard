@@ -10,6 +10,9 @@ body.is-background-loading {
 body.is-background-loading.is-safari-browser {
     background-color: #ffffff;
 }
+body.is-background-loading.is-firefox-browser {
+    background-color: #ffffff;
+}
 html {
     box-sizing: border-box;
 }
@@ -55,6 +58,12 @@ html {
 body.is-background-loading #background .content::before {
     opacity: 1;
     animation: backgroundLoadingBreathing 8s ease-in-out infinite;
+}
+body.is-background-loading.is-firefox-browser #background .content {
+    background-color: #ffffff;
+}
+body.is-background-loading.is-firefox-browser #background .content::before {
+    display: none;
 }
 body.is-background-loading.is-safari-browser #background .content {
     background-color: #ffffff;
