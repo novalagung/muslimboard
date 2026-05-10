@@ -34,6 +34,7 @@ body {
 }
 #main > #intro .actions div {
   display: inline-block;
+  margin-bottom: 5px;
 }
 #main > #intro .actions div a {
   background-color: #5f4f93;
@@ -47,6 +48,16 @@ body {
 }
 #main > #intro .actions div a:not(.in-progress):hover {
   opacity: 0.8;
+}
+@media screen and (max-width: 736px) {
+  #main > #intro .actions {
+    margin-left: 0;
+    margin-right: 0;
+  }
+  #main > #intro .actions div {
+    width: calc(50% - 0.8em);
+    margin: 0 0.4em 0.8em;
+  }
 }
 #main > #preview {
   padding: 5em 0 0;
