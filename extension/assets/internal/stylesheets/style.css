@@ -4,6 +4,9 @@ html, body {
     font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
     background-color: white;
 }
+body.is-background-loading {
+    background-color: #0d1511;
+}
 html {
     box-sizing: border-box;
 }
@@ -28,6 +31,41 @@ html {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center center;
+}
+#background .content {
+    background-color: #0d1511;
+    overflow: hidden;
+}
+#background .content::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(0, 177, 106, 0.18), transparent 42%),
+        radial-gradient(circle at 80% 80%, rgba(118, 200, 226, 0.12), transparent 40%),
+        linear-gradient(135deg, rgba(8, 14, 11, 0.98), rgba(16, 26, 20, 0.96));
+    transform-origin: center;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 700ms ease;
+}
+body.is-background-loading #background .content::before {
+    opacity: 1;
+    animation: backgroundLoadingBreathing 8s ease-in-out infinite;
+}
+@keyframes backgroundLoadingBreathing {
+    0% {
+        opacity: 0.92;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.035);
+    }
+    100% {
+        opacity: 0.92;
+        transform: scale(1);
+    }
 }
 
 #transitioner {

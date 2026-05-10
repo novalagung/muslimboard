@@ -936,7 +936,6 @@
 
             // if certain image is currently appearing on screen,
             // then the transition need to be smooth.
-            // meanwhile at first load, local image will be used to make the image loading process faster
             if (this.selectedBackground) {
                 this.selectedBackground = this.nextSelectedBackground
                 this.nextSelectedBackground = doPickBackground(this.selectedBackground) || this.selectedBackground
@@ -976,48 +975,41 @@
                         $('#background .content').css('background-position', '')
                     }
 
+                    $('body').removeClass('is-background-loading')
+
                     doUpdateBackgroundAndPreloadNextImage(delayBeforeTransitionMs)
                     updateBackgroundAthorName(this.selectedBackground)
                 }
 
-                if (localBackgrounds.length > 0) {
-                    // Show a local background immediately on the first load.
-                    // The remote background will be preloaded in the background and used for the next transition.
-                    this.selectedBackground = Utility.randomFromArray('background', localBackgrounds)
-                    this.nextSelectedBackground = doPickBackground(this.selectedBackground) || this.selectedBackground
-                    doUpdateBackgroundForTheFirstTime(Utility.seconds(0.1))
+                this.selectedBackground = doPickBackground()
+                if (!this.selectedBackground) {
                     return
-                } else {
-                    this.selectedBackground = doPickBackground()
-                    if (!this.selectedBackground) {
-                        return
-                    }
-                    this.nextSelectedBackground = doPickBackground(this.selectedBackground) || this.selectedBackground
-
-                    // right after certain image loaded, trigger preload for next image,
-                    // this approach is to ensure when the next image transition is happening,
-                    // it's need to happen smoothly.
-                    // on rare occasion the preload might failing due to various reason such slow internet,
-                    // and if that situation is happening, use the local image
-                    this.preloadBackgroundImage.call(this, doGetBackgroundURL(this.selectedBackground))
-                        .then(() => {
-                            Utility.log('next image preloaded', doGetBackgroundURL(this.selectedBackground))
-                            doUpdateBackgroundForTheFirstTime()
-                        })
-                        .catch((err) => {
-                            Utility.error(err)
-                            this.selectedBackground = Utility.randomFromArray(
-                                'background',
-                                localBackgrounds,
-                                this.selectedBackground
-                            )
-                            if (!this.selectedBackground) {
-                                return
-                            }
-                            this.nextSelectedBackground = doPickBackground(this.selectedBackground) || this.selectedBackground
-                            doUpdateBackgroundForTheFirstTime()
-                        })
                 }
+                this.nextSelectedBackground = doPickBackground(this.selectedBackground) || this.selectedBackground
+
+                // right after certain image loaded, trigger preload for next image,
+                // this approach is to ensure when the next image transition is happening,
+                // it's need to happen smoothly.
+                // on rare occasion the preload might failing due to various reason such slow internet,
+                // and if that situation is happening, use the local image
+                this.preloadBackgroundImage.call(this, doGetBackgroundURL(this.selectedBackground))
+                    .then(() => {
+                        Utility.log('next image preloaded', doGetBackgroundURL(this.selectedBackground))
+                        doUpdateBackgroundForTheFirstTime(Constant.app.updateBackgroundDelayDuration)
+                    })
+                    .catch((err) => {
+                        Utility.error(err)
+                        this.selectedBackground = Utility.randomFromArray(
+                            'background',
+                            localBackgrounds,
+                            this.selectedBackground
+                        )
+                        if (!this.selectedBackground) {
+                            return
+                        }
+                        this.nextSelectedBackground = doPickBackground(this.selectedBackground) || this.selectedBackground
+                        doUpdateBackgroundForTheFirstTime(Constant.app.updateBackgroundDelayDuration)
+                    })
             }
         },
     
@@ -2215,6 +2207,7 @@
         async init() {
             const t0 = performance.now()
             Utility.log(`${Constant.meta.appName} ${Constant.meta.version}`)
+            $('body').addClass('is-background-loading')
 
             this.renderDateTime.call(this)
             this.getDataBackgroundThenRender.call(this)
