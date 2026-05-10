@@ -262,16 +262,15 @@
             return data
         },
 
-        // remove prayer times cache
-        clearPrayerTimesCache() {
-
-            // remove coordinate cache
-            localStorage.removeItem('data-coordinate-cache')
-            localStorage.removeItem(this.prayerCoordinateCacheIndexKey)
-
-            // remove prayer time cache
-            Utility.removeLocalStorageItemsByPrefix((d) => d.indexOf('data-prayer-time') > -1)
-        },
+        // Currently unused by the normal prayer-time flow.
+        // Kept for manual reset and future recovery paths.
+        // clearPrayerTimesCache() {
+        //     // remove coordinate cache
+        //     localStorage.removeItem('data-coordinate-cache')
+        //     localStorage.removeItem(this.prayerCoordinateCacheIndexKey)
+        //     // remove prayer time cache
+        //     Utility.removeLocalStorageItemsByPrefix((d) => d.indexOf('data-prayer-time') > -1)
+        // },
 
         // render prayer time to screen
         renderPrayerTimeInterval: undefined,
@@ -772,7 +771,6 @@
                             if (silent) {
                                 return
                             } else {
-                                this.clearPrayerTimesCache.call(this)
                                 throw new Error(I18n.getText('promptErrorFailToGetPrayerTimesMessage'))
                             }
                         }
@@ -830,7 +828,6 @@
                     // if prayer time data ever been loaded once, then the cache will be used on next call
                     const data =  await this.getPrayerTimesByLocationID(province, kabko, id)
                     if (!data) {
-                        this.clearPrayerTimesCache.call(this)
                         throw new Error(I18n.getText('promptErrorFailToGetPrayerTimesMessage'))
                     }
 
