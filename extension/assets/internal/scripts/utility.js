@@ -135,6 +135,10 @@ const Utility = {
             if (callNow) func.apply(context, args);
         };
     },
+    isSafariBrowser: () => {
+        const ua = navigator.userAgent || ''
+        return /Safari/i.test(ua) && !/(Chrome|Chromium|CriOS|FxiOS|Edg|OPR)/i.test(ua)
+    },
     getCurrentLocationCoordinate: () => new Promise((resolve, reject) => {
         const useCoordinateCache = () => {
             const coordinateCache = JSON.parse(localStorage.getItem('data-coordinate-cache') || '{}')
