@@ -1051,7 +1051,7 @@
             });
         },
 
-        // apply event handler for change language
+        // apply event handler for language
         registerEventForChangeLanguageButton() {
 
             let swalChangeLanguage = null
@@ -1082,8 +1082,8 @@
 
                 const langCode = I18n.getSelectedLocale().toUpperCase()
                 const modalTitle = (langCode === 'EN')
-                    ? `Change language`
-                    : `Change language\n${I18n.getText('modalChangeLanguageHeader')}`
+                    ? `Language`
+                    : `Language\n${I18n.getText('modalChangeLanguageHeader')}`
                 swalChangeLanguage = Swal.fire({
                     icon: 'info',
                     title: modalTitle,
@@ -1093,7 +1093,7 @@
                 });
             });
             
-            // handle change language event
+            // handle language event
             $('body').on('click', '.modal-change-language a', async (e) => {
                 const locale = $(e.currentTarget).attr('data-locale')
                 I18n.setSelectedLocale(locale)
@@ -1106,7 +1106,7 @@
                 const activeLanguage = (langCode === 'EN' || langCode === 'ID')
                     ? `${I18n.getText('languageName').english} ${langCode}`
                     : `${I18n.getText('languageName').native} ${langCode}`
-                const text = `Change language (${activeLanguage})`
+                const text = `Language (${activeLanguage})`
                 // const text = I18n.getText('footerMenuChangeLanguage')
                 $('.change-language span').text(text)
             }
@@ -1185,7 +1185,7 @@
                         <p>
                             ${I18n.getText('modalAboutUsText3')
                                 .replace('$1', `<a href='mailto:${Constant.maintainer.email}?subject=${Constant.meta.appName} ${Constant.meta.version} feedback'>${Constant.maintainer.email}</a>`)
-                                .replace('$2', `<a href='https://github.com/novalagung/muslimboard' target='_blank'>GitHub</a>`)}
+                                .replace('$2', `<a href='https://github.com/novalagung/muslimboard' target='_blank'>GitHub <i class='fa fa-github'></i></a>`)}
                         </p>
                         ${newVersionText}
                         <hr class='separator'>

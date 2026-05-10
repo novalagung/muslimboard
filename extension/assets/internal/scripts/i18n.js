@@ -278,23 +278,23 @@ const I18n = {
         },
         footerMenuImageAuthor: {
             ar: 'الصورة من',
-            en: 'Image from',
+            en: 'Image @',
             ru: 'Фотография из',
-            bn: 'ছবি থেকে', 
+            bn: 'ছবি থেকে',
             hi: 'चित्र से',
             id: 'Foto dari',
             'zh-tw': '圖片來自',
             'zh-cn': '图片来自'
         },
         footerMenuChangeLanguage: {
-            ar: 'غير اللغة',
-            en: 'Change language',
-            ru: 'Изменить язык',
-            bn: 'ভাষা পরিবর্তন করুন', 
-            hi: 'भाषा बदलें',
-            id: 'Ubah bahasa',
-            'zh-tw': '改變語言',
-            'zh-cn': '改变语言'
+            ar: 'اللغة',
+            en: 'Language',
+            ru: 'Язык',
+            bn: 'ভাষা',
+            hi: 'भाषा',
+            id: 'Bahasa',
+            'zh-tw': '語言',
+            'zh-cn': '语言'
         },
         footerMenuSourceCode: {
             ar: 'مصدر الكود',
