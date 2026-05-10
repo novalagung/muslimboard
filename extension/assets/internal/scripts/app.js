@@ -529,6 +529,10 @@
 
             // get background url. use local image if exists
             const doGetBackgroundURL = (bg) => (bg.urlLocal) ? bg.urlLocal : bg.url
+            const isOffline = typeof navigator !== 'undefined' && navigator.onLine === false
+            const localBackgrounds = data.content.filter((d) => doGetBackgroundURL(d).indexOf('http') == -1)
+            const availableBackgrounds = isOffline ? localBackgrounds : data.content
+            const doPickBackground = (exclusion) => Utility.randomFromArray('background', availableBackgrounds, exclusion)
 
             // update author name
             const updateBackgroundAthorName = (background) => {
@@ -558,7 +562,18 @@
                     })
                     .catch((err) => {
                         Utility.error(err)
-                        this.nextSelectedBackground = Utility.randomFromArray('background', data.content, this.selectedBackground)
+
+                        const fallbackBackground = doPickBackground(this.selectedBackground)
+                        if (!fallbackBackground) {
+                            return
+                        }
+
+                        this.nextSelectedBackground = fallbackBackground
+
+                        if (isOffline) {
+                            return
+                        }
+
                         doUpdateBackgroundAndPreloadNextImage()
                     })
             }
@@ -595,7 +610,6 @@
                     updateBackgroundAthorName(this.selectedBackground)
                 })
             } else {
-                const localBackgrounds = data.content.filter((d) => doGetBackgroundURL(d).indexOf('http') == -1)
                 const doUpdateBackgroundForTheFirstTime = (delayBeforeTransitionMs = 0) => {
                     $('#background .content').css('background-image', `url("${doGetBackgroundURL(this.selectedBackground)}")`)
         
@@ -614,12 +628,15 @@
                     // Show a local background immediately on the first load.
                     // The remote background will be preloaded in the background and used for the next transition.
                     this.selectedBackground = Utility.randomFromArray('background', localBackgrounds)
-                    this.nextSelectedBackground = Utility.randomFromArray('background', data.content, this.selectedBackground)
+                    this.nextSelectedBackground = doPickBackground(this.selectedBackground)
                     doUpdateBackgroundForTheFirstTime(Utility.seconds(0.1))
                     return
                 } else {
-                    this.selectedBackground = Utility.randomFromArray('background', data.content)
-                    this.nextSelectedBackground = Utility.randomFromArray('background', data.content, this.selectedBackground)
+                    this.selectedBackground = doPickBackground()
+                    if (!this.selectedBackground) {
+                        return
+                    }
+                    this.nextSelectedBackground = doPickBackground(this.selectedBackground)
 
                     // right after certain image loaded, trigger preload for next image,
                     // this approach is to ensure when the next image transition is happening,
@@ -635,10 +652,13 @@
                             Utility.error(err)
                             this.selectedBackground = Utility.randomFromArray(
                                 'background',
-                                data.content.filter((d) => doGetBackgroundURL(d).indexOf('http') == -1),
+                                localBackgrounds,
                                 this.selectedBackground
                             )
-                            this.nextSelectedBackground = Utility.randomFromArray('background', data.content, this.selectedBackground)
+                            if (!this.selectedBackground) {
+                                return
+                            }
+                            this.nextSelectedBackground = doPickBackground(this.selectedBackground)
                             doUpdateBackgroundForTheFirstTime()
                         })
                 }
