@@ -262,16 +262,15 @@
             return data
         },
 
-        // remove prayer times cache
-        clearPrayerTimesCache() {
-
-            // remove coordinate cache
-            localStorage.removeItem('data-coordinate-cache')
-            localStorage.removeItem(this.prayerCoordinateCacheIndexKey)
-
-            // remove prayer time cache
-            Utility.removeLocalStorageItemsByPrefix((d) => d.indexOf('data-prayer-time') > -1)
-        },
+        // Currently unused by the normal prayer-time flow.
+        // Kept for manual reset and future recovery paths.
+        // clearPrayerTimesCache() {
+        //     // remove coordinate cache
+        //     localStorage.removeItem('data-coordinate-cache')
+        //     localStorage.removeItem(this.prayerCoordinateCacheIndexKey)
+        //     // remove prayer time cache
+        //     Utility.removeLocalStorageItemsByPrefix((d) => d.indexOf('data-prayer-time') > -1)
+        // },
 
         // render prayer time to screen
         renderPrayerTimeInterval: undefined,
@@ -473,6 +472,343 @@
         // store next background image
         nextSelectedBackground: false,
 
+        // custom background image storage
+        customBackgroundImageRecords: [],
+        customBackgroundImages: [],
+        customBackgroundObjectUrls: {},
+        customBackgroundImageStoreName: Utility.indexedDb.storeNames.customBackgroundImages,
+        customBackgroundImageModeKey: 'background-image-mode',
+        customBackgroundImageModeDefault: 'both',
+        customBackgroundImageLimit: 25,
+        customBackgroundImageMaxSize: 5 * 1024 * 1024,
+
+        getBackgroundImageMode() {
+            const mode = localStorage.getItem(this.customBackgroundImageModeKey) || this.customBackgroundImageModeDefault
+            return ['muslimboard', 'custom', 'both'].includes(mode) ? mode : this.customBackgroundImageModeDefault
+        },
+        setBackgroundImageMode(mode) {
+            const nextMode = ['muslimboard', 'custom', 'both'].includes(mode)
+                ? mode
+                : this.customBackgroundImageModeDefault
+            localStorage.setItem(this.customBackgroundImageModeKey, nextMode)
+            return nextMode
+        },
+        createCustomBackgroundImageId() {
+            if (self.crypto && self.crypto.randomUUID) {
+                return self.crypto.randomUUID()
+            }
+
+            return `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`
+        },
+        getCustomBackgroundImageObjectUrl(record) {
+            if (!record || !record.id) {
+                return ''
+            }
+
+            if (this.customBackgroundObjectUrls[record.id]) {
+                return this.customBackgroundObjectUrls[record.id]
+            }
+
+            const objectUrl = URL.createObjectURL(record.blob)
+            this.customBackgroundObjectUrls[record.id] = objectUrl
+            return objectUrl
+        },
+        revokeCustomBackgroundImageObjectUrl(recordId) {
+            if (!recordId || !this.customBackgroundObjectUrls[recordId]) {
+                return
+            }
+
+            URL.revokeObjectURL(this.customBackgroundObjectUrls[recordId])
+            delete this.customBackgroundObjectUrls[recordId]
+        },
+        cleanupCustomBackgroundObjectUrls(retainedIds = []) {
+            const protectedIds = [
+                this.selectedBackground?.customImageId,
+                this.nextSelectedBackground?.customImageId,
+            ].filter(Boolean)
+
+            Object.keys(this.customBackgroundObjectUrls).forEach((recordId) => {
+                if (retainedIds.includes(recordId) || protectedIds.includes(recordId)) {
+                    return
+                }
+                this.revokeCustomBackgroundImageObjectUrl.call(this, recordId)
+            })
+        },
+        async getCustomBackgroundImageRecords() {
+            try {
+                const records = await Utility.indexedDb.getAll(this.customBackgroundImageStoreName)
+                return (records || []).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0))
+            } catch (err) {
+                Utility.error(err)
+                return []
+            }
+        },
+        buildCustomBackgroundImage(record) {
+            return {
+                id: `custom-${record.id}`,
+                customImageId: record.id,
+                customImageName: record.name || I18n.getText('modalCustomImageHeader'),
+                customImageSize: record.size || 0,
+                isCustomImage: true,
+                urlLocal: this.getCustomBackgroundImageObjectUrl.call(this, record),
+                source: '',
+                author: {
+                    name: record.name || I18n.getText('modalCustomImageHeader'),
+                    profile: ''
+                }
+            }
+        },
+        async refreshCustomBackgroundImages() {
+            const records = await this.getCustomBackgroundImageRecords.call(this)
+            this.customBackgroundImageRecords = records
+            this.customBackgroundImages = records.map((record) => this.buildCustomBackgroundImage.call(this, record))
+            this.cleanupCustomBackgroundObjectUrls.call(this, records.map((record) => record.id))
+            return this.customBackgroundImages
+        },
+        getActiveBackgroundImages(muslimboardImages = []) {
+            const mode = this.getBackgroundImageMode.call(this)
+            const customImages = this.customBackgroundImages || []
+            if (mode === 'muslimboard') {
+                return muslimboardImages
+            }
+            if (mode === 'custom') {
+                return customImages.length > 0 ? customImages : muslimboardImages
+            }
+            return muslimboardImages.concat(customImages)
+        },
+        getLocalBackgroundImages(muslimboardImages = []) {
+            return this.getActiveBackgroundImages.call(this, muslimboardImages)
+                .filter((bg) => {
+                    const url = bg.urlLocal || bg.url || ''
+                    return url.indexOf('http') == -1
+                })
+        },
+        renderCustomBackgroundUploadedList(records = []) {
+            const $list = $('#custom-background-uploaded-list')
+            if ($list.length == 0) {
+                return
+            }
+
+            if (records.length == 0) {
+                $list.html(`
+                    <div class="custom-background-empty">
+                        ${I18n.getText('modalCustomImageUploadedEmpty')}
+                        ${this.getBackgroundImageMode.call(this) === 'custom'
+                            ? `<div class="fallback-note">${I18n.getText('modalCustomImageUploadedEmptyFallback')}</div>`
+                            : ''}
+                    </div>
+                `)
+                return
+            }
+
+            const html = records.map((record) => {
+                const blob = this.customBackgroundImageRecords.find((each) => each.id == record.id)
+                const imageUrl = this.getCustomBackgroundImageObjectUrl.call(this, blob || record)
+                const sizeInMb = ((record.size || 0) / (1024 * 1024))
+                const sizeText = (record.size || 0) > 0
+                    ? `${sizeInMb >= 1 ? sizeInMb.toFixed(1) : sizeInMb.toFixed(2)} MB`
+                    : ''
+                const safeName = Utility.escapeHtml(record.name || I18n.getText('modalCustomImageHeader'))
+
+                return `
+                    <div class="custom-background-item" data-id="${record.id}">
+                        <div class="thumb">
+                            <img src="${imageUrl}" alt="${safeName}">
+                        </div>
+                        <div class="meta">
+                            <div class="name">${safeName}</div>
+                            <div class="size">${sizeText}</div>
+                        </div>
+                        <button type="button" class="delete" data-id="${record.id}">
+                            <i class="fa fa-close"></i>
+                        </button>
+                    </div>
+                `
+            }).join('')
+
+            $list.html(html)
+        },
+        async deleteCustomBackgroundImage(recordId) {
+            try {
+                const deleted = await Utility.indexedDb.delete(this.customBackgroundImageStoreName, recordId)
+                if (deleted === false) {
+                    throw new Error('indexedDB unavailable')
+                }
+                await this.refreshCustomBackgroundImages.call(this)
+                this.renderCustomBackgroundUploadedList.call(this, this.customBackgroundImageRecords)
+            } catch (err) {
+                Utility.error(err)
+                Swal.fire({
+                    icon: 'error',
+                    text: I18n.getText('modalCustomImageStorageError'),
+                    showConfirmButton: true
+                })
+            }
+        },
+        async saveCustomBackgroundImages(files) {
+            try {
+                const selectedFiles = Array.from(files || [])
+                if (selectedFiles.length == 0) {
+                    return
+                }
+
+                const currentCount = this.customBackgroundImageRecords.length
+                const availableSlots = Math.max(0, this.customBackgroundImageLimit - currentCount)
+                if (availableSlots == 0) {
+                    Swal.fire({
+                        icon: 'warning',
+                        text: I18n.getText('modalCustomImageLimitReached'),
+                        showConfirmButton: true
+                    })
+                    return
+                }
+
+                const validFiles = selectedFiles.filter((file) => {
+                    if (!file || !file.type || file.type.indexOf('image/') != 0) {
+                        return false
+                    }
+                    if (file.size > this.customBackgroundImageMaxSize) {
+                        return false
+                    }
+                    return true
+                }).slice(0, availableSlots)
+
+                if (validFiles.length == 0) {
+                    const hasTooLargeFile = selectedFiles.some((file) => file && file.size > this.customBackgroundImageMaxSize)
+                    Swal.fire({
+                        icon: 'warning',
+                        text: hasTooLargeFile
+                            ? I18n.getText('modalCustomImageTooLarge')
+                            : I18n.getText('modalCustomImageInvalidFile'),
+                        showConfirmButton: true
+                    })
+                    return
+                }
+
+                const rejectedTooLarge = selectedFiles.filter((file) => file && file.size > this.customBackgroundImageMaxSize)
+                if (rejectedTooLarge.length > 0) {
+                    Swal.fire({
+                        icon: 'warning',
+                        text: I18n.getText('modalCustomImageTooLarge'),
+                        showConfirmButton: true
+                    })
+                }
+
+                for (const file of validFiles) {
+                    const record = {
+                        id: this.createCustomBackgroundImageId.call(this),
+                        name: file.name,
+                        size: file.size,
+                        type: file.type,
+                        createdAt: Date.now(),
+                        blob: file
+                    }
+                    const stored = await Utility.indexedDb.put(this.customBackgroundImageStoreName, record)
+                    if (stored === false) {
+                        throw new Error('indexedDB unavailable')
+                    }
+                }
+
+                await this.refreshCustomBackgroundImages.call(this)
+                this.renderCustomBackgroundUploadedList.call(this, this.customBackgroundImageRecords)
+
+                if (selectedFiles.length > availableSlots) {
+                    Swal.fire({
+                        icon: 'warning',
+                        text: I18n.getText('modalCustomImageLimitReached'),
+                        showConfirmButton: true
+                    })
+                }
+            } catch (err) {
+                Utility.error(err)
+                Swal.fire({
+                    icon: 'error',
+                    text: I18n.getText('modalCustomImageStorageError'),
+                    showConfirmButton: true
+                })
+            }
+        },
+        async showCustomBackgroundModal() {
+            await this.refreshCustomBackgroundImages.call(this)
+            const currentMode = this.getBackgroundImageMode.call(this)
+            const html = `
+                <div class="modal-custom-background">
+                    <p class="description">
+                        <span class="storage-note">${I18n.getText('modalCustomImageDescription')} ${I18n.getText('modalCustomImageStorageNote')}</span>
+                    </p>
+                    <div class="mode-group">
+                        <p class="mode-label">${I18n.getText('modalCustomImageModeLabel')}</p>
+                        <label>
+                            <input type="radio" name="background-mode" value="muslimboard" ${currentMode === 'muslimboard' ? 'checked' : ''}>
+                            <span>${I18n.getText('modalCustomImageModeMuslimboard')}</span>
+                        </label>
+                        <label>
+                            <input type="radio" name="background-mode" value="custom" ${currentMode === 'custom' ? 'checked' : ''}>
+                            <span>${I18n.getText('modalCustomImageModeCustom')}</span>
+                        </label>
+                        <label>
+                            <input type="radio" name="background-mode" value="both" ${currentMode === 'both' ? 'checked' : ''}>
+                            <span>${I18n.getText('modalCustomImageModeBoth')}</span>
+                        </label>
+                    </div>
+                    <div class="upload-group">
+                        <input type="file" class="custom-background-upload-input" accept="image/*" multiple hidden>
+                        <button type="button" class="custom-background-upload-trigger">
+                            ${I18n.getText('modalCustomImageUploadButton')}
+                        </button>
+                        <p class="upload-hint">${I18n.getText('modalCustomImageUploadHint')}</p>
+                    </div>
+                    <hr class="separator">
+                    <p class="uploaded-title">${I18n.getText('modalCustomImageUploadedTitle')}</p>
+                    <div id="custom-background-uploaded-list" class="custom-background-list"></div>
+                </div>
+            `
+
+            Swal.fire({
+                icon: 'info',
+                title: I18n.getText('modalCustomImageHeader'),
+                html: html,
+                showConfirmButton: false,
+                showCloseButton: true,
+                allowOutsideClick: true,
+                didClose: () => {
+                    location.reload()
+                },
+                didOpen: () => {
+                    const $container = $('#swal2-html-container')
+                    const $uploadInput = $container.find('.custom-background-upload-input')
+
+                    this.renderCustomBackgroundUploadedList.call(this, this.customBackgroundImageRecords)
+
+                    $container.find('input[name="background-mode"]').on('change', (e) => {
+                        const mode = $(e.currentTarget).val()
+                        this.setBackgroundImageMode.call(this, mode)
+                    })
+
+                    $container.find('.custom-background-upload-trigger').on('click', (e) => {
+                        e.preventDefault()
+                        $uploadInput.trigger('click')
+                    })
+
+                    $uploadInput.on('change', async (e) => {
+                        const files = e.currentTarget.files || []
+                        await this.saveCustomBackgroundImages.call(this, files)
+                        e.currentTarget.value = ''
+                    })
+
+                    $container.on('click', '.custom-background-item .delete', async (e) => {
+                        e.preventDefault()
+                        const recordId = $(e.currentTarget).attr('data-id')
+                        const confirmDelete = window.confirm(I18n.getText('modalCustomImageDeleteConfirm'))
+                        if (!confirmDelete) {
+                            return
+                        }
+                        await this.deleteCustomBackgroundImage.call(this, recordId)
+                    })
+                }
+            })
+        },
+
         preloadBackgroundImage(url) {
             return new Promise((resolve, reject) => {
                 const preloader = new Image()
@@ -509,6 +845,7 @@
                     resolve(result)
                 })
                 if (Object.keys(data?.content || {}).length > 0) {
+                    await this.refreshCustomBackgroundImages.call(this)
                     this.updateBackground.call(this, data.content)
                     return
                 } 
@@ -521,28 +858,51 @@
             const url = `data/data-background.json`
             const response = await Utility.fetch(url)
             const data = await response.json()
+            await this.refreshCustomBackgroundImages.call(this)
             this.updateBackground.call(this, data)
         },
 
         // update background images randomly on every X interval
         async updateBackground(data) {
 
+            const muslimboardBackgrounds = data.content || []
+            const activeBackgrounds = this.getActiveBackgroundImages.call(this, muslimboardBackgrounds)
+
             // get background url. use local image if exists
             const doGetBackgroundURL = (bg) => (bg.urlLocal) ? bg.urlLocal : bg.url
+            const isOffline = typeof navigator !== 'undefined' && navigator.onLine === false
+            const localBackgrounds = this.getLocalBackgroundImages.call(this, muslimboardBackgrounds)
+            const availableBackgrounds = isOffline ? localBackgrounds : activeBackgrounds
+            const doPickBackground = (exclusion) => Utility.randomFromArray('background', availableBackgrounds, exclusion)
 
             // update author name
             const updateBackgroundAthorName = (background) => {
-                if (background.hasOwnProperty('author')) {
+                const $photoOwnership = $('.photo-ownership')
+                if (background.isCustomImage) {
+                    $('.photographer').text(background.customImageName || I18n.getText('modalCustomImageHeader'))
+                    $photoOwnership
+                        .attr('href', 'javascript:void(0)')
+                        .removeAttr('target')
+                        .attr('data-custom-image', '1')
+                } else if (background.hasOwnProperty('author')) {
                     $('.photographer').html(background.author.name)
+                    $photoOwnership.removeAttr('data-custom-image')
+                    $photoOwnership.attr('target', '_blank')
                 } else {
                     $('.photographer').html(background.source.split('http://').reverse()[0])
+                    $photoOwnership.removeAttr('data-custom-image')
+                    $photoOwnership.attr('target', '_blank')
                 }
-                $('.photographer').closest('a').attr('href', background.source)
+                $photoOwnership.attr('href', background.source || 'javascript:void(0)')
             }
 
             // the doUpdateBackgroundAndPreloadNextImage below is used to manage the image and text transition
             const doUpdateBackgroundAndPreloadNextImage = (delayBeforeTransitionMs = Constant.app.updateBackgroundDelayDuration) => {
                 Utility.log('preparing next image')
+
+                if (!this.nextSelectedBackground) {
+                    return
+                }
 
                 this.preloadBackgroundImage.call(this, doGetBackgroundURL(this.nextSelectedBackground))
                     .then(() => {
@@ -558,17 +918,27 @@
                     })
                     .catch((err) => {
                         Utility.error(err)
-                        this.nextSelectedBackground = Utility.randomFromArray('background', data.content, this.selectedBackground)
+
+                        const fallbackBackground = doPickBackground(this.selectedBackground)
+                        if (!fallbackBackground) {
+                            return
+                        }
+
+                        this.nextSelectedBackground = fallbackBackground
+
+                        if (isOffline) {
+                            return
+                        }
+
                         doUpdateBackgroundAndPreloadNextImage()
                     })
             }
 
             // if certain image is currently appearing on screen,
             // then the transition need to be smooth.
-            // meanwhile at first load, local image will be used to make the image loading process faster
             if (this.selectedBackground) {
                 this.selectedBackground = this.nextSelectedBackground
-                    this.nextSelectedBackground = Utility.randomFromArray('background', data.content, this.selectedBackground)
+                this.nextSelectedBackground = doPickBackground(this.selectedBackground) || this.selectedBackground
     
                 $('#transitioner .content')
                     .css('opacity', '0')
@@ -595,7 +965,6 @@
                     updateBackgroundAthorName(this.selectedBackground)
                 })
             } else {
-                const localBackgrounds = data.content.filter((d) => doGetBackgroundURL(d).indexOf('http') == -1)
                 const doUpdateBackgroundForTheFirstTime = (delayBeforeTransitionMs = 0) => {
                     $('#background .content').css('background-image', `url("${doGetBackgroundURL(this.selectedBackground)}")`)
         
@@ -606,42 +975,41 @@
                         $('#background .content').css('background-position', '')
                     }
 
+                    $('body').removeClass('is-background-loading')
+
                     doUpdateBackgroundAndPreloadNextImage(delayBeforeTransitionMs)
                     updateBackgroundAthorName(this.selectedBackground)
                 }
 
-                if (localBackgrounds.length > 0) {
-                    // Show a local background immediately on the first load.
-                    // The remote background will be preloaded in the background and used for the next transition.
-                    this.selectedBackground = Utility.randomFromArray('background', localBackgrounds)
-                    this.nextSelectedBackground = Utility.randomFromArray('background', data.content, this.selectedBackground)
-                    doUpdateBackgroundForTheFirstTime(Utility.seconds(0.1))
+                this.selectedBackground = doPickBackground()
+                if (!this.selectedBackground) {
                     return
-                } else {
-                    this.selectedBackground = Utility.randomFromArray('background', data.content)
-                    this.nextSelectedBackground = Utility.randomFromArray('background', data.content, this.selectedBackground)
-
-                    // right after certain image loaded, trigger preload for next image,
-                    // this approach is to ensure when the next image transition is happening,
-                    // it's need to happen smoothly.
-                    // on rare occasion the preload might failing due to various reason such slow internet,
-                    // and if that situation is happening, use the local image
-                    this.preloadBackgroundImage.call(this, doGetBackgroundURL(this.selectedBackground))
-                        .then(() => {
-                            Utility.log('next image preloaded', doGetBackgroundURL(this.selectedBackground))
-                            doUpdateBackgroundForTheFirstTime()
-                        })
-                        .catch((err) => {
-                            Utility.error(err)
-                            this.selectedBackground = Utility.randomFromArray(
-                                'background',
-                                data.content.filter((d) => doGetBackgroundURL(d).indexOf('http') == -1),
-                                this.selectedBackground
-                            )
-                            this.nextSelectedBackground = Utility.randomFromArray('background', data.content, this.selectedBackground)
-                            doUpdateBackgroundForTheFirstTime()
-                        })
                 }
+                this.nextSelectedBackground = doPickBackground(this.selectedBackground) || this.selectedBackground
+
+                // right after certain image loaded, trigger preload for next image,
+                // this approach is to ensure when the next image transition is happening,
+                // it's need to happen smoothly.
+                // on rare occasion the preload might failing due to various reason such slow internet,
+                // and if that situation is happening, use the local image
+                this.preloadBackgroundImage.call(this, doGetBackgroundURL(this.selectedBackground))
+                    .then(() => {
+                        Utility.log('next image preloaded', doGetBackgroundURL(this.selectedBackground))
+                        doUpdateBackgroundForTheFirstTime(Constant.app.updateBackgroundDelayDuration)
+                    })
+                    .catch((err) => {
+                        Utility.error(err)
+                        this.selectedBackground = Utility.randomFromArray(
+                            'background',
+                            localBackgrounds,
+                            this.selectedBackground
+                        )
+                        if (!this.selectedBackground) {
+                            return
+                        }
+                        this.nextSelectedBackground = doPickBackground(this.selectedBackground) || this.selectedBackground
+                        doUpdateBackgroundForTheFirstTime(Constant.app.updateBackgroundDelayDuration)
+                    })
             }
         },
     
@@ -752,7 +1120,6 @@
                             if (silent) {
                                 return
                             } else {
-                                this.clearPrayerTimesCache.call(this)
                                 throw new Error(I18n.getText('promptErrorFailToGetPrayerTimesMessage'))
                             }
                         }
@@ -810,7 +1177,6 @@
                     // if prayer time data ever been loaded once, then the cache will be used on next call
                     const data =  await this.getPrayerTimesByLocationID(province, kabko, id)
                     if (!data) {
-                        this.clearPrayerTimesCache.call(this)
                         throw new Error(I18n.getText('promptErrorFailToGetPrayerTimesMessage'))
                     }
 
@@ -1034,7 +1400,7 @@
             });
         },
 
-        // apply event handler for change language
+        // apply event handler for language
         registerEventForChangeLanguageButton() {
 
             let swalChangeLanguage = null
@@ -1065,8 +1431,8 @@
 
                 const langCode = I18n.getSelectedLocale().toUpperCase()
                 const modalTitle = (langCode === 'EN')
-                    ? `Change language`
-                    : `Change language\n${I18n.getText('modalChangeLanguageHeader')}`
+                    ? `Language`
+                    : `Language\n${I18n.getText('modalChangeLanguageHeader')}`
                 swalChangeLanguage = Swal.fire({
                     icon: 'info',
                     title: modalTitle,
@@ -1076,7 +1442,7 @@
                 });
             });
             
-            // handle change language event
+            // handle language event
             $('body').on('click', '.modal-change-language a', async (e) => {
                 const locale = $(e.currentTarget).attr('data-locale')
                 I18n.setSelectedLocale(locale)
@@ -1089,10 +1455,17 @@
                 const activeLanguage = (langCode === 'EN' || langCode === 'ID')
                     ? `${I18n.getText('languageName').english} ${langCode}`
                     : `${I18n.getText('languageName').native} ${langCode}`
-                const text = `Change language (${activeLanguage})`
+                const text = `Language (${activeLanguage})`
                 // const text = I18n.getText('footerMenuChangeLanguage')
                 $('.change-language span').text(text)
             }
+        },
+
+        registerEventForUseOwnImageButton() {
+            $('.use-own-image').on('click', async (e) => {
+                e.preventDefault()
+                await this.showCustomBackgroundModal.call(this)
+            })
         },
 
         // apply event handler for about us button
@@ -1168,7 +1541,7 @@
                         <p>
                             ${I18n.getText('modalAboutUsText3')
                                 .replace('$1', `<a href='mailto:${Constant.maintainer.email}?subject=${Constant.meta.appName} ${Constant.meta.version} feedback'>${Constant.maintainer.email}</a>`)
-                                .replace('$2', `<a href='https://github.com/novalagung/muslimboard' target='_blank'>GitHub</a>`)}
+                                .replace('$2', `<a href='https://github.com/novalagung/muslimboard' target='_blank'>GitHub <i class='fa fa-github'></i></a>`)}
                         </p>
                         ${newVersionText}
                         <hr class='separator'>
@@ -1834,6 +2207,7 @@
         async init() {
             const t0 = performance.now()
             Utility.log(`${Constant.meta.appName} ${Constant.meta.version}`)
+            $('body').addClass('is-background-loading')
 
             this.renderDateTime.call(this)
             this.getDataBackgroundThenRender.call(this)
@@ -1842,6 +2216,7 @@
             this.registerEventForForceLoadLocationAndPrayerTimes.call(this)
             this.registerEventForInternetAvailabilityStatus.call(this)
             this.registerEventForChangeLanguageButton.call(this)
+            this.registerEventForUseOwnImageButton.call(this)
             this.registerEventForAboutUsButton.call(this)
             this.registerEventForAlarm.call(this)
             this.registerEventTodoList.call(this)

@@ -13,6 +13,105 @@ const Utility = {
             chrome.storage.sync.remove([key], () => resolve());
         }),
     },
+    indexedDb: {
+        dbName: 'muslimboard',
+        dbVersion: 1,
+        storeNames: {
+            customBackgroundImages: 'custom-background-images',
+        },
+        open() {
+            if (typeof indexedDB === 'undefined') {
+                return Promise.resolve(false)
+            }
+
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(this.dbName, this.dbVersion)
+
+                request.onupgradeneeded = () => {
+                    const db = request.result
+                    if (!db.objectStoreNames.contains(this.storeNames.customBackgroundImages)) {
+                        db.createObjectStore(this.storeNames.customBackgroundImages, { keyPath: 'id' })
+                    }
+                }
+
+                request.onsuccess = () => resolve(request.result)
+                request.onerror = () => reject(request.error || new Error('indexedDB open failed'))
+            })
+        },
+        requestToPromise(request) {
+            return new Promise((resolve, reject) => {
+                request.onsuccess = () => resolve(request.result)
+                request.onerror = () => reject(request.error || new Error('indexedDB request failed'))
+            })
+        },
+        async withStore(storeName, mode, callback) {
+            const db = await this.open()
+            if (!db) {
+                return false
+            }
+
+            return new Promise((resolve, reject) => {
+                let result
+                let tx
+                try {
+                    tx = db.transaction(storeName, mode)
+                    const store = tx.objectStore(storeName)
+                    result = callback(store)
+                } catch (err) {
+                    db.close()
+                    reject(err)
+                    return
+                }
+
+                tx.oncomplete = () => {
+                    db.close()
+                    resolve(result)
+                }
+                tx.onerror = () => {
+                    db.close()
+                    reject(tx.error || new Error(`indexedDB transaction failed: ${storeName}`))
+                }
+                tx.onabort = () => {
+                    db.close()
+                    reject(tx.error || new Error(`indexedDB transaction aborted: ${storeName}`))
+                }
+            })
+        },
+        async getAll(storeName) {
+            const db = await this.open()
+            if (!db) {
+                return []
+            }
+
+            return new Promise((resolve, reject) => {
+                try {
+                    const tx = db.transaction(storeName, 'readonly')
+                    const store = tx.objectStore(storeName)
+                    const request = store.getAll()
+                    request.onsuccess = () => {
+                        db.close()
+                        resolve(request.result || [])
+                    }
+                    request.onerror = () => {
+                        db.close()
+                        reject(request.error || new Error(`indexedDB getAll failed: ${storeName}`))
+                    }
+                } catch (err) {
+                    db.close()
+                    reject(err)
+                }
+            })
+        },
+        async put(storeName, value) {
+            return this.withStore(storeName, 'readwrite', (store) => store.put(value))
+        },
+        async delete(storeName, key) {
+            return this.withStore(storeName, 'readwrite', (store) => store.delete(key))
+        },
+        async clear(storeName) {
+            return this.withStore(storeName, 'readwrite', (store) => store.clear())
+        },
+    },
     selectElementContents: (el) => {
         let range = document.createRange();
         range.selectNodeContents(el);
@@ -111,7 +210,7 @@ const Utility = {
         Utility.log('remove local storage', cond)
         Object.keys(localStorage).filter(cond).forEach((d) => { localStorage.removeItem(d) })
     },
-    randomFromArray(key, arr, exclusion) {
+    randomFromArray(key, arr, exclusion, didReset = false) {
         const cacheKey = `data-cache-${key}`
         
         let arrExcluded = JSON.parse(localStorage.getItem(cacheKey) || '[]')
@@ -127,7 +226,10 @@ const Utility = {
         Utility.log('randomFromArray', cacheKey, 'items:', items)
         if (items.length == 0) {
             localStorage.removeItem(cacheKey)
-            return Utility.randomFromArray(key, arr, exclusion)
+            if (didReset || (arr || []).length == 0) {
+                return false
+            }
+            return Utility.randomFromArray(key, arr, exclusion, true)
         }
 
         const nextItem = items[Math.floor(Math.random()*items.length)]
@@ -146,6 +248,12 @@ const Utility = {
     log: (...args) => (Constant.app.debug) ? console.log(...args) : $.noop(),
     error: (...args) => (Constant.app.debug) ? console.error(...args) : $.noop(),
     toTitleCase: (str) => str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()),
+    escapeHtml: (text = '') => String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;'),
     getCurrentTimezoneAbbreviation: (countryCode) => {
         const tzAbbr = moment.tz(moment.tz.guess()).zoneAbbr()
         return Utility.getFormattedTzAbbr(tzAbbr)
