@@ -833,5 +833,10 @@ const I18n = {
                 $e.text(text)
             }
         })
+        $('[data-i18n-title]').each((i, e) => {
+            const $e = $(e)
+            const key = $e.attr('data-i18n-title')
+            $e.attr('title', I18n.getText(key))
+        })
     }
 }

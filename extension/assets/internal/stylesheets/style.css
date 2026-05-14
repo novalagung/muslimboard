@@ -426,21 +426,24 @@ body.show-todo-list #wise-word {
 #todo-list {
     overflow: hidden;
     position: absolute;
-    width: 240px;
-    right: 30px;
-    bottom: 16px;
+    width: 37px;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
     background-color: rgba(255, 255, 255, 0.92);
-    border-radius: 10px;
+    border-radius: 10px 0 0 10px;
     z-index: 5;
-    transition: ease-in-out bottom 300ms;
-    transition-property: bottom, background-color;
+    transition: width 300ms ease-in-out, right 300ms ease-in-out, top 300ms ease-in-out, transform 300ms ease-in-out, background-color 300ms ease-in-out, border-radius 300ms ease-in-out, height 300ms ease-in-out;
     height: 37px;
 }
 body.show-todo-list #todo-list {
     top: 30px;
+    transform: translateY(0);
     bottom: 30px;
+    right: 30px;
     width: 420px;
     height: auto;
+    border-radius: 10px;
 }
 #todo-list:hover {
     background-color: white;
@@ -454,13 +457,17 @@ body.show-todo-list #todo-list {
     cursor: pointer;
     color: #404040;
     font-size: 12px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 7;
 }
 body.show-todo-list #todo-list .wrapper .toggler {
     height: 40px;
     padding: 11px 10px;
 }
 #todo-list .wrapper .toggler .true {
-    display: inline;
+    display: none;
 }
 #todo-list .wrapper .toggler .false {
     display: none;
@@ -472,10 +479,14 @@ body.show-todo-list #todo-list .wrapper .toggler .false {
     display: inline;
 }
 #todo-list .wrapper .toggler .fa {
+    margin-right: 0;
+}
+body.show-todo-list #todo-list .wrapper .toggler .fa {
     margin-right: 5px;
 }
 #todo-list .wrapper .items {
     overflow-y: auto;
+    padding-top: 60px;
 }
 #todo-list .wrapper .items .add,
 #todo-list .wrapper .items .import,
@@ -492,22 +503,22 @@ body.show-todo-list #todo-list .wrapper .toggler .false {
     box-shadow: 0 1px 6px 0 rgba(32,33,36,0.28);
     position: absolute;
     top: 10px;
-    right: 10px;
+    left: 10px;
     display: none;
     z-index: 6;
     opacity: 0.9;
     transition: opacity 100ms ease-in-out, transform 100ms ease-in-out;
 }
 #todo-list .wrapper .items .add {
-    right: 106px;
+    left: 10px;
     background-color: #00b16a;
 }
 #todo-list .wrapper .items .import {
-    right: 58px;
+    left: 58px;
     background-color: #f39c12;
 }
 #todo-list .wrapper .items .export {
-    right: 10px;
+    left: 106px;
     background-color: #008c9e;
 }
 body.show-todo-list #todo-list .wrapper .items .add,
