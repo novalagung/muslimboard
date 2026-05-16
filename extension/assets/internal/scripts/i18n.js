@@ -107,33 +107,33 @@ const I18n = {
         
         todoListHeaderShow: {
             ar: 'إظهار لائحة المهام',
-            en: 'Show TODO list panel',
+            en: 'Show todo list panel',
             ru: 'Показать панель списка дел',
             bn: 'কি করণীয় এর তালিকা দেখুন', 
             hi: 'करने योग्य कार्यों की सूची देखें',
-            id: 'Tampilkan TODO list',
+            id: 'Tampilkan todo list',
             'zh-tw': '顯示待辦事項清單',
             'zh-cn': '显示待办事项清单'
         },
         todoListHeaderHide: {
             ar: 'إخفاء لائحة المهام',
-            en: 'Hide TODO list panel',
+            en: 'Hide todo list panel',
             ru: 'Скрыть панель списка дел',
             bn: 'কি করণীয় এর তালিকা লুকিয়ে ফেলুন', 
             hi: 'कार्य सूची छिपाएँ',
-            id: 'Sembunyikan TODO list',
+            id: 'Sembunyikan todo list',
             'zh-tw': '隱藏待辦事項清單',
             'zh-cn': '隐藏待办事项清单'
         },
         todoListEntryPlaceholder: {
-            ar: 'أكتب شيئاً',
-            en: 'Write something',
-            ru: 'Напишите что-нибудь',
-            bn: 'কিছু লিখুন', 
-            hi: 'कुछ लिखना',
-            id: 'Tulis sesuatu',
-            'zh-tw': '寫點什麼',
-            'zh-cn': '写点什么'
+            ar: 'اضغط مرتين لكتابة ملاحظة',
+            en: 'Double tap to write note',
+            ru: 'Нажмите дважды, чтобы написать заметку',
+            bn: 'নোট লিখতে দুবার ট্যাপ করুন',
+            hi: 'नोट लिखने के लिए दो बार टैप करें',
+            id: 'Ketuk 2x untuk menulis catatan',
+            'zh-tw': '輕點兩下以撰寫筆記',
+            'zh-cn': '双击以撰写备注'
         },
         todoListPlaceholder: {
             ar: 'كن شاكراً دوماً وانشر البهجة',
@@ -144,6 +144,106 @@ const I18n = {
             id: 'Senantiasa bersyukur dan berbuat baik',
             'zh-tw': '永遠感恩，並傳播善意',
             'zh-cn': '永远感恩，传播善意'
+        },
+        todoListLinkExample: {
+            ar: 'يمكنك أيضاً حفظ الرابط هنا، مثل https://muslimboard.novalagung.com',
+            en: 'You can also save link here, like https://muslimboard.novalagung.com',
+            ru: 'Вы также можете сохранить здесь ссылку, например https://muslimboard.novalagung.com',
+            bn: 'আপনি এখানে লিংকও সংরক্ষণ করতে পারেন, যেমন https://muslimboard.novalagung.com',
+            hi: 'आप यहां लिंक भी सहेज सकते हैं, जैसे https://muslimboard.novalagung.com',
+            id: 'Anda juga bisa menyimpan tautan di sini, seperti https://muslimboard.novalagung.com',
+            'zh-tw': '你也可以在這裡儲存連結，例如 https://muslimboard.novalagung.com',
+            'zh-cn': '你也可以在这里保存链接，例如 https://muslimboard.novalagung.com'
+        },
+        todoListEditHint: {
+            ar: 'اضغط على الملاحظة مرتين للتعديل',
+            en: 'Double tap note to edit',
+            ru: 'Нажмите заметку дважды, чтобы отредактировать',
+            bn: 'সম্পাদনা করতে নোটে দুইবার ট্যাপ করুন',
+            hi: 'संपादित करने के लिए नोट को दो बार टैप करें',
+            id: 'Ketuk catatan 2x untuk mengedit',
+            'zh-tw': '輕點筆記兩下即可編輯',
+            'zh-cn': '双击备注即可编辑'
+        },
+        todoListImportFailedTitle: {
+            ar: 'فشل الاستيراد',
+            en: 'Import failed',
+            ru: 'Не удалось импортировать',
+            bn: 'ইম্পোর্ট ব্যর্থ হয়েছে',
+            hi: 'आयात विफल',
+            id: 'Impor gagal',
+            'zh-tw': '匯入失敗',
+            'zh-cn': '导入失败'
+        },
+        todoListImportFailedText: {
+            ar: 'الملف المحدد لا يحتوي على عناصر قائمة المهام.',
+            en: 'The selected file does not contain todo items.',
+            ru: 'Выбранный файл не содержит элементы списка дел.',
+            bn: 'নির্বাচিত ফাইলে টুডু আইটেম নেই।',
+            hi: 'चयनित फ़ाइल में टोडू आइटम नहीं हैं।',
+            id: 'File yang dipilih tidak berisi item todo.',
+            'zh-tw': '所選檔案不包含待辦事項。',
+            'zh-cn': '所选文件不包含待办事项。'
+        },
+        todoListImportPromptTitle: {
+            ar: 'استيراد عناصر قائمة المهام؟',
+            en: 'Import todo list items?',
+            ru: 'Импортировать элементы списка дел?',
+            bn: 'টুডু আইটেম আমদানি করবেন?',
+            hi: 'टोडू आइटम आयात करें?',
+            id: 'Impor item todo?',
+            'zh-tw': '匯入待辦事項項目？',
+            'zh-cn': '导入待办事项项？'
+        },
+        todoListImportPromptText: {
+            ar: 'تم العثور على $1 عنصر(عناصر). اختر ما إذا كنت تريد استبدال جميع عناصر القائمة الحالية أو إدراجها.',
+            en: 'Found $1 item(s). Choose whether to replace all current items or insert them.',
+            ru: 'Найдено $1 элемент(ов). Выберите, заменить все текущие элементы или вставить их.',
+            bn: '$1 আইটেম পাওয়া গেছে। নির্বাচন করুন আপনি সমস্ত বর্তমান আইটেম প্রতিস্থাপন করতে চান নাকি সেগুলো ঢোকাতে চান।',
+            hi: '$1 आइटम पाए गए। चुनें कि क्या सभी वर्तमान आइटम बदलना है या इन्हें सम्मिलित करना है।',
+            id: 'Ditemukan $1 item. Pilih apakah ingin mengganti semua item saat ini atau menyisipkannya.',
+            'zh-tw': '找到 $1 個項目。選擇是否替換所有當前項目或插入它們。',
+            'zh-cn': '找到 $1 个项目。请选择是替换所有当前项目还是插入它们。'
+        },
+        todoListImportReplaceAll: {
+            ar: 'استبدال الكل',
+            en: 'Replace all',
+            ru: 'Заменить все',
+            bn: 'সবগুলো প্রতিস্থাপন',
+            hi: 'सभी बदलें',
+            id: 'Ganti semua',
+            'zh-tw': '替換全部',
+            'zh-cn': '替换全部'
+        },
+        todoListImportReplace: {
+            ar: 'استبدال',
+            en: 'Replace',
+            ru: 'Заменить',
+            bn: 'প্রতিস্থাপন',
+            hi: 'बदलिए',
+            id: 'Ganti',
+            'zh-tw': '替換',
+            'zh-cn': '替换'
+        },
+        todoListImportInsert: {
+            ar: 'إدراج',
+            en: 'Insert',
+            ru: 'Вставить',
+            bn: 'প্রবেশ করান',
+            hi: 'सम्मिलित करें',
+            id: 'Sisipkan',
+            'zh-tw': '插入',
+            'zh-cn': '插入'
+        },
+        todoListImportReadErrorText: {
+            ar: 'تعذر قراءة الملف المحدد.',
+            en: 'The selected file could not be read.',
+            ru: 'Не удалось прочитать выбранный файл.',
+            bn: 'নির্বাচিত ফাইল পড়া যায়নি।',
+            hi: 'चयनित फ़ाइल को पढ़ा नहीं जा सका।',
+            id: 'File yang dipilih tidak bisa dibaca.',
+            'zh-tw': '無法讀取所選檔案。',
+            'zh-cn': '无法读取所选文件。'
         },
 
         footerMenuAutomaticLocationDetection: {
@@ -178,23 +278,33 @@ const I18n = {
         },
         footerMenuImageAuthor: {
             ar: 'الصورة من',
-            en: 'Image from',
+            en: 'Image @',
             ru: 'Фотография из',
-            bn: 'ছবি থেকে', 
+            bn: 'ছবি থেকে',
             hi: 'चित्र से',
             id: 'Foto dari',
             'zh-tw': '圖片來自',
             'zh-cn': '图片来自'
         },
+        footerMenuUseOwnImage: {
+            ar: 'استخدم صورتك الخاصة',
+            en: 'Use your own image',
+            ru: 'Используйте своё изображение',
+            bn: 'আপনার নিজের ছবি ব্যবহার করুন',
+            hi: 'अपनी खुद की छवि उपयोग करें',
+            id: 'Gunakan gambar sendiri',
+            'zh-tw': '使用自己的圖片',
+            'zh-cn': '使用你自己的图片'
+        },
         footerMenuChangeLanguage: {
-            ar: 'غير اللغة',
-            en: 'Change language',
-            ru: 'Изменить язык',
-            bn: 'ভাষা পরিবর্তন করুন', 
-            hi: 'भाषा बदलें',
-            id: 'Ubah bahasa',
-            'zh-tw': '改變語言',
-            'zh-cn': '改变语言'
+            ar: 'اللغة',
+            en: 'Language',
+            ru: 'Язык',
+            bn: 'ভাষা',
+            hi: 'भाषा',
+            id: 'Bahasa',
+            'zh-tw': '語言',
+            'zh-cn': '语言'
         },
         footerMenuSourceCode: {
             ar: 'مصدر الكود',
@@ -226,6 +336,187 @@ const I18n = {
             'zh-tw': '關於我們',
             'zh-cn': '关于我们'
         },        
+
+        modalCustomImageHeader: {
+            ar: 'استخدم صورتك الخاصة',
+            en: 'Use your own image',
+            ru: 'Используйте своё изображение',
+            bn: 'আপনার নিজের ছবি ব্যবহার করুন',
+            hi: 'अपनी खुद की छवि उपयोग करें',
+            id: 'Gunakan gambar sendiri',
+            'zh-tw': '使用自己的圖片',
+            'zh-cn': '使用你自己的图片'
+        },
+        modalCustomImageDescription: {
+            ar: 'ارفع صورتك واحتفظ بها داخل هذا المتصفح فقط.',
+            en: 'Upload your image and keep it stored only in this browser.',
+            ru: 'Загрузите изображение и храните его только в этом браузере.',
+            bn: 'আপনার ছবি আপলোড করুন এবং শুধু এই ব্রাউজারেই সংরক্ষণ করুন।',
+            hi: 'अपनी छवि अपलोड करें और इसे केवल इसी ब्राउज़र में सहेजकर रखें।',
+            id: 'Unggah gambar Anda dan simpan hanya di browser ini.',
+            'zh-tw': '上傳你的圖片，並只保存在這個瀏覽器中。',
+            'zh-cn': '上传你的图片，并仅保存在这个浏览器中。'
+        },
+        modalCustomImageStorageNote: {
+            ar: 'يتم حفظها في قاعدة بيانات المتصفح المحلية (Browser IndexedDB)، ولا تُرفع إلى أي خادم. لذلك سيؤدي حذف بيانات المتصفح إلى حذفها أيضاً.',
+            en: 'It is saved in the browser local database (Browser IndexedDB) and is not uploaded to any server. Clearing browser data will remove it too.',
+            ru: 'Оно сохраняется в локальной базе данных браузера (Browser IndexedDB) и не отправляется на какой-либо сервер. Поэтому очистка данных браузера тоже его удалит.',
+            bn: 'এটি ব্রাউজারের লোকাল ডাটাবেসে (Browser IndexedDB) রাখা থাকে এবং কোনো সার্ভারে আপলোড করা হয় না। তাই ব্রাউজারের ডেটা মুছে ফেললে সেটিও মুছে যাবে।',
+            hi: 'यह ब्राउज़र के स्थानीय डेटाबेस (Browser IndexedDB) में सुरक्षित रहता है और किसी भी सर्वर पर अपलोड नहीं किया जाता। इसलिए ब्राउज़र डेटा साफ़ करने पर यह भी हट जाएगा।',
+            id: 'Gambar disimpan di database lokal browser (Browser IndexedDB) dan tidak diunggah ke server mana pun. Saat data browser dihapus, gambar juga ikut terhapus.',
+            'zh-tw': '圖片會儲存在瀏覽器的本機資料庫（Browser IndexedDB）中，不會上傳到任何伺服器。因此清除瀏覽器資料也會一併刪除。',
+            'zh-cn': '图片会保存在浏览器的本地数据库（Browser IndexedDB）中，不会上传到任何服务器。因此清除浏览器数据也会将其删除。'
+        },
+        modalCustomImageModeLabel: {
+            ar: 'اختر مصدر الصورة',
+            en: 'Choose image source',
+            ru: 'Выберите источник изображения',
+            bn: 'ছবির উৎস নির্বাচন করুন',
+            hi: 'छवि स्रोत चुनें',
+            id: 'Pilih sumber gambar',
+            'zh-tw': '選擇圖片來源',
+            'zh-cn': '选择图片来源'
+        },
+        modalCustomImageModeMuslimboard: {
+            ar: 'صور مسلمبورد',
+            en: 'Muslimboard images',
+            ru: 'Изображения Muslimboard',
+            bn: 'মুসলিমবোর্ডের ছবি',
+            hi: 'Muslimboard छवियाँ',
+            id: 'Gambar Muslim Board',
+            'zh-tw': 'Muslimboard 圖片',
+            'zh-cn': 'Muslimboard 图片'
+        },
+        modalCustomImageModeCustom: {
+            ar: 'صورك الخاصة',
+            en: 'Your own images',
+            ru: 'Ваши собственные изображения',
+            bn: 'আপনার নিজের ছবি',
+            hi: 'आपकी अपनी छवियाँ',
+            id: 'Gambar sendiri',
+            'zh-tw': '你自己的圖片',
+            'zh-cn': '你自己的图片'
+        },
+        modalCustomImageModeBoth: {
+            ar: 'الاثنان معاً',
+            en: 'Both',
+            ru: 'Оба варианта',
+            bn: 'দুটোই',
+            hi: 'दोनों',
+            id: 'Keduanya',
+            'zh-tw': '兩者皆可',
+            'zh-cn': '两者都用'
+        },
+        modalCustomImageUploadButton: {
+            ar: 'حدد صورة للرفع',
+            en: 'Select image to upload',
+            ru: 'Выберите изображение для загрузки',
+            bn: 'আপলোডের জন্য ছবি নির্বাচন করুন',
+            hi: 'अपलोड करने के लिए छवि चुनें',
+            id: 'Pilih gambar untuk diunggah',
+            'zh-tw': '選擇要上傳的圖片',
+            'zh-cn': '选择要上传的图片'
+        },
+        modalCustomImageUploadHint: {
+            ar: 'حتى 25 صورة. يُنصح ألا يتجاوز حجم الصورة 5 ميجابايت.',
+            en: 'Up to 25 images. Recommended maximum size is 5 MB.',
+            ru: 'До 25 изображений. Рекомендуемый максимальный размер — 5 МБ.',
+            bn: 'সর্বোচ্চ ২৫টি ছবি। প্রস্তাবিত সর্বোচ্চ আকার ৫ এমবি।',
+            hi: 'अधिकतम 25 छवियाँ। अनुशंसित अधिकतम आकार 5 MB है।',
+            id: 'Maksimal 25 gambar. Ukuran yang disarankan maksimal 5 MB.',
+            'zh-tw': '最多 25 張圖片。建議最大大小為 5 MB。',
+            'zh-cn': '最多 25 张图片。建议最大大小为 5 MB。'
+        },
+        modalCustomImageUploadedTitle: {
+            ar: 'الصور المرفوعة',
+            en: 'Uploaded images',
+            ru: 'Загруженные изображения',
+            bn: 'আপলোড করা ছবি',
+            hi: 'अपलोड की गई छवियाँ',
+            id: 'Gambar yang diunggah',
+            'zh-tw': '已上傳的圖片',
+            'zh-cn': '已上传的图片'
+        },
+        modalCustomImageUploadedEmpty: {
+            ar: 'لا توجد صور خاصة حتى الآن.',
+            en: 'No custom images uploaded yet.',
+            ru: 'Пока нет загруженных пользовательских изображений.',
+            bn: 'এখনও কোনো কাস্টম ছবি আপলোড করা হয়নি।',
+            hi: 'अभी तक कोई कस्टम छवि अपलोड नहीं की गई है।',
+            id: 'Belum ada gambar sendiri yang diunggah.',
+            'zh-tw': '目前尚未上傳任何自訂圖片。',
+            'zh-cn': '目前还没有上传任何自定义图片。'
+        },
+        modalCustomImageUploadedEmptyFallback: {
+            ar: 'سيستخدم التطبيق الآن صور مسلمبورد كبديل حتى تضيف صورك الخاصة.',
+            en: 'Muslimboard images will be used as a fallback until you upload your own images.',
+            ru: 'Изображения Muslimboard будут использоваться как запасной вариант, пока вы не загрузите свои.',
+            bn: 'আপনি নিজের ছবি আপলোড না করা পর্যন্ত মুসলিমবোর্ডের ছবি ব্যাকআপ হিসেবে ব্যবহার হবে।',
+            hi: 'जब तक आप अपनी खुद की छवियाँ अपलोड नहीं करते, तब तक Muslimboard छवियाँ fallback के रूप में उपयोग होंगी।',
+            id: 'Gambar Muslimboard akan dipakai sebagai cadangan sampai Anda mengunggah gambar sendiri.',
+            'zh-tw': '在您上傳自己的圖片之前，將改用 Muslimboard 圖片作為備援。',
+            'zh-cn': '在你上传自己的图片之前，将使用 Muslimboard 图片作为备用。'
+        },
+        modalCustomImageDelete: {
+            ar: 'حذف',
+            en: 'Delete',
+            ru: 'Удалить',
+            bn: 'মুছুন',
+            hi: 'हटाएँ',
+            id: 'Hapus',
+            'zh-tw': '刪除',
+            'zh-cn': '删除'
+        },
+        modalCustomImageDeleteConfirm: {
+            ar: 'حذف هذه الصورة؟',
+            en: 'Delete this image?',
+            ru: 'Удалить это изображение?',
+            bn: 'এই ছবিটি মুছবেন?',
+            hi: 'क्या यह छवि हटाएँ?',
+            id: 'Hapus gambar ini?',
+            'zh-tw': '刪除這張圖片？',
+            'zh-cn': '删除这张图片？'
+        },
+        modalCustomImageInvalidFile: {
+            ar: 'الملف المحدد ليس صورة صالحة.',
+            en: 'The selected file is not a valid image.',
+            ru: 'Выбранный файл не является допустимым изображением.',
+            bn: 'নির্বাচিত ফাইলটি একটি বৈধ ছবি নয়।',
+            hi: 'चयनित फ़ाइल मान्य छवि नहीं है।',
+            id: 'File yang dipilih bukan gambar yang valid.',
+            'zh-tw': '所選檔案不是有效的圖片。',
+            'zh-cn': '所选文件不是有效图片。'
+        },
+        modalCustomImageTooLarge: {
+            ar: 'حجم الصورة كبير جداً. يرجى اختيار صورة أصغر من 5 ميجابايت.',
+            en: 'The image is too large. Please choose an image smaller than 5 MB.',
+            ru: 'Изображение слишком большое. Выберите файл меньше 5 МБ.',
+            bn: 'ছবিটি খুব বড়। অনুগ্রহ করে ৫ এমবি-এর কম একটি ছবি বেছে নিন।',
+            hi: 'छवि बहुत बड़ी है। कृपया 5 MB से छोटी छवि चुनें।',
+            id: 'Ukuran gambar terlalu besar. Pilih gambar yang lebih kecil dari 5 MB.',
+            'zh-tw': '圖片太大，請選擇小於 5 MB 的圖片。',
+            'zh-cn': '图片太大，请选择小于 5 MB 的图片。'
+        },
+        modalCustomImageLimitReached: {
+            ar: 'تم الوصول إلى الحد الأقصى البالغ 25 صورة.',
+            en: 'You have reached the 25 image limit.',
+            ru: 'Достигнут лимит в 25 изображений.',
+            bn: 'আপনি ২৫টি ছবির সীমা অতিক্রম করেছেন।',
+            hi: 'आप 25 छवियों की सीमा तक पहुँच गए हैं।',
+            id: 'Anda telah mencapai batas 25 gambar.',
+            'zh-tw': '已達到 25 張圖片的上限。',
+            'zh-cn': '你已达到 25 张图片的上限。'
+        },
+        modalCustomImageStorageError: {
+            ar: 'تعذر حفظ الصور أو حذفها في التخزين المحلي لهذا المتصفح.',
+            en: 'Unable to save or delete images in this browser local storage.',
+            ru: 'Не удалось сохранить или удалить изображения в локальном хранилище браузера.',
+            bn: 'এই ব্রাউজারের লোকাল স্টোরেজে ছবি সংরক্ষণ বা মুছতে পারা যায়নি।',
+            hi: 'इस ब्राउज़र के स्थानीय संग्रह में छवियों को सहेजना या हटाना संभव नहीं है।',
+            id: 'Tidak bisa menyimpan atau menghapus gambar di penyimpanan lokal browser ini.',
+            'zh-tw': '無法在此瀏覽器的本機儲存中儲存或刪除圖片。',
+            'zh-cn': '无法在此浏览器的本地存储中保存或删除图片。'
+        },
 
         alarmExactPrayerTimeMessageTemplate: {
             ar: `exact|انه وقت صلاة $1 |في $2`,
@@ -534,7 +825,13 @@ const I18n = {
         $('[data-i18n]').each((i, e) => {
             const $e = $(e)
             const key = $e.attr('data-i18n')
-            $e.text(I18n.getText(key))
+            const text = I18n.getText(key)
+            const $textTarget = $e.find('.text:first')
+            if ($textTarget.length > 0) {
+                $textTarget.text(text)
+            } else {
+                $e.text(text)
+            }
         })
     }
 }

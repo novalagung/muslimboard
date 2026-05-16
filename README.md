@@ -19,6 +19,15 @@ Personal Dashboard for Muslims anywhere in the world, available on many language
 
 ![preview](resources/guide/preview-1.png)
 
+## Features
+
+- Prayer schedule based on location, with automatic and manual location modes
+- Random Islamic quotes and smooth background rotation
+- Todo list with clickable links, import/export, editing, and tooltips
+- Upload your own background images and keep them stored locally in browser IndexedDB
+- Cloud-backed background and content JSON updates without needing a new extension release
+- Multi-language support
+
 ## Installation via Official Page
 
 - MacOS **Safari** via [App Store](https://apps.apple.com/us/app/muslim-board/id1659445206)
@@ -28,7 +37,50 @@ Personal Dashboard for Muslims anywhere in the world, available on many language
 
 ## Local Installation
 
-Use chrome → open up extension menu → click **Load unpacked** and navigate to the `extension` directory. Other browser has similar way to load unpacked extensions.
+Use the `extension` directory as the unpacked source for local testing.
+
+#### Brave
+
+1. Open `brave://extensions`.
+2. Turn on `Developer mode`.
+3. Click `Load unpacked`.
+4. Select the `extension` directory.
+
+#### Chrome
+
+1. Open `chrome://extensions`.
+2. Turn on `Developer mode`.
+3. Click `Load unpacked`.
+4. Select the `extension` directory.
+
+#### Edge
+
+1. Open `edge://extensions`.
+2. Turn on `Developer mode`.
+3. Click `Load unpacked`.
+4. Select the `extension` directory.
+
+#### Firefox
+
+1. Open `about:debugging#/runtime/this-firefox`.
+2. Click `Load Temporary Add-on...`.
+3. Select `extension/manifest.json`.
+4. Reload the add-on from the same page when you change files.
+
+#### Opera
+
+1. Open `opera://extensions`.
+2. Turn on `Developer mode`.
+3. Click `Load unpacked`.
+4. Select the `extension` directory.
+
+#### Safari
+
+1. Open the `macos/Muslim Board.xcodeproj` project in Xcode.
+2. Build and run the macOS app once.
+3. Open Safari and go to `Safari > Settings > Extensions`.
+4. Enable `Muslim Board`.
+5. Use Safari’s preferences and the installed app to manage the extension during local testing.
 
 ## Project Structure
 

@@ -1,4 +1,4 @@
-*.zip
 .DS_Store
 .idea
-
+webservice/.env
+release

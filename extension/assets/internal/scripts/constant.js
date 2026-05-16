@@ -11,12 +11,16 @@ const Constant = {
     app: {
         baseUrlWebService: 'https://muslimboard-api.novalagung.com',
         baseUrlGithub: 'https://muslimboard.novalagung.com/extension/data',
+        feedbackOrBugReportUrl: 'https://forms.gle/ZDATLmKNntdXBBt58',
         debug: (() => !('update_url' in chrome.runtime.getManifest()))(),
         timeoutDuration: Utility.seconds(5),
         updateBackgroundDelayDuration: Utility.seconds(40),
         updateContentDelayDuration: Utility.seconds(60),
         changelogs: [
-            'Error UI improvement'
+            'Use your own image with local IndexedDB storage',
+            'Smoother background loading with softer startup state',
+            'Improved offline handling for cached prayer times and backgrounds',
+            'Refined modal copy, labels, and UI details'
         ]
     },
 }

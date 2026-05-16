@@ -1,13 +1,12 @@
-version: '3.9'
-
 services:
 
   redis:
-    restart: always
     container_name: muslimboard-redis
-    image: redis:alpine
-    ports:
-      - "6379:6379"
+    image: redis:8.6.2-alpine
+    restart: unless-stopped
+    # command: redis-server --appendonly yes
+    expose:
+      - "6379"
     volumes:
       - volume-redis:/data
     networks:
@@ -19,17 +18,16 @@ services:
           # memory: 1000M
 
   webservice:
-    restart: always
     container_name: muslimboard-api
-    build:
-      context: ./
-      dockerfile: ./Dockerfile
-    environment:
-      - PORT=8012
-      - SENTRY_DSN=https://46eb3d7abc35aa698971c1413e695b23@o4506627037790208.ingest.us.sentry.io/4506627059810304
-      - REDIS_HOST=muslimboard-redis:6379
-      - LOG_LEVEL=debug
-      - CACHE_DURATION_IN_HOURS=48
+    image: ghcr.io/novalagung/muslimboard-api:latest
+    restart: unless-stopped
+    # build:
+    #   context: ./
+    #   dockerfile: ./Dockerfile
+    env_file:
+      - .env
+    depends_on:
+      - redis
     ports:
       - "8012:8012"
     networks:
