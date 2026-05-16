@@ -10,6 +10,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strconv"
 	"strings"
 
@@ -29,7 +30,10 @@ type cityRecord struct {
 	Population  int64
 	Timezone    string
 	AltNames    []string
+	PostalCodes []string
 }
+
+var normalizeTokenPattern = regexp.MustCompile(`[^\p{L}\p{N}]+`)
 
 func main() {
 	dataDir := flag.String("data-dir", "data/geonames", "directory containing GeoNames dump files")
@@ -45,6 +49,7 @@ func main() {
 	cities, err := readCities(filepath.Join(*dataDir, "cities500.zip"))
 	must(err)
 	must(readAlternateNames(filepath.Join(*dataDir, "alternateNamesV2.zip"), cities))
+	must(readPostalCodes(filepath.Join(*dataDir, "allCountries.zip"), cities))
 	must(writeDatabase(*output, countries, admin1, admin2, cities))
 
 	log.Printf("generated %s with %d locations", *output, len(cities))
@@ -226,6 +231,123 @@ func isUsefulAlternateName(name string) bool {
 	return !strings.HasPrefix(lower, "http://") && !strings.HasPrefix(lower, "https://")
 }
 
+func normalizeLookupToken(value string) string {
+	parts := normalizeTokenPattern.Split(strings.ToLower(strings.TrimSpace(value)), -1)
+	normalized := make([]string, 0, len(parts))
+	for _, part := range parts {
+		if part == "" {
+			continue
+		}
+		normalized = append(normalized, part)
+	}
+	return strings.Join(normalized, " ")
+}
+
+func normalizePostalCodeCompact(value string) string {
+	parts := normalizeTokenPattern.Split(strings.ToUpper(strings.TrimSpace(value)), -1)
+	return strings.Join(parts, "")
+}
+
+func primaryPostalCode(codes []string) string {
+	for _, code := range codes {
+		code = strings.TrimSpace(code)
+		if code != "" {
+			return code
+		}
+	}
+	return ""
+}
+
+func buildCityLookupIndex(cities map[int64]*cityRecord) map[string]map[string][]*cityRecord {
+	index := make(map[string]map[string][]*cityRecord)
+	for _, city := range cities {
+		country := strings.ToUpper(strings.TrimSpace(city.CountryCode))
+		if index[country] == nil {
+			index[country] = make(map[string][]*cityRecord)
+		}
+		seen := make(map[string]bool)
+		candidates := append([]string{city.Name, city.ASCIIName}, city.AltNames...)
+		for _, name := range candidates {
+			token := normalizeLookupToken(name)
+			if token == "" || seen[token] {
+				continue
+			}
+			seen[token] = true
+			index[country][token] = append(index[country][token], city)
+		}
+	}
+	return index
+}
+
+func readPostalCodes(path string, cities map[int64]*cityRecord) error {
+	file, err := openFirstZipFile(path)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	index := buildCityLookupIndex(cities)
+	seenByCity := make(map[int64]map[string]bool)
+
+	scanner := bufio.NewScanner(file)
+	scanner.Buffer(make([]byte, 1024), 4*1024*1024)
+	for scanner.Scan() {
+		parts := strings.Split(scanner.Text(), "\t")
+		if len(parts) < 11 {
+			continue
+		}
+		countryCode := strings.ToUpper(strings.TrimSpace(parts[0]))
+		postalCodeRaw := strings.TrimSpace(parts[1])
+		placeName := normalizeLookupToken(parts[2])
+		admin1Code := strings.TrimSpace(parts[4])
+		lat, _ := strconv.ParseFloat(parts[9], 64)
+		lon, _ := strconv.ParseFloat(parts[10], 64)
+		if countryCode == "" || postalCodeRaw == "" || placeName == "" {
+			continue
+		}
+
+		cityCandidates := index[countryCode][placeName]
+		if len(cityCandidates) == 0 {
+			continue
+		}
+
+		selected := cityCandidates[0]
+		bestScore := 3
+		bestDistance := 0.0
+		for i, candidate := range cityCandidates {
+			score := 1
+			if admin1Code != "" && candidate.Admin1Code == admin1Code {
+				score = 0
+			}
+			distance := (candidate.Latitude-lat)*(candidate.Latitude-lat) + (candidate.Longitude-lon)*(candidate.Longitude-lon)
+			if i == 0 || score < bestScore || (score == bestScore && distance < bestDistance) {
+				selected = candidate
+				bestScore = score
+				bestDistance = distance
+			}
+		}
+
+		if seenByCity[selected.ID] == nil {
+			seenByCity[selected.ID] = make(map[string]bool)
+		}
+
+		codes := []string{strings.ToUpper(postalCodeRaw)}
+		compactCode := normalizePostalCodeCompact(postalCodeRaw)
+		if compactCode != "" && compactCode != codes[0] {
+			codes = append(codes, compactCode)
+		}
+
+		for _, code := range codes {
+			if code == "" || seenByCity[selected.ID][code] {
+				continue
+			}
+			seenByCity[selected.ID][code] = true
+			selected.PostalCodes = append(selected.PostalCodes, code)
+		}
+	}
+	return scanner.Err()
+}
+
 func writeDatabase(path string, countries, admin1, admin2 map[string]string, cities map[int64]*cityRecord) error {
 	if err := os.MkdirAll(filepath.Dir(path), 0755); err != nil {
 		return err
@@ -251,7 +373,8 @@ func writeDatabase(path string, countries, admin1, admin2 map[string]string, cit
 			latitude REAL NOT NULL,
 			longitude REAL NOT NULL,
 			timezone TEXT NOT NULL,
-			population INTEGER NOT NULL
+			population INTEGER NOT NULL,
+			postal_code TEXT NOT NULL DEFAULT ''
 		)`,
 		`CREATE VIRTUAL TABLE location_search USING fts5(location_id UNINDEXED, searchable, tokenize='unicode61 remove_diacritics 2')`,
 	}
@@ -269,8 +392,8 @@ func writeDatabase(path string, countries, admin1, admin2 map[string]string, cit
 
 	locationStmt, err := tx.Prepare(`INSERT INTO locations (
 		geoname_id, name, ascii_name, admin1_name, admin2_name, country_code, country_name,
-		latitude, longitude, timezone, population
-	) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+		latitude, longitude, timezone, population, postal_code
+	) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
 	if err != nil {
 		return err
 	}
@@ -298,6 +421,7 @@ func writeDatabase(path string, countries, admin1, admin2 map[string]string, cit
 			city.Longitude,
 			city.Timezone,
 			city.Population,
+			primaryPostalCode(city.PostalCodes),
 		); err != nil {
 			return err
 		}
@@ -309,7 +433,7 @@ func writeDatabase(path string, countries, admin1, admin2 map[string]string, cit
 			admin2Name,
 			countryName,
 			city.CountryCode,
-		}, city.AltNames...), " ")
+		}, append(city.AltNames, city.PostalCodes...)...), " ")
 		if _, err := searchStmt.Exec(city.ID, searchable); err != nil {
 			return err
 		}

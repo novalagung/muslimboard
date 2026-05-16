@@ -100,7 +100,8 @@ func SearchLocations(ctx context.Context, query string, limit int) ([]Location, 
 			l.latitude,
 			l.longitude,
 			l.timezone,
-			l.population
+			l.population,
+			l.postal_code
 		FROM location_search s
 		JOIN locations l ON l.geoname_id = s.location_id
 		WHERE s.searchable MATCH ?
@@ -134,6 +135,7 @@ func SearchLocations(ctx context.Context, query string, limit int) ([]Location, 
 			&location.Longitude,
 			&location.Timezone,
 			&location.Population,
+			&location.PostalCode,
 		); err != nil {
 			logger.Log.Errorln(namespace, "rows.Scan", err)
 			return nil, err

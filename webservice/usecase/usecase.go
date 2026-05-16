@@ -36,11 +36,77 @@ func SearchLocations(ctx context.Context, query string, limit int) ([]geonames.L
 	return geonames.SearchLocations(ctx, query, limit)
 }
 
+func normalizeAladhanMethod(raw, fallback string) string {
+	method := strings.TrimSpace(raw)
+	if method == "" {
+		return fallback
+	}
+	allowed := map[string]bool{
+		"1": true, "2": true, "3": true, "4": true,
+		"5": true, "7": true, "8": true, "9": true, "10": true,
+		"11": true, "12": true, "13": true, "14": true, "15": true,
+		"16": true, "17": true, "18": true, "19": true, "20": true,
+		"21": true, "22": true, "23": true, "99": true,
+	}
+	if allowed[method] {
+		return method
+	}
+	return fallback
+}
+
+func normalizeFallbackMethod(raw, fallback string) *prayer.TwilightConvention {
+	method := strings.ToUpper(strings.TrimSpace(raw))
+	if method == "" {
+		method = strings.ToUpper(strings.TrimSpace(fallback))
+	}
+	methodMapping := map[string]func() *prayer.TwilightConvention{
+		"ASTRONOMICAL": prayer.AstronomicalTwilight,
+		"MWL":          prayer.MWL,
+		"ISNA":         prayer.ISNA,
+		"UMMALQURA":    prayer.UmmAlQura,
+		"GULF":         prayer.Gulf,
+		"ALGERIAN":     prayer.Algerian,
+		"KARACHI":      prayer.Karachi,
+		"DIYANET":      prayer.Diyanet,
+		"EGYPT":        prayer.Egypt,
+		"EGYPTBIS":     prayer.EgyptBis,
+		"KEMENAG":      prayer.Kemenag,
+		"MUIS":         prayer.MUIS,
+		"JAKIM":        prayer.JAKIM,
+		"UOIF":         prayer.UOIF,
+		"FRANCE15":     prayer.France15,
+		"FRANCE18":     prayer.France18,
+		"TUNISIA":      prayer.Tunisia,
+		"TEHRAN":       prayer.Tehran,
+		"JAFARI":       prayer.Jafari,
+	}
+	resolver := methodMapping[method]
+	if resolver == nil {
+		resolver = methodMapping[strings.ToUpper(strings.TrimSpace(fallback))]
+	}
+	if resolver == nil {
+		return prayer.MWL()
+	}
+	return resolver()
+}
+
+func normalizeAsrMethod(raw string) prayer.AsrConvention {
+	method := strings.ToLower(strings.TrimSpace(raw))
+	if method == "hanafi" {
+		return prayer.Hanafi
+	}
+	return prayer.Shafii
+}
+
 // GetShalatScheduleByCoordinate is handler of get shalat schedule by coordinate
-func GetShalatScheduleByCoordinate(ctx context.Context, browserID, method, latitude, longitude, month, year string) (map[string]any, error) {
+func GetShalatScheduleByCoordinate(ctx context.Context, browserID, method, fallbackMethod, asrMethod, latitude, longitude, month, year string) (map[string]any, error) {
 	namespace := "usecase.GetShalatScheduleByCoordinate"
 	span := sentry.StartSpan(ctx, namespace)
 	defer span.Finish()
+
+	method = normalizeAladhanMethod(method, "3")
+	twilightConvention := normalizeFallbackMethod(fallbackMethod, "Kemenag")
+	asrConvention := normalizeAsrMethod(asrMethod)
 
 	// if lat long is invalid, then simply return true
 	latInt, _ := strconv.ParseFloat(latitude, 64)
@@ -48,11 +114,14 @@ func GetShalatScheduleByCoordinate(ctx context.Context, browserID, method, latit
 
 	// Create cache key for location-based caching
 	cacheKey := cacheManager.GenerateLocationCacheKey(cache.LocationCacheKey{
-		BrowserID: browserID,
-		Latitude:  latInt,
-		Longitude: lonInt,
-		Month:     month,
-		Year:      year,
+		BrowserID:      browserID,
+		Latitude:       latInt,
+		Longitude:      lonInt,
+		Month:          month,
+		Year:           year,
+		PrimaryMethod:  method,
+		FallbackMethod: strings.ToUpper(strings.TrimSpace(fallbackMethod)),
+		AsrMethod:      strings.ToLower(strings.TrimSpace(asrMethod)),
 	})
 
 	// Try to get from cache first and extend expiration on hit
@@ -72,7 +141,7 @@ func GetShalatScheduleByCoordinate(ctx context.Context, browserID, method, latit
 	schedules, err := aladhan.GetShalatScheduleByCoordinate(ctx, method, latInt, lonInt, month, year)
 	if err != nil {
 		logger.Log.Infoln(namespace, "aladhan api returned error data. recalculate prayer times using go-prayer", latInt, lonInt)
-		schedules, err = calculatePrayerTimes(ctx, latInt, lonInt, time.Now(), prayer.MWL())
+		schedules, err = calculatePrayerTimes(ctx, latInt, lonInt, time.Now(), twilightConvention, asrConvention)
 	}
 	if err != nil {
 		logger.Log.Errorln(namespace, "getShalatScheduleByCoordinate", err)
@@ -111,10 +180,14 @@ func GetShalatScheduleByCoordinate(ctx context.Context, browserID, method, latit
 
 // GetShalatScheduleByLocation is handler of get shalat schedule by location
 // for now, immediately use aladhan.com api coz kemenag backend still under development
-func GetShalatScheduleByLocation(ctx context.Context, browserID, method, province, city, month, year string) (map[string]any, error) {
+func GetShalatScheduleByLocation(ctx context.Context, browserID, method, fallbackMethod, asrMethod, province, city, month, year string) (map[string]any, error) {
 	namespace := "usecase.GetShalatScheduleByLocation"
 	span := sentry.StartSpan(ctx, namespace)
 	defer span.Finish()
+
+	method = normalizeAladhanMethod(method, "3")
+	twilightConvention := normalizeFallbackMethod(fallbackMethod, "Kemenag")
+	asrConvention := normalizeAsrMethod(asrMethod)
 
 	location := fmt.Sprintf("%s,%s", city, province)
 	location = strings.ToLower(location)
@@ -136,11 +209,14 @@ func GetShalatScheduleByLocation(ctx context.Context, browserID, method, provinc
 
 	// Create cache key for location-based caching
 	cacheKey := cacheManager.GenerateLocationCacheKey(cache.LocationCacheKey{
-		BrowserID: browserID,
-		Latitude:  latitude,
-		Longitude: longitude,
-		Month:     month,
-		Year:      year,
+		BrowserID:      browserID,
+		Latitude:       latitude,
+		Longitude:      longitude,
+		Month:          month,
+		Year:           year,
+		PrimaryMethod:  method,
+		FallbackMethod: strings.ToUpper(strings.TrimSpace(fallbackMethod)),
+		AsrMethod:      strings.ToLower(strings.TrimSpace(asrMethod)),
 	})
 
 	// Try to get from cache first and extend expiration on hit
@@ -160,7 +236,7 @@ func GetShalatScheduleByLocation(ctx context.Context, browserID, method, provinc
 	schedules, err := aladhan.GetShalatScheduleByCoordinate(ctx, method, latitude, longitude, month, year)
 	if err != nil {
 		logger.Log.Infoln(namespace, "aladhan api returned error data. recalculate prayer times using go-prayer", latitude, longitude)
-		schedules, err = calculatePrayerTimes(ctx, latitude, longitude, time.Now(), prayer.Kemenag())
+		schedules, err = calculatePrayerTimes(ctx, latitude, longitude, time.Now(), twilightConvention, asrConvention)
 	}
 	if err != nil {
 		logger.Log.Errorln(namespace, "getShalatScheduleByCoordinate", err)
@@ -188,7 +264,7 @@ func GetShalatScheduleByLocation(ctx context.Context, browserID, method, provinc
 	return res, nil
 }
 
-func calculatePrayerTimes(ctx context.Context, lat, lon float64, date time.Time, twilightConvention *prayer.TwilightConvention) ([]aladhan.PrayerTimeSchedule, error) {
+func calculatePrayerTimes(ctx context.Context, lat, lon float64, date time.Time, twilightConvention *prayer.TwilightConvention, asrConvention prayer.AsrConvention) ([]aladhan.PrayerTimeSchedule, error) {
 	namespace := "usecase.calculatePrayerTimes"
 	span := sentry.StartSpan(ctx, namespace)
 	defer span.Finish()
@@ -204,7 +280,7 @@ func calculatePrayerTimes(ctx context.Context, lat, lon float64, date time.Time,
 		}
 	}
 
-	schedulesBackup, err := goprayer.CalculatePrayerTimes(ctx, lat, lon, timezone, date, twilightConvention)
+	schedulesBackup, err := goprayer.CalculatePrayerTimes(ctx, lat, lon, timezone, date, twilightConvention, asrConvention)
 	if err != nil {
 		logger.Log.Errorln(namespace, "goprayer.CalculatePrayerTimes", err)
 		return nil, err

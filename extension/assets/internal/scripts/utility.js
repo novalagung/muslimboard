@@ -182,7 +182,7 @@ const Utility = {
             }
         )
     }),
-    getLatestData: (key, callback) => new Promise(async (resolve) => {
+    getLatestData: (key, callback, options = {}) => new Promise(async (resolve) => {
         const nowYYYYMMDD = moment().format('YYYY-MM-DD')
         let data = {
             lastUpdated: nowYYYYMMDD,
@@ -193,11 +193,12 @@ const Utility = {
         if (cacheData) {
             data = JSON.parse(cacheData)
         }
-        
+
+        const forceRefresh = options.forceRefresh === true
         const isFirstTime = Object.keys(data.content).length == 0
         const isNotToday = data.lastUpdated != nowYYYYMMDD
-        Utility.log('isFirstTime:', isFirstTime, 'isNotToday:', isNotToday)
-        if (isFirstTime || isNotToday) {
+        Utility.log('isFirstTime:', isFirstTime, 'isNotToday:', isNotToday, 'forceRefresh:', forceRefresh)
+        if (forceRefresh || isFirstTime || isNotToday) {
             try {
                 await callback((result) => {
                     data.lastUpdated = nowYYYYMMDD
@@ -205,10 +206,12 @@ const Utility = {
                     localStorage.setItem(key, JSON.stringify(data))
                     resolve(data)
                 })
+                return
             } catch (err) {
                 Utility.error(err)
                 Utility.log('use cached data instead')
                 resolve(data)
+                return
             }
         }
 

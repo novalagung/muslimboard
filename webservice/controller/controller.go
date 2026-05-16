@@ -103,17 +103,25 @@ func HandleShalatScheduleByCoordinate(ctx context.Context, w http.ResponseWriter
 	namespace := "controller.HandleShalatScheduleByCoordinate"
 	span := sentry.StartSpan(ctx, namespace)
 	span.Data = map[string]any{
-		"browserID": r.URL.Query().Get("browserID"),
-		"month":     r.URL.Query().Get("month"),
-		"year":      r.URL.Query().Get("year"),
-		"latitude":  r.URL.Query().Get("latitude"),
-		"longitude": r.URL.Query().Get("longitude"),
+		"browserID":    r.URL.Query().Get("browserID"),
+		"month":        r.URL.Query().Get("month"),
+		"year":         r.URL.Query().Get("year"),
+		"latitude":     r.URL.Query().Get("latitude"),
+		"longitude":    r.URL.Query().Get("longitude"),
+		"calcPrimary":  r.URL.Query().Get("calc_primary"),
+		"calcFallback": r.URL.Query().Get("calc_fallback"),
+		"calcAsr":      r.URL.Query().Get("calc_asr"),
 	}
 	defer span.Finish()
 
 	// parse params
 	browserID := r.URL.Query().Get("browserID")
 	method := "3" // Muslim World League
+	fallbackMethod := r.URL.Query().Get("calc_fallback")
+	asrMethod := r.URL.Query().Get("calc_asr")
+	if value := r.URL.Query().Get("calc_primary"); value != "" {
+		method = value
+	}
 	month := r.URL.Query().Get("month")
 	year := r.URL.Query().Get("year")
 	latitude := r.URL.Query().Get("latitude")
@@ -128,7 +136,7 @@ func HandleShalatScheduleByCoordinate(ctx context.Context, w http.ResponseWriter
 	}
 
 	// get data
-	res, err := usecase.GetShalatScheduleByCoordinate(ctx, browserID, method, latitude, longitude, month, year)
+	res, err := usecase.GetShalatScheduleByCoordinate(ctx, browserID, method, fallbackMethod, asrMethod, latitude, longitude, month, year)
 	if err != nil {
 		logger.Log.Errorln(namespace, "getShalatScheduleByCoordinate", err)
 		pkg_http.WriteRespose(ctx, w, r, http.StatusInternalServerError, nil, err)
@@ -144,24 +152,32 @@ func HandleShalatScheduleByLocation(ctx context.Context, w http.ResponseWriter, 
 	namespace := "controller.HandleShalatScheduleByLocation"
 	span := sentry.StartSpan(ctx, namespace)
 	span.Data = map[string]any{
-		"browserID": r.URL.Query().Get("browserID"),
-		"month":     r.URL.Query().Get("month"),
-		"year":      r.URL.Query().Get("year"),
-		"province":  r.URL.Query().Get("province"),
-		"city":      r.URL.Query().Get("city"),
+		"browserID":    r.URL.Query().Get("browserID"),
+		"month":        r.URL.Query().Get("month"),
+		"year":         r.URL.Query().Get("year"),
+		"province":     r.URL.Query().Get("province"),
+		"city":         r.URL.Query().Get("city"),
+		"calcPrimary":  r.URL.Query().Get("calc_primary"),
+		"calcFallback": r.URL.Query().Get("calc_fallback"),
+		"calcAsr":      r.URL.Query().Get("calc_asr"),
 	}
 	defer span.Finish()
 
 	// parse params
 	browserID := r.URL.Query().Get("browserID")
-	method := "11" // Majlis Ugama Islam Singapura, Singapore
+	method := "3" // Muslim World League
+	fallbackMethod := r.URL.Query().Get("calc_fallback")
+	asrMethod := r.URL.Query().Get("calc_asr")
+	if value := r.URL.Query().Get("calc_primary"); value != "" {
+		method = value
+	}
 	month := r.URL.Query().Get("month")
 	year := r.URL.Query().Get("year")
 	province := r.URL.Query().Get("province")
 	city := r.URL.Query().Get("city")
 
 	// get data
-	res, err := usecase.GetShalatScheduleByLocation(ctx, browserID, method, province, city, month, year)
+	res, err := usecase.GetShalatScheduleByLocation(ctx, browserID, method, fallbackMethod, asrMethod, province, city, month, year)
 	if err != nil {
 		logger.Log.Errorln(namespace, "getShalatScheduleByLocation", err)
 		pkg_http.WriteRespose(ctx, w, r, http.StatusInternalServerError, nil, err)

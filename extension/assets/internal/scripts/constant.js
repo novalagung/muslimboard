@@ -19,8 +19,12 @@ const Constant = {
         changelogs: [
             'Use your own image with local IndexedDB storage',
             'Smoother background loading with softer startup state',
+            'Search and set prayer location worldwide by city, province, or postal code',
+            'Optional prayer calculation methods for primary API, fallback, and Asr madhab',
+            'Clearer auto-detect and manual location setup with improved confirmations',
+            'Postal codes in location search results when available',
             'Improved offline handling for cached prayer times and backgrounds',
-            'Refined modal copy, labels, and UI details'
+            'Refined modal copy, labels, and UI details across languages'
         ]
     },
 }

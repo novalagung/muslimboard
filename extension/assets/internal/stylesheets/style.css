@@ -871,8 +871,32 @@ body.show-todo-list #todo-list .wrapper .items .edit-hint {
 #swal2-html-container hr.separator {
     border-top: none;
     border-color: var(--color-border-soft);
-    margin-top: 15px;
+    margin: 15px 0 0;
     display: block;
+}
+#swal2-html-container .manual-location-search + hr.separator,
+#swal2-html-container .manual-location-validation + hr.separator {
+    margin: 10px 0 0;
+}
+#swal2-html-container .manual-location-validation {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    margin: 8px 0 0;
+    color: var(--color-danger);
+    font-size: var(--font-size-sm);
+    line-height: 1.4;
+}
+#swal2-html-container .manual-location-validation .fa {
+    flex: 0 0 auto;
+    margin-top: 2px;
+}
+#swal2-html-container .manual-location-validation[hidden] {
+    display: none;
+    margin: 0;
+}
+#swal2-html-container hr.separator + .prayer-calc-settings {
+    margin-top: 10px;
 }
 #swal2-html-container .modal-info .share-container .btn-share {
     text-decoration: none;
@@ -1105,8 +1129,15 @@ body.show-todo-list #todo-list .wrapper .items .edit-hint {
     width: 300px;
     font-size: var(--font-size-md);
 }
+#swal2-html-container .manual-geolocation {
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
 #swal2-html-container .manual-geolocation .location-search-input {
     width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
     padding: 10px 12px;
     border: 1px solid var(--color-border-control);
     border-radius: var(--radius-standard);
@@ -1118,13 +1149,31 @@ body.show-todo-list #todo-list .wrapper .items .edit-hint {
     box-shadow: 0 0 0 3px var(--color-primary-focus);
 }
 #swal2-html-container .manual-geolocation .location-search-status {
-    margin: 10px 0 8px;
+    margin: 8px 0 0;
     color: var(--color-text-muted);
     font-size: var(--font-size-sm);
+    line-height: 1.4;
+}
+#swal2-html-container .manual-geolocation .location-search-status:empty {
+    display: none;
+    margin: 0;
+}
+#swal2-html-container .manual-geolocation .location-search-results:empty {
+    display: none;
+    margin: 0;
+    padding: 0;
+}
+#swal2-html-container .manual-geolocation .location-search-selected-hint {
+    display: none;
+    margin: 8px 0 0;
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+    line-height: 1.4;
 }
 #swal2-html-container .manual-geolocation .location-search-results {
     display: grid;
     gap: 8px;
+    margin-top: 8px;
     max-height: 260px;
     overflow-y: auto;
 }
@@ -1146,6 +1195,257 @@ body.show-todo-list #todo-list .wrapper .items .edit-hint {
 #swal2-html-container .manual-geolocation .location-search-result.is-selected {
     border-color: var(--color-primary-border);
     background-color: var(--color-primary-subtle);
+}
+#swal2-html-container .prayer-calc-settings {
+    margin-top: 12px;
+    max-width: 100%;
+    min-width: 0;
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-standard);
+    background-color: var(--color-white);
+    overflow: hidden;
+}
+#swal2-html-container .prayer-calc-settings > summary {
+    list-style: none;
+    font-weight: normal;
+}
+#swal2-html-container .prayer-calc-settings > summary::-webkit-details-marker {
+    display: none;
+}
+#swal2-html-container .prayer-calc-settings .prayer-calc-settings-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    cursor: pointer;
+    padding: 9px 10px;
+    user-select: none;
+}
+#swal2-html-container .prayer-calc-settings .prayer-calc-settings-toggle-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    text-align: left;
+}
+#swal2-html-container .prayer-calc-settings .prayer-calc-settings-title {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--color-text);
+    line-height: 1.3;
+    word-break: break-word;
+}
+#swal2-html-container .prayer-calc-settings .prayer-calc-settings-summary-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    min-width: 0;
+}
+#swal2-html-container .prayer-calc-settings .prayer-calc-settings-summary {
+    flex: 1;
+    min-width: 0;
+    font-size: var(--font-size-sm);
+    font-weight: normal;
+    color: var(--color-text-muted);
+    line-height: 1.35;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+#swal2-html-container .prayer-calc-settings .prayer-calc-reset[hidden] {
+    display: none;
+}
+#swal2-html-container .prayer-calc-settings .prayer-calc-reset {
+    flex: 0 0 auto;
+    margin: 0;
+    padding: 4px 8px;
+    border: none;
+    border-radius: var(--radius-standard);
+    background-color: var(--color-warning);
+    color: var(--color-white);
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    line-height: 1.2;
+    white-space: nowrap;
+    cursor: pointer;
+    box-shadow: var(--shadow-control);
+    opacity: var(--opacity-soft);
+    transition: opacity var(--duration-fast) ease-in-out, transform var(--duration-fast) ease-in-out;
+}
+#swal2-html-container .prayer-calc-settings .prayer-calc-reset:hover {
+    opacity: var(--opacity-full);
+    transform: var(--motion-hover-lift);
+}
+#swal2-html-container .prayer-calc-settings .prayer-calc-settings-chevron {
+    flex: 0 0 auto;
+    width: 8px;
+    height: 8px;
+    margin-top: 2px;
+    border-right: 2px solid var(--color-text-muted);
+    border-bottom: 2px solid var(--color-text-muted);
+    transform: rotate(45deg);
+    transition: transform var(--duration-fast) ease-in-out, border-color var(--duration-fast) ease-in-out;
+}
+#swal2-html-container .prayer-calc-settings.is-open .prayer-calc-settings-chevron {
+    margin-top: 6px;
+    transform: rotate(-135deg);
+    border-color: var(--color-primary-border);
+}
+#swal2-html-container .prayer-calc-settings .prayer-calc-settings-content {
+    border-top: 1px solid var(--color-border-soft);
+    padding: 8px 10px 10px;
+    background-color: var(--color-surface-soft);
+    max-width: 100%;
+    min-width: 0;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+#swal2-html-container .prayer-calc-settings .prayer-calc-settings-help {
+    margin: 0 0 10px;
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+    line-height: 1.45;
+}
+#swal2-html-container .prayer-calc-settings .prayer-calc-field {
+    margin-bottom: 8px;
+    max-width: 100%;
+    min-width: 0;
+}
+#swal2-html-container .prayer-calc-settings .prayer-calc-field-asr {
+    margin-bottom: 0;
+}
+#swal2-html-container .prayer-calc-settings .prayer-calc-settings-label {
+    display: block;
+    margin: 0 0 4px;
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--color-text);
+    text-align: left;
+    word-break: break-word;
+}
+#swal2-html-container .prayer-calc-picker {
+    position: relative;
+    max-width: 100%;
+    min-width: 0;
+}
+#swal2-html-container .prayer-calc-picker-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    min-height: 34px;
+    padding: 7px 10px;
+    border: 1px solid var(--color-border-control);
+    border-radius: var(--radius-standard);
+    background-color: var(--color-white);
+    color: var(--color-text);
+    font-size: var(--font-size-sm);
+    text-align: left;
+    cursor: pointer;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color var(--duration-fast) ease-in-out, box-shadow var(--duration-fast) ease-in-out;
+}
+#swal2-html-container .prayer-calc-picker-trigger:hover {
+    border-color: var(--color-primary-border);
+}
+#swal2-html-container .prayer-calc-picker.is-open .prayer-calc-picker-trigger,
+#swal2-html-container .prayer-calc-picker-trigger:focus-visible {
+    border-color: var(--color-primary-border);
+    box-shadow: 0 0 0 3px var(--color-primary-focus);
+}
+#swal2-html-container .prayer-calc-picker-value {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 1.35;
+    text-align: left;
+}
+#swal2-html-container .prayer-calc-picker-chevron {
+    flex: 0 0 auto;
+    width: 8px;
+    height: 8px;
+    border-right: 2px solid var(--color-text-muted);
+    border-bottom: 2px solid var(--color-text-muted);
+    transform: rotate(45deg);
+    transition: transform var(--duration-fast) ease-in-out, border-color var(--duration-fast) ease-in-out;
+}
+#swal2-html-container .prayer-calc-picker.is-open .prayer-calc-picker-chevron {
+    margin-top: 4px;
+    transform: rotate(-135deg);
+    border-color: var(--color-primary-border);
+}
+#swal2-html-container .prayer-calc-picker-panel {
+    display: none;
+    margin-top: 6px;
+    padding: 6px;
+    max-width: 100%;
+    min-width: 0;
+    max-height: 180px;
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-standard);
+    background-color: var(--color-white);
+    box-shadow: var(--shadow-control);
+    box-sizing: border-box;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+#swal2-html-container .prayer-calc-picker.is-open .prayer-calc-picker-panel {
+    display: block;
+}
+#swal2-html-container .prayer-calc-picker-group + .prayer-calc-picker-group {
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px solid var(--color-border-soft);
+}
+#swal2-html-container .prayer-calc-picker-group-label {
+    margin-bottom: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    text-align: left;
+}
+#swal2-html-container .prayer-calc-picker-options {
+    display: grid;
+    gap: 4px;
+}
+#swal2-html-container .prayer-calc-option {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    width: 100%;
+    max-width: 100%;
+    padding: 6px 8px;
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-standard);
+    background-color: var(--color-white);
+    color: var(--color-text);
+    font-size: var(--font-size-xs);
+    line-height: 1.3;
+    text-align: left;
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    box-sizing: border-box;
+    cursor: pointer;
+    transition: background-color var(--duration-fast) ease-in-out, border-color var(--duration-fast) ease-in-out;
+}
+#swal2-html-container .prayer-calc-option:hover {
+    background-color: var(--color-surface-soft);
+}
+#swal2-html-container .prayer-calc-option.is-selected {
+    border-color: var(--color-primary-border);
+    background-color: var(--color-primary-subtle);
+    font-weight: 600;
 }
 #swal2-html-container .manual-geolocation label {
     width: 100px;

@@ -91,6 +91,425 @@
             return (query || '').trim().toLowerCase().replace(/\s+/g, ' ')
         },
 
+        prayerCalculationStorageKey: 'data-prayer-calculation-method',
+        prayerCalculationHealToastKey() {
+            return `data-prayer-calculation-method-heal-toast-shown:${Constant.meta.version}`
+        },
+        prayerCalculationDefaults: {
+            aladhanMethod: '3',
+            goPrayerMethod: 'KEMENAG',
+            asrMadhab: 'shafii',
+        },
+        getPrayerCalculationDefaultValues() {
+            return {
+                aladhanMethod: this.prayerCalculationDefaults.aladhanMethod,
+                goPrayerMethod: this.prayerCalculationDefaults.goPrayerMethod,
+                asrMadhab: this.prayerCalculationDefaults.asrMadhab,
+            }
+        },
+        prayerCalculationOptions: {
+            aladhanMethods: [
+                { value: '1', abbr: 'KARACHI', name: 'University of Islamic Sciences, Karachi' },
+                { value: '2', abbr: 'ISNA', name: 'Islamic Society of North America' },
+                { value: '3', abbr: 'MWL', name: 'Muslim World League' },
+                { value: '4', abbr: 'MAKKAH', name: 'Umm Al-Qura University, Makkah' },
+                { value: '5', abbr: 'EGYPT', name: 'Egyptian General Authority of Survey' },
+                { value: '7', abbr: 'TEHRAN', name: 'University of Tehran' },
+                { value: '8', abbr: 'GULF', name: 'Gulf Region' },
+                { value: '9', abbr: 'KUWAIT', name: 'Kuwait' },
+                { value: '10', abbr: 'QATAR', name: 'Qatar' },
+                { value: '11', abbr: 'MUIS', name: 'Majlis Ugama Islam Singapura' },
+                { value: '12', abbr: 'FRANCE', name: 'Union Organization Islamic de France' },
+                { value: '13', abbr: 'TURKEY', name: 'Diyanet Turkey' },
+                { value: '14', abbr: 'RUSSIA', name: 'Spiritual Administration of Muslims of Russia' },
+                { value: '15', abbr: 'MOONSIGHTING', name: 'Moonsighting Committee Worldwide' },
+                { value: '16', abbr: 'DUBAI', name: 'Dubai' },
+                { value: '17', abbr: 'JAKIM', name: 'JAKIM Malaysia' },
+                { value: '18', abbr: 'TUNISIA', name: 'Tunisia' },
+                { value: '19', abbr: 'ALGERIA', name: 'Algeria' },
+                { value: '20', abbr: 'KEMENAG', name: 'Kementerian Agama Republik Indonesia' },
+                { value: '21', abbr: 'MOROCCO', name: 'Morocco' },
+                { value: '22', abbr: 'PORTUGAL', name: 'Comunidade Islamica de Lisboa' },
+                { value: '23', abbr: 'JORDAN', name: 'Jordan Ministry of Awqaf' },
+                { value: '99', abbr: 'CUSTOM', name: 'Custom Angles' },
+            ],
+            goPrayerMethods: [
+                { value: 'ASTRONOMICAL', abbr: 'ASTRONOMICAL', name: 'Astronomical Twilight' },
+                { value: 'MWL', abbr: 'MWL', name: 'Muslim World League' },
+                { value: 'ISNA', abbr: 'ISNA', name: 'Islamic Society of North America' },
+                { value: 'UMMALQURA', abbr: 'UMMALQURA', name: 'Umm Al-Qura' },
+                { value: 'GULF', abbr: 'GULF', name: 'Gulf Region' },
+                { value: 'ALGERIAN', abbr: 'ALGERIAN', name: 'Algeria' },
+                { value: 'KARACHI', abbr: 'KARACHI', name: 'Karachi' },
+                { value: 'DIYANET', abbr: 'DIYANET', name: 'Diyanet Turkey' },
+                { value: 'EGYPT', abbr: 'EGYPT', name: 'Egypt' },
+                { value: 'EGYPTBIS', abbr: 'EGYPTBIS', name: 'Egypt (Bis)' },
+                { value: 'KEMENAG', abbr: 'KEMENAG', name: 'Kementerian Agama Republik Indonesia' },
+                { value: 'MUIS', abbr: 'MUIS', name: 'Majlis Ugama Islam Singapura' },
+                { value: 'JAKIM', abbr: 'JAKIM', name: 'JAKIM Malaysia' },
+                { value: 'UOIF', abbr: 'UOIF', name: 'Union Organization Islamic de France' },
+                { value: 'FRANCE15', abbr: 'FRANCE15', name: 'France 15°' },
+                { value: 'FRANCE18', abbr: 'FRANCE18', name: 'France 18°' },
+                { value: 'TUNISIA', abbr: 'TUNISIA', name: 'Tunisia' },
+                { value: 'TEHRAN', abbr: 'TEHRAN', name: 'Tehran' },
+                { value: 'JAFARI', abbr: 'JAFARI', name: 'Jafari' },
+            ],
+            asrMethods: [
+                { value: 'shafii', abbr: 'SHAFII', name: 'Shafii' },
+                { value: 'hanafi', abbr: 'HANAFI', name: 'Hanafi' },
+            ],
+            popularAladhanValues: ['20', '11', '17', '3', '4', '5', '2', '16', '23', '9'],
+            popularGoPrayerValues: ['KEMENAG', 'MUIS', 'JAKIM', 'MWL', 'ISNA', 'UMMALQURA', 'GULF', 'EGYPT', 'KARACHI'],
+            popularAsrValues: ['shafii', 'hanafi'],
+        },
+        getPrayerCalculationStoredSettings() {
+            let raw = {}
+            try {
+                raw = JSON.parse(localStorage.getItem(this.prayerCalculationStorageKey) || '{}')
+            } catch (err) {
+                raw = {}
+            }
+            return {
+                aladhanMethod: String(raw.aladhanMethod || '').trim(),
+                goPrayerMethod: String(raw.goPrayerMethod || '').trim().toUpperCase(),
+                asrMadhab: String(raw.asrMadhab || '').trim().toLowerCase(),
+            }
+        },
+        getPrayerCalculationSettings(flowType = 'coordinate') {
+            const defaults = this.getPrayerCalculationDefaultValues.call(this)
+            const raw = this.getPrayerCalculationStoredSettings.call(this)
+
+            const allowedAladhan = this.prayerCalculationOptions.aladhanMethods.map((each) => each.value)
+            const allowedGoPrayer = this.prayerCalculationOptions.goPrayerMethods.map((each) => each.value)
+            const allowedAsr = this.prayerCalculationOptions.asrMethods.map((each) => each.value)
+            const hasAnyValue = !!(raw.aladhanMethod || raw.goPrayerMethod || raw.asrMadhab)
+            const normalized = {
+                aladhanMethod: hasAnyValue ? raw.aladhanMethod : defaults.aladhanMethod,
+                goPrayerMethod: hasAnyValue ? raw.goPrayerMethod : defaults.goPrayerMethod,
+                asrMadhab: hasAnyValue ? raw.asrMadhab : defaults.asrMadhab,
+            }
+
+            let isHealed = false
+            if (!allowedAladhan.includes(normalized.aladhanMethod)) {
+                normalized.aladhanMethod = defaults.aladhanMethod
+                if (hasAnyValue) {
+                    isHealed = true
+                }
+            }
+            if (!allowedGoPrayer.includes(normalized.goPrayerMethod)) {
+                normalized.goPrayerMethod = defaults.goPrayerMethod
+                if (hasAnyValue) {
+                    isHealed = true
+                }
+            }
+            if (!allowedAsr.includes(normalized.asrMadhab)) {
+                normalized.asrMadhab = defaults.asrMadhab
+                if (hasAnyValue) {
+                    isHealed = true
+                }
+            }
+
+            if (isHealed) {
+                this.setPrayerCalculationSettings.call(this, normalized)
+                if (!localStorage.getItem(this.prayerCalculationHealToastKey.call(this))) {
+                    localStorage.setItem(this.prayerCalculationHealToastKey.call(this), '1')
+                    $.toast({
+                        heading: I18n.getText('prayerCalculationMethodAutoResetToastTitle'),
+                        text: I18n.getText('prayerCalculationMethodAutoResetToast'),
+                        showHideTransition: 'fade',
+                        icon: 'info',
+                        position: 'top-center',
+                        hideAfter: 6000
+                    })
+                }
+            }
+
+            return normalized
+        },
+        setPrayerCalculationSettings(payload) {
+            const normalized = {
+                aladhanMethod: String(payload.aladhanMethod || '').trim(),
+                goPrayerMethod: String(payload.goPrayerMethod || '').trim().toUpperCase(),
+                asrMadhab: String(payload.asrMadhab || '').trim().toLowerCase(),
+            }
+            localStorage.setItem(this.prayerCalculationStorageKey, JSON.stringify(normalized))
+            return normalized
+        },
+        resetPrayerCalculationSettings(flowType = 'coordinate') {
+            return this.setPrayerCalculationSettings.call(this, this.getPrayerCalculationDefaultValues.call(this))
+        },
+        getPrayerCalculationOptionLabel(optionType, value) {
+            const options = this.prayerCalculationOptions[`${optionType}Methods`] || []
+            const match = options.find((each) => String(each.value) == String(value))
+            if (!match) {
+                return value
+            }
+            return match.abbr || match.name
+        },
+        formatPrayerCalculationOptionLabel(option) {
+            if (!option) {
+                return ''
+            }
+            if (!option.abbr) {
+                return option.name
+            }
+            return `${option.abbr} - ${option.name}`
+        },
+        getPrayerCalculationOptionName(optionType, value) {
+            const options = this.prayerCalculationOptions[`${optionType}Methods`] || []
+            const match = options.find((each) => String(each.value) == String(value))
+            if (!match) {
+                return value
+            }
+            return this.formatPrayerCalculationOptionLabel.call(this, match)
+        },
+        sortPrayerCalculationOptions(options) {
+            return options.slice().sort((a, b) => {
+                const labelA = this.formatPrayerCalculationOptionLabel.call(this, a)
+                const labelB = this.formatPrayerCalculationOptionLabel.call(this, b)
+                return labelA.localeCompare(labelB, undefined, { sensitivity: 'base' })
+            })
+        },
+        renderPrayerCalculationPickerOptions(items, popularValues, selectedValue) {
+            const renderGroup = (groupLabel, groupItems) => {
+                if (groupItems.length == 0) {
+                    return ''
+                }
+                const sortedItems = this.sortPrayerCalculationOptions.call(this, groupItems)
+                const options = sortedItems.map((each) => {
+                    const selectedClass = each.value == selectedValue ? ' is-selected' : ''
+                    return `<button type="button" class="prayer-calc-option${selectedClass}" data-value="${each.value}">${this.formatPrayerCalculationOptionLabel.call(this, each)}</button>`
+                }).join('')
+                return `
+                    <div class="prayer-calc-picker-group">
+                        <div class="prayer-calc-picker-group-label">${groupLabel}</div>
+                        <div class="prayer-calc-picker-options">${options}</div>
+                    </div>
+                `
+            }
+            const popular = items.filter((each) => popularValues.includes(each.value))
+            const other = items.filter((each) => !popularValues.includes(each.value))
+            return `
+                ${renderGroup(I18n.getText('prayerCalculationCommonGroup'), popular)}
+                ${renderGroup(I18n.getText('prayerCalculationOtherGroup'), other)}
+            `
+        },
+        renderPrayerCalculationPicker(optionType, inputClass, items, popularValues, selectedValue) {
+            const pickerClass = optionType === 'goPrayer' ? 'goprayer' : optionType
+            const selectedName = this.getPrayerCalculationOptionName.call(this, optionType, selectedValue)
+            return `
+                <div class="prayer-calc-picker prayer-calc-picker-${pickerClass}">
+                    <input type="hidden" class="${inputClass}" value="${selectedValue}">
+                    <button type="button" class="prayer-calc-picker-trigger" aria-expanded="false">
+                        <span class="prayer-calc-picker-value">${selectedName}</span>
+                        <span class="prayer-calc-picker-chevron" aria-hidden="true"></span>
+                    </button>
+                    <div class="prayer-calc-picker-panel">
+                        ${this.renderPrayerCalculationPickerOptions.call(this, items, popularValues, selectedValue)}
+                    </div>
+                </div>
+            `
+        },
+        getPrayerCalculationPickerOptionType($picker) {
+            if ($picker.hasClass('prayer-calc-picker-aladhan')) {
+                return 'aladhan'
+            }
+            if ($picker.hasClass('prayer-calc-picker-asr')) {
+                return 'asr'
+            }
+            return 'goPrayer'
+        },
+        closePrayerCalculationPickers($exceptPicker = $()) {
+            $('.prayer-calc-picker').not($exceptPicker).removeClass('is-open')
+            $('.prayer-calc-picker-trigger').not($exceptPicker.find('.prayer-calc-picker-trigger')).attr('aria-expanded', 'false')
+        },
+        setPrayerCalculationPickerValue($picker, optionType, value) {
+            const items = this.prayerCalculationOptions[`${optionType}Methods`] || []
+            const match = items.find((each) => String(each.value) == String(value))
+            if (!match) {
+                return
+            }
+            $picker.find('input[type=hidden]').val(match.value)
+            $picker.find('.prayer-calc-picker-value').text(this.formatPrayerCalculationOptionLabel.call(this, match))
+            $picker.find('.prayer-calc-option').removeClass('is-selected')
+            $picker.find(`.prayer-calc-option[data-value="${match.value}"]`).addClass('is-selected')
+        },
+        applyPrayerCalculationPanelValues(settings) {
+            this.setPrayerCalculationPickerValue.call(this, $('.prayer-calc-picker-aladhan'), 'aladhan', settings.aladhanMethod)
+            this.setPrayerCalculationPickerValue.call(this, $('.prayer-calc-picker-goprayer'), 'goPrayer', settings.goPrayerMethod)
+            this.setPrayerCalculationPickerValue.call(this, $('.prayer-calc-picker-asr'), 'asr', settings.asrMadhab)
+        },
+        isPrayerCalculationDefaultSelection(settings) {
+            const defaults = this.getPrayerCalculationDefaultValues.call(this)
+            return (
+                settings.aladhanMethod == defaults.aladhanMethod &&
+                settings.goPrayerMethod == defaults.goPrayerMethod &&
+                settings.asrMadhab == defaults.asrMadhab
+            )
+        },
+        formatPrayerCalculationSummary(settings, flowType = 'coordinate') {
+            const primary = this.getPrayerCalculationOptionLabel.call(this, 'aladhan', settings.aladhanMethod)
+            const fallback = this.getPrayerCalculationOptionLabel.call(this, 'goPrayer', settings.goPrayerMethod)
+            if (this.isPrayerCalculationDefaultSelection.call(this, settings)) {
+                return I18n.getText('prayerCalculationSummaryDefault')
+                    .replace('$1', primary)
+                    .replace('$2', fallback)
+            }
+            return I18n.getText('prayerCalculationSummaryCustom')
+                .replace('$1', primary)
+                .replace('$2', fallback)
+        },
+        renderPrayerCalculationSettingsPanel(currentSettings, flowType = 'coordinate') {
+            const isDefaultSelection = this.isPrayerCalculationDefaultSelection.call(this, currentSettings)
+            return `
+                <details class="prayer-calc-settings">
+                    <summary class="prayer-calc-settings-toggle">
+                        <span class="prayer-calc-settings-toggle-text">
+                            <span class="prayer-calc-settings-title">${I18n.getText('prayerCalculationAdvancedSettingsTitle')}</span>
+                            <span class="prayer-calc-settings-summary-row">
+                                <span class="prayer-calc-settings-summary">${this.formatPrayerCalculationSummary.call(this, currentSettings, flowType)}</span>
+                                <button type="button" class="prayer-calc-reset"${isDefaultSelection ? ' hidden' : ''}>${I18n.getText('prayerCalculationReset')}</button>
+                            </span>
+                        </span>
+                        <span class="prayer-calc-settings-chevron" aria-hidden="true"></span>
+                    </summary>
+                    <div class="prayer-calc-settings-content">
+                        <p class="prayer-calc-settings-help">${I18n.getText('prayerCalculationAdvancedSettingsHelp')}</p>
+                        <div class="prayer-calc-field">
+                            <div class="prayer-calc-settings-label">${I18n.getText('prayerCalculationPrimaryLabel')}</div>
+                            ${this.renderPrayerCalculationPicker.call(
+                                this,
+                                'aladhan',
+                                'prayer-calc-primary',
+                                this.prayerCalculationOptions.aladhanMethods,
+                                this.prayerCalculationOptions.popularAladhanValues,
+                                currentSettings.aladhanMethod
+                            )}
+                        </div>
+                        <div class="prayer-calc-field">
+                            <div class="prayer-calc-settings-label">${I18n.getText('prayerCalculationFallbackLabel')}</div>
+                            ${this.renderPrayerCalculationPicker.call(
+                                this,
+                                'goPrayer',
+                                'prayer-calc-fallback',
+                                this.prayerCalculationOptions.goPrayerMethods,
+                                this.prayerCalculationOptions.popularGoPrayerValues,
+                                currentSettings.goPrayerMethod
+                            )}
+                        </div>
+                        <div class="prayer-calc-field prayer-calc-field-asr">
+                            <div class="prayer-calc-settings-label">${I18n.getText('prayerCalculationAsrLabel')}</div>
+                            ${this.renderPrayerCalculationPicker.call(
+                                this,
+                                'asr',
+                                'prayer-calc-asr',
+                                this.prayerCalculationOptions.asrMethods,
+                                this.prayerCalculationOptions.popularAsrValues,
+                                currentSettings.asrMadhab
+                            )}
+                        </div>
+                    </div>
+                </details>
+            `
+        },
+        updatePrayerCalculationSettingsSummary(flowType = 'coordinate') {
+            const $summary = $('.prayer-calc-settings-summary')
+            if ($summary.length == 0) {
+                return
+            }
+            const settings = this.readPrayerCalculationSettingsFromPanel.call(this, flowType)
+            const isDefaultSelection = this.isPrayerCalculationDefaultSelection.call(this, settings)
+            $summary.text(this.formatPrayerCalculationSummary.call(this, settings, flowType))
+            $('.prayer-calc-reset').prop('hidden', isDefaultSelection)
+        },
+        bindPrayerCalculationSettingsPanel(flowType = 'coordinate') {
+            const $details = $('.prayer-calc-settings')
+            const syncOpenState = () => {
+                $details.toggleClass('is-open', $details.prop('open'))
+            }
+            $details.off('toggle.prayerCalc').on('toggle.prayerCalc', syncOpenState)
+            syncOpenState()
+
+            $('.prayer-calc-picker-trigger')
+                .off('click.prayerCalc')
+                .on('click.prayerCalc', (e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    const $picker = $(e.currentTarget).closest('.prayer-calc-picker')
+                    const isOpen = $picker.hasClass('is-open')
+                    this.closePrayerCalculationPickers.call(this)
+                    if (!isOpen) {
+                        $picker.addClass('is-open')
+                        $(e.currentTarget).attr('aria-expanded', 'true')
+                    }
+                })
+
+            $('.prayer-calc-option')
+                .off('click.prayerCalc')
+                .on('click.prayerCalc', (e) => {
+                    e.preventDefault()
+                    const $option = $(e.currentTarget)
+                    const $picker = $option.closest('.prayer-calc-picker')
+                    const value = $option.attr('data-value')
+                    const optionType = this.getPrayerCalculationPickerOptionType.call(this, $picker)
+                    this.setPrayerCalculationPickerValue.call(this, $picker, optionType, value)
+                    this.closePrayerCalculationPickers.call(this)
+                    this.updatePrayerCalculationSettingsSummary.call(this, flowType)
+                })
+
+            $('#swal2-html-container')
+                .off('click.prayerCalcOutside')
+                .on('click.prayerCalcOutside', (e) => {
+                    if ($(e.target).closest('.prayer-calc-picker').length == 0) {
+                        this.closePrayerCalculationPickers.call(this)
+                    }
+                })
+
+            $('.prayer-calc-reset')
+                .off('click.prayerCalc')
+                .on('click.prayerCalc', (e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    const defaults = this.resetPrayerCalculationSettings.call(this, flowType)
+                    this.applyPrayerCalculationPanelValues.call(this, defaults)
+                    this.updatePrayerCalculationSettingsSummary.call(this, flowType)
+                })
+
+            this.updatePrayerCalculationSettingsSummary.call(this, flowType)
+        },
+        getPrayerCalculationModalSwalOptions(flowType, extraOptions = {}) {
+            return Object.assign({
+                showCancelButton: true,
+                cancelButtonText: I18n.getText('promptConfirmationCancel'),
+            }, extraOptions)
+        },
+        readPrayerCalculationSettingsFromPanel(flowType = 'coordinate') {
+            const defaults = this.getPrayerCalculationSettings.call(this, flowType)
+            return {
+                aladhanMethod: $('input.prayer-calc-primary').val() || defaults.aladhanMethod,
+                goPrayerMethod: $('input.prayer-calc-fallback').val() || defaults.goPrayerMethod,
+                asrMadhab: $('input.prayer-calc-asr').val() || defaults.asrMadhab,
+            }
+        },
+        savePrayerCalculationSettingsFromSelection(flowType, selectedSettings) {
+            const stored = this.getPrayerCalculationStoredSettings.call(this)
+            const hasStored = !!(stored.aladhanMethod || stored.goPrayerMethod || stored.asrMadhab)
+            const defaults = this.getPrayerCalculationDefaultValues.call(this)
+            const isDefaultSelection = this.isPrayerCalculationDefaultSelection.call(this, selectedSettings)
+            if (!hasStored && isDefaultSelection) {
+                return
+            }
+            this.setPrayerCalculationSettings.call(this, selectedSettings)
+        },
+        getPrayerCalculationQueryParams(flowType = 'coordinate') {
+            const stored = this.getPrayerCalculationStoredSettings.call(this)
+            if (!stored.aladhanMethod && !stored.goPrayerMethod && !stored.asrMadhab) {
+                return ''
+            }
+            const settings = this.getPrayerCalculationSettings.call(this, flowType)
+            return `&calc_primary=${encodeURIComponent(settings.aladhanMethod)}&calc_fallback=${encodeURIComponent(settings.goPrayerMethod)}&calc_asr=${encodeURIComponent(settings.asrMadhab)}`
+        },
+
         getLocationSearchCache(query) {
             const normalized = this.normalizeLocationSearchQuery.call(this, query)
             const key = `data-location-search-cache:${Constant.meta.version}:${normalized}`
@@ -139,9 +558,14 @@
         },
 
         formatLocationSearchResult(location) {
-            return [location.name, location.admin1Name, location.countryName]
+            const parts = [location.name, location.admin1Name, location.countryName]
                 .filter((each) => !!each)
-                .join(', ')
+            let label = parts.join(', ')
+            const postalCode = String(location.postalCode || '').trim()
+            if (postalCode) {
+                label += ` (${postalCode})`
+            }
+            return label
         },
 
         // detect whether automatic location is currently active, or not
@@ -204,7 +628,7 @@
         // get automatic prayer time
         prayerCoordinateCacheIndexKey: 'data-prayer-time-by-coordinate-index',
         prayerCoordinateCachePrefix: 'data-prayer-time-by-coordinate-',
-        prayerCoordinateCacheLimit: 20,
+        prayerCoordinateCacheLimit: 10,
         normalizePrayerCoordinateCacheIndex() {
             const allCoordinateKeys = Object.keys(localStorage)
                 .filter((each) => each.indexOf(this.prayerCoordinateCachePrefix) == 0)
@@ -243,7 +667,7 @@
             const retained = normalized.filter((each) => each != key)
             localStorage.setItem(this.prayerCoordinateCacheIndexKey, JSON.stringify(retained))
         },
-        async getPrayerTimesByCoordinate(latitude, longitude) {
+        async getPrayerTimesByCoordinate(latitude, longitude, options = {}) {
             const key = `data-prayer-time-by-coordinate-${latitude}-${longitude}`
             if (latitude == 0 && longitude == 0) {
                 localStorage.removeItem(key)
@@ -255,12 +679,13 @@
             const data = await Utility.getLatestData(key, async (resolve) => {
                 const month = parseInt(Utility.now().format('MM'), 10)
                 const year = Utility.now().year()
-                const url = `${Constant.app.baseUrlWebService}/muslimboard-api?v=${Constant.meta.version}&op=shalat-schedule-by-coordinate&latitude=${latitude}&longitude=${longitude}&month=${month}&year=${year}&browserID=${Utility.getBrowserUuid()}`
+                const calcQuery = this.getPrayerCalculationQueryParams.call(this, 'coordinate')
+                const url = `${Constant.app.baseUrlWebService}/muslimboard-api?v=${Constant.meta.version}&op=shalat-schedule-by-coordinate&latitude=${latitude}&longitude=${longitude}&month=${month}&year=${year}&browserID=${Utility.getBrowserUuid()}${calcQuery}`
                 const response = await Utility.fetch(url)
                 const result = await response.json()
         
                 resolve(result)
-            })
+            }, options)
             let isDataFound = true
             if (!data) {
                 isDataFound = false
@@ -305,7 +730,8 @@
             const data = await Utility.getLatestData(key, async (resolve) => {
                 const month = parseInt(Utility.now().format('MM'), 10)
                 const year = Utility.now().year()
-                const url = `${Constant.app.baseUrlWebService}/muslimboard-api?v=${Constant.meta.version}&op=shalat-schedule-by-location&locationID=${locationID}&province=${province}&city=${kabko}&month=${month}&year=${year}&browserID=${Utility.getBrowserUuid()}`
+                const calcQuery = this.getPrayerCalculationQueryParams.call(this, 'location')
+                const url = `${Constant.app.baseUrlWebService}/muslimboard-api?v=${Constant.meta.version}&op=shalat-schedule-by-location&locationID=${locationID}&province=${province}&city=${kabko}&month=${month}&year=${year}&browserID=${Utility.getBrowserUuid()}${calcQuery}`
                 const response = await Utility.fetch(url)
                 const result = await response.json()
         
@@ -1185,7 +1611,7 @@
         // =========== PRAYER TIMES
     
         // load the location and prayer information whether on manual mode or automatic
-        async loadLocationAndPrayerTimeThenRender() {
+        async loadLocationAndPrayerTimeThenRender(options = {}) {
             this.renderPrayerTimePlaceholder.call(this)
             const isDetectModeAutomatic = this.isUsingAutomaticLocation.call(this)
 
@@ -1252,7 +1678,12 @@
                     if (manualCoordinate) {
                         this.renderLocationText.call(this, manualCoordinate.name)
 
-                        const data = await this.getPrayerTimesByCoordinate.call(this, manualCoordinate.latitude, manualCoordinate.longitude)
+                        const data = await this.getPrayerTimesByCoordinate.call(
+                            this,
+                            manualCoordinate.latitude,
+                            manualCoordinate.longitude,
+                            options
+                        )
                         if (!data) {
                             throw new Error(I18n.getText('promptErrorFailToGetPrayerTimesMessage'))
                         }
@@ -1312,19 +1743,24 @@
                     text = I18n.getText('promptConfirmationMessageToRefreshAutoDetectLocation')
                     buttonText = I18n.getText('promptConfirmationYesToRefreshAutoDetectLocation')
                 }
+                const currentCalcSettings = this.getPrayerCalculationSettings.call(this, 'coordinate')
+                const calcSettingsSection = this.renderPrayerCalculationSettingsPanel.call(this, currentCalcSettings, 'coordinate')
 
-                Swal.fire({
+                Swal.fire(this.getPrayerCalculationModalSwalOptions.call(this, 'coordinate', {
                     icon: 'info',
                     title: I18n.getText('footerMenuAutomaticLocationDetection'),
-                    html: text,
+                    html: `<p>${text}</p>${calcSettingsSection}`,
                     showConfirmButton: true,
-                    showCancelButton: true,
                     confirmButtonText: buttonText,
-                    cancelButtonText: I18n.getText('promptConfirmationCancel')
-                }).then(async (result) => {
+                    didOpen: () => {
+                        this.bindPrayerCalculationSettingsPanel.call(this, 'coordinate')
+                    },
+                })).then(async (result) => {
                     if (!result.isConfirmed) {
                         return
                     }
+                    const selectedCalcSettings = this.readPrayerCalculationSettingsFromPanel.call(this, 'coordinate')
+                    this.savePrayerCalculationSettingsFromSelection.call(this, 'coordinate', selectedCalcSettings)
 
                     // remove automatic location cache
                     const location = await Utility.getCurrentLocationCoordinate()
@@ -1357,26 +1793,51 @@
                             placeholder="${I18n.getText('promptManualLocationSearchPlaceholder')}"
                             autocomplete="off"
                         />
-                        <div class="location-search-status">${I18n.getText('promptManualLocationSearchMinimumText')}</div>
+                        <div class="location-search-status"></div>
                         <div class="location-search-results"></div>
+                        <div class="location-search-selected-hint"></div>
                     </form>
+                    <div class="manual-location-validation" role="alert" hidden></div>
+                    <hr class="separator">
+                    ${this.renderPrayerCalculationSettingsPanel.call(this, this.getPrayerCalculationSettings.call(this, 'location'), 'location')}
                 `
 
                 let selectedLocation = this.getManualLocationCoordinateData.call(this) || false
+                const clearManualLocationValidation = () => {
+                    $('.manual-location-validation').prop('hidden', true).empty()
+                }
+                const showManualLocationValidation = () => {
+                    const message = I18n.getText('promptErrorUnableToSaveDueToEmptyCity')
+                    $('.manual-location-validation')
+                        .html(`<i class="fa fa-exclamation-triangle" aria-hidden="true"></i><span>${message}</span>`)
+                        .prop('hidden', false)
+                }
+                const setLocationSearchSelectedHint = (visible) => {
+                    const $hint = $('.manual-location-search .location-search-selected-hint')
+                    if (!visible) {
+                        $hint.hide().empty()
+                        return
+                    }
+                    $hint.text(I18n.getText('promptManualLocationSearchSelectedText')).show()
+                }
                 const renderSelectedLocation = () => {
                     if (!selectedLocation) {
+                        setLocationSearchSelectedHint.call(this, false)
                         return
                     }
 
+                    clearManualLocationValidation()
                     const $results = $('.manual-location-search .location-search-results')
                     const label = this.formatLocationSearchResult.call(this, selectedLocation)
                     $results.empty().append(
                         $('<button type="button" class="location-search-result is-selected"></button>')
                             .text(label)
                     )
-                    $('.manual-location-search .location-search-status').text(I18n.getText('promptManualLocationSearchSelectedText'))
+                    $('.manual-location-search .location-search-status').empty()
+                    setLocationSearchSelectedHint.call(this, true)
                 }
                 const renderSearchResults = (results) => {
+                    setLocationSearchSelectedHint.call(this, false)
                     const $results = $('.manual-location-search .location-search-results')
                     $results.empty()
                     if (results.length == 0) {
@@ -1391,9 +1852,7 @@
                             .text(label)
                             .on('click', () => {
                                 selectedLocation = each
-                                $('.manual-location-search .location-search-result').removeClass('is-selected')
-                                $button.addClass('is-selected')
-                                $('.manual-location-search .location-search-status').text(I18n.getText('promptManualLocationSearchSelectedText'))
+                                renderSelectedLocation()
                             })
                         $results.append($button)
                     })
@@ -1403,9 +1862,11 @@
                     const normalized = this.normalizeLocationSearchQuery.call(this, query)
                     selectedLocation = false
                     $('.manual-location-search .location-search-results').empty()
+                    setLocationSearchSelectedHint.call(this, false)
+                    clearManualLocationValidation()
 
                     if (normalized.length < 3) {
-                        $('.manual-location-search .location-search-status').text(I18n.getText('promptManualLocationSearchMinimumText'))
+                        $('.manual-location-search .location-search-status').empty()
                         return
                     }
 
@@ -1420,27 +1881,32 @@
                 }, 400)
 
                 // show the manual location picker
-                Swal.fire({
+                Swal.fire(this.getPrayerCalculationModalSwalOptions.call(this, 'location', {
                     icon: 'info',
                     title: I18n.getText('footerMenuManualLocationSelection'),
                     html: text,
                     showConfirmButton: true,
-                    showCancelButton: true,
-                    confirmButtonText: I18n.getText('promptConfirmationSave'),
-                    cancelButtonText: I18n.getText('promptConfirmationCancel'),
+                    confirmButtonText: I18n.getText('promptConfirmationActivateManualLocation'),
                     didOpen: () => {
+                        Swal.resetValidationMessage()
+                        clearManualLocationValidation()
                         $('.manual-location-search .location-search-input').on('input', performSearch)
                         renderSelectedLocation()
+                        this.bindPrayerCalculationSettingsPanel.call(this, 'location')
                     },
                     preConfirm: () => {
                         if (!selectedLocation) {
-                            Swal.showValidationMessage(I18n.getText('promptErrorUnableToSaveDueToEmptyCity'))
+                            showManualLocationValidation()
                             return false
                         }
 
+                        clearManualLocationValidation()
+
+                        const selectedCalcSettings = this.readPrayerCalculationSettingsFromPanel.call(this, 'location')
+                        this.savePrayerCalculationSettingsFromSelection.call(this, 'location', selectedCalcSettings)
                         return selectedLocation
-                    }
-                }).then((result) => {
+                    },
+                })).then((result) => {
                     if (!result.isConfirmed) {
                         return
                     }
@@ -1455,13 +1921,14 @@
                         longitude: Number(location.longitude),
                         countryCode: location.countryCode,
                         timezone: location.timezone,
+                        postalCode: String(location.postalCode || '').trim(),
                         id: location.id
                     }
                     localStorage.removeItem('data-manual-location')
                     localStorage.setItem('data-manual-location-coordinate', JSON.stringify(manualLocation))
 
-                    // reload prayer time then render
-                    this.loadLocationAndPrayerTimeThenRender.call(this)
+                    // reload prayer time from backend (skip cache), then store fresh result
+                    this.loadLocationAndPrayerTimeThenRender.call(this, { forceRefresh: true })
                 })
             })
             
@@ -2321,6 +2788,7 @@
                 $('body').addClass('is-safari-browser')
             }
 
+            this.getPrayerCalculationSettings.call(this, 'coordinate')
             this.renderDateTime.call(this)
             this.getDataBackgroundThenRender.call(this)
             this.getDataContentThenRender.call(this)

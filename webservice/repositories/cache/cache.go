@@ -25,11 +25,14 @@ func NewCacheManager() *CacheManager {
 
 // LocationCacheKey represents a cache key for location-based caching
 type LocationCacheKey struct {
-	BrowserID string
-	Latitude  float64
-	Longitude float64
-	Month     string
-	Year      string
+	BrowserID      string
+	Latitude       float64
+	Longitude      float64
+	Month          string
+	Year           string
+	PrimaryMethod  string
+	FallbackMethod string
+	AsrMethod      string
 }
 
 // GenerateLocationCacheKey creates a cache key based on browserID and normalized coordinates
@@ -44,8 +47,8 @@ func (c *CacheManager) GenerateLocationCacheKey(key LocationCacheKey) string {
 	lngStr := fmt.Sprintf("%.2f", key.Longitude)
 
 	// Create a deterministic key
-	keyStr := fmt.Sprintf("shalat_schedule:%s:%s:%s:%s:%s",
-		key.BrowserID, latStr, lngStr, key.Month, key.Year)
+	keyStr := fmt.Sprintf("shalat_schedule:%s:%s:%s:%s:%s:%s:%s:%s",
+		key.BrowserID, latStr, lngStr, key.Month, key.Year, key.PrimaryMethod, key.FallbackMethod, key.AsrMethod)
 
 	// Use MD5 hash to create a shorter, consistent key
 	hash := md5.Sum([]byte(keyStr))

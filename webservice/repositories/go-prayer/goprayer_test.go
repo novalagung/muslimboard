@@ -11,7 +11,7 @@ import (
 
 func TestPrayerTimes(t *testing.T) {
 	tz, _ := time.LoadLocation("Asia/Jakarta")
-	schedules, err := CalculatePrayerTimes(context.TODO(), -7.983908, 112.621391, tz, time.Now(), prayer.MWL())
+	schedules, err := CalculatePrayerTimes(context.TODO(), -7.983908, 112.621391, tz, time.Now(), prayer.MWL(), prayer.Shafii)
 	fmt.Println("err", err)
 	fmt.Println("schedules", schedules)
 

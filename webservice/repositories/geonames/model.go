@@ -11,4 +11,5 @@ type Location struct {
 	Longitude   float64 `json:"longitude"`
 	Timezone    string  `json:"timezone"`
 	Population  int64   `json:"population"`
+	PostalCode  string  `json:"postalCode"`
 }
