@@ -678,51 +678,43 @@
             localStorage.setItem(this.prayerCoordinateCacheIndexKey, JSON.stringify(retained))
         },
         async getPrayerTimesByCoordinate(latitude, longitude, options = {}) {
-            const key = `data-prayer-time-by-coordinate-${latitude}-${longitude}`
-            if (latitude == 0 && longitude == 0) {
+            const lat = Utility.normalizeCoordinate(latitude)
+            const lon = Utility.normalizeCoordinate(longitude)
+            const key = Utility.buildPrayerCoordinateCacheKey(lat, lon)
+            if (lat == 0 && lon == 0) {
                 localStorage.removeItem(key)
                 this.removePrayerCoordinateCacheIndexItem.call(this, key)
             }
 
             this.retainLastPrayerCoordinateCaches.call(this, key)
 
-            const data = await Utility.getLatestData(key, async (resolve) => {
+            let data = await Utility.getLatestData(key, async (resolve) => {
                 const month = parseInt(Utility.now().format('MM'), 10)
                 const year = Utility.now().year()
                 const calcQuery = this.getPrayerCalculationQueryParams.call(this, 'coordinate')
-                const url = `${Constant.app.baseUrlWebService}/muslimboard-api?v=${Constant.meta.version}&op=shalat-schedule-by-coordinate&latitude=${latitude}&longitude=${longitude}&month=${month}&year=${year}&browserID=${Utility.getBrowserUuid()}${calcQuery}`
+                const url = `${Constant.app.baseUrlWebService}/muslimboard-api?v=${Constant.meta.version}&op=shalat-schedule-by-coordinate&latitude=${lat}&longitude=${lon}&month=${month}&year=${year}&browserID=${Utility.getBrowserUuid()}${calcQuery}`
                 const response = await Utility.fetch(url)
                 const result = await response.json()
         
                 resolve(result)
-            }, options)
-            let isDataFound = true
-            if (!data) {
-                isDataFound = false
-            } else if (!data.content) {
-                isDataFound = false
-            } else if (data.content.status_code != 200) {
-                isDataFound = false
-            } else if (!data.content.data) {
-                isDataFound = false
-            }
-            if (!isDataFound) {
-                localStorage.removeItem(key)
-                this.removePrayerCoordinateCacheIndexItem.call(this, key)
-                return false
+            }, {
+                ...options,
+                resolveFallbackCache: () => Utility.findPrayerCoordinateCache(lat, lon)?.data || null
+            })
+
+            if (!Utility.getTodayPrayerSchedule(data)?.timings) {
+                const fallback = Utility.findPrayerCoordinateCache(lat, lon)
+                if (fallback) {
+                    Utility.log('using nearby prayer cache', fallback.key)
+                    data = fallback.data
+                }
             }
 
-            // construct prayer time data then render
-            const schedules = data.content.data.schedules.find((d) => d.date.gregorian.date == Utility.now().format('DD-MM-YYYY'))
-            isDataFound = true
-            if (!schedules) {
-                isDataFound = false
-            } else if (!schedules.timings) {
-                isDataFound = false
-            }
-            if (!isDataFound) {
-                localStorage.removeItem(key)
-                this.removePrayerCoordinateCacheIndexItem.call(this, key)
+            if (!Utility.getTodayPrayerSchedule(data)?.timings) {
+                if (!Utility.isOffline()) {
+                    localStorage.removeItem(key)
+                    this.removePrayerCoordinateCacheIndexItem.call(this, key)
+                }
                 return false
             }
 
@@ -747,31 +739,10 @@
         
                 resolve(result)
             })
-            let isDataFound = true
-            if (!data) {
-                isDataFound = false
-            } else if (!data.content) {
-                isDataFound = false
-            } else if (data.content.status_code != 200) {
-                isDataFound = false
-            } else if (!data.content.data) {
-                isDataFound = false
-            }
-            if (!isDataFound) {
-                localStorage.removeItem(key)
-                return false
-            }
-
-            // construct prayer time data then render
-            const schedules = data.content.data.schedules.find((d) => d.date.gregorian.date == Utility.now().format('DD-MM-YYYY'))
-            isDataFound = true
-            if (!schedules) {
-                isDataFound = false
-            } else if (!schedules.timings) {
-                isDataFound = false
-            }
-            if (!isDataFound) {
-                localStorage.removeItem(key)
+            if (!Utility.getTodayPrayerSchedule(data)?.timings) {
+                if (!Utility.isOffline()) {
+                    localStorage.removeItem(key)
+                }
                 return false
             }
 
@@ -1095,8 +1066,12 @@
         getLocalBackgroundImages(muslimboardImages = []) {
             return this.getActiveBackgroundImages.call(this, muslimboardImages)
                 .filter((bg) => {
-                    const url = bg.urlLocal || bg.url || ''
-                    return url.indexOf('http') == -1
+                    if (bg?.urlLocal) {
+                        return true
+                    }
+
+                    const url = bg?.url || ''
+                    return url && !Utility.isRemoteResourceUrl(url)
                 })
         },
         renderCustomBackgroundUploadedList(records = []) {
@@ -1332,7 +1307,7 @@
                     preloader.onload = null
                     preloader.onerror = null
                     reject(new Error(`background image load timeout: ${url}`))
-                }, Constant.app.timeoutDuration)
+                }, Constant.app.backgroundPreloadTimeoutDuration)
 
                 preloader.onload = () => {
                     clearTimeout(timeout)
@@ -1356,32 +1331,45 @@
                 const key = `data-background-remote-${Constant.meta.version}`
                 const data = await Utility.getLatestData(key, async (resolve) => {
                     const url = `${Constant.app.baseUrlGithub}/data-background.json?v=${Constant.meta.version}.${Utility.now().format('YYYY-MM-DD')}`
-                    const response = await Utility.fetch(url)
-                    const result = await response.json()
+                    const result = await Utility.fetchJsonDataFile(url)
+                    if (!Array.isArray(result.content) || result.content.length === 0) {
+                        throw new Error(`background data has no content: ${url}`)
+                    }
                     resolve(result)
+                }, {
+                    isContentEmpty: (payload) => Utility.normalizeBackgroundDataFile(payload).content.length === 0
                 })
-                if (Object.keys(data?.content || {}).length > 0) {
+                const backgroundPayload = Utility.normalizeBackgroundDataFile(data)
+                if (backgroundPayload.content.length > 0) {
                     await this.refreshCustomBackgroundImages.call(this)
-                    this.updateBackground.call(this, data)
+                    this.updateBackground.call(this, backgroundPayload)
                     return
-                } 
+                }
             } catch (err) {
                 Utility.error(err)
             }
 
             // in case of failure, use local data
-            Utility.log('fetching local data background')
-            const url = `data/data-background.json`
-            const response = await Utility.fetch(url)
-            const data = await response.json()
-            await this.refreshCustomBackgroundImages.call(this)
-            this.updateBackground.call(this, data)
+            try {
+                Utility.log('fetching local data background')
+                const url = `data/data-background.json`
+                const data = await Utility.fetchJsonDataFile(url)
+                if (!Array.isArray(data.content) || data.content.length === 0) {
+                    throw new Error(`local background data has no content: ${url}`)
+                }
+                await this.refreshCustomBackgroundImages.call(this)
+                this.updateBackground.call(this, Utility.normalizeBackgroundDataFile(data))
+            } catch (err) {
+                Utility.error(err)
+            }
         },
 
         // update background images randomly on every X interval
         async updateBackground(data) {
 
-            const muslimboardBackgrounds = data.content || []
+            const backgroundPayload = Utility.normalizeBackgroundDataFile(data)
+            this.backgroundDataFile = backgroundPayload
+            const muslimboardBackgrounds = backgroundPayload.content
             const activeBackgrounds = this.getActiveBackgroundImages.call(this, muslimboardBackgrounds)
 
             // get background url. use local image if exists
@@ -1405,7 +1393,7 @@
                     $photoOwnership.removeAttr('data-custom-image')
                     $photoOwnership.attr('target', '_blank')
                 } else {
-                    $('.photographer').html(background.source.split('http://').reverse()[0])
+                    $('.photographer').html(Utility.formatSourceLabel(background.source))
                     $photoOwnership.removeAttr('data-custom-image')
                     $photoOwnership.attr('target', '_blank')
                 }
@@ -1426,10 +1414,10 @@
 
                         if (delayBeforeTransitionMs > 0) {
                             setTimeout(() => {
-                                this.updateBackground.call(this, data)
+                                this.updateBackground.call(this, this.backgroundDataFile)
                             }, delayBeforeTransitionMs)
                         } else {
-                            this.updateBackground.call(this, data)
+                            this.updateBackground.call(this, this.backgroundDataFile)
                         }
                     })
                     .catch((err) => {
@@ -1441,12 +1429,7 @@
                         }
 
                         this.nextSelectedBackground = fallbackBackground
-
-                        if (isOffline) {
-                            return
-                        }
-
-                        doUpdateBackgroundAndPreloadNextImage()
+                        doUpdateBackgroundAndPreloadNextImage(0)
                     })
             }
 
@@ -1537,6 +1520,8 @@
         // get data content then render it on screen.
         // if background image data ever been loaded once, then the cache will be used on next call
         async getDataContentThenRender() {
+            const getContentPayload = (data) => Utility.unwrapLatestDataContent(data)
+            const hasContentPayload = (payload) => Array.isArray(payload?.content) && payload.content.length > 0
 
             // load data from remote url
             try {
@@ -1544,14 +1529,19 @@
                 const key = `data-content-${I18n.getSelectedLocale()}-remote-${Constant.meta.version}`
                 const data = await Utility.getLatestData(key, async (resolve) => {
                     const url = `${Constant.app.baseUrlGithub}/data-content-${I18n.getSelectedLocale()}.json?v=${Constant.meta.version}.${Utility.now().format('YYYY-MM-DD')}`
-                    const response = await Utility.fetch(url)
-                    const result = await response.json()
+                    const result = await Utility.fetchJsonDataFile(url)
+                    if (!Array.isArray(result.content) || result.content.length === 0) {
+                        throw new Error(`content data has no items: ${url}`)
+                    }
                     resolve(result)
+                }, {
+                    isContentEmpty: (payload) => !hasContentPayload(getContentPayload({ content: payload }))
                 })
-                if (Object.keys(data?.content || {}).length > 0) {
-                    this.updateContent.call(this, data.content)
+                const contentPayload = getContentPayload(data)
+                if (hasContentPayload(contentPayload)) {
+                    this.updateContent.call(this, contentPayload)
                     return
-                } 
+                }
             } catch (err) {
                 Utility.error(err)
             }
@@ -1560,20 +1550,24 @@
             try {
                 Utility.log(`fetching local data (${I18n.getSelectedLocale()}) content`)
                 const url = `data/data-content-${I18n.getSelectedLocale()}.json`
-                const response = await Utility.fetch(url)
-                const data = await response.json()
-                this.updateContent.call(this, data)
-                return
+                const data = await Utility.fetchJsonDataFile(url)
+                if (hasContentPayload(data)) {
+                    this.updateContent.call(this, data)
+                    return
+                }
             } catch (err) {
                 Utility.error(err)
             }
 
             // in case of failure (due to missing localized content or other reason), use english local content
-            Utility.log('fetching local data (en) content')
-            const url = `data/data-content-en.json`
-            const response = await Utility.fetch(url)
-            const data = await response.json()
-            this.updateContent.call(this, data)
+            try {
+                Utility.log('fetching local data (en) content')
+                const url = `data/data-content-en.json`
+                const data = await Utility.fetchJsonDataFile(url)
+                this.updateContent.call(this, data)
+            } catch (err) {
+                Utility.error(err)
+            }
         },
 
         // update content. it's the quote and other text related to it.
@@ -1645,7 +1639,7 @@
                         const address = data.content.data.address
                         this.renderLocationText.call(this, address)
 
-                        const schedule = data.content.data.schedules.find((d) => d.date.gregorian.date == Utility.now().format('DD-MM-YYYY')).timings
+                        const schedule = Utility.getTodayPrayerSchedule(data).timings
                         this.renderPrayerTime.call(this, schedule)
                     }
 
@@ -1699,7 +1693,7 @@
                         }
 
                         this.geoLocationCountryCode = (data.content.data.countryCode || manualCoordinate.countryCode || 'id')
-                        const schedule = data.content.data.schedules.find((d) => d.date.gregorian.date == Utility.now().format('DD-MM-YYYY')).timings
+                        const schedule = Utility.getTodayPrayerSchedule(data).timings
                         this.renderPrayerTime.call(this, schedule)
                         return
                     }
@@ -1717,7 +1711,7 @@
                     }
 
                     this.geoLocationCountryCode = (data.content.data.countryCode || 'id')
-                    const schedule = data.content.data.schedules.find((d) => d.date.gregorian.date == Utility.now().format('DD-MM-YYYY')).timings
+                    const schedule = Utility.getTodayPrayerSchedule(data).timings
                     this.renderPrayerTime.call(this, schedule)
                 }
             } catch (err) {
@@ -1775,7 +1769,7 @@
                     // remove automatic location cache
                     const location = await Utility.getCurrentLocationCoordinate()
                     const { latitude, longitude } = location.coords
-                    localStorage.removeItem(`data-prayer-time-by-coordinate-${latitude}-${longitude}`)
+                    localStorage.removeItem(Utility.buildPrayerCoordinateCacheKey(latitude, longitude))
 
                     // force to not use cached coordinate when refreshing finding coordinate.
                     // not really sure whether this one is good approach
@@ -2095,7 +2089,7 @@
                     </a>
                 `).join('')
 
-                const keyOfNewVersionMessage = `new-version-${Constant.meta.version}}`
+                const keyOfNewVersionMessage = `new-version-${Constant.meta.version}`
                 const newVersion = localStorage.getItem(keyOfNewVersionMessage) || ''
                 const newVersionText = Utility.versionAsFloat(newVersion) > Utility.versionAsFloat(Constant.meta.version) ? `
                     <hr class='separator'>
@@ -2747,7 +2741,7 @@
         },
 
         async checkNewVersion() {
-            const keyOfNewVersionMessage = `new-version-${Constant.meta.version}}`
+            const keyOfNewVersionMessage = `new-version-${Constant.meta.version}`
             if (localStorage.getItem(keyOfNewVersionMessage)) {
                 return
             }

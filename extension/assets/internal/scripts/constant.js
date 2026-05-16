@@ -14,6 +14,7 @@ const Constant = {
         feedbackOrBugReportUrl: 'https://forms.gle/ZDATLmKNntdXBBt58',
         debug: (() => !('update_url' in chrome.runtime.getManifest()))(),
         timeoutDuration: Utility.seconds(5),
+        backgroundPreloadTimeoutDuration: Utility.seconds(20),
         updateBackgroundDelayDuration: Utility.seconds(40),
         updateContentDelayDuration: Utility.seconds(60),
         changelogs: [
