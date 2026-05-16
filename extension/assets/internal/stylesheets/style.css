@@ -6,7 +6,7 @@ html, body {
     margin: 0;
     padding: 0;
     font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    background-color: var(--color-surface);
+    background-color: var(--color-white);
 }
 
 /* ==========================================================================
@@ -29,25 +29,17 @@ html, body {
     --color-text-muted: #666;
     --color-text-soft: #777;
     --color-placeholder: #b1b1b1;
-    --color-surface: #fff;
-    --color-surface-solid: #ffffff;
     --color-surface-soft: #f8f8f8;
-    --color-surface-hover: #f9f9f9;
     --color-surface-muted: #f1f1f1;
     --color-border: #dedede;
     --color-border-soft: #e6e6e6;
     --color-border-control: #d6d6d6;
-    --color-border-hover: #ddd;
-    --color-border-separator: #ececec;
     --color-white: #fff;
-    --color-thumb-bg: #f2f2f2;
     --color-note-muted: #8a8a8a;
 
-    --color-overlay-soft: rgba(0, 0, 0, 0.25);
     --color-overlay-modal: rgba(0, 0, 0, 0.6);
     --color-shadow-backdrop: rgba(0, 0, 0, 0.3);
     --color-glass-panel: rgba(255, 255, 255, 0.92);
-    --color-glass-row: rgba(255, 255, 255, 0.18);
     --color-glass-row-hover: rgba(255, 255, 255, 0.2);
     --color-glass-border: rgba(255, 255, 255, 0.28);
     --color-primary-subtle: rgba(0, 177, 106, 0.08);
@@ -55,39 +47,45 @@ html, body {
     --color-primary-hover-border: rgba(0, 153, 85, 0.85);
     --color-primary-focus: rgba(0, 177, 106, 0.15);
     --color-danger-overlay: rgba(231, 76, 60, 0.96);
-    --color-hint-text: #555;
-    --color-hint-bg: rgba(90, 90, 90, 0.12);
-    --color-hint-border: rgba(90, 90, 90, 0.28);
+    --color-hint-text: #6f6f6f;
+    --color-hint-bg: rgba(120, 120, 120, 0.08);
+    --color-hint-border: rgba(120, 120, 120, 0.18);
 
-    --radius-control: 6px;
-    --radius-panel: 8px;
+    --radius-standard: 8px;
     --radius-pill: 999px;
     --radius-round: 50%;
 
     --shadow-control: 0 1px 6px 0 rgba(32, 33, 36, 0.28);
-    --shadow-floating: 0 4px 14px rgba(0, 0, 0, 0.12);
     --shadow-button: 0 4px 10px rgba(0, 0, 0, 0.18);
     --shadow-button-hover: 0 6px 14px rgba(0, 0, 0, 0.22);
-    --shadow-button-hover-soft: 0 6px 14px rgba(0, 0, 0, 0.16);
 
     --duration-fast: 100ms;
-    --duration-check: 120ms;
     --duration-normal: 300ms;
     --motion-hover-lift: translateY(-1px);
+
+    --opacity-none: 0;
+    --opacity-subtle: 0.2;
+    --opacity-soft: 0.9;
+    --opacity-full: 1;
 
     --font-size-xs: 12px;
     --font-size-sm: 13px;
     --font-size-md: 15px;
     --font-size-lg: 18px;
+    --font-size-clock: 98px;
+    --font-size-quote-arabic: 40px;
+    --font-size-quote-translation: 24px;
+    --font-size-wisdom: 32px;
 }
+
 body.is-background-loading {
     background-color: var(--color-loading-bg);
 }
 body.is-background-loading.is-safari-browser {
-    background-color: var(--color-surface-solid);
+    background-color: var(--color-white);
 }
 body.is-background-loading.is-firefox-browser {
-    background-color: var(--color-surface-solid);
+    background-color: var(--color-white);
 }
 html {
     box-sizing: border-box;
@@ -132,21 +130,21 @@ html {
         linear-gradient(135deg, rgba(8, 14, 11, 0.98), rgba(16, 26, 20, 0.96));
     transform-origin: center;
     pointer-events: none;
-    opacity: 0;
+    opacity: var(--opacity-none);
     transition: opacity 700ms ease;
 }
 body.is-background-loading #background .content::before {
-    opacity: 1;
+    opacity: var(--opacity-full);
     animation: backgroundLoadingBreathing 8s ease-in-out infinite;
 }
 body.is-background-loading.is-firefox-browser #background .content {
-    background-color: var(--color-surface-solid);
+    background-color: var(--color-white);
 }
 body.is-background-loading.is-firefox-browser #background .content::before {
     display: none;
 }
 body.is-background-loading.is-safari-browser #background .content {
-    background-color: var(--color-surface-solid);
+    background-color: var(--color-white);
 }
 body.is-background-loading.is-safari-browser #background .content::before {
     background:
@@ -156,15 +154,15 @@ body.is-background-loading.is-safari-browser #background .content::before {
 }
 @keyframes backgroundLoadingBreathing {
     0% {
-        opacity: 0.92;
+        opacity: var(--opacity-soft);
         transform: scale(1);
     }
     50% {
-        opacity: 1;
+        opacity: var(--opacity-full);
         transform: scale(1.035);
     }
     100% {
-        opacity: 0.92;
+        opacity: var(--opacity-soft);
         transform: scale(1);
     }
 }
@@ -174,7 +172,7 @@ body.is-background-loading.is-safari-browser #background .content::before {
 }
 
 #background-blur {
-    background-color: var(--color-overlay-soft);
+    background-color: var(--color-shadow-backdrop);
     z-index: 3;
 }
 
@@ -210,10 +208,10 @@ body.is-background-loading.is-safari-browser #background .content::before {
     text-align: center;
 }
 #sidebar .date-time .time {
-    font-size: 107px;
+    font-size: var(--font-size-clock);
     font-weight: bold;
     margin-left: -2px;
-    margin-right: -18px;
+    margin-right: 0;
     margin-top: 0;
 }
 #sidebar .date-time .time .separator:before {
@@ -289,7 +287,7 @@ body.is-background-loading.is-safari-browser #background .content::before {
     cursor: default;
 }
 #sidebar .prayer-time table tr.prayer-time-row.active {
-    background-color: var(--color-glass-row);
+    background-color: var(--color-glass-row-hover);
 }
 #sidebar .prayer-time table tr.prayer-time-row:not(.active):hover {
     background-color: var(--color-glass-row-hover);
@@ -336,7 +334,7 @@ body.is-background-loading.is-safari-browser #background .content::before {
     display: none;
 }
 #sidebar .prayer-time table tr.remaining-time td {
-    background-color: var(--color-glass-row);
+    background-color: var(--color-glass-row-hover);
 }
 #sidebar .prayer-time table tr.remaining-time td div {
     font-style: italic;
@@ -387,12 +385,12 @@ body.show-todo-list #wise-word {
     text-decoration: inherit;
 }
 #wise-word .wrapper .vertical .matan {
-    font-size: 40px;
+    font-size: var(--font-size-quote-arabic);
     font-family: "KFGQPC Uthman Taha Naskh", "Helvetica Neue", Helvetica, Arial, sans-serif;
     margin-bottom: 10px;
 }
 #wise-word .wrapper .vertical .translation {
-    font-size: 24px;
+    font-size: var(--font-size-quote-translation);
     font-style: italic;
     font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
@@ -408,7 +406,7 @@ body.show-todo-list #wise-word {
     display: none;
 }
 #wise-word[data-type="word of wisdom"] .wrapper .vertical .translation {
-    font-size: 32px;
+    font-size: var(--font-size-wisdom);
 }
 #wise-word[data-type="word of wisdom"] .wrapper .vertical .reference {
     margin-top: 20px;
@@ -489,7 +487,7 @@ body.show-todo-list #wise-word {
     text-align: right;
     margin: 0px;
     transition: opacity var(--duration-fast) ease-in-out, transform var(--duration-fast) ease-in-out;
-    opacity: 0.2;
+    opacity: var(--opacity-subtle);
 }
 #footer p.dev a {
     color: inherit;
@@ -527,7 +525,7 @@ body.show-todo-list #wise-word {
     right: 30px;
     bottom: 16px;
     background-color: var(--color-glass-panel);
-    border-radius: var(--radius-panel);
+    border-radius: var(--radius-standard);
     z-index: 5;
     transition: ease-in-out bottom var(--duration-normal);
     transition-property: bottom, background-color;
@@ -540,7 +538,7 @@ body.show-todo-list #todo-list {
     height: auto;
 }
 #todo-list:hover {
-    background-color: var(--color-surface);
+    background-color: var(--color-white);
 }
 /* #todo-list.search-active {
     bottom: 30px;
@@ -598,7 +596,7 @@ body.show-todo-list #todo-list .wrapper .toggler .false {
     right: 10px;
     display: none;
     z-index: 6;
-    opacity: 0.9;
+    opacity: var(--opacity-soft);
     transition: opacity var(--duration-fast) ease-in-out, transform var(--duration-fast) ease-in-out;
 }
 #todo-list .wrapper .items .add {
@@ -621,7 +619,7 @@ body.show-todo-list #todo-list .wrapper .items .export {
 #todo-list .wrapper .items .add:hover,
 #todo-list .wrapper .items .import:hover,
 #todo-list .wrapper .items .export:hover {
-    opacity: 1;
+    opacity: var(--opacity-full);
     transform: var(--motion-hover-lift);
 }
 #todo-list .wrapper .items .item {
@@ -639,7 +637,7 @@ body.show-todo-list #todo-list .wrapper .items .item {
     display: block;
 }
 #todo-list .wrapper .items .item:hover {
-    background-color: var(--color-surface-hover);
+    background-color: var(--color-surface-soft);
 }
 #todo-list .wrapper .items .item.draggable-source--is-dragging,
 #todo-list .wrapper .items .item.draggable-mirror {
@@ -647,7 +645,7 @@ body.show-todo-list #todo-list .wrapper .items .item {
     background-color: var(--color-surface-muted) !important;
 }
 #todo-list .wrapper .items .item.draggable-mirror {
-    opacity: 0.1;
+    opacity: var(--opacity-subtle);
 }
 #todo-list .wrapper .items .item input[type=checkbox] {
     position: absolute;
@@ -662,7 +660,7 @@ body.show-todo-list #todo-list .wrapper .items .item {
     height: 1.55rem;
     margin: 0;
     border: 1px solid var(--color-border-control);
-    border-radius: var(--radius-control);
+    border-radius: var(--radius-standard);
     box-sizing: border-box;
     cursor: pointer;
     transform: translateY(-50%);
@@ -676,7 +674,7 @@ body.show-todo-list #todo-list .wrapper .items .item {
     clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
     transform: scale(0);
     transform-origin: bottom left;
-    transition: transform var(--duration-check) ease-in-out;
+    transition: transform var(--duration-fast) ease-in-out;
 }
 #todo-list .wrapper .items .item input[type=checkbox]:checked::before {
     color: var(--color-white);
@@ -706,7 +704,7 @@ body.show-todo-list #todo-list .wrapper .items .item {
 #todo-list .wrapper .items .item .item-textbox.is-editing {
     background-color: var(--color-primary-subtle);
     border: 1px solid var(--color-primary-border);
-    border-radius: var(--radius-control);
+    border-radius: var(--radius-standard);
     padding: 6px 10px;
     margin-left: 32px;
     box-shadow: 0 0 0 3px var(--color-primary-focus);
@@ -755,7 +753,7 @@ body.show-todo-list #todo-list .wrapper .items .item {
     background: var(--color-hint-bg);
     border: 1px solid var(--color-hint-border);
     border-radius: var(--radius-pill);
-    box-shadow: var(--shadow-floating);
+    box-shadow: var(--shadow-button);
     z-index: 5;
     pointer-events: none;
 }
@@ -771,7 +769,7 @@ body.show-todo-list #todo-list .wrapper .items .edit-hint {
     height: 25px;
     text-align: center;
     color: var(--color-white);
-    border-radius: var(--radius-control);
+    border-radius: var(--radius-standard);
     font-size: var(--font-size-md);
     box-shadow: var(--shadow-control);
     position: absolute;
@@ -779,7 +777,7 @@ body.show-todo-list #todo-list .wrapper .items .edit-hint {
     margin-top: -12.5px;
     z-index: 7;
     display: none;
-    opacity: 0.9;
+    opacity: var(--opacity-soft);
     transition: opacity var(--duration-fast) ease-in-out;
 }
 #todo-list .wrapper .items .item .delete {
@@ -797,7 +795,7 @@ body.show-todo-list #todo-list .wrapper .items .edit-hint {
 }
 #todo-list .wrapper .items .item .delete:hover,
 #todo-list .wrapper .items .item .move:hover {
-    opacity: 1;
+    opacity: var(--opacity-full);
     transform: var(--motion-hover-lift);
 }
 
@@ -810,7 +808,7 @@ body.show-todo-list #todo-list .wrapper .items .edit-hint {
     cursor: pointer;
 }
 #footer .menu a:not(.just-text):hover {
-    border-bottom-color: var(--color-border-hover);
+    border-bottom-color: var(--color-border);
 }
 #footer .menu a .connection-status {
     position: relative;
@@ -872,7 +870,7 @@ body.show-todo-list #todo-list .wrapper .items .edit-hint {
 }
 #swal2-html-container hr.separator {
     border-top: none;
-    border-color: var(--color-border-separator);
+    border-color: var(--color-border-soft);
     margin-top: 15px;
     display: block;
 }
@@ -884,14 +882,14 @@ body.show-todo-list #todo-list .wrapper .items .edit-hint {
     padding: 13px 0px;
     margin: 0px 2px;
     font-size: 23px;
-    border-radius: var(--radius-control);
+    border-radius: var(--radius-standard);
     overflow: hidden;
     text-align: center;
-    opacity: 1;
+    opacity: var(--opacity-full);
     transition: opacity var(--duration-fast) ease-in-out, transform var(--duration-fast) ease-in-out;
 }
 #swal2-html-container .modal-info .share-container .btn-share:hover {
-    opacity: 0.7;
+    opacity: var(--opacity-soft);
     transform: var(--motion-hover-lift);
 }
 #swal2-html-container .modal-info .share-container .btn-share.facebook {
@@ -924,7 +922,7 @@ body.show-todo-list #todo-list .wrapper .items .edit-hint {
     margin: 0px auto;
     display: block;
     color: var(--color-white);
-    border-radius: var(--radius-control);
+    border-radius: var(--radius-standard);
     padding: 12px 17px;
     text-decoration: none;
     background-color: var(--color-primary);
@@ -946,7 +944,7 @@ body.show-todo-list #todo-list .wrapper .items .edit-hint {
     margin-bottom: 5px;
 }
 #swal2-html-container .modal-change-language a:hover {
-    opacity: 0.9;
+    opacity: var(--opacity-soft);
     transform: var(--motion-hover-lift);
     box-shadow: var(--shadow-button-hover);
 }
@@ -971,7 +969,7 @@ body.show-todo-list #todo-list .wrapper .items .edit-hint {
 #swal2-html-container .modal-custom-background .mode-group {
     margin: 14px 0 12px;
     padding: 12px;
-    border-radius: var(--radius-panel);
+    border-radius: var(--radius-standard);
     background: var(--color-surface-soft);
 }
 #swal2-html-container .modal-custom-background .mode-group .mode-label {
@@ -1004,16 +1002,16 @@ body.show-todo-list #todo-list .wrapper .items .edit-hint {
     background-color: var(--color-primary);
     color: var(--color-white);
     padding: 9px 13px;
-    border-radius: var(--radius-control);
+    border-radius: var(--radius-standard);
     font-weight: 700;
     font-size: var(--font-size-sm);
     cursor: pointer;
     transition: opacity var(--duration-fast) ease-in-out, transform var(--duration-fast) ease-in-out, box-shadow var(--duration-fast) ease-in-out;
 }
 #swal2-html-container .modal-custom-background .custom-background-upload-trigger:hover {
-    opacity: 0.92;
+    opacity: var(--opacity-soft);
     transform: var(--motion-hover-lift);
-    box-shadow: var(--shadow-button-hover-soft);
+    box-shadow: var(--shadow-button-hover);
 }
 #swal2-html-container .modal-custom-background .custom-background-list {
     display: grid;
@@ -1028,7 +1026,7 @@ body.show-todo-list #todo-list .wrapper .items .edit-hint {
 #swal2-html-container .modal-custom-background .custom-background-empty {
     grid-column: 1 / -1;
     padding: 14px;
-    border-radius: var(--radius-panel);
+    border-radius: var(--radius-standard);
     background-color: var(--color-surface-soft);
     color: var(--color-text-muted);
     font-size: 14px;
@@ -1040,7 +1038,7 @@ body.show-todo-list #todo-list .wrapper .items .edit-hint {
 }
 #swal2-html-container .modal-custom-background .custom-background-item {
     border: 1px solid var(--color-border-soft);
-    border-radius: var(--radius-panel);
+    border-radius: var(--radius-standard);
     overflow: hidden;
     background-color: var(--color-white);
     position: relative;
@@ -1050,7 +1048,7 @@ body.show-todo-list #todo-list .wrapper .items .edit-hint {
     width: 100%;
     height: 140px;
     overflow: hidden;
-    background-color: var(--color-thumb-bg);
+    background-color: var(--color-surface-muted);
     flex: 0 0 auto;
 }
 #swal2-html-container .modal-custom-background .custom-background-item .thumb img {
@@ -1087,7 +1085,7 @@ body.show-todo-list #todo-list .wrapper .items .edit-hint {
     width: 28px;
     height: 28px;
     padding: 0;
-    border-radius: var(--radius-control);
+    border-radius: var(--radius-standard);
     cursor: pointer;
     font-weight: 700;
     line-height: 28px;
@@ -1097,7 +1095,7 @@ body.show-todo-list #todo-list .wrapper .items .edit-hint {
     transition: opacity var(--duration-fast) ease-in-out, transform var(--duration-fast) ease-in-out;
 }
 #swal2-html-container .modal-custom-background .custom-background-item .delete:hover {
-    opacity: 0.9;
+    opacity: var(--opacity-soft);
     transform: var(--motion-hover-lift);
 }
 #swal2-html-container .manual-geolocation div.row {
