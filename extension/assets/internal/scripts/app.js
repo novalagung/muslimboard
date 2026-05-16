@@ -1362,7 +1362,7 @@
                 })
                 if (Object.keys(data?.content || {}).length > 0) {
                     await this.refreshCustomBackgroundImages.call(this)
-                    this.updateBackground.call(this, data.content)
+                    this.updateBackground.call(this, data)
                     return
                 } 
             } catch (err) {
