@@ -146,13 +146,18 @@ const Utility = {
     getCurrentLocationCoordinate: () => new Promise((resolve, reject) => {
         const useCoordinateCache = () => {
             const coordinateCache = JSON.parse(localStorage.getItem('data-coordinate-cache') || '{}')
-            Utility.log('timeout. use last cached location', coordinateCache)
+            Utility.log('use last cached location', coordinateCache)
             if (Object.keys(coordinateCache).length > 0) {
                 resolve(coordinateCache)
             } else {
                 localStorage.removeItem('data-coordinate-cache')
                 reject(new Error(I18n.getText('promptErrorFailToGetLocationInfo')))
             }
+        }
+
+        if (Utility.isOffline()) {
+            useCoordinateCache()
+            return
         }
 
         if (!navigator.geolocation) {
@@ -182,7 +187,191 @@ const Utility = {
             }
         )
     }),
-    getLatestData: (key, callback) => new Promise(async (resolve) => {
+    unwrapLatestDataContent(data) {
+        if (!data || typeof data !== 'object') {
+            return null
+        }
+
+        const inner = data.content
+        if (inner && typeof inner === 'object' && Array.isArray(inner.content)) {
+            return inner
+        }
+
+        if (Array.isArray(inner)) {
+            return {
+                version: data.version || '',
+                content: inner,
+                author: data.author || {}
+            }
+        }
+
+        if (Array.isArray(data.content) && (data.version || data.author)) {
+            return data
+        }
+
+        return data
+    },
+    normalizeBackgroundDataFile(data) {
+        const doc = Utility.unwrapLatestDataContent(data) || {}
+        return {
+            version: doc.version || '',
+            content: Array.isArray(doc.content) ? doc.content : []
+        }
+    },
+    isOffline() {
+        return typeof navigator !== 'undefined' && navigator.onLine === false
+    },
+    isNetworkFetchError(err) {
+        if (!err) {
+            return false
+        }
+
+        const message = String(err.message || err).toLowerCase()
+        return message.indexOf('failed to fetch') > -1
+            || message.indexOf('networkerror') > -1
+            || message.indexOf('network error') > -1
+            || message.indexOf('internet_disconnected') > -1
+            || message.indexOf('err_internet_disconnected') > -1
+    },
+    normalizeCoordinate(value) {
+        const number = Number(value)
+        if (!Number.isFinite(number)) {
+            return 0
+        }
+
+        return Math.round(number * 10000) / 10000
+    },
+    buildPrayerCoordinateCacheKey(latitude, longitude) {
+        const lat = Utility.normalizeCoordinate(latitude)
+        const lon = Utility.normalizeCoordinate(longitude)
+        return `data-prayer-time-by-coordinate-${lat}-${lon}`
+    },
+    readPrayerTimeCacheEntry(key) {
+        const raw = localStorage.getItem(key)
+        if (!raw) {
+            return null
+        }
+
+        try {
+            const data = JSON.parse(raw)
+            if (!Utility.getTodayPrayerSchedule(data)?.timings) {
+                return null
+            }
+
+            return { key, data }
+        } catch (err) {
+            Utility.error(err)
+            return null
+        }
+    },
+    readPrayerCoordinateCacheEntry(key) {
+        return Utility.readPrayerTimeCacheEntry(key)
+    },
+    findPrayerLocationCache(locationID) {
+        const preferredKey = `data-prayer-time-by-location-${locationID}`
+        const preferred = Utility.readPrayerTimeCacheEntry(preferredKey)
+        if (preferred) {
+            return preferred
+        }
+
+        const prefix = 'data-prayer-time-by-location-'
+        return Object.keys(localStorage)
+            .filter((key) => key.indexOf(prefix) === 0)
+            .map((key) => Utility.readPrayerTimeCacheEntry(key))
+            .find((entry) => entry) || null
+    },
+    findPrayerCoordinateCache(latitude, longitude) {
+        const preferredKey = Utility.buildPrayerCoordinateCacheKey(latitude, longitude)
+        const preferred = Utility.readPrayerTimeCacheEntry(preferredKey)
+        if (preferred) {
+            return preferred
+        }
+
+        const prefix = 'data-prayer-time-by-coordinate-'
+        const targetLat = Utility.normalizeCoordinate(latitude)
+        const targetLon = Utility.normalizeCoordinate(longitude)
+        let nearest = null
+        let nearestDistance = Infinity
+
+        Object.keys(localStorage).forEach((key) => {
+            if (key.indexOf(prefix) !== 0 || key === preferredKey) {
+                return
+            }
+
+            const coordsPart = key.slice(prefix.length)
+            const separatorIndex = coordsPart.indexOf('-', 1)
+            if (separatorIndex < 1) {
+                return
+            }
+
+            const cachedLat = parseFloat(coordsPart.slice(0, separatorIndex))
+            const cachedLon = parseFloat(coordsPart.slice(separatorIndex + 1))
+            if (!Number.isFinite(cachedLat) || !Number.isFinite(cachedLon)) {
+                return
+            }
+
+            const entry = Utility.readPrayerTimeCacheEntry(key)
+            if (!entry) {
+                return
+            }
+
+            const distance = Utility.distanceBetween(targetLat, targetLon, cachedLat, cachedLon)
+            if (distance < nearestDistance) {
+                nearestDistance = distance
+                nearest = entry
+            }
+        })
+
+        if (nearest) {
+            return nearest
+        }
+
+        return Object.keys(localStorage)
+            .filter((key) => key.indexOf(prefix) === 0)
+            .map((key) => Utility.readPrayerTimeCacheEntry(key))
+            .find((entry) => entry) || null
+    },
+    resolveValidPrayerTimeCache(data, options = {}) {
+        if (Utility.getTodayPrayerSchedule(data)?.timings) {
+            return data
+        }
+
+        if (typeof options.resolveFallbackCache === 'function') {
+            return options.resolveFallbackCache() || null
+        }
+
+        return null
+    },
+    isRemoteResourceUrl(url) {
+        return /^https?:\/\//i.test(String(url || ''))
+    },
+    getTodayPrayerSchedule(cacheWrapper) {
+        const content = cacheWrapper?.content
+        if (!content || content.status_code != 200 || !content.data?.schedules) {
+            return null
+        }
+
+        return content.data.schedules.find(
+            (each) => each.date.gregorian.date == Utility.now().format('DD-MM-YYYY')
+        ) || null
+    },
+    formatSourceLabel(source) {
+        return String(source || '').replace(/^https?:\/\//i, '')
+    },
+    async fetchJsonDataFile(url) {
+        const response = await Utility.fetch(url)
+        if (!response || !response.ok) {
+            throw new Error(`data fetch failed (${response?.status || 'no response'}): ${url}`)
+        }
+
+        const result = await response.json()
+        if (!result || typeof result !== 'object') {
+            throw new Error(`data fetch returned invalid json: ${url}`)
+        }
+
+        return result
+    },
+    getLatestData: (key, callback, options = {}) => new Promise(async (resolve) => {
         const nowYYYYMMDD = moment().format('YYYY-MM-DD')
         let data = {
             lastUpdated: nowYYYYMMDD,
@@ -193,11 +382,46 @@ const Utility = {
         if (cacheData) {
             data = JSON.parse(cacheData)
         }
-        
-        const isFirstTime = Object.keys(data.content).length == 0
+
+        const isContentEmpty = options.isContentEmpty || ((payload) => {
+            if (!payload || typeof payload !== 'object') {
+                return true
+            }
+            if (Array.isArray(payload)) {
+                return payload.length === 0
+            }
+            return Object.keys(payload).length === 0
+        })
+
+        const forceRefresh = options.forceRefresh === true
+        const isFirstTime = isContentEmpty(data.content)
         const isNotToday = data.lastUpdated != nowYYYYMMDD
-        Utility.log('isFirstTime:', isFirstTime, 'isNotToday:', isNotToday)
-        if (isFirstTime || isNotToday) {
+        const hasCachedContent = !isContentEmpty(data.content)
+        const cacheHasTodaySchedule = !!Utility.getTodayPrayerSchedule(data)?.timings
+        const preferValidTodayCache = options.preferValidTodayCache === true
+
+        Utility.log(
+            'isFirstTime:', isFirstTime,
+            'isNotToday:', isNotToday,
+            'forceRefresh:', forceRefresh,
+            'offline:', Utility.isOffline(),
+            'hasCachedContent:', hasCachedContent,
+            'cacheHasTodaySchedule:', cacheHasTodaySchedule,
+            'preferValidTodayCache:', preferValidTodayCache
+        )
+
+        if (preferValidTodayCache && !forceRefresh && Utility.isOffline()) {
+            const validCache = Utility.resolveValidPrayerTimeCache(data, options)
+            if (validCache) {
+                Utility.log('offline, use month prayer cache with today schedule', key, 'lastUpdated:', validCache.lastUpdated)
+                resolve(validCache)
+                return
+            }
+        }
+
+        const shouldAttemptFetch = forceRefresh || isFirstTime || isNotToday
+
+        if (shouldAttemptFetch) {
             try {
                 await callback((result) => {
                     data.lastUpdated = nowYYYYMMDD
@@ -205,10 +429,27 @@ const Utility = {
                     localStorage.setItem(key, JSON.stringify(data))
                     resolve(data)
                 })
+                return
             } catch (err) {
                 Utility.error(err)
                 Utility.log('use cached data instead')
+                const validCache = preferValidTodayCache
+                    ? Utility.resolveValidPrayerTimeCache(data, options)
+                    : (cacheHasTodaySchedule ? data : null)
+                if (validCache) {
+                    resolve(validCache)
+                    return
+                }
                 resolve(data)
+                return
+            }
+        }
+
+        if (preferValidTodayCache && !forceRefresh) {
+            const validCache = Utility.resolveValidPrayerTimeCache(data, options)
+            if (validCache) {
+                resolve(validCache)
+                return
             }
         }
 

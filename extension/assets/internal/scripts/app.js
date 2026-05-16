@@ -70,8 +70,522 @@
             return { province: parts[0], kabko: parts[1], id: parts[2] }
         },
 
+        getManualLocationCoordinateData() {
+            try {
+                const text = localStorage.getItem('data-manual-location-coordinate') || ''
+                const data = JSON.parse(text || '{}')
+                if (data.type != 'coordinate') {
+                    return false
+                }
+                if (!data.name || !Number.isFinite(data.latitude) || !Number.isFinite(data.longitude)) {
+                    return false
+                }
+                return data
+            } catch (err) {
+                Utility.error('failed to parse manual coordinate location', err)
+                return false
+            }
+        },
+
+        normalizeLocationSearchQuery(query) {
+            return (query || '').trim().toLowerCase().replace(/\s+/g, ' ')
+        },
+
+        prayerCalculationStorageKey: 'data-prayer-calculation-method',
+        prayerCalculationHealToastKey() {
+            return `data-prayer-calculation-method-heal-toast-shown:${Constant.meta.version}`
+        },
+        prayerCalculationDefaults: {
+            aladhanMethod: '3',
+            goPrayerMethod: 'KEMENAG',
+            asrMadhab: 'shafii',
+        },
+        getPrayerCalculationDefaultValues() {
+            return {
+                aladhanMethod: this.prayerCalculationDefaults.aladhanMethod,
+                goPrayerMethod: this.prayerCalculationDefaults.goPrayerMethod,
+                asrMadhab: this.prayerCalculationDefaults.asrMadhab,
+            }
+        },
+        prayerCalculationOptions: {
+            aladhanMethods: [
+                { value: '1', abbr: 'KARACHI', name: 'University of Islamic Sciences, Karachi' },
+                { value: '2', abbr: 'ISNA', name: 'Islamic Society of North America' },
+                { value: '3', abbr: 'MWL', name: 'Muslim World League' },
+                { value: '4', abbr: 'MAKKAH', name: 'Umm Al-Qura University, Makkah' },
+                { value: '5', abbr: 'EGYPT', name: 'Egyptian General Authority of Survey' },
+                { value: '7', abbr: 'TEHRAN', name: 'University of Tehran' },
+                { value: '8', abbr: 'GULF', name: 'Gulf Region' },
+                { value: '9', abbr: 'KUWAIT', name: 'Kuwait' },
+                { value: '10', abbr: 'QATAR', name: 'Qatar' },
+                { value: '11', abbr: 'MUIS', name: 'Majlis Ugama Islam Singapura' },
+                { value: '12', abbr: 'FRANCE', name: 'Union Organization Islamic de France' },
+                { value: '13', abbr: 'TURKEY', name: 'Diyanet Turkey' },
+                { value: '14', abbr: 'RUSSIA', name: 'Spiritual Administration of Muslims of Russia' },
+                { value: '15', abbr: 'MOONSIGHTING', name: 'Moonsighting Committee Worldwide' },
+                { value: '16', abbr: 'DUBAI', name: 'Dubai' },
+                { value: '17', abbr: 'JAKIM', name: 'JAKIM Malaysia' },
+                { value: '18', abbr: 'TUNISIA', name: 'Tunisia' },
+                { value: '19', abbr: 'ALGERIA', name: 'Algeria' },
+                { value: '20', abbr: 'KEMENAG', name: 'Kementerian Agama Republik Indonesia' },
+                { value: '21', abbr: 'MOROCCO', name: 'Morocco' },
+                { value: '22', abbr: 'PORTUGAL', name: 'Comunidade Islamica de Lisboa' },
+                { value: '23', abbr: 'JORDAN', name: 'Jordan Ministry of Awqaf' },
+                { value: '99', abbr: 'CUSTOM', name: 'Custom Angles' },
+            ],
+            goPrayerMethods: [
+                { value: 'ASTRONOMICAL', abbr: 'ASTRONOMICAL', name: 'Astronomical Twilight' },
+                { value: 'MWL', abbr: 'MWL', name: 'Muslim World League' },
+                { value: 'ISNA', abbr: 'ISNA', name: 'Islamic Society of North America' },
+                { value: 'UMMALQURA', abbr: 'UMMALQURA', name: 'Umm Al-Qura' },
+                { value: 'GULF', abbr: 'GULF', name: 'Gulf Region' },
+                { value: 'ALGERIAN', abbr: 'ALGERIAN', name: 'Algeria' },
+                { value: 'KARACHI', abbr: 'KARACHI', name: 'Karachi' },
+                { value: 'DIYANET', abbr: 'DIYANET', name: 'Diyanet Turkey' },
+                { value: 'EGYPT', abbr: 'EGYPT', name: 'Egypt' },
+                { value: 'EGYPTBIS', abbr: 'EGYPTBIS', name: 'Egypt (Bis)' },
+                { value: 'KEMENAG', abbr: 'KEMENAG', name: 'Kementerian Agama Republik Indonesia' },
+                { value: 'MUIS', abbr: 'MUIS', name: 'Majlis Ugama Islam Singapura' },
+                { value: 'JAKIM', abbr: 'JAKIM', name: 'JAKIM Malaysia' },
+                { value: 'UOIF', abbr: 'UOIF', name: 'Union Organization Islamic de France' },
+                { value: 'FRANCE15', abbr: 'FRANCE15', name: 'France 15°' },
+                { value: 'FRANCE18', abbr: 'FRANCE18', name: 'France 18°' },
+                { value: 'TUNISIA', abbr: 'TUNISIA', name: 'Tunisia' },
+                { value: 'TEHRAN', abbr: 'TEHRAN', name: 'Tehran' },
+                { value: 'JAFARI', abbr: 'JAFARI', name: 'Jafari' },
+            ],
+            asrMethods: [
+                { value: 'shafii', abbr: 'SHAFII', name: 'Shafii' },
+                { value: 'hanafi', abbr: 'HANAFI', name: 'Hanafi' },
+            ],
+            popularAladhanValues: ['20', '11', '17', '3', '4', '5', '2', '16', '23', '9'],
+            popularGoPrayerValues: ['KEMENAG', 'MUIS', 'JAKIM', 'MWL', 'ISNA', 'UMMALQURA', 'GULF', 'EGYPT', 'KARACHI'],
+            popularAsrValues: ['shafii', 'hanafi'],
+        },
+        getPrayerCalculationStoredSettings() {
+            let raw = {}
+            try {
+                raw = JSON.parse(localStorage.getItem(this.prayerCalculationStorageKey) || '{}')
+            } catch (err) {
+                raw = {}
+            }
+            return {
+                aladhanMethod: String(raw.aladhanMethod || '').trim(),
+                goPrayerMethod: String(raw.goPrayerMethod || '').trim().toUpperCase(),
+                asrMadhab: String(raw.asrMadhab || '').trim().toLowerCase(),
+            }
+        },
+        getPrayerCalculationSettings(flowType = 'coordinate') {
+            const defaults = this.getPrayerCalculationDefaultValues.call(this)
+            const raw = this.getPrayerCalculationStoredSettings.call(this)
+
+            const allowedAladhan = this.prayerCalculationOptions.aladhanMethods.map((each) => each.value)
+            const allowedGoPrayer = this.prayerCalculationOptions.goPrayerMethods.map((each) => each.value)
+            const allowedAsr = this.prayerCalculationOptions.asrMethods.map((each) => each.value)
+            const hasAnyValue = !!(raw.aladhanMethod || raw.goPrayerMethod || raw.asrMadhab)
+            const normalized = {
+                aladhanMethod: hasAnyValue ? raw.aladhanMethod : defaults.aladhanMethod,
+                goPrayerMethod: hasAnyValue ? raw.goPrayerMethod : defaults.goPrayerMethod,
+                asrMadhab: hasAnyValue ? raw.asrMadhab : defaults.asrMadhab,
+            }
+
+            let isHealed = false
+            if (!allowedAladhan.includes(normalized.aladhanMethod)) {
+                normalized.aladhanMethod = defaults.aladhanMethod
+                if (hasAnyValue) {
+                    isHealed = true
+                }
+            }
+            if (!allowedGoPrayer.includes(normalized.goPrayerMethod)) {
+                normalized.goPrayerMethod = defaults.goPrayerMethod
+                if (hasAnyValue) {
+                    isHealed = true
+                }
+            }
+            if (!allowedAsr.includes(normalized.asrMadhab)) {
+                normalized.asrMadhab = defaults.asrMadhab
+                if (hasAnyValue) {
+                    isHealed = true
+                }
+            }
+
+            if (isHealed) {
+                this.setPrayerCalculationSettings.call(this, normalized)
+                if (!localStorage.getItem(this.prayerCalculationHealToastKey.call(this))) {
+                    localStorage.setItem(this.prayerCalculationHealToastKey.call(this), '1')
+                    $.toast({
+                        heading: I18n.getText('prayerCalculationMethodAutoResetToastTitle'),
+                        text: I18n.getText('prayerCalculationMethodAutoResetToast'),
+                        showHideTransition: 'fade',
+                        icon: 'info',
+                        position: 'top-center',
+                        hideAfter: 6000
+                    })
+                }
+            }
+
+            return normalized
+        },
+        setPrayerCalculationSettings(payload) {
+            const normalized = {
+                aladhanMethod: String(payload.aladhanMethod || '').trim(),
+                goPrayerMethod: String(payload.goPrayerMethod || '').trim().toUpperCase(),
+                asrMadhab: String(payload.asrMadhab || '').trim().toLowerCase(),
+            }
+            localStorage.setItem(this.prayerCalculationStorageKey, JSON.stringify(normalized))
+            return normalized
+        },
+        resetPrayerCalculationSettings(flowType = 'coordinate') {
+            return this.setPrayerCalculationSettings.call(this, this.getPrayerCalculationDefaultValues.call(this))
+        },
+        getPrayerCalculationOptionLabel(optionType, value) {
+            const options = this.prayerCalculationOptions[`${optionType}Methods`] || []
+            const match = options.find((each) => String(each.value) == String(value))
+            if (!match) {
+                return value
+            }
+            return match.abbr || match.name
+        },
+        getPrayerCalculationAsrSummaryLabel(value) {
+            const match = this.prayerCalculationOptions.asrMethods.find((each) => String(each.value) == String(value))
+            if (!match) {
+                return value
+            }
+            return match.name
+        },
+        formatPrayerCalculationOptionLabel(option) {
+            if (!option) {
+                return ''
+            }
+            if (!option.abbr) {
+                return option.name
+            }
+            return `${option.abbr} - ${option.name}`
+        },
+        getPrayerCalculationOptionName(optionType, value) {
+            const options = this.prayerCalculationOptions[`${optionType}Methods`] || []
+            const match = options.find((each) => String(each.value) == String(value))
+            if (!match) {
+                return value
+            }
+            return this.formatPrayerCalculationOptionLabel.call(this, match)
+        },
+        sortPrayerCalculationOptions(options) {
+            return options.slice().sort((a, b) => {
+                const labelA = this.formatPrayerCalculationOptionLabel.call(this, a)
+                const labelB = this.formatPrayerCalculationOptionLabel.call(this, b)
+                return labelA.localeCompare(labelB, undefined, { sensitivity: 'base' })
+            })
+        },
+        renderPrayerCalculationPickerOptions(items, popularValues, selectedValue) {
+            const renderGroup = (groupLabel, groupItems) => {
+                if (groupItems.length == 0) {
+                    return ''
+                }
+                const sortedItems = this.sortPrayerCalculationOptions.call(this, groupItems)
+                const options = sortedItems.map((each) => {
+                    const selectedClass = each.value == selectedValue ? ' is-selected' : ''
+                    return `<button type="button" class="prayer-calc-option${selectedClass}" data-value="${each.value}">${this.formatPrayerCalculationOptionLabel.call(this, each)}</button>`
+                }).join('')
+                return `
+                    <div class="prayer-calc-picker-group">
+                        <div class="prayer-calc-picker-group-label">${groupLabel}</div>
+                        <div class="prayer-calc-picker-options">${options}</div>
+                    </div>
+                `
+            }
+            const popular = items.filter((each) => popularValues.includes(each.value))
+            const other = items.filter((each) => !popularValues.includes(each.value))
+            return `
+                ${renderGroup(I18n.getText('prayerCalculationCommonGroup'), popular)}
+                ${renderGroup(I18n.getText('prayerCalculationOtherGroup'), other)}
+            `
+        },
+        renderPrayerCalculationPicker(optionType, inputClass, items, popularValues, selectedValue) {
+            const pickerClass = optionType === 'goPrayer' ? 'goprayer' : optionType
+            const selectedName = this.getPrayerCalculationOptionName.call(this, optionType, selectedValue)
+            return `
+                <div class="prayer-calc-picker prayer-calc-picker-${pickerClass}">
+                    <input type="hidden" class="${inputClass}" value="${selectedValue}">
+                    <button type="button" class="prayer-calc-picker-trigger" aria-expanded="false">
+                        <span class="prayer-calc-picker-value">${selectedName}</span>
+                        <span class="prayer-calc-picker-chevron" aria-hidden="true"></span>
+                    </button>
+                    <div class="prayer-calc-picker-panel">
+                        ${this.renderPrayerCalculationPickerOptions.call(this, items, popularValues, selectedValue)}
+                    </div>
+                </div>
+            `
+        },
+        getPrayerCalculationPickerOptionType($picker) {
+            if ($picker.hasClass('prayer-calc-picker-aladhan')) {
+                return 'aladhan'
+            }
+            if ($picker.hasClass('prayer-calc-picker-asr')) {
+                return 'asr'
+            }
+            return 'goPrayer'
+        },
+        closePrayerCalculationPickers($exceptPicker = $()) {
+            $('.prayer-calc-picker').not($exceptPicker).removeClass('is-open')
+            $('.prayer-calc-picker-trigger').not($exceptPicker.find('.prayer-calc-picker-trigger')).attr('aria-expanded', 'false')
+        },
+        setPrayerCalculationPickerValue($picker, optionType, value) {
+            const items = this.prayerCalculationOptions[`${optionType}Methods`] || []
+            const match = items.find((each) => String(each.value) == String(value))
+            if (!match) {
+                return
+            }
+            $picker.find('input[type=hidden]').val(match.value)
+            $picker.find('.prayer-calc-picker-value').text(this.formatPrayerCalculationOptionLabel.call(this, match))
+            $picker.find('.prayer-calc-option').removeClass('is-selected')
+            $picker.find(`.prayer-calc-option[data-value="${match.value}"]`).addClass('is-selected')
+        },
+        applyPrayerCalculationPanelValues(settings) {
+            this.setPrayerCalculationPickerValue.call(this, $('.prayer-calc-picker-aladhan'), 'aladhan', settings.aladhanMethod)
+            this.setPrayerCalculationPickerValue.call(this, $('.prayer-calc-picker-goprayer'), 'goPrayer', settings.goPrayerMethod)
+            this.setPrayerCalculationPickerValue.call(this, $('.prayer-calc-picker-asr'), 'asr', settings.asrMadhab)
+        },
+        isPrayerCalculationDefaultSelection(settings) {
+            const defaults = this.getPrayerCalculationDefaultValues.call(this)
+            return (
+                settings.aladhanMethod == defaults.aladhanMethod &&
+                settings.goPrayerMethod == defaults.goPrayerMethod &&
+                settings.asrMadhab == defaults.asrMadhab
+            )
+        },
+        formatPrayerCalculationSummary(settings, flowType = 'coordinate') {
+            const primary = this.getPrayerCalculationOptionLabel.call(this, 'aladhan', settings.aladhanMethod)
+            const fallback = this.getPrayerCalculationOptionLabel.call(this, 'goPrayer', settings.goPrayerMethod)
+            const asr = this.getPrayerCalculationAsrSummaryLabel.call(this, settings.asrMadhab)
+            if (this.isPrayerCalculationDefaultSelection.call(this, settings)) {
+                return I18n.getText('prayerCalculationSummaryDefault')
+                    .replace('$1', primary)
+                    .replace('$2', fallback)
+                    .replace('$3', asr)
+            }
+            return I18n.getText('prayerCalculationSummaryCustom')
+                .replace('$1', primary)
+                .replace('$2', fallback)
+                .replace('$3', asr)
+        },
+        renderPrayerCalculationSettingsPanel(currentSettings, flowType = 'coordinate') {
+            const isDefaultSelection = this.isPrayerCalculationDefaultSelection.call(this, currentSettings)
+            return `
+                <details class="prayer-calc-settings">
+                    <summary class="prayer-calc-settings-toggle">
+                        <span class="prayer-calc-settings-toggle-text">
+                            <span class="prayer-calc-settings-title">${I18n.getText('prayerCalculationAdvancedSettingsTitle')}</span>
+                            <span class="prayer-calc-settings-summary-row">
+                                <span class="prayer-calc-settings-summary">${this.formatPrayerCalculationSummary.call(this, currentSettings, flowType)}</span>
+                                <button type="button" class="prayer-calc-reset"${isDefaultSelection ? ' hidden' : ''}>${I18n.getText('prayerCalculationReset')}</button>
+                            </span>
+                        </span>
+                        <span class="prayer-calc-settings-chevron" aria-hidden="true"></span>
+                    </summary>
+                    <div class="prayer-calc-settings-content">
+                        <p class="prayer-calc-settings-help">${I18n.getText('prayerCalculationAdvancedSettingsHelp')}</p>
+                        <div class="prayer-calc-field">
+                            <div class="prayer-calc-settings-label">${I18n.getText('prayerCalculationPrimaryLabel')}</div>
+                            ${this.renderPrayerCalculationPicker.call(
+                                this,
+                                'aladhan',
+                                'prayer-calc-primary',
+                                this.prayerCalculationOptions.aladhanMethods,
+                                this.prayerCalculationOptions.popularAladhanValues,
+                                currentSettings.aladhanMethod
+                            )}
+                        </div>
+                        <div class="prayer-calc-field">
+                            <div class="prayer-calc-settings-label">${I18n.getText('prayerCalculationFallbackLabel')}</div>
+                            ${this.renderPrayerCalculationPicker.call(
+                                this,
+                                'goPrayer',
+                                'prayer-calc-fallback',
+                                this.prayerCalculationOptions.goPrayerMethods,
+                                this.prayerCalculationOptions.popularGoPrayerValues,
+                                currentSettings.goPrayerMethod
+                            )}
+                        </div>
+                        <div class="prayer-calc-field prayer-calc-field-asr">
+                            <div class="prayer-calc-settings-label">${I18n.getText('prayerCalculationAsrLabel')}</div>
+                            ${this.renderPrayerCalculationPicker.call(
+                                this,
+                                'asr',
+                                'prayer-calc-asr',
+                                this.prayerCalculationOptions.asrMethods,
+                                this.prayerCalculationOptions.popularAsrValues,
+                                currentSettings.asrMadhab
+                            )}
+                        </div>
+                    </div>
+                </details>
+            `
+        },
+        updatePrayerCalculationSettingsSummary(flowType = 'coordinate') {
+            const $summary = $('.prayer-calc-settings-summary')
+            if ($summary.length == 0) {
+                return
+            }
+            const settings = this.readPrayerCalculationSettingsFromPanel.call(this, flowType)
+            const isDefaultSelection = this.isPrayerCalculationDefaultSelection.call(this, settings)
+            $summary.text(this.formatPrayerCalculationSummary.call(this, settings, flowType))
+            $('.prayer-calc-reset').prop('hidden', isDefaultSelection)
+        },
+        bindPrayerCalculationSettingsPanel(flowType = 'coordinate') {
+            const $details = $('.prayer-calc-settings')
+            const syncOpenState = () => {
+                $details.toggleClass('is-open', $details.prop('open'))
+            }
+            $details.off('toggle.prayerCalc').on('toggle.prayerCalc', syncOpenState)
+            syncOpenState()
+
+            $('.prayer-calc-picker-trigger')
+                .off('click.prayerCalc')
+                .on('click.prayerCalc', (e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    const $picker = $(e.currentTarget).closest('.prayer-calc-picker')
+                    const isOpen = $picker.hasClass('is-open')
+                    this.closePrayerCalculationPickers.call(this)
+                    if (!isOpen) {
+                        $picker.addClass('is-open')
+                        $(e.currentTarget).attr('aria-expanded', 'true')
+                    }
+                })
+
+            $('.prayer-calc-option')
+                .off('click.prayerCalc')
+                .on('click.prayerCalc', (e) => {
+                    e.preventDefault()
+                    const $option = $(e.currentTarget)
+                    const $picker = $option.closest('.prayer-calc-picker')
+                    const value = $option.attr('data-value')
+                    const optionType = this.getPrayerCalculationPickerOptionType.call(this, $picker)
+                    this.setPrayerCalculationPickerValue.call(this, $picker, optionType, value)
+                    this.closePrayerCalculationPickers.call(this)
+                    this.updatePrayerCalculationSettingsSummary.call(this, flowType)
+                })
+
+            $('#swal2-html-container')
+                .off('click.prayerCalcOutside')
+                .on('click.prayerCalcOutside', (e) => {
+                    if ($(e.target).closest('.prayer-calc-picker').length == 0) {
+                        this.closePrayerCalculationPickers.call(this)
+                    }
+                })
+
+            $('.prayer-calc-reset')
+                .off('click.prayerCalc')
+                .on('click.prayerCalc', (e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    const defaults = this.resetPrayerCalculationSettings.call(this, flowType)
+                    this.applyPrayerCalculationPanelValues.call(this, defaults)
+                    this.updatePrayerCalculationSettingsSummary.call(this, flowType)
+                })
+
+            this.updatePrayerCalculationSettingsSummary.call(this, flowType)
+        },
+        getPrayerCalculationModalSwalOptions(flowType, extraOptions = {}) {
+            return Object.assign({
+                showCancelButton: true,
+                cancelButtonText: I18n.getText('promptConfirmationCancel'),
+            }, extraOptions)
+        },
+        readPrayerCalculationSettingsFromPanel(flowType = 'coordinate') {
+            const defaults = this.getPrayerCalculationSettings.call(this, flowType)
+            return {
+                aladhanMethod: $('input.prayer-calc-primary').val() || defaults.aladhanMethod,
+                goPrayerMethod: $('input.prayer-calc-fallback').val() || defaults.goPrayerMethod,
+                asrMadhab: $('input.prayer-calc-asr').val() || defaults.asrMadhab,
+            }
+        },
+        savePrayerCalculationSettingsFromSelection(flowType, selectedSettings) {
+            const stored = this.getPrayerCalculationStoredSettings.call(this)
+            const hasStored = !!(stored.aladhanMethod || stored.goPrayerMethod || stored.asrMadhab)
+            const defaults = this.getPrayerCalculationDefaultValues.call(this)
+            const isDefaultSelection = this.isPrayerCalculationDefaultSelection.call(this, selectedSettings)
+            if (!hasStored && isDefaultSelection) {
+                return
+            }
+            this.setPrayerCalculationSettings.call(this, selectedSettings)
+        },
+        getPrayerCalculationQueryParams(flowType = 'coordinate') {
+            const stored = this.getPrayerCalculationStoredSettings.call(this)
+            if (!stored.aladhanMethod && !stored.goPrayerMethod && !stored.asrMadhab) {
+                return ''
+            }
+            const settings = this.getPrayerCalculationSettings.call(this, flowType)
+            return `&calc_primary=${encodeURIComponent(settings.aladhanMethod)}&calc_fallback=${encodeURIComponent(settings.goPrayerMethod)}&calc_asr=${encodeURIComponent(settings.asrMadhab)}`
+        },
+
+        getLocationSearchCache(query) {
+            const normalized = this.normalizeLocationSearchQuery.call(this, query)
+            const key = `data-location-search-cache:${Constant.meta.version}:${normalized}`
+            try {
+                const data = JSON.parse(localStorage.getItem(key) || '{}')
+                if (!Array.isArray(data.results)) {
+                    return false
+                }
+                return data.results
+            } catch (err) {
+                Utility.error('failed to parse location search cache', err)
+                localStorage.removeItem(key)
+                return false
+            }
+        },
+
+        setLocationSearchCache(query, results) {
+            const normalized = this.normalizeLocationSearchQuery.call(this, query)
+            const key = `data-location-search-cache:${Constant.meta.version}:${normalized}`
+            localStorage.setItem(key, JSON.stringify({
+                cachedAt: new Date().getTime(),
+                results
+            }))
+        },
+
+        async searchLocations(query) {
+            const normalized = this.normalizeLocationSearchQuery.call(this, query)
+            if (normalized.length < 3) {
+                return []
+            }
+
+            const cached = this.getLocationSearchCache.call(this, normalized)
+            if (cached) {
+                return cached
+            }
+
+            const url = `${Constant.app.baseUrlWebService}/muslimboard-api?v=${Constant.meta.version}&op=location-search&q=${encodeURIComponent(normalized)}&limit=10&browserID=${Utility.getBrowserUuid()}`
+            const response = await Utility.fetch(url)
+            const result = await response.json()
+            if (result.status_code != 200 || !Array.isArray(result.data)) {
+                throw new Error(result.error_message || I18n.getText('promptManualLocationSearchError'))
+            }
+
+            this.setLocationSearchCache.call(this, normalized, result.data)
+            return result.data
+        },
+
+        formatLocationSearchResult(location) {
+            const parts = [location.name, location.admin1Name, location.countryName]
+                .filter((each) => !!each)
+            let label = parts.join(', ')
+            const postalCode = String(location.postalCode || '').trim()
+            if (postalCode) {
+                label += ` (${postalCode})`
+            }
+            return label
+        },
+
         // detect whether automatic location is currently active, or not
         isUsingAutomaticLocation() {
+            if (localStorage.getItem('data-manual-location-coordinate')) {
+                if (this.getManualLocationCoordinateData.call(this)) {
+                    return false
+                }
+                localStorage.removeItem('data-manual-location-coordinate')
+            }
             if (localStorage.getItem('data-manual-location')) {
                 return false
             }
@@ -163,51 +677,45 @@
             const retained = normalized.filter((each) => each != key)
             localStorage.setItem(this.prayerCoordinateCacheIndexKey, JSON.stringify(retained))
         },
-        async getPrayerTimesByCoordinate(latitude, longitude) {
-            const key = `data-prayer-time-by-coordinate-${latitude}-${longitude}`
-            if (latitude == 0 && longitude == 0) {
+        async getPrayerTimesByCoordinate(latitude, longitude, options = {}) {
+            const lat = Utility.normalizeCoordinate(latitude)
+            const lon = Utility.normalizeCoordinate(longitude)
+            const key = Utility.buildPrayerCoordinateCacheKey(lat, lon)
+            if (lat == 0 && lon == 0) {
                 localStorage.removeItem(key)
                 this.removePrayerCoordinateCacheIndexItem.call(this, key)
             }
 
             this.retainLastPrayerCoordinateCaches.call(this, key)
 
-            const data = await Utility.getLatestData(key, async (resolve) => {
+            let data = await Utility.getLatestData(key, async (resolve) => {
                 const month = parseInt(Utility.now().format('MM'), 10)
                 const year = Utility.now().year()
-                const url = `${Constant.app.baseUrlWebService}/muslimboard-api?v=${Constant.meta.version}&op=shalat-schedule-by-coordinate&latitude=${latitude}&longitude=${longitude}&month=${month}&year=${year}&browserID=${Utility.getBrowserUuid()}`
+                const calcQuery = this.getPrayerCalculationQueryParams.call(this, 'coordinate')
+                const url = `${Constant.app.baseUrlWebService}/muslimboard-api?v=${Constant.meta.version}&op=shalat-schedule-by-coordinate&latitude=${lat}&longitude=${lon}&month=${month}&year=${year}&browserID=${Utility.getBrowserUuid()}${calcQuery}`
                 const response = await Utility.fetch(url)
                 const result = await response.json()
         
                 resolve(result)
+            }, {
+                ...options,
+                preferValidTodayCache: true,
+                resolveFallbackCache: () => Utility.findPrayerCoordinateCache(lat, lon)?.data || null
             })
-            let isDataFound = true
-            if (!data) {
-                isDataFound = false
-            } else if (!data.content) {
-                isDataFound = false
-            } else if (data.content.status_code != 200) {
-                isDataFound = false
-            } else if (!data.content.data) {
-                isDataFound = false
-            }
-            if (!isDataFound) {
-                localStorage.removeItem(key)
-                this.removePrayerCoordinateCacheIndexItem.call(this, key)
-                return false
+
+            if (!Utility.getTodayPrayerSchedule(data)?.timings) {
+                const fallback = Utility.findPrayerCoordinateCache(lat, lon)
+                if (fallback) {
+                    Utility.log('using nearby prayer cache', fallback.key)
+                    data = fallback.data
+                }
             }
 
-            // construct prayer time data then render
-            const schedules = data.content.data.schedules.find((d) => d.date.gregorian.date == Utility.now().format('DD-MM-YYYY'))
-            isDataFound = true
-            if (!schedules) {
-                isDataFound = false
-            } else if (!schedules.timings) {
-                isDataFound = false
-            }
-            if (!isDataFound) {
-                localStorage.removeItem(key)
-                this.removePrayerCoordinateCacheIndexItem.call(this, key)
+            if (!Utility.getTodayPrayerSchedule(data)?.timings) {
+                if (!Utility.isOffline()) {
+                    localStorage.removeItem(key)
+                    this.removePrayerCoordinateCacheIndexItem.call(this, key)
+                }
                 return false
             }
 
@@ -222,40 +730,32 @@
                 localStorage.removeItem(key)
             }
 
-            const data = await Utility.getLatestData(key, async (resolve) => {
+            let data = await Utility.getLatestData(key, async (resolve) => {
                 const month = parseInt(Utility.now().format('MM'), 10)
                 const year = Utility.now().year()
-                const url = `${Constant.app.baseUrlWebService}/muslimboard-api?v=${Constant.meta.version}&op=shalat-schedule-by-location&locationID=${locationID}&province=${province}&city=${kabko}&month=${month}&year=${year}&browserID=${Utility.getBrowserUuid()}`
+                const calcQuery = this.getPrayerCalculationQueryParams.call(this, 'location')
+                const url = `${Constant.app.baseUrlWebService}/muslimboard-api?v=${Constant.meta.version}&op=shalat-schedule-by-location&locationID=${locationID}&province=${province}&city=${kabko}&month=${month}&year=${year}&browserID=${Utility.getBrowserUuid()}${calcQuery}`
                 const response = await Utility.fetch(url)
                 const result = await response.json()
         
                 resolve(result)
+            }, {
+                preferValidTodayCache: true,
+                resolveFallbackCache: () => Utility.findPrayerLocationCache(locationID)?.data || null
             })
-            let isDataFound = true
-            if (!data) {
-                isDataFound = false
-            } else if (!data.content) {
-                isDataFound = false
-            } else if (data.content.status_code != 200) {
-                isDataFound = false
-            } else if (!data.content.data) {
-                isDataFound = false
-            }
-            if (!isDataFound) {
-                localStorage.removeItem(key)
-                return false
+
+            if (!Utility.getTodayPrayerSchedule(data)?.timings) {
+                const fallback = Utility.findPrayerLocationCache(locationID)
+                if (fallback) {
+                    Utility.log('using cached prayer data by location', fallback.key)
+                    data = fallback.data
+                }
             }
 
-            // construct prayer time data then render
-            const schedules = data.content.data.schedules.find((d) => d.date.gregorian.date == Utility.now().format('DD-MM-YYYY'))
-            isDataFound = true
-            if (!schedules) {
-                isDataFound = false
-            } else if (!schedules.timings) {
-                isDataFound = false
-            }
-            if (!isDataFound) {
-                localStorage.removeItem(key)
+            if (!Utility.getTodayPrayerSchedule(data)?.timings) {
+                if (!Utility.isOffline()) {
+                    localStorage.removeItem(key)
+                }
                 return false
             }
 
@@ -579,8 +1079,12 @@
         getLocalBackgroundImages(muslimboardImages = []) {
             return this.getActiveBackgroundImages.call(this, muslimboardImages)
                 .filter((bg) => {
-                    const url = bg.urlLocal || bg.url || ''
-                    return url.indexOf('http') == -1
+                    if (bg?.urlLocal) {
+                        return true
+                    }
+
+                    const url = bg?.url || ''
+                    return url && !Utility.isRemoteResourceUrl(url)
                 })
         },
         renderCustomBackgroundUploadedList(records = []) {
@@ -816,7 +1320,7 @@
                     preloader.onload = null
                     preloader.onerror = null
                     reject(new Error(`background image load timeout: ${url}`))
-                }, Constant.app.timeoutDuration)
+                }, Constant.app.backgroundPreloadTimeoutDuration)
 
                 preloader.onload = () => {
                     clearTimeout(timeout)
@@ -840,32 +1344,45 @@
                 const key = `data-background-remote-${Constant.meta.version}`
                 const data = await Utility.getLatestData(key, async (resolve) => {
                     const url = `${Constant.app.baseUrlGithub}/data-background.json?v=${Constant.meta.version}.${Utility.now().format('YYYY-MM-DD')}`
-                    const response = await Utility.fetch(url)
-                    const result = await response.json()
+                    const result = await Utility.fetchJsonDataFile(url)
+                    if (!Array.isArray(result.content) || result.content.length === 0) {
+                        throw new Error(`background data has no content: ${url}`)
+                    }
                     resolve(result)
+                }, {
+                    isContentEmpty: (payload) => Utility.normalizeBackgroundDataFile(payload).content.length === 0
                 })
-                if (Object.keys(data?.content || {}).length > 0) {
+                const backgroundPayload = Utility.normalizeBackgroundDataFile(data)
+                if (backgroundPayload.content.length > 0) {
                     await this.refreshCustomBackgroundImages.call(this)
-                    this.updateBackground.call(this, data.content)
+                    this.updateBackground.call(this, backgroundPayload)
                     return
-                } 
+                }
             } catch (err) {
                 Utility.error(err)
             }
 
             // in case of failure, use local data
-            Utility.log('fetching local data background')
-            const url = `data/data-background.json`
-            const response = await Utility.fetch(url)
-            const data = await response.json()
-            await this.refreshCustomBackgroundImages.call(this)
-            this.updateBackground.call(this, data)
+            try {
+                Utility.log('fetching local data background')
+                const url = `data/data-background.json`
+                const data = await Utility.fetchJsonDataFile(url)
+                if (!Array.isArray(data.content) || data.content.length === 0) {
+                    throw new Error(`local background data has no content: ${url}`)
+                }
+                await this.refreshCustomBackgroundImages.call(this)
+                this.updateBackground.call(this, Utility.normalizeBackgroundDataFile(data))
+            } catch (err) {
+                Utility.error(err)
+            }
         },
 
         // update background images randomly on every X interval
         async updateBackground(data) {
 
-            const muslimboardBackgrounds = data.content || []
+            const backgroundPayload = Utility.normalizeBackgroundDataFile(data)
+            this.backgroundDataFile = backgroundPayload
+            const muslimboardBackgrounds = backgroundPayload.content
             const activeBackgrounds = this.getActiveBackgroundImages.call(this, muslimboardBackgrounds)
 
             // get background url. use local image if exists
@@ -889,7 +1406,7 @@
                     $photoOwnership.removeAttr('data-custom-image')
                     $photoOwnership.attr('target', '_blank')
                 } else {
-                    $('.photographer').html(background.source.split('http://').reverse()[0])
+                    $('.photographer').html(Utility.formatSourceLabel(background.source))
                     $photoOwnership.removeAttr('data-custom-image')
                     $photoOwnership.attr('target', '_blank')
                 }
@@ -910,10 +1427,10 @@
 
                         if (delayBeforeTransitionMs > 0) {
                             setTimeout(() => {
-                                this.updateBackground.call(this, data)
+                                this.updateBackground.call(this, this.backgroundDataFile)
                             }, delayBeforeTransitionMs)
                         } else {
-                            this.updateBackground.call(this, data)
+                            this.updateBackground.call(this, this.backgroundDataFile)
                         }
                     })
                     .catch((err) => {
@@ -925,12 +1442,7 @@
                         }
 
                         this.nextSelectedBackground = fallbackBackground
-
-                        if (isOffline) {
-                            return
-                        }
-
-                        doUpdateBackgroundAndPreloadNextImage()
+                        doUpdateBackgroundAndPreloadNextImage(0)
                     })
             }
 
@@ -1021,6 +1533,8 @@
         // get data content then render it on screen.
         // if background image data ever been loaded once, then the cache will be used on next call
         async getDataContentThenRender() {
+            const getContentPayload = (data) => Utility.unwrapLatestDataContent(data)
+            const hasContentPayload = (payload) => Array.isArray(payload?.content) && payload.content.length > 0
 
             // load data from remote url
             try {
@@ -1028,14 +1542,19 @@
                 const key = `data-content-${I18n.getSelectedLocale()}-remote-${Constant.meta.version}`
                 const data = await Utility.getLatestData(key, async (resolve) => {
                     const url = `${Constant.app.baseUrlGithub}/data-content-${I18n.getSelectedLocale()}.json?v=${Constant.meta.version}.${Utility.now().format('YYYY-MM-DD')}`
-                    const response = await Utility.fetch(url)
-                    const result = await response.json()
+                    const result = await Utility.fetchJsonDataFile(url)
+                    if (!Array.isArray(result.content) || result.content.length === 0) {
+                        throw new Error(`content data has no items: ${url}`)
+                    }
                     resolve(result)
+                }, {
+                    isContentEmpty: (payload) => !hasContentPayload(getContentPayload({ content: payload }))
                 })
-                if (Object.keys(data?.content || {}).length > 0) {
-                    this.updateContent.call(this, data.content)
+                const contentPayload = getContentPayload(data)
+                if (hasContentPayload(contentPayload)) {
+                    this.updateContent.call(this, contentPayload)
                     return
-                } 
+                }
             } catch (err) {
                 Utility.error(err)
             }
@@ -1044,20 +1563,24 @@
             try {
                 Utility.log(`fetching local data (${I18n.getSelectedLocale()}) content`)
                 const url = `data/data-content-${I18n.getSelectedLocale()}.json`
-                const response = await Utility.fetch(url)
-                const data = await response.json()
-                this.updateContent.call(this, data)
-                return
+                const data = await Utility.fetchJsonDataFile(url)
+                if (hasContentPayload(data)) {
+                    this.updateContent.call(this, data)
+                    return
+                }
             } catch (err) {
                 Utility.error(err)
             }
 
             // in case of failure (due to missing localized content or other reason), use english local content
-            Utility.log('fetching local data (en) content')
-            const url = `data/data-content-en.json`
-            const response = await Utility.fetch(url)
-            const data = await response.json()
-            this.updateContent.call(this, data)
+            try {
+                Utility.log('fetching local data (en) content')
+                const url = `data/data-content-en.json`
+                const data = await Utility.fetchJsonDataFile(url)
+                this.updateContent.call(this, data)
+            } catch (err) {
+                Utility.error(err)
+            }
         },
 
         // update content. it's the quote and other text related to it.
@@ -1105,7 +1628,7 @@
         // =========== PRAYER TIMES
     
         // load the location and prayer information whether on manual mode or automatic
-        async loadLocationAndPrayerTimeThenRender() {
+        async loadLocationAndPrayerTimeThenRender(options = {}) {
             this.renderPrayerTimePlaceholder.call(this)
             const isDetectModeAutomatic = this.isUsingAutomaticLocation.call(this)
 
@@ -1129,7 +1652,7 @@
                         const address = data.content.data.address
                         this.renderLocationText.call(this, address)
 
-                        const schedule = data.content.data.schedules.find((d) => d.date.gregorian.date == Utility.now().format('DD-MM-YYYY')).timings
+                        const schedule = Utility.getTodayPrayerSchedule(data).timings
                         this.renderPrayerTime.call(this, schedule)
                     }
 
@@ -1168,6 +1691,26 @@
                 } else {
                     Utility.log('load location manually, then render prayer times')
 
+                    const manualCoordinate = this.getManualLocationCoordinateData.call(this)
+                    if (manualCoordinate) {
+                        this.renderLocationText.call(this, manualCoordinate.name)
+
+                        const data = await this.getPrayerTimesByCoordinate.call(
+                            this,
+                            manualCoordinate.latitude,
+                            manualCoordinate.longitude,
+                            options
+                        )
+                        if (!data) {
+                            throw new Error(I18n.getText('promptErrorFailToGetPrayerTimesMessage'))
+                        }
+
+                        this.geoLocationCountryCode = (data.content.data.countryCode || manualCoordinate.countryCode || 'id')
+                        const schedule = Utility.getTodayPrayerSchedule(data).timings
+                        this.renderPrayerTime.call(this, schedule)
+                        return
+                    }
+
                     // on manual mode, get the data from selected province and citym, then render it
                     const { province, kabko, id } = this.getManualLocationData.call(this)
                     const locationText = `${Utility.toTitleCase(kabko)}, ${Utility.toTitleCase(province)}`
@@ -1181,7 +1724,7 @@
                     }
 
                     this.geoLocationCountryCode = (data.content.data.countryCode || 'id')
-                    const schedule = data.content.data.schedules.find((d) => d.date.gregorian.date == Utility.now().format('DD-MM-YYYY')).timings
+                    const schedule = Utility.getTodayPrayerSchedule(data).timings
                     this.renderPrayerTime.call(this, schedule)
                 }
             } catch (err) {
@@ -1205,30 +1748,6 @@
         // for both manual mode and automatic mode
         async registerEventForForceLoadLocationAndPrayerTimes() {
 
-            // get master location data
-            const locations = await this.getDataMasterLocation.call(this)
-
-            // function to render dropdown options
-            const renderDropdownOption = (collections, keyValue, keyText, placeholder) => {
-                const contentOptions = JSON.parse(JSON.stringify(collections))
-                contentOptions.sort((a, b) => {
-                    if (a[keyText] > b[keyText]) {
-                        return 1
-                    } else if (b[keyText] > a[keyText]) {
-                        return -1
-                    } else {
-                        return 0
-                    }
-                })
-    
-                const options = contentOptions.map((each) => {
-                    return `<option value='${each[keyValue]}'>${each[keyText]}</option>`
-                })
-                return [`<option value=''>---- ${placeholder.toUpperCase()} ----</option>`]
-                    .concat(options)
-                    .join('')
-            };
-
             // register event handler for applying automatic location
             $('.detect-data-automatically').on('click', async () => {
                 Utility.log('force load location & prayer times')
@@ -1241,24 +1760,29 @@
                     text = I18n.getText('promptConfirmationMessageToRefreshAutoDetectLocation')
                     buttonText = I18n.getText('promptConfirmationYesToRefreshAutoDetectLocation')
                 }
+                const currentCalcSettings = this.getPrayerCalculationSettings.call(this, 'coordinate')
+                const calcSettingsSection = this.renderPrayerCalculationSettingsPanel.call(this, currentCalcSettings, 'coordinate')
 
-                Swal.fire({
+                Swal.fire(this.getPrayerCalculationModalSwalOptions.call(this, 'coordinate', {
                     icon: 'info',
                     title: I18n.getText('footerMenuAutomaticLocationDetection'),
-                    html: text,
+                    html: `<p>${text}</p>${calcSettingsSection}`,
                     showConfirmButton: true,
-                    showCancelButton: true,
                     confirmButtonText: buttonText,
-                    cancelButtonText: I18n.getText('promptConfirmationCancel')
-                }).then(async (result) => {
+                    didOpen: () => {
+                        this.bindPrayerCalculationSettingsPanel.call(this, 'coordinate')
+                    },
+                })).then(async (result) => {
                     if (!result.isConfirmed) {
                         return
                     }
+                    const selectedCalcSettings = this.readPrayerCalculationSettingsFromPanel.call(this, 'coordinate')
+                    this.savePrayerCalculationSettingsFromSelection.call(this, 'coordinate', selectedCalcSettings)
 
                     // remove automatic location cache
                     const location = await Utility.getCurrentLocationCoordinate()
                     const { latitude, longitude } = location.coords
-                    localStorage.removeItem(`data-prayer-time-by-coordinate-${latitude}-${longitude}`)
+                    localStorage.removeItem(Utility.buildPrayerCoordinateCacheKey(latitude, longitude))
 
                     // force to not use cached coordinate when refreshing finding coordinate.
                     // not really sure whether this one is good approach
@@ -1266,6 +1790,7 @@
 
                     // remove data-manual-location to enable automatic detection on location
                     localStorage.removeItem('data-manual-location')
+                    localStorage.removeItem('data-manual-location-coordinate')
 
                     // reload prayer time
                     this.loadLocationAndPrayerTimeThenRender.call(this)
@@ -1277,92 +1802,153 @@
                 Utility.log('set location of prayer times manually')
 
                 const text = `
-                    <p>${I18n.getText('promptManualLocationSelectionTitle')}</p>
-                    <form class='manual-geolocation'>
-                        <div class="row">
-                            <label>${I18n.getText('promptManualLocationProvinceTitle')}</label>
-                            <select required class="dropdown-province">
-                                ${renderDropdownOption(locations, 'provinsi', 'provinsi', I18n.getText('promptManualLocationProvinceSelectionLabel'))}
-                            </select>
-                        </div>
-                        <div class="row">
-                            <label>${I18n.getText('promptManualLocationCityTitle')}</label>
-                            <select required class="dropdown-city">
-                                <option value="">---- ${I18n.getText('promptManualLocationProvinceOptionPlaceholderLabel')} ----</option>
-                            </select>
-                        </div>
+                    <p>${I18n.getText('promptManualLocationSearchTitle')}</p>
+                    <form class='manual-geolocation manual-location-search'>
+                        <input
+                            type="search"
+                            class="location-search-input"
+                            placeholder="${I18n.getText('promptManualLocationSearchPlaceholder')}"
+                            autocomplete="off"
+                        />
+                        <div class="location-search-status"></div>
+                        <div class="location-search-results"></div>
+                        <div class="location-search-selected-hint"></div>
                     </form>
+                    <div class="manual-location-validation" role="alert" hidden></div>
+                    <hr class="separator">
+                    ${this.renderPrayerCalculationSettingsPanel.call(this, this.getPrayerCalculationSettings.call(this, 'location'), 'location')}
                 `
 
-                let province = ''
-                let kabko = ''
-                let locationID = ''
+                let selectedLocation = this.getManualLocationCoordinateData.call(this) || false
+                const clearManualLocationValidation = () => {
+                    $('.manual-location-validation').prop('hidden', true).empty()
+                }
+                const showManualLocationValidation = () => {
+                    const message = I18n.getText('promptErrorUnableToSaveDueToEmptyCity')
+                    $('.manual-location-validation')
+                        .html(`<i class="fa fa-exclamation-triangle" aria-hidden="true"></i><span>${message}</span>`)
+                        .prop('hidden', false)
+                }
+                const setLocationSearchSelectedHint = (visible) => {
+                    const $hint = $('.manual-location-search .location-search-selected-hint')
+                    if (!visible) {
+                        $hint.hide().empty()
+                        return
+                    }
+                    $hint.text(I18n.getText('promptManualLocationSearchSelectedText')).show()
+                }
+                const renderSelectedLocation = () => {
+                    if (!selectedLocation) {
+                        setLocationSearchSelectedHint.call(this, false)
+                        return
+                    }
+
+                    clearManualLocationValidation()
+                    const $results = $('.manual-location-search .location-search-results')
+                    const label = this.formatLocationSearchResult.call(this, selectedLocation)
+                    $results.empty().append(
+                        $('<button type="button" class="location-search-result is-selected"></button>')
+                            .text(label)
+                    )
+                    $('.manual-location-search .location-search-status').empty()
+                    setLocationSearchSelectedHint.call(this, true)
+                }
+                const renderSearchResults = (results) => {
+                    setLocationSearchSelectedHint.call(this, false)
+                    const $results = $('.manual-location-search .location-search-results')
+                    $results.empty()
+                    if (results.length == 0) {
+                        $('.manual-location-search .location-search-status').text(I18n.getText('promptManualLocationSearchNoResultText'))
+                        return
+                    }
+
+                    $('.manual-location-search .location-search-status').text(I18n.getText('promptManualLocationSearchResultText').replace('$1', results.length))
+                    results.forEach((each) => {
+                        const label = this.formatLocationSearchResult.call(this, each)
+                        const $button = $('<button type="button" class="location-search-result"></button>')
+                            .text(label)
+                            .on('click', () => {
+                                selectedLocation = each
+                                renderSelectedLocation()
+                            })
+                        $results.append($button)
+                    })
+                }
+                const performSearch = Utility.debounce(async () => {
+                    const query = $('.manual-location-search .location-search-input').val()
+                    const normalized = this.normalizeLocationSearchQuery.call(this, query)
+                    selectedLocation = false
+                    $('.manual-location-search .location-search-results').empty()
+                    setLocationSearchSelectedHint.call(this, false)
+                    clearManualLocationValidation()
+
+                    if (normalized.length < 3) {
+                        $('.manual-location-search .location-search-status').empty()
+                        return
+                    }
+
+                    $('.manual-location-search .location-search-status').text(I18n.getText('promptManualLocationSearchLoadingText'))
+                    try {
+                        const results = await this.searchLocations.call(this, normalized)
+                        renderSearchResults(results)
+                    } catch (err) {
+                        Utility.error('failed to search locations', err)
+                        $('.manual-location-search .location-search-status').text(I18n.getText('promptManualLocationSearchError'))
+                    }
+                }, 400)
 
                 // show the manual location picker
-                Swal.fire({
+                Swal.fire(this.getPrayerCalculationModalSwalOptions.call(this, 'location', {
                     icon: 'info',
                     title: I18n.getText('footerMenuManualLocationSelection'),
                     html: text,
                     showConfirmButton: true,
-                    showCancelButton: true,
-                    confirmButtonText: I18n.getText('promptConfirmationSave'),
-                    cancelButtonText: I18n.getText('promptConfirmationCancel'),
+                    confirmButtonText: I18n.getText('promptConfirmationActivateManualLocation'),
+                    didOpen: () => {
+                        Swal.resetValidationMessage()
+                        clearManualLocationValidation()
+                        $('.manual-location-search .location-search-input').on('input', performSearch)
+                        renderSelectedLocation()
+                        this.bindPrayerCalculationSettingsPanel.call(this, 'location')
+                    },
                     preConfirm: () => {
-                        province = $('.dropdown-province').val()
-                        kabko = $('.dropdown-city').children('option').filter(':selected').text()
-                        locationID = $('.dropdown-city').val()
+                        if (!selectedLocation) {
+                            showManualLocationValidation()
+                            return false
+                        }
 
-                        return Promise.resolve()
-                    }
-                }).then((result) => {
+                        clearManualLocationValidation()
+
+                        const selectedCalcSettings = this.readPrayerCalculationSettingsFromPanel.call(this, 'location')
+                        this.savePrayerCalculationSettingsFromSelection.call(this, 'location', selectedCalcSettings)
+                        return selectedLocation
+                    },
+                })).then((result) => {
                     if (!result.isConfirmed) {
-                        return
-                    }
-
-                    if (!province) {
-                        alert(I18n.getText('promptErrorUnableToSaveDueToEmptyProvince'))
-                        return
-                    } else if (!kabko || (kabko || '').includes('----')) {
-                        alert(I18n.getText('promptErrorUnableToSaveDueToEmptyCity'))
                         return
                     }
 
                     // delete previously cached selected location data.
                     // replace it with the newly selected location
-                    const key = `data-prayer-time-by-location-${locationID}`
-                    localStorage.removeItem(key)
-                    localStorage.setItem('data-manual-location', `${province}|${kabko}|${locationID}`)
+                    const location = result.value
+                    const manualLocation = {
+                        type: 'coordinate',
+                        name: this.formatLocationSearchResult.call(this, location),
+                        latitude: Number(location.latitude),
+                        longitude: Number(location.longitude),
+                        countryCode: location.countryCode,
+                        timezone: location.timezone,
+                        postalCode: String(location.postalCode || '').trim(),
+                        id: location.id
+                    }
+                    localStorage.removeItem('data-manual-location')
+                    localStorage.setItem('data-manual-location-coordinate', JSON.stringify(manualLocation))
 
-                    // reload prayer time then render
-                    this.loadLocationAndPrayerTimeThenRender.call(this)
+                    // reload prayer time from backend (skip cache), then store fresh result
+                    this.loadLocationAndPrayerTimeThenRender.call(this, { forceRefresh: true })
                 })
-
-                // get manual location data then show it on modal
-                const savedLocation = this.getManualLocationData.call(this)
-                $('.dropdown-province').val(savedLocation.province);
-                $('.dropdown-province').trigger('change');
-                setTimeout(() => {
-                    $('.dropdown-city').val(savedLocation.id)
-                }, 300);
             })
             
-            // on manual popup/modal, when user select a province,
-            // then proceed with showing cities under the particular province
-            $('body').on('change', '.dropdown-province', async (e) => {
-                const value = e.currentTarget.value
-                if (!value) {
-                    return
-                }
-
-                const found = locations.find((d) => d.provinsi == value)
-                const cities = found ? found.children : []
-                
-                $('.dropdown-city').replaceWith($(
-                    `<select required class="dropdown-city">
-                        ${renderDropdownOption(cities, 'id', 'kabko', I18n.getText('promptManualLocationCitySelectionLabel'))}
-                    </select>`
-                ))
-            })
         },
     
         // =========== FOOTER
@@ -1516,7 +2102,7 @@
                     </a>
                 `).join('')
 
-                const keyOfNewVersionMessage = `new-version-${Constant.meta.version}}`
+                const keyOfNewVersionMessage = `new-version-${Constant.meta.version}`
                 const newVersion = localStorage.getItem(keyOfNewVersionMessage) || ''
                 const newVersionText = Utility.versionAsFloat(newVersion) > Utility.versionAsFloat(Constant.meta.version) ? `
                     <hr class='separator'>
@@ -1542,6 +2128,10 @@
                             ${I18n.getText('modalAboutUsText3')
                                 .replace('$1', `<a href='mailto:${Constant.maintainer.email}?subject=${Constant.meta.appName} ${Constant.meta.version} feedback'>${Constant.maintainer.email}</a>`)
                                 .replace('$2', `<a href='https://github.com/novalagung/muslimboard' target='_blank'>GitHub <i class='fa fa-github'></i></a>`)}
+                        </p>
+                        <p>
+                            ${I18n.getText('modalAboutUsGeoNamesAttribution')
+                                .replace('$1', `<a href='https://www.geonames.org/' target='_blank'>GeoNames</a>`)}
                         </p>
                         ${newVersionText}
                         <hr class='separator'>
@@ -2164,7 +2754,7 @@
         },
 
         async checkNewVersion() {
-            const keyOfNewVersionMessage = `new-version-${Constant.meta.version}}`
+            const keyOfNewVersionMessage = `new-version-${Constant.meta.version}`
             if (localStorage.getItem(keyOfNewVersionMessage)) {
                 return
             }
@@ -2215,6 +2805,7 @@
                 $('body').addClass('is-safari-browser')
             }
 
+            this.getPrayerCalculationSettings.call(this, 'coordinate')
             this.renderDateTime.call(this)
             this.getDataBackgroundThenRender.call(this)
             this.getDataContentThenRender.call(this)

@@ -7,10 +7,14 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
+	"strings"
+	"time"
 
 	"github.com/getsentry/sentry-go"
 	pkg_http "muslimboard-api.novalagung.com/pkg/http"
 	"muslimboard-api.novalagung.com/pkg/logger"
+	pkg_redis "muslimboard-api.novalagung.com/pkg/redis"
+	"muslimboard-api.novalagung.com/repositories/geonames"
 	"muslimboard-api.novalagung.com/usecase"
 )
 
@@ -51,22 +55,73 @@ func HandleImage(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func HandleLocationSearch(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+	namespace := "controller.HandleLocationSearch"
+	span := sentry.StartSpan(ctx, namespace)
+	span.Data = map[string]any{
+		"browserID": r.URL.Query().Get("browserID"),
+		"query":     r.URL.Query().Get("q"),
+		"limit":     r.URL.Query().Get("limit"),
+	}
+	defer span.Finish()
+
+	browserID := strings.TrimSpace(r.URL.Query().Get("browserID"))
+	query := strings.TrimSpace(r.URL.Query().Get("q"))
+	limit := geonames.ParseLimit(r.URL.Query().Get("limit"))
+
+	if browserID == "" {
+		err := fmt.Errorf("missing browserID")
+		pkg_http.WriteRespose(ctx, w, r, http.StatusBadRequest, nil, err)
+		return
+	}
+	if len([]rune(query)) < 3 {
+		err := fmt.Errorf("query must contain at least 3 characters")
+		pkg_http.WriteRespose(ctx, w, r, http.StatusBadRequest, nil, err)
+		return
+	}
+
+	ip := pkg_http.GetClientIP(r)
+	if !pkg_redis.AllowRateLimit(ctx, "rate:location-search:ip:"+ip, 30, time.Minute) ||
+		!pkg_redis.AllowRateLimit(ctx, "rate:location-search:browser:"+browserID, 300, 24*time.Hour) {
+		err := fmt.Errorf("too many location search requests")
+		pkg_http.WriteRespose(ctx, w, r, http.StatusTooManyRequests, nil, err)
+		return
+	}
+
+	res, err := usecase.SearchLocations(ctx, query, limit)
+	if err != nil {
+		logger.Log.Errorln(namespace, "searchLocations", err)
+		pkg_http.WriteRespose(ctx, w, r, http.StatusInternalServerError, nil, err)
+		return
+	}
+
+	pkg_http.WriteRespose(ctx, w, r, http.StatusOK, res, nil)
+}
+
 // HandleShalatScheduleByCoordinate is handler of get shalat schedule by coordinate
 func HandleShalatScheduleByCoordinate(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	namespace := "controller.HandleShalatScheduleByCoordinate"
 	span := sentry.StartSpan(ctx, namespace)
 	span.Data = map[string]any{
-		"browserID": r.URL.Query().Get("browserID"),
-		"month":     r.URL.Query().Get("month"),
-		"year":      r.URL.Query().Get("year"),
-		"latitude":  r.URL.Query().Get("latitude"),
-		"longitude": r.URL.Query().Get("longitude"),
+		"browserID":    r.URL.Query().Get("browserID"),
+		"month":        r.URL.Query().Get("month"),
+		"year":         r.URL.Query().Get("year"),
+		"latitude":     r.URL.Query().Get("latitude"),
+		"longitude":    r.URL.Query().Get("longitude"),
+		"calcPrimary":  r.URL.Query().Get("calc_primary"),
+		"calcFallback": r.URL.Query().Get("calc_fallback"),
+		"calcAsr":      r.URL.Query().Get("calc_asr"),
 	}
 	defer span.Finish()
 
 	// parse params
 	browserID := r.URL.Query().Get("browserID")
 	method := "3" // Muslim World League
+	fallbackMethod := r.URL.Query().Get("calc_fallback")
+	asrMethod := r.URL.Query().Get("calc_asr")
+	if value := r.URL.Query().Get("calc_primary"); value != "" {
+		method = value
+	}
 	month := r.URL.Query().Get("month")
 	year := r.URL.Query().Get("year")
 	latitude := r.URL.Query().Get("latitude")
@@ -81,7 +136,7 @@ func HandleShalatScheduleByCoordinate(ctx context.Context, w http.ResponseWriter
 	}
 
 	// get data
-	res, err := usecase.GetShalatScheduleByCoordinate(ctx, browserID, method, latitude, longitude, month, year)
+	res, err := usecase.GetShalatScheduleByCoordinate(ctx, browserID, method, fallbackMethod, asrMethod, latitude, longitude, month, year)
 	if err != nil {
 		logger.Log.Errorln(namespace, "getShalatScheduleByCoordinate", err)
 		pkg_http.WriteRespose(ctx, w, r, http.StatusInternalServerError, nil, err)
@@ -97,24 +152,32 @@ func HandleShalatScheduleByLocation(ctx context.Context, w http.ResponseWriter, 
 	namespace := "controller.HandleShalatScheduleByLocation"
 	span := sentry.StartSpan(ctx, namespace)
 	span.Data = map[string]any{
-		"browserID": r.URL.Query().Get("browserID"),
-		"month":     r.URL.Query().Get("month"),
-		"year":      r.URL.Query().Get("year"),
-		"province":  r.URL.Query().Get("province"),
-		"city":      r.URL.Query().Get("city"),
+		"browserID":    r.URL.Query().Get("browserID"),
+		"month":        r.URL.Query().Get("month"),
+		"year":         r.URL.Query().Get("year"),
+		"province":     r.URL.Query().Get("province"),
+		"city":         r.URL.Query().Get("city"),
+		"calcPrimary":  r.URL.Query().Get("calc_primary"),
+		"calcFallback": r.URL.Query().Get("calc_fallback"),
+		"calcAsr":      r.URL.Query().Get("calc_asr"),
 	}
 	defer span.Finish()
 
 	// parse params
 	browserID := r.URL.Query().Get("browserID")
-	method := "11" // Majlis Ugama Islam Singapura, Singapore
+	method := "3" // Muslim World League
+	fallbackMethod := r.URL.Query().Get("calc_fallback")
+	asrMethod := r.URL.Query().Get("calc_asr")
+	if value := r.URL.Query().Get("calc_primary"); value != "" {
+		method = value
+	}
 	month := r.URL.Query().Get("month")
 	year := r.URL.Query().Get("year")
 	province := r.URL.Query().Get("province")
 	city := r.URL.Query().Get("city")
 
 	// get data
-	res, err := usecase.GetShalatScheduleByLocation(ctx, browserID, method, province, city, month, year)
+	res, err := usecase.GetShalatScheduleByLocation(ctx, browserID, method, fallbackMethod, asrMethod, province, city, month, year)
 	if err != nil {
 		logger.Log.Errorln(namespace, "getShalatScheduleByLocation", err)
 		pkg_http.WriteRespose(ctx, w, r, http.StatusInternalServerError, nil, err)

@@ -14,13 +14,17 @@ const Constant = {
         feedbackOrBugReportUrl: 'https://forms.gle/ZDATLmKNntdXBBt58',
         debug: (() => !('update_url' in chrome.runtime.getManifest()))(),
         timeoutDuration: Utility.seconds(5),
+        backgroundPreloadTimeoutDuration: Utility.seconds(20),
         updateBackgroundDelayDuration: Utility.seconds(40),
         updateContentDelayDuration: Utility.seconds(60),
         changelogs: [
-            'Use your own image with local IndexedDB storage',
-            'Smoother background loading with softer startup state',
-            'Improved offline handling for cached prayer times and backgrounds',
-            'Refined modal copy, labels, and UI details'
+            'Search and set prayer location worldwide by city, province, or postal code',
+            'Optional prayer calculation methods for primary API, fallback, and Asr madhab',
+            'Clearer auto-detect and manual location setup with improved confirmations',
+            'Postal codes in location search results when available',
+            'Prayer times from cached monthly schedules when offline, with refresh when back online',
+            'More reliable background images on slow or offline connections',
+            'Refined modal copy, labels, and UI details across languages'
         ]
     },
 }
