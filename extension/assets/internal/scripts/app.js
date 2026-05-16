@@ -246,6 +246,13 @@
             }
             return match.abbr || match.name
         },
+        getPrayerCalculationAsrSummaryLabel(value) {
+            const match = this.prayerCalculationOptions.asrMethods.find((each) => String(each.value) == String(value))
+            if (!match) {
+                return value
+            }
+            return match.name
+        },
         formatPrayerCalculationOptionLabel(option) {
             if (!option) {
                 return ''
@@ -350,14 +357,17 @@
         formatPrayerCalculationSummary(settings, flowType = 'coordinate') {
             const primary = this.getPrayerCalculationOptionLabel.call(this, 'aladhan', settings.aladhanMethod)
             const fallback = this.getPrayerCalculationOptionLabel.call(this, 'goPrayer', settings.goPrayerMethod)
+            const asr = this.getPrayerCalculationAsrSummaryLabel.call(this, settings.asrMadhab)
             if (this.isPrayerCalculationDefaultSelection.call(this, settings)) {
                 return I18n.getText('prayerCalculationSummaryDefault')
                     .replace('$1', primary)
                     .replace('$2', fallback)
+                    .replace('$3', asr)
             }
             return I18n.getText('prayerCalculationSummaryCustom')
                 .replace('$1', primary)
                 .replace('$2', fallback)
+                .replace('$3', asr)
         },
         renderPrayerCalculationSettingsPanel(currentSettings, flowType = 'coordinate') {
             const isDefaultSelection = this.isPrayerCalculationDefaultSelection.call(this, currentSettings)
