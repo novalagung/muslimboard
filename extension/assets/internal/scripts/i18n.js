@@ -257,14 +257,14 @@ const I18n = {
             'zh-cn': '自动检测位置'
         },
         footerMenuManualLocationSelection: {
-            ar: 'حدد مكان بعينه (إندونيسيا)',
-            en: 'Choose specific location (Indonesia only)',
-            ru: 'Выберите конкретное местоположение (только в Индонезии)',
-            bn: 'একটি নির্দিষ্ট অবস্থান নির্বাচন করুন (শুধুমাত্র ইন্দোনেশিয়ার জন্য)', 
-            hi: 'एक विशिष्ट स्थान चुनें (केवल इंडोनेशिया के लिए)',
-            id: 'Atur manual pilihan lokasi (Indonesia)',
-            'zh-tw': '手動選擇位置',
-            'zh-cn': '手动选择位置'
+            ar: 'تحديد الموقع يدوياً',
+            en: 'Set location manually',
+            ru: 'Указать местоположение вручную',
+            bn: 'ম্যানুয়ালি অবস্থান সেট করুন',
+            hi: 'स्थान मैन्युअल रूप से सेट करें',
+            id: 'Atur lokasi manual',
+            'zh-tw': '手動設定位置',
+            'zh-cn': '手动设置位置'
         },
         footerMenuInternetAvailability: {
             ar: 'انترنت',
@@ -632,6 +632,86 @@ const I18n = {
             'zh-tw': '請選擇您想要使用的省份和城市，以取得祈禱時間',
             'zh-cn': '请选择您想要用于获取祈祷时间的省份和城市'
         },
+        promptManualLocationSearchTitle: {
+            ar: 'ابحث عن مدينة أو محافظة أو دولة لتحديد موقع مواقيت الصلاة.',
+            en: 'Search for a city, province, or country to set your prayer time location.',
+            ru: 'Найдите город, область или страну, чтобы указать место для расчёта времени намаза.',
+            bn: 'নামাজের সময় নির্ধারণের জন্য শহর, প্রদেশ বা দেশ খুঁজুন।',
+            hi: 'नमाज़ के समय के लिए शहर, प्रांत या देश खोजकर अपना स्थान चुनें।',
+            id: 'Cari kota, provinsi, atau negara untuk menentukan lokasi jadwal sholat.',
+            'zh-tw': '搜尋城市、省或國家，以設定禮拜時間的位置。',
+            'zh-cn': '搜索城市、省或国家，以设置礼拜时间的位置。'
+        },
+        promptManualLocationSearchPlaceholder: {
+            ar: 'اكتب 3 أحرف على الأقل',
+            en: 'Type at least 3 characters',
+            ru: 'Введите минимум 3 символа',
+            bn: 'কমপক্ষে ৩টি অক্ষর লিখুন',
+            hi: 'कम से कम 3 अक्षर लिखें',
+            id: 'Ketik minimal 3 karakter',
+            'zh-tw': '至少輸入 3 個字元',
+            'zh-cn': '至少输入 3 个字符'
+        },
+        promptManualLocationSearchMinimumText: {
+            ar: 'اكتب 3 أحرف على الأقل للبحث.',
+            en: 'Type at least 3 characters to search.',
+            ru: 'Введите минимум 3 символа для поиска.',
+            bn: 'অনুসন্ধানের জন্য কমপক্ষে ৩টি অক্ষর লিখুন।',
+            hi: 'खोजने के लिए कम से कम 3 अक्षर लिखें।',
+            id: 'Ketik minimal 3 karakter untuk mencari.',
+            'zh-tw': '至少輸入 3 個字元以搜尋。',
+            'zh-cn': '至少输入 3 个字符进行搜索。'
+        },
+        promptManualLocationSearchLoadingText: {
+            ar: 'جاري البحث...',
+            en: 'Searching...',
+            ru: 'Поиск...',
+            bn: 'অনুসন্ধান হচ্ছে...',
+            hi: 'खोज रहे हैं...',
+            id: 'Mencari...',
+            'zh-tw': '搜尋中...',
+            'zh-cn': '搜索中...'
+        },
+        promptManualLocationSearchNoResultText: {
+            ar: 'لم يتم العثور على موقع.',
+            en: 'No location found.',
+            ru: 'Местоположение не найдено.',
+            bn: 'কোনো অবস্থান পাওয়া যায়নি।',
+            hi: 'कोई स्थान नहीं मिला।',
+            id: 'Lokasi tidak ditemukan.',
+            'zh-tw': '找不到位置。',
+            'zh-cn': '未找到位置。'
+        },
+        promptManualLocationSearchResultText: {
+            ar: 'تم العثور على $1 موقع.',
+            en: '$1 locations found.',
+            ru: 'Найдено местоположений: $1.',
+            bn: '$1টি অবস্থান পাওয়া গেছে।',
+            hi: '$1 स्थान मिले।',
+            id: '$1 lokasi ditemukan.',
+            'zh-tw': '找到 $1 個位置。',
+            'zh-cn': '找到 $1 个位置。'
+        },
+        promptManualLocationSearchSelectedText: {
+            ar: 'تم اختيار الموقع. اضغط «حفظ» للمتابعة.',
+            en: 'Location selected. Tap Save to continue.',
+            ru: 'Место выбрано. Нажмите «Сохранить», чтобы продолжить.',
+            bn: 'অবস্থান নির্বাচন হয়েছে। চালিয়ে যেতে «সংরক্ষণ» ট্যাপ করুন।',
+            hi: 'स्थान चुन लिया गया है। जारी रखने के लिए «सहेजें» दबाएँ।',
+            id: 'Lokasi sudah dipilih. Tekan Simpan untuk melanjutkan.',
+            'zh-tw': '已選擇位置。點選「儲存」以繼續。',
+            'zh-cn': '已选择位置。点击“保存”以继续。'
+        },
+        promptManualLocationSearchError: {
+            ar: 'تعذر البحث عن الموقع الآن.',
+            en: 'Unable to search locations right now.',
+            ru: 'Не удалось выполнить поиск местоположений.',
+            bn: 'এখন অবস্থান অনুসন্ধান করা যাচ্ছে না।',
+            hi: 'अभी स्थान खोजा नहीं जा सका।',
+            id: 'Tidak bisa mencari lokasi saat ini.',
+            'zh-tw': '目前無法搜尋位置。',
+            'zh-cn': '目前无法搜索位置。'
+        },
         promptManualLocationProvinceTitle: {
             ar: 'مقاطعة',
             en: 'Province',
@@ -732,6 +812,16 @@ const I18n = {
             id: 'Untuk pertanyaan, kritik & saran, maupun jika ingin berkontribusi foto atau quote, silakan kirim email ke $1 atau via submit PR di $2.',
             'zh-tw': '如有任何意見或建議，或想要貢獻照片或名言，請發送電子郵件至 $1 或提交 PR 到 $2。',
             'zh-cn': '如有任何意见或建议，或想要贡献照片或名言，请发送电子邮件至 $1 或提交 PR 到 $2。'
+        },
+        modalAboutUsGeoNamesAttribution: {
+            ar: 'بيانات البحث عن الموقع من $1، مرخصة بموجب CC BY 4.0.',
+            en: 'Location search data by $1, licensed under CC BY 4.0.',
+            ru: 'Данные поиска местоположений предоставлены $1 по лицензии CC BY 4.0.',
+            bn: 'অবস্থান অনুসন্ধানের ডেটা $1 থেকে, CC BY 4.0 লাইসেন্সের অধীনে।',
+            hi: 'स्थान खोज डेटा $1 द्वारा, CC BY 4.0 लाइसेंस के अंतर्गत।',
+            id: 'Data pencarian lokasi dari $1, berlisensi CC BY 4.0.',
+            'zh-tw': '位置搜尋資料由 $1 提供，採用 CC BY 4.0 授權。',
+            'zh-cn': '位置搜索数据由 $1 提供，采用 CC BY 4.0 授权。'
         },
         
         modalShareHeader: {

@@ -19,6 +19,7 @@ import (
 	"golang.org/x/text/language"
 	"muslimboard-api.novalagung.com/repositories/aladhan"
 	"muslimboard-api.novalagung.com/repositories/cache"
+	"muslimboard-api.novalagung.com/repositories/geonames"
 	goprayer "muslimboard-api.novalagung.com/repositories/go-prayer"
 	"muslimboard-api.novalagung.com/repositories/openstreetmap"
 	"muslimboard-api.novalagung.com/repositories/unsplash"
@@ -29,6 +30,10 @@ var cacheManager = cache.NewCacheManager()
 
 func GetImage(ctx context.Context, imageUrl string) (string, io.ReadCloser, error) {
 	return unsplash.GetImage(ctx, imageUrl)
+}
+
+func SearchLocations(ctx context.Context, query string, limit int) ([]geonames.Location, error) {
+	return geonames.SearchLocations(ctx, query, limit)
 }
 
 // GetShalatScheduleByCoordinate is handler of get shalat schedule by coordinate

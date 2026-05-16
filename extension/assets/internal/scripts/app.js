@@ -70,8 +70,88 @@
             return { province: parts[0], kabko: parts[1], id: parts[2] }
         },
 
+        getManualLocationCoordinateData() {
+            try {
+                const text = localStorage.getItem('data-manual-location-coordinate') || ''
+                const data = JSON.parse(text || '{}')
+                if (data.type != 'coordinate') {
+                    return false
+                }
+                if (!data.name || !Number.isFinite(data.latitude) || !Number.isFinite(data.longitude)) {
+                    return false
+                }
+                return data
+            } catch (err) {
+                Utility.error('failed to parse manual coordinate location', err)
+                return false
+            }
+        },
+
+        normalizeLocationSearchQuery(query) {
+            return (query || '').trim().toLowerCase().replace(/\s+/g, ' ')
+        },
+
+        getLocationSearchCache(query) {
+            const normalized = this.normalizeLocationSearchQuery.call(this, query)
+            const key = `data-location-search-cache:${Constant.meta.version}:${normalized}`
+            try {
+                const data = JSON.parse(localStorage.getItem(key) || '{}')
+                if (!Array.isArray(data.results)) {
+                    return false
+                }
+                return data.results
+            } catch (err) {
+                Utility.error('failed to parse location search cache', err)
+                localStorage.removeItem(key)
+                return false
+            }
+        },
+
+        setLocationSearchCache(query, results) {
+            const normalized = this.normalizeLocationSearchQuery.call(this, query)
+            const key = `data-location-search-cache:${Constant.meta.version}:${normalized}`
+            localStorage.setItem(key, JSON.stringify({
+                cachedAt: new Date().getTime(),
+                results
+            }))
+        },
+
+        async searchLocations(query) {
+            const normalized = this.normalizeLocationSearchQuery.call(this, query)
+            if (normalized.length < 3) {
+                return []
+            }
+
+            const cached = this.getLocationSearchCache.call(this, normalized)
+            if (cached) {
+                return cached
+            }
+
+            const url = `${Constant.app.baseUrlWebService}/muslimboard-api?v=${Constant.meta.version}&op=location-search&q=${encodeURIComponent(normalized)}&limit=10&browserID=${Utility.getBrowserUuid()}`
+            const response = await Utility.fetch(url)
+            const result = await response.json()
+            if (result.status_code != 200 || !Array.isArray(result.data)) {
+                throw new Error(result.error_message || I18n.getText('promptManualLocationSearchError'))
+            }
+
+            this.setLocationSearchCache.call(this, normalized, result.data)
+            return result.data
+        },
+
+        formatLocationSearchResult(location) {
+            return [location.name, location.admin1Name, location.countryName]
+                .filter((each) => !!each)
+                .join(', ')
+        },
+
         // detect whether automatic location is currently active, or not
         isUsingAutomaticLocation() {
+            if (localStorage.getItem('data-manual-location-coordinate')) {
+                if (this.getManualLocationCoordinateData.call(this)) {
+                    return false
+                }
+                localStorage.removeItem('data-manual-location-coordinate')
+            }
             if (localStorage.getItem('data-manual-location')) {
                 return false
             }
@@ -1168,6 +1248,21 @@
                 } else {
                     Utility.log('load location manually, then render prayer times')
 
+                    const manualCoordinate = this.getManualLocationCoordinateData.call(this)
+                    if (manualCoordinate) {
+                        this.renderLocationText.call(this, manualCoordinate.name)
+
+                        const data = await this.getPrayerTimesByCoordinate.call(this, manualCoordinate.latitude, manualCoordinate.longitude)
+                        if (!data) {
+                            throw new Error(I18n.getText('promptErrorFailToGetPrayerTimesMessage'))
+                        }
+
+                        this.geoLocationCountryCode = (data.content.data.countryCode || manualCoordinate.countryCode || 'id')
+                        const schedule = data.content.data.schedules.find((d) => d.date.gregorian.date == Utility.now().format('DD-MM-YYYY')).timings
+                        this.renderPrayerTime.call(this, schedule)
+                        return
+                    }
+
                     // on manual mode, get the data from selected province and citym, then render it
                     const { province, kabko, id } = this.getManualLocationData.call(this)
                     const locationText = `${Utility.toTitleCase(kabko)}, ${Utility.toTitleCase(province)}`
@@ -1204,30 +1299,6 @@
         // this function containt many event definition for any location and prayer time related operation
         // for both manual mode and automatic mode
         async registerEventForForceLoadLocationAndPrayerTimes() {
-
-            // get master location data
-            const locations = await this.getDataMasterLocation.call(this)
-
-            // function to render dropdown options
-            const renderDropdownOption = (collections, keyValue, keyText, placeholder) => {
-                const contentOptions = JSON.parse(JSON.stringify(collections))
-                contentOptions.sort((a, b) => {
-                    if (a[keyText] > b[keyText]) {
-                        return 1
-                    } else if (b[keyText] > a[keyText]) {
-                        return -1
-                    } else {
-                        return 0
-                    }
-                })
-    
-                const options = contentOptions.map((each) => {
-                    return `<option value='${each[keyValue]}'>${each[keyText]}</option>`
-                })
-                return [`<option value=''>---- ${placeholder.toUpperCase()} ----</option>`]
-                    .concat(options)
-                    .join('')
-            };
 
             // register event handler for applying automatic location
             $('.detect-data-automatically').on('click', async () => {
@@ -1266,6 +1337,7 @@
 
                     // remove data-manual-location to enable automatic detection on location
                     localStorage.removeItem('data-manual-location')
+                    localStorage.removeItem('data-manual-location-coordinate')
 
                     // reload prayer time
                     this.loadLocationAndPrayerTimeThenRender.call(this)
@@ -1277,26 +1349,75 @@
                 Utility.log('set location of prayer times manually')
 
                 const text = `
-                    <p>${I18n.getText('promptManualLocationSelectionTitle')}</p>
-                    <form class='manual-geolocation'>
-                        <div class="row">
-                            <label>${I18n.getText('promptManualLocationProvinceTitle')}</label>
-                            <select required class="dropdown-province">
-                                ${renderDropdownOption(locations, 'provinsi', 'provinsi', I18n.getText('promptManualLocationProvinceSelectionLabel'))}
-                            </select>
-                        </div>
-                        <div class="row">
-                            <label>${I18n.getText('promptManualLocationCityTitle')}</label>
-                            <select required class="dropdown-city">
-                                <option value="">---- ${I18n.getText('promptManualLocationProvinceOptionPlaceholderLabel')} ----</option>
-                            </select>
-                        </div>
+                    <p>${I18n.getText('promptManualLocationSearchTitle')}</p>
+                    <form class='manual-geolocation manual-location-search'>
+                        <input
+                            type="search"
+                            class="location-search-input"
+                            placeholder="${I18n.getText('promptManualLocationSearchPlaceholder')}"
+                            autocomplete="off"
+                        />
+                        <div class="location-search-status">${I18n.getText('promptManualLocationSearchMinimumText')}</div>
+                        <div class="location-search-results"></div>
                     </form>
                 `
 
-                let province = ''
-                let kabko = ''
-                let locationID = ''
+                let selectedLocation = this.getManualLocationCoordinateData.call(this) || false
+                const renderSelectedLocation = () => {
+                    if (!selectedLocation) {
+                        return
+                    }
+
+                    const $results = $('.manual-location-search .location-search-results')
+                    const label = this.formatLocationSearchResult.call(this, selectedLocation)
+                    $results.empty().append(
+                        $('<button type="button" class="location-search-result is-selected"></button>')
+                            .text(label)
+                    )
+                    $('.manual-location-search .location-search-status').text(I18n.getText('promptManualLocationSearchSelectedText'))
+                }
+                const renderSearchResults = (results) => {
+                    const $results = $('.manual-location-search .location-search-results')
+                    $results.empty()
+                    if (results.length == 0) {
+                        $('.manual-location-search .location-search-status').text(I18n.getText('promptManualLocationSearchNoResultText'))
+                        return
+                    }
+
+                    $('.manual-location-search .location-search-status').text(I18n.getText('promptManualLocationSearchResultText').replace('$1', results.length))
+                    results.forEach((each) => {
+                        const label = this.formatLocationSearchResult.call(this, each)
+                        const $button = $('<button type="button" class="location-search-result"></button>')
+                            .text(label)
+                            .on('click', () => {
+                                selectedLocation = each
+                                $('.manual-location-search .location-search-result').removeClass('is-selected')
+                                $button.addClass('is-selected')
+                                $('.manual-location-search .location-search-status').text(I18n.getText('promptManualLocationSearchSelectedText'))
+                            })
+                        $results.append($button)
+                    })
+                }
+                const performSearch = Utility.debounce(async () => {
+                    const query = $('.manual-location-search .location-search-input').val()
+                    const normalized = this.normalizeLocationSearchQuery.call(this, query)
+                    selectedLocation = false
+                    $('.manual-location-search .location-search-results').empty()
+
+                    if (normalized.length < 3) {
+                        $('.manual-location-search .location-search-status').text(I18n.getText('promptManualLocationSearchMinimumText'))
+                        return
+                    }
+
+                    $('.manual-location-search .location-search-status').text(I18n.getText('promptManualLocationSearchLoadingText'))
+                    try {
+                        const results = await this.searchLocations.call(this, normalized)
+                        renderSearchResults(results)
+                    } catch (err) {
+                        Utility.error('failed to search locations', err)
+                        $('.manual-location-search .location-search-status').text(I18n.getText('promptManualLocationSearchError'))
+                    }
+                }, 400)
 
                 // show the manual location picker
                 Swal.fire({
@@ -1307,62 +1428,43 @@
                     showCancelButton: true,
                     confirmButtonText: I18n.getText('promptConfirmationSave'),
                     cancelButtonText: I18n.getText('promptConfirmationCancel'),
+                    didOpen: () => {
+                        $('.manual-location-search .location-search-input').on('input', performSearch)
+                        renderSelectedLocation()
+                    },
                     preConfirm: () => {
-                        province = $('.dropdown-province').val()
-                        kabko = $('.dropdown-city').children('option').filter(':selected').text()
-                        locationID = $('.dropdown-city').val()
+                        if (!selectedLocation) {
+                            Swal.showValidationMessage(I18n.getText('promptErrorUnableToSaveDueToEmptyCity'))
+                            return false
+                        }
 
-                        return Promise.resolve()
+                        return selectedLocation
                     }
                 }).then((result) => {
                     if (!result.isConfirmed) {
                         return
                     }
 
-                    if (!province) {
-                        alert(I18n.getText('promptErrorUnableToSaveDueToEmptyProvince'))
-                        return
-                    } else if (!kabko || (kabko || '').includes('----')) {
-                        alert(I18n.getText('promptErrorUnableToSaveDueToEmptyCity'))
-                        return
-                    }
-
                     // delete previously cached selected location data.
                     // replace it with the newly selected location
-                    const key = `data-prayer-time-by-location-${locationID}`
-                    localStorage.removeItem(key)
-                    localStorage.setItem('data-manual-location', `${province}|${kabko}|${locationID}`)
+                    const location = result.value
+                    const manualLocation = {
+                        type: 'coordinate',
+                        name: this.formatLocationSearchResult.call(this, location),
+                        latitude: Number(location.latitude),
+                        longitude: Number(location.longitude),
+                        countryCode: location.countryCode,
+                        timezone: location.timezone,
+                        id: location.id
+                    }
+                    localStorage.removeItem('data-manual-location')
+                    localStorage.setItem('data-manual-location-coordinate', JSON.stringify(manualLocation))
 
                     // reload prayer time then render
                     this.loadLocationAndPrayerTimeThenRender.call(this)
                 })
-
-                // get manual location data then show it on modal
-                const savedLocation = this.getManualLocationData.call(this)
-                $('.dropdown-province').val(savedLocation.province);
-                $('.dropdown-province').trigger('change');
-                setTimeout(() => {
-                    $('.dropdown-city').val(savedLocation.id)
-                }, 300);
             })
             
-            // on manual popup/modal, when user select a province,
-            // then proceed with showing cities under the particular province
-            $('body').on('change', '.dropdown-province', async (e) => {
-                const value = e.currentTarget.value
-                if (!value) {
-                    return
-                }
-
-                const found = locations.find((d) => d.provinsi == value)
-                const cities = found ? found.children : []
-                
-                $('.dropdown-city').replaceWith($(
-                    `<select required class="dropdown-city">
-                        ${renderDropdownOption(cities, 'id', 'kabko', I18n.getText('promptManualLocationCitySelectionLabel'))}
-                    </select>`
-                ))
-            })
         },
     
         // =========== FOOTER
@@ -1542,6 +1644,10 @@
                             ${I18n.getText('modalAboutUsText3')
                                 .replace('$1', `<a href='mailto:${Constant.maintainer.email}?subject=${Constant.meta.appName} ${Constant.meta.version} feedback'>${Constant.maintainer.email}</a>`)
                                 .replace('$2', `<a href='https://github.com/novalagung/muslimboard' target='_blank'>GitHub <i class='fa fa-github'></i></a>`)}
+                        </p>
+                        <p>
+                            ${I18n.getText('modalAboutUsGeoNamesAttribution')
+                                .replace('$1', `<a href='https://www.geonames.org/' target='_blank'>GeoNames</a>`)}
                         </p>
                         ${newVersionText}
                         <hr class='separator'>

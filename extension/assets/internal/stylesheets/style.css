@@ -1105,6 +1105,48 @@ body.show-todo-list #todo-list .wrapper .items .edit-hint {
     width: 300px;
     font-size: var(--font-size-md);
 }
+#swal2-html-container .manual-geolocation .location-search-input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--color-border-control);
+    border-radius: var(--radius-standard);
+    font-size: var(--font-size-md);
+    outline: none;
+}
+#swal2-html-container .manual-geolocation .location-search-input:focus {
+    border-color: var(--color-primary-border);
+    box-shadow: 0 0 0 3px var(--color-primary-focus);
+}
+#swal2-html-container .manual-geolocation .location-search-status {
+    margin: 10px 0 8px;
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+}
+#swal2-html-container .manual-geolocation .location-search-results {
+    display: grid;
+    gap: 8px;
+    max-height: 260px;
+    overflow-y: auto;
+}
+#swal2-html-container .manual-geolocation .location-search-result {
+    display: block;
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-standard);
+    background-color: var(--color-white);
+    color: var(--color-text);
+    font-size: var(--font-size-md);
+    text-align: left;
+    cursor: pointer;
+}
+#swal2-html-container .manual-geolocation .location-search-result:hover {
+    background-color: var(--color-surface-soft);
+}
+#swal2-html-container .manual-geolocation .location-search-result.is-selected {
+    border-color: var(--color-primary-border);
+    background-color: var(--color-primary-subtle);
+}
 #swal2-html-container .manual-geolocation label {
     width: 100px;
     display: inline-block;
