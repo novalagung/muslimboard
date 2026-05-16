@@ -55,30 +55,6 @@ func HandleImage(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func getClientIP(r *http.Request) string {
-	if value := r.Header.Get("X-Forwarded-For"); value != "" {
-		parts := strings.Split(value, ",")
-		return strings.TrimSpace(parts[0])
-	}
-	if value := r.Header.Get("X-Real-IP"); value != "" {
-		return strings.TrimSpace(value)
-	}
-	return r.RemoteAddr
-}
-
-func allowRateLimit(ctx context.Context, key string, limit int64, expiration time.Duration) bool {
-	client := pkg_redis.NewRedis()
-	count, err := client.Incr(ctx, key).Result()
-	if err != nil {
-		logger.Log.Errorln("controller.allowRateLimit", "redis.Incr", err)
-		return true
-	}
-	if count == 1 {
-		client.Expire(ctx, key, expiration).Err()
-	}
-	return count <= limit
-}
-
 func HandleLocationSearch(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	namespace := "controller.HandleLocationSearch"
 	span := sentry.StartSpan(ctx, namespace)
@@ -104,9 +80,9 @@ func HandleLocationSearch(ctx context.Context, w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	ip := getClientIP(r)
-	if !allowRateLimit(ctx, "rate:location-search:ip:"+ip, 30, time.Minute) ||
-		!allowRateLimit(ctx, "rate:location-search:browser:"+browserID, 300, 24*time.Hour) {
+	ip := pkg_http.GetClientIP(r)
+	if !pkg_redis.AllowRateLimit(ctx, "rate:location-search:ip:"+ip, 30, time.Minute) ||
+		!pkg_redis.AllowRateLimit(ctx, "rate:location-search:browser:"+browserID, 300, 24*time.Hour) {
 		err := fmt.Errorf("too many location search requests")
 		pkg_http.WriteRespose(ctx, w, r, http.StatusTooManyRequests, nil, err)
 		return
