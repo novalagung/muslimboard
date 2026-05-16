@@ -638,7 +638,7 @@
         // get automatic prayer time
         prayerCoordinateCacheIndexKey: 'data-prayer-time-by-coordinate-index',
         prayerCoordinateCachePrefix: 'data-prayer-time-by-coordinate-',
-        prayerCoordinateCacheLimit: 10,
+        prayerCoordinateCacheLimit: 20,
         normalizePrayerCoordinateCacheIndex() {
             const allCoordinateKeys = Object.keys(localStorage)
                 .filter((each) => each.indexOf(this.prayerCoordinateCachePrefix) == 0)
