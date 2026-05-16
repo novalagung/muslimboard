@@ -426,7 +426,8 @@ body.show-todo-list #wise-word {
 #todo-list {
     overflow: hidden;
     position: absolute;
-    width: 240px;
+    width: auto;
+    min-width: 180px;
     right: 30px;
     bottom: 16px;
     background-color: rgba(255, 255, 255, 0.92);
@@ -449,15 +450,21 @@ body.show-todo-list #todo-list {
     bottom: 30px;
 } */
 #todo-list .wrapper .toggler {
-    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 37px;
+    padding: 0 12px;
     text-transform: uppercase;
     cursor: pointer;
     color: #404040;
     font-size: 12px;
+    white-space: nowrap;
 }
 body.show-todo-list #todo-list .wrapper .toggler {
+    justify-content: flex-start;
     height: 40px;
-    padding: 11px 10px;
+    padding: 0 10px;
 }
 #todo-list .wrapper .toggler .true {
     display: inline;
@@ -472,7 +479,7 @@ body.show-todo-list #todo-list .wrapper .toggler .false {
     display: inline;
 }
 #todo-list .wrapper .toggler .fa {
-    margin-right: 5px;
+    margin-right: 6px;
 }
 #todo-list .wrapper .items {
     overflow-y: auto;
@@ -522,7 +529,7 @@ body.show-todo-list #todo-list .wrapper .items .export {
     transform: translateY(-1px);
 }
 #todo-list .wrapper .items .item {
-    padding: 16px;
+    padding: 12px;
     border-bottom: 1px solid #dedede;
     position: relative;
     cursor: pointer;
@@ -548,58 +555,64 @@ body.show-todo-list #todo-list .wrapper .items .item {
 }
 #todo-list .wrapper .items .item input[type=checkbox] {
     position: absolute;
-    margin-top: -6px;
     top: 50%;
-    transform: scale(1.5);
-    width: 30px;
-    height: 30px;
-    cursor: pointer;
-    font-size: 17px;
-    visibility: hidden;
-}
-#todo-list .wrapper .items .item input[type=checkbox]:after {
-    content: " ";
+    -webkit-appearance: none;
+    appearance: none;
     background-color: #fff;
-    display: block;
     color: #00b16a;
-    width: 22px;
-    height: 23px;
-    visibility: visible;
-    border: 1px solid #e0e0e0;
-    padding-left: 3px;
+    display: grid;
+    place-content: center;
+    width: 1.55rem;
+    height: 1.55rem;
+    margin: 0;
+    border: 1px solid #d6d6d6;
     border-radius: 5px;
-    margin-top: -3px;
+    box-sizing: border-box;
+    cursor: pointer;
+    transform: translateY(-50%);
 }
-#todo-list .wrapper .items .item input[type=checkbox]:checked:after {
-    content: "\2714";
-    padding: -5px;
-    font-weight: bold;
+#todo-list .wrapper .items .item input[type=checkbox]::before {
+    content: "";
+    width: 0.75rem;
+    height: 0.75rem;
+    background-color: CanvasText;
+    box-shadow: inset 1rem 1rem currentColor;
+    clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+    transform: scale(0);
+    transform-origin: bottom left;
+    transition: transform 120ms ease-in-out;
 }
-@-moz-document url-prefix() {
-    #todo-list .wrapper .items .item input[type=checkbox] {
-        margin-top: -15px;
-        visibility: visible;
-    }
+#todo-list .wrapper .items .item input[type=checkbox]:checked::before {
+    color: #fff;
+    transform: scale(1);
+}
+#todo-list .wrapper .items .item input[type=checkbox]:checked {
+    background-color: #00b16a;
+    border-color: #00b16a;
+}
+#todo-list .wrapper .items .item input[type=checkbox]:focus {
+    outline: max(2px, 0.15rem) solid currentColor;
+    outline-offset: max(2px, 0.15rem);
 }
 #todo-list .wrapper .items .item span[contentEditable=true] {
-    margin-left: 40px;
+    margin-left: 36px;
     display: block;
-    font-size: 16px;
+    font-size: 15px;
     outline: none;
 }
 #todo-list .wrapper .items .item .item-textbox {
-    margin-left: 40px;
+    margin-left: 36px;
     display: block;
-    font-size: 16px;
-    min-height: 20px;
-    line-height: 1.35;
+    font-size: 15px;
+    min-height: 18px;
+    line-height: 1.25;
 }
 #todo-list .wrapper .items .item .item-textbox.is-editing {
     background-color: rgba(0, 177, 106, 0.08);
     border: 1px solid rgba(0, 177, 106, 0.45);
     border-radius: 6px;
-    padding: 8px 10px;
-    margin-left: 34px;
+    padding: 6px 10px;
+    margin-left: 32px;
     box-shadow: 0 0 0 3px rgba(0, 177, 106, 0.15);
     transition: box-shadow 100ms ease-in-out, background-color 100ms ease-in-out, border-color 100ms ease-in-out;
 }
@@ -641,10 +654,10 @@ body.show-todo-list #todo-list .wrapper .items .item {
     max-width: calc(100% - 24px);
     padding: 8px 12px;
     font-size: 12px;
-    color: #1b5e46;
+    color: #555;
     text-align: center;
-    background: rgba(0, 177, 106, 0.14);
-    border: 1px solid rgba(0, 177, 106, 0.35);
+    background: rgba(90, 90, 90, 0.12);
+    border: 1px solid rgba(90, 90, 90, 0.28);
     border-radius: 999px;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
     z-index: 5;
@@ -774,10 +787,11 @@ body.show-todo-list #todo-list .wrapper .items .edit-hint {
     overflow: hidden;
     text-align: center;
     opacity: 1;
-    transition: opacity 100ms ease-in-out;
+    transition: opacity 100ms ease-in-out, transform 100ms ease-in-out;
 }
 #swal2-html-container .modal-info .share-container .btn-share:hover {
     opacity: 0.7;
+    transform: translateY(-1px);
 }
 #swal2-html-container .modal-info .share-container .btn-share.facebook {
     background-color: #405D9B;
