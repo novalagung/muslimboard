@@ -246,7 +246,7 @@ const Utility = {
         const lon = Utility.normalizeCoordinate(longitude)
         return `data-prayer-time-by-coordinate-${lat}-${lon}`
     },
-    readPrayerCoordinateCacheEntry(key) {
+    readPrayerTimeCacheEntry(key) {
         const raw = localStorage.getItem(key)
         if (!raw) {
             return null
@@ -264,9 +264,25 @@ const Utility = {
             return null
         }
     },
+    readPrayerCoordinateCacheEntry(key) {
+        return Utility.readPrayerTimeCacheEntry(key)
+    },
+    findPrayerLocationCache(locationID) {
+        const preferredKey = `data-prayer-time-by-location-${locationID}`
+        const preferred = Utility.readPrayerTimeCacheEntry(preferredKey)
+        if (preferred) {
+            return preferred
+        }
+
+        const prefix = 'data-prayer-time-by-location-'
+        return Object.keys(localStorage)
+            .filter((key) => key.indexOf(prefix) === 0)
+            .map((key) => Utility.readPrayerTimeCacheEntry(key))
+            .find((entry) => entry) || null
+    },
     findPrayerCoordinateCache(latitude, longitude) {
         const preferredKey = Utility.buildPrayerCoordinateCacheKey(latitude, longitude)
-        const preferred = Utility.readPrayerCoordinateCacheEntry(preferredKey)
+        const preferred = Utility.readPrayerTimeCacheEntry(preferredKey)
         if (preferred) {
             return preferred
         }
@@ -294,7 +310,7 @@ const Utility = {
                 return
             }
 
-            const entry = Utility.readPrayerCoordinateCacheEntry(key)
+            const entry = Utility.readPrayerTimeCacheEntry(key)
             if (!entry) {
                 return
             }
@@ -312,8 +328,19 @@ const Utility = {
 
         return Object.keys(localStorage)
             .filter((key) => key.indexOf(prefix) === 0)
-            .map((key) => Utility.readPrayerCoordinateCacheEntry(key))
+            .map((key) => Utility.readPrayerTimeCacheEntry(key))
             .find((entry) => entry) || null
+    },
+    resolveValidPrayerTimeCache(data, options = {}) {
+        if (Utility.getTodayPrayerSchedule(data)?.timings) {
+            return data
+        }
+
+        if (typeof options.resolveFallbackCache === 'function') {
+            return options.resolveFallbackCache() || null
+        }
+
+        return null
     },
     isRemoteResourceUrl(url) {
         return /^https?:\/\//i.test(String(url || ''))
@@ -371,21 +398,30 @@ const Utility = {
         const isNotToday = data.lastUpdated != nowYYYYMMDD
         const hasCachedContent = !isContentEmpty(data.content)
         const cacheHasTodaySchedule = !!Utility.getTodayPrayerSchedule(data)?.timings
+        const preferValidTodayCache = options.preferValidTodayCache === true
+
         Utility.log(
             'isFirstTime:', isFirstTime,
             'isNotToday:', isNotToday,
             'forceRefresh:', forceRefresh,
             'offline:', Utility.isOffline(),
             'hasCachedContent:', hasCachedContent,
-            'cacheHasTodaySchedule:', cacheHasTodaySchedule
+            'cacheHasTodaySchedule:', cacheHasTodaySchedule,
+            'preferValidTodayCache:', preferValidTodayCache
         )
-        if (forceRefresh || isFirstTime || isNotToday) {
-            if (!forceRefresh && cacheHasTodaySchedule && Utility.isOffline()) {
-                Utility.log('offline, use cached prayer data instead of fetching', key)
-                resolve(data)
+
+        if (preferValidTodayCache && !forceRefresh && Utility.isOffline()) {
+            const validCache = Utility.resolveValidPrayerTimeCache(data, options)
+            if (validCache) {
+                Utility.log('offline, use month prayer cache with today schedule', key, 'lastUpdated:', validCache.lastUpdated)
+                resolve(validCache)
                 return
             }
+        }
 
+        const shouldAttemptFetch = forceRefresh || isFirstTime || isNotToday
+
+        if (shouldAttemptFetch) {
             try {
                 await callback((result) => {
                     data.lastUpdated = nowYYYYMMDD
@@ -397,18 +433,22 @@ const Utility = {
             } catch (err) {
                 Utility.error(err)
                 Utility.log('use cached data instead')
-                if (cacheHasTodaySchedule) {
-                    resolve(data)
+                const validCache = preferValidTodayCache
+                    ? Utility.resolveValidPrayerTimeCache(data, options)
+                    : (cacheHasTodaySchedule ? data : null)
+                if (validCache) {
+                    resolve(validCache)
                     return
                 }
-                if (typeof options.resolveFallbackCache === 'function') {
-                    const fallback = options.resolveFallbackCache(err)
-                    if (fallback) {
-                        resolve(fallback)
-                        return
-                    }
-                }
                 resolve(data)
+                return
+            }
+        }
+
+        if (preferValidTodayCache && !forceRefresh) {
+            const validCache = Utility.resolveValidPrayerTimeCache(data, options)
+            if (validCache) {
+                resolve(validCache)
                 return
             }
         }

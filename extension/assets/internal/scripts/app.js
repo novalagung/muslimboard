@@ -699,6 +699,7 @@
                 resolve(result)
             }, {
                 ...options,
+                preferValidTodayCache: true,
                 resolveFallbackCache: () => Utility.findPrayerCoordinateCache(lat, lon)?.data || null
             })
 
@@ -729,7 +730,7 @@
                 localStorage.removeItem(key)
             }
 
-            const data = await Utility.getLatestData(key, async (resolve) => {
+            let data = await Utility.getLatestData(key, async (resolve) => {
                 const month = parseInt(Utility.now().format('MM'), 10)
                 const year = Utility.now().year()
                 const calcQuery = this.getPrayerCalculationQueryParams.call(this, 'location')
@@ -738,7 +739,19 @@
                 const result = await response.json()
         
                 resolve(result)
+            }, {
+                preferValidTodayCache: true,
+                resolveFallbackCache: () => Utility.findPrayerLocationCache(locationID)?.data || null
             })
+
+            if (!Utility.getTodayPrayerSchedule(data)?.timings) {
+                const fallback = Utility.findPrayerLocationCache(locationID)
+                if (fallback) {
+                    Utility.log('using cached prayer data by location', fallback.key)
+                    data = fallback.data
+                }
+            }
+
             if (!Utility.getTodayPrayerSchedule(data)?.timings) {
                 if (!Utility.isOffline()) {
                     localStorage.removeItem(key)

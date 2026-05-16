@@ -22,6 +22,8 @@ const Constant = {
             'Optional prayer calculation methods for primary API, fallback, and Asr madhab',
             'Clearer auto-detect and manual location setup with improved confirmations',
             'Postal codes in location search results when available',
+            'Prayer times from cached monthly schedules when offline, with refresh when back online',
+            'More reliable background images on slow or offline connections',
             'Refined modal copy, labels, and UI details across languages'
         ]
     },
