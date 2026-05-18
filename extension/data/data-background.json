@@ -43,7 +43,7 @@
             },
             "position": {
                 "horizontal": "center",
-                "vertical": "bottom"
+                "vertical": "70%"
             }
         },
         {
@@ -97,6 +97,10 @@
             "author": {
                 "name": "Padraig Treanor",
                 "profile": "https://unsplash.com/@padraigo"
+            },
+            "position": {
+                "horizontal": "center",
+                "vertical": "15%"
             }
         },
         {
@@ -115,6 +119,10 @@
             "author": {
                 "name": "Christoph Bengtsson Lissalde",
                 "profile": "https://unsplash.com/@lissalde"
+            },
+            "position": {
+                "horizontal": "center",
+                "vertical": "top"
             }
         },
         {
@@ -168,6 +176,10 @@
             "author": {
                 "name": "Toa Heftiba",
                 "profile": "https://unsplash.com/@heftiba"
+            },
+            "position": {
+                "horizontal": "center",
+                "vertical": "15%"
             }
         },
         {
@@ -187,7 +199,7 @@
             "source": "https://unsplash.com/photos/KqVHRmHVwwM",
             "author": {
                 "name": "Erez Attias",
-                "profile": "https://unsplash.com/erezattias"
+                "profile": "https://unsplash.com/@erezattias"
             }
         },
         {
@@ -196,7 +208,7 @@
             "source": "https://unsplash.com/photos/_SmZSuZwkHg",
             "author": {
                 "name": "Stefan Kunze",
-                "profile": "https://unsplash.com/stefankunze"
+                "profile": "https://unsplash.com/@stefankunze"
             }
         },
         {
@@ -215,6 +227,10 @@
             "author": {
                 "name": "Matt Jones",
                 "profile": "https://unsplash.com/@mattrobinjones"
+            },
+            "position": {
+                "horizontal": "center",
+                "vertical": "bottom"
             }
         },
         {
@@ -233,6 +249,10 @@
             "author": {
                 "name": "NASA",
                 "profile": "https://unsplash.com/@nasa"
+            },
+            "position": {
+                "horizontal": "center",
+                "vertical": "30%"
             }
         },
         {
@@ -295,7 +315,7 @@
             "source": "https://unsplash.com/photos/rM7B4DheQc0",
             "author": {
                 "name": "Mike Wilson",
-                "profile": "https://unsplash.com/mkwlsn"
+                "profile": "https://unsplash.com/@mkwlsn"
             }
         },
         {
@@ -304,7 +324,11 @@
             "source": "https://unsplash.com/photos/_h7aBovKia4",
             "author": {
                 "name": "Philippe Wuyts",
-                "profile": "https://unsplash.com/philippewuyts"
+                "profile": "https://unsplash.com/@philippewuyts"
+            },
+            "position": {
+                "horizontal": "center",
+                "vertical": "top"
             }
         },
         {
@@ -313,7 +337,7 @@
             "source": "https://unsplash.com/photos/-oWyJoSqBRM",
             "author": {
                 "name": "Alexey Topolyanskiy",
-                "profile": "https://unsplash.com/devilcoders"
+                "profile": "https://unsplash.com/@devilcoders"
             }
         },
         {
@@ -322,7 +346,7 @@
             "source": "https://unsplash.com/photos/UklXbPE-Hos",
             "author": {
                 "name": "Joseph Barrientos",
-                "profile": "https://unsplash.com/thata7guy"
+                "profile": "https://unsplash.com/@thata7guy"
             }
         },
         {
@@ -331,7 +355,7 @@
             "source": "https://unsplash.com/photos/hIMdKs_0cSE",
             "author": {
                 "name": "Sylvain Guiheneuc",
-                "profile": "https://unsplash.com/sylvain_guiheneuc"
+                "profile": "https://unsplash.com/@sylvain_guiheneuc"
             }
         },
         {
@@ -340,7 +364,7 @@
             "source": "https://unsplash.com/photos/kKrfPaKgE1c",
             "author": {
                 "name": "Alberto Restifo",
-                "profile": "https://unsplash.com/albertorestifo"
+                "profile": "https://unsplash.com/@albertorestifo"
             }
         },
         {
@@ -348,12 +372,12 @@
             "url": "https://images.unsplash.com/photo-1439798060585-62ab242d7724?q=30&fm=jpg&w=3440&fit=max",
             "source": "https://unsplash.com/photos/Nte-4RiRfwU",
             "position": {
-                "horizontal": "bottom",
-                "vertical": "middle"
+                "horizontal": "center",
+                "vertical": "bottom"
             },
             "author": {
                 "name": "Larry Chen",
-                "profile": "https://unsplash.com/chen_idragon"
+                "profile": "https://unsplash.com/@chen_idragon"
             }
         },
         {
@@ -362,7 +386,11 @@
             "source": "https://unsplash.com/photos/E9CrQou9K0Y",
             "author": {
                 "name": "Andras Toth",
-                "profile": "https://unsplash.com/tothur"
+                "profile": "https://unsplash.com/@tothur"
+            },
+            "position": {
+                "horizontal": "center",
+                "vertical": "40%"
             }
         },
         {
@@ -371,7 +399,7 @@
             "source": "https://unsplash.com/photos/W_9mOGUwR08",
             "author": {
                 "name": "Todd DeSantis",
-                "profile": "https://unsplash.com/todddesantis"
+                "profile": "https://unsplash.com/@todddesantis"
             }
         },
         {
@@ -380,7 +408,11 @@
             "source": "https://unsplash.com/photos/6hxvm0NzYP8",
             "author": {
                 "name": "Caleb Ralston",
-                "profile": "https://unsplash.com/calebralston"
+                "profile": "https://unsplash.com/@calebralston"
+            },
+            "position": {
+                "horizontal": "center",
+                "vertical": "80%"
             }
         },
         {
@@ -389,7 +421,7 @@
             "source": "https://unsplash.com/photos/9RqA6tnT0gA",
             "author": {
                 "name": "Samuel Zeller",
-                "profile": "https://unsplash.com/samuelzeller"
+                "profile": "https://unsplash.com/@samuelzeller"
             }
         },
         {
@@ -398,7 +430,11 @@
             "source": "https://unsplash.com/photos/11H1SSVcIxc",
             "author": {
                 "name": "Federico Bottos",
-                "profile": "https://unsplash.com/landscapeplaces"
+                "profile": "https://unsplash.com/@landscapeplaces"
+            },
+            "position": {
+                "horizontal": "center",
+                "vertical": "top"
             }
         },
         {
@@ -407,7 +443,7 @@
             "source": "https://unsplash.com/photos/LVdiXyu2eTc",
             "author": {
                 "name": "Kazuend",
-                "profile": "https://unsplash.com/kazuend"
+                "profile": "https://unsplash.com/@kazuend"
             }
         },
         {
@@ -416,7 +452,7 @@
             "source": "https://unsplash.com/photos/Ixp4YhCKZkI",
             "author": {
                 "name": "Steve Carter",
-                "profile": "https://unsplash.com/stvcrtr"
+                "profile": "https://unsplash.com/@stvcrtr"
             }
         },
         {
@@ -425,7 +461,11 @@
             "source": "https://unsplash.com/photos/VB-w_3dnyvI",
             "author": {
                 "name": "Andrew Coelho",
-                "profile": "https://unsplash.com/andrewcoelho"
+                "profile": "https://unsplash.com/@andrewcoelho"
+            },
+            "position": {
+                "horizontal": "center",
+                "vertical": "10%"
             }
         },
         {
@@ -434,7 +474,7 @@
             "source": "https://unsplash.com/photos/yOujaSETXlo",
             "author": {
                 "name": "Wolfgang Lutz",
-                "profile": "https://unsplash.com/wolfi"
+                "profile": "https://unsplash.com/@wolfi"
             }
         },
         {
@@ -444,6 +484,10 @@
             "author": {
                 "name": "Agung Hari Wijaya",
                 "profile": "https://www.flickr.com/photos/a9un9hari"
+            },
+            "position": {
+                "horizontal": "center",
+                "vertical": "0%"
             }
         },
         {
@@ -462,6 +506,10 @@
             "author": {
                 "name": "Agung Hari Wijaya",
                 "profile": "https://www.flickr.com/photos/a9un9hari"
+            },
+            "position": {
+                "horizontal": "center",
+                "vertical": "30%"
             }
         },
         {
@@ -547,19 +595,6 @@
         },
         {
             "id": "57",
-            "url": "https://images.unsplash.com/photo-1673294245958-89d2c1a9a36d?q=10&fm=jpg&w=3440&fit=crop&crop=focalpoint&h=4000",
-            "source": "https://unsplash.com/photos/bbHHSGA9NbI",
-            "author": {
-                "name": "Job Savelsberg",
-                "profile": "https://unsplash.com/@jobsavelsberg"
-            },
-            "position": {
-                "horizontal": "center",
-                "vertical": "83%"
-            }
-        },
-        {
-            "id": "58",
             "url": "https://images.unsplash.com/photo-1597142550704-859f7df53964?q=30&fm=jpg&w=3440&fit=max",
             "urlLocal": "assets/internal/images/photo-1597142550704-859f7df53964.jpeg",
             "source": "https://unsplash.com/photos/5JpPoCftOCc",
@@ -573,7 +608,7 @@
             }
         },
         {
-            "id": "59",
+            "id": "58",
             "url": "https://cdn.novalagung.com/muslimboard/images/fejk7fpbuys4qxyv7a3p.jpg",
             "source": "https://unsplash.com/photos/man-waving-flag-D9lCSvUcErk",
             "author": {
@@ -586,7 +621,7 @@
             }
         },
         {
-            "id": "60",
+            "id": "59",
             "url": "https://images.unsplash.com/photo-1600880292630-ee8a00403024?q=35&fm=jpg&w=3440&fit=max",
             "source": "https://unsplash.com/photos/a-cat-laying-on-top-of-a-bed-next-to-a-white-wall-MgrEuJOtayk",
             "author": {
@@ -599,7 +634,7 @@
             }
         },
         {
-            "id": "61",
+            "id": "60",
             "url": "https://images.unsplash.com/photo-1536147116438-62679a5e01f2?q=25&fm=jpg&w=3440&fit=max",
             "urlLocal": "assets/internal/images/photo-1536147116438-62679a5e01f2.jpeg",
             "source": "https://unsplash.com/photos/photography-of-green-leaves-ZVKr8wADhpc",
@@ -609,11 +644,11 @@
             },
             "position": {
                 "horizontal": "center",
-                "vertical": "30%"
+                "vertical": "22%"
             }
         },
         {
-            "id": "62",
+            "id": "61",
             "url": "https://images.unsplash.com/photo-1772289935157-f64bc178b47d?q=50&fm=jpg&w=2831&fit=max",
             "source": "https://unsplash.com/photos/desert-landscape-with-large-rock-formations-at-sunset-D1_LGLZSckY",
             "author": {
@@ -622,7 +657,7 @@
             }
         },
         {
-            "id": "63",
+            "id": "62",
             "url": "https://plus.unsplash.com/premium_photo-1729070677283-c16a03fe5287?q=50&fm=jpg&w=2728&fit=max",
             "source": "https://unsplash.com/photos/an-aerial-view-of-a-lush-green-field-ZA3tbwnvr5Y",
             "author": {
@@ -631,7 +666,7 @@
             }
         },
         {
-            "id": "64",
+            "id": "63",
             "url": "https://images.unsplash.com/photo-1739497404614-6074ab01c3a6?q=50&fm=jpg&w=2340&fit=max",
             "source": "https://unsplash.com/photos/a-group-of-orange-curved-objects-on-a-beige-background-TmrETzB0hdk",
             "author": {
@@ -644,7 +679,7 @@
             }
         },
         {
-            "id": "65",
+            "id": "64",
             "url": "https://images.unsplash.com/photo-1774893582522-c8e9c0aeaec9?q=50&fm=jpg&w=2340&fit=max",
             "source": "https://unsplash.com/photos/abstract-blue-and-white-swirling-patterns-f9PtNFb9_iE",
             "author": {
@@ -657,25 +692,33 @@
             }
         },
         {
+            "id": "65",
+            "url": "https://images.unsplash.com/photo-1766933366411-7a921aebe181?q=80&fm=jpg&w=3870&fit=max",
+            "source": "https://unsplash.com/photos/jagged-mountain-peaks-illuminated-by-golden-hour-sunlight-Q8cUF6c2ytM",
+            "author": {
+                "name": "Venti Views",
+                "profile": "https://unsplash.com/@ventiviews"
+            },
+            "position": {
+                "horizontal": "center",
+                "vertical": "30%"
+            }
+        },
+        {
             "id": "66",
             "url": "https://images.unsplash.com/photo-1766933366411-7a921aebe181?q=80&fm=jpg&w=3870&fit=max",
             "source": "https://unsplash.com/photos/jagged-mountain-peaks-illuminated-by-golden-hour-sunlight-Q8cUF6c2ytM",
             "author": {
                 "name": "Venti Views",
                 "profile": "https://unsplash.com/@ventiviews"
+            },
+            "position": {
+                "horizontal": "center",
+                "vertical": "30%"
             }
         },
         {
             "id": "67",
-            "url": "https://images.unsplash.com/photo-1766933366411-7a921aebe181?q=80&fm=jpg&w=3870&fit=max",
-            "source": "https://unsplash.com/photos/jagged-mountain-peaks-illuminated-by-golden-hour-sunlight-Q8cUF6c2ytM",
-            "author": {
-                "name": "Venti Views",
-                "profile": "https://unsplash.com/@ventiviews"
-            }
-        },
-        {
-            "id": "68",
             "url": "https://images.unsplash.com/photo-1715279353068-6fc32f2ec5aa?q=50&fm=jpg&w=2832&fit=max",
             "source": "https://unsplash.com/photos/a-small-island-in-the-middle-of-a-body-of-water-rfPuRWDTe7Q",
             "author": {
@@ -688,7 +731,7 @@
             }
         },
         {
-            "id": "69",
+            "id": "68",
             "url": "https://images.unsplash.com/photo-1633178418565-b3c7a6ddb02a?q=80&fm=jpg&w=2342&fit=max",
             "source": "https://unsplash.com/photos/a-long-hallway-with-orange-walls-and-tiled-floors-ltuGEjXss_c",
             "author": {
@@ -697,25 +740,73 @@
             },
             "position": {
                 "horizontal": "center",
-                "vertical": "60"
+                "vertical": "60%"
             }
         },
         {
-            "id": "70",
+            "id": "69",
             "url": "https://images.unsplash.com/photo-1636145354736-439482e677a5?q=80&fm=jpg&w=3870&fit=max",
             "source": "https://unsplash.com/photos/a-lava-flow-in-the-lava-of-a-volcano-boE05arvV7I",
             "author": {
                 "name": "J dG",
                 "profile": "https://unsplash.com/@vultured"
+            },
+            "position": {
+                "horizontal": "center",
+                "vertical": "30%"
             }
         },
         {
-            "id": "71",
+            "id": "70",
             "url": "https://images.unsplash.com/photo-1497752531616-c3afd9760a11?q=80&fm=jpg&w=2070&fit=max",
             "source": "https://unsplash.com/photos/raccoon-walking-on-lawn-grass-6GMq7AGxNbE",
             "author": {
                 "name": "Gary Bendig",
                 "profile": "https://unsplash.com/@kris_ricepees"
+            }
+        },
+        {
+            "id": "71",
+            "url": "https://images.unsplash.com/photo-1747504206118-cb5b4f77b018?q=80&fm=jpg&w=2729&fit=max",
+            "source": "https://unsplash.com/photos/snow-covered-mountains-are-lit-by-the-sun-gbFCGCQzMTE",
+            "author": {
+                "name": "Marek Piwnicki",
+                "profile": "https://unsplash.com/@marekpiwnicki"
+            }
+        },
+        {
+            "id": "72",
+            "url": "https://images.unsplash.com/photo-1778017825902-5d212f5ce532?q=80&fm=jpg&w=2670&fit=max",
+            "source": "https://unsplash.com/photos/majestic-mountain-peak-bathed-in-warm-sunset-light-yCJpf20Esvg",
+            "author": {
+                "name": "Andrea Caramello",
+                "profile": "https://unsplash.com/@andreacaramello"
+            },
+            "position": {
+                "horizontal": "center",
+                "vertical": "top"
+            }
+        },
+        {
+            "id": "73",
+            "url": "https://images.unsplash.com/photo-1699122016094-00e0351210db?q=80&fm=jpg&w=2832&fit=max",
+            "source": "https://unsplash.com/photos/a-large-mountain-covered-in-snow-under-a-blue-sky-Ef3jVcCqS0Y",
+            "author": {
+                "name": "Marek Piwnicki",
+                "profile": "https://unsplash.com/@marekpiwnicki"
+            },
+            "position": {
+                "horizontal": "center",
+                "vertical": "top"
+            }
+        },
+        {
+            "id": "74",
+            "url": "https://images.unsplash.com/photo-1627933577672-d191b77baa9c?q=80&fm=jpg&w=2670&fit=max",
+            "source": "https://unsplash.com/photos/hot-air-balloons-flying-over-the-mountains-during-daytime-7FyzRTZYufY",
+            "author": {
+                "name": "Niketh Vellanki",
+                "profile": "https://unsplash.com/@thenikyv"
             }
         }
     ]

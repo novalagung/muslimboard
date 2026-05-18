@@ -9,7 +9,7 @@ import (
 	"muslimboard-api.novalagung.com/pkg/logger"
 )
 
-func CalculatePrayerTimes(ctx context.Context, lat, long float64, timezone *time.Location, date time.Time, twilightConvention *prayer.TwilightConvention) ([]prayer.Schedule, error) {
+func CalculatePrayerTimes(ctx context.Context, lat, long float64, timezone *time.Location, date time.Time, twilightConvention *prayer.TwilightConvention, asrConvention prayer.AsrConvention) ([]prayer.Schedule, error) {
 	namespace := "repositories.go-prayer.CalculatePrayerTimes"
 	span := sentry.StartSpan(ctx, namespace)
 	defer span.Finish()
@@ -19,7 +19,7 @@ func CalculatePrayerTimes(ctx context.Context, lat, long float64, timezone *time
 		Longitude:          long,
 		Timezone:           timezone,
 		TwilightConvention: twilightConvention,
-		AsrConvention:      prayer.Shafii,
+		AsrConvention:      asrConvention,
 		PreciseToSeconds:   false,
 	}
 	schedules, err := prayer.Calculate(cfg, date.Year())

@@ -4,9 +4,22 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+	"strings"
 
 	"github.com/getsentry/sentry-go"
 )
+
+// GetClientIP returns the client IP from proxy headers when present.
+func GetClientIP(r *http.Request) string {
+	if value := r.Header.Get("X-Forwarded-For"); value != "" {
+		parts := strings.Split(value, ",")
+		return strings.TrimSpace(parts[0])
+	}
+	if value := r.Header.Get("X-Real-IP"); value != "" {
+		return strings.TrimSpace(value)
+	}
+	return r.RemoteAddr
+}
 
 // writeResponse definition
 func WriteRespose(ctx context.Context, w http.ResponseWriter, r *http.Request, statusCode int, resp any, err error) {

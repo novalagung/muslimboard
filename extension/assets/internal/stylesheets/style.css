@@ -1,17 +1,91 @@
+/* ==========================================================================
+   Base
+   ========================================================================== */
+
 html, body {
     margin: 0;
     padding: 0;
     font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    background-color: white;
+    background-color: var(--color-white);
 }
+
+/* ==========================================================================
+   Tokens
+   ========================================================================== */
+
+:root {
+    --color-primary: #00b16a;
+    --color-primary-hover: #009955;
+    --color-danger: #e74c3c;
+    --color-danger-strong: #EF4836;
+    --color-warning: #f39c12;
+    --color-info: #008c9e;
+    --color-action-move: #3c53e7;
+    --color-prayer-next-bg: #76C8E2;
+    --color-prayer-next-text: #006c8d;
+    --color-loading-bg: #0d1511;
+
+    --color-text: #404040;
+    --color-text-muted: #666;
+    --color-text-soft: #777;
+    --color-placeholder: #b1b1b1;
+    --color-surface-soft: #f8f8f8;
+    --color-surface-muted: #f1f1f1;
+    --color-border: #dedede;
+    --color-border-soft: #e6e6e6;
+    --color-border-control: #d6d6d6;
+    --color-white: #fff;
+    --color-note-muted: #8a8a8a;
+
+    --color-overlay-modal: rgba(0, 0, 0, 0.6);
+    --color-shadow-backdrop: rgba(0, 0, 0, 0.3);
+    --color-glass-panel: rgba(255, 255, 255, 0.92);
+    --color-glass-row-hover: rgba(255, 255, 255, 0.2);
+    --color-glass-border: rgba(255, 255, 255, 0.28);
+    --color-primary-subtle: rgba(0, 177, 106, 0.08);
+    --color-primary-border: rgba(0, 177, 106, 0.45);
+    --color-primary-hover-border: rgba(0, 153, 85, 0.85);
+    --color-primary-focus: rgba(0, 177, 106, 0.15);
+    --color-danger-overlay: rgba(231, 76, 60, 0.96);
+    --color-hint-text: #6f6f6f;
+    --color-hint-bg: rgba(120, 120, 120, 0.08);
+    --color-hint-border: rgba(120, 120, 120, 0.18);
+
+    --radius-standard: 8px;
+    --radius-pill: 999px;
+    --radius-round: 50%;
+
+    --shadow-control: 0 1px 6px 0 rgba(32, 33, 36, 0.28);
+    --shadow-button: 0 4px 10px rgba(0, 0, 0, 0.18);
+    --shadow-button-hover: 0 6px 14px rgba(0, 0, 0, 0.22);
+
+    --duration-fast: 100ms;
+    --duration-normal: 300ms;
+    --motion-hover-lift: translateY(-1px);
+
+    --opacity-none: 0;
+    --opacity-subtle: 0.2;
+    --opacity-soft: 0.9;
+    --opacity-full: 1;
+
+    --font-size-xs: 12px;
+    --font-size-sm: 13px;
+    --font-size-md: 15px;
+    --font-size-lg: 18px;
+    --font-size-clock: 98px;
+    --font-size-quote-arabic: 40px;
+    --font-size-quote-translation: 24px;
+    --font-size-wisdom: 32px;
+}
+
 body.is-background-loading {
-    background-color: #0d1511;
+    background-color: var(--color-loading-bg);
 }
 body.is-background-loading.is-safari-browser {
-    background-color: #ffffff;
+    background-color: var(--color-white);
 }
 body.is-background-loading.is-firefox-browser {
-    background-color: #ffffff;
+    background-color: var(--color-white);
 }
 html {
     box-sizing: border-box;
@@ -19,6 +93,10 @@ html {
 *, *:before, *:after {
     box-sizing: inherit;
 }
+
+/* ==========================================================================
+   Background
+   ========================================================================== */
 
 #transitioner,
 #background,
@@ -39,7 +117,7 @@ html {
     background-position: center center;
 }
 #background .content {
-    background-color: #0d1511;
+    background-color: var(--color-loading-bg);
     overflow: hidden;
 }
 #background .content::before {
@@ -52,21 +130,21 @@ html {
         linear-gradient(135deg, rgba(8, 14, 11, 0.98), rgba(16, 26, 20, 0.96));
     transform-origin: center;
     pointer-events: none;
-    opacity: 0;
+    opacity: var(--opacity-none);
     transition: opacity 700ms ease;
 }
 body.is-background-loading #background .content::before {
-    opacity: 1;
+    opacity: var(--opacity-full);
     animation: backgroundLoadingBreathing 8s ease-in-out infinite;
 }
 body.is-background-loading.is-firefox-browser #background .content {
-    background-color: #ffffff;
+    background-color: var(--color-white);
 }
 body.is-background-loading.is-firefox-browser #background .content::before {
     display: none;
 }
 body.is-background-loading.is-safari-browser #background .content {
-    background-color: #ffffff;
+    background-color: var(--color-white);
 }
 body.is-background-loading.is-safari-browser #background .content::before {
     background:
@@ -76,15 +154,15 @@ body.is-background-loading.is-safari-browser #background .content::before {
 }
 @keyframes backgroundLoadingBreathing {
     0% {
-        opacity: 0.92;
+        opacity: var(--opacity-soft);
         transform: scale(1);
     }
     50% {
-        opacity: 1;
+        opacity: var(--opacity-full);
         transform: scale(1.035);
     }
     100% {
-        opacity: 0.92;
+        opacity: var(--opacity-soft);
         transform: scale(1);
     }
 }
@@ -94,14 +172,18 @@ body.is-background-loading.is-safari-browser #background .content::before {
 }
 
 #background-blur {
-    background-color: rgba(0, 0, 0, 0.25);
+    background-color: var(--color-shadow-backdrop);
     z-index: 3;
 }
+
+/* ==========================================================================
+   Sidebar
+   ========================================================================== */
 
 #sidebar {
     position: absolute;
     width: 360px;
-    color: white;
+    color: var(--color-white);
     z-index: 4;
 }
 #sidebar {
@@ -126,10 +208,10 @@ body.is-background-loading.is-safari-browser #background .content::before {
     text-align: center;
 }
 #sidebar .date-time .time {
-    font-size: 107px;
+    font-size: var(--font-size-clock);
     font-weight: bold;
     margin-left: -2px;
-    margin-right: -18px;
+    margin-right: 0;
     margin-top: 0;
 }
 #sidebar .date-time .time .separator:before {
@@ -142,7 +224,7 @@ body.is-background-loading.is-safari-browser #background .content::before {
 #sidebar .date-time .date-hijr,
 #sidebar .date-time .location {
     font-weight: normal;
-    font-size: 12px;
+    font-size: var(--font-size-xs);
 }
 #sidebar .date-time .location {
     position: relative;
@@ -154,7 +236,7 @@ body.is-background-loading.is-safari-browser #background .content::before {
     top: 1px;
 }
 #sidebar .date-time .location .fa.fa-map-marker {
-    font-size: 15px;
+    font-size: var(--font-size-md);
     top: 2px;
 }
 #sidebar .date-time .location span {
@@ -178,7 +260,7 @@ body.is-background-loading.is-safari-browser #background .content::before {
     margin-bottom: 8px;
     margin-right: -10px;
     font-style: italic;
-    font-size: 12px;
+    font-size: var(--font-size-xs);
 }
 #sidebar .prayer-time .wrapper .text {
     margin: 0px;
@@ -193,11 +275,11 @@ body.is-background-loading.is-safari-browser #background .content::before {
     left: 35px;
     right: 35px;
     text-align: center;
-    font-size: 13px;
+    font-size: var(--font-size-sm);
     cursor: pointer;
 }
 #sidebar .prayer-time table {
-    font-size: 18px;
+    font-size: var(--font-size-lg);
     border-collapse: collapse;
     margin-left: -5px;
 }
@@ -205,14 +287,14 @@ body.is-background-loading.is-safari-browser #background .content::before {
     cursor: default;
 }
 #sidebar .prayer-time table tr.prayer-time-row.active {
-    background-color: rgba(255, 255, 255, 0.18);
+    background-color: var(--color-glass-row-hover);
 }
 #sidebar .prayer-time table tr.prayer-time-row:not(.active):hover {
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: var(--color-glass-row-hover);
 }
 #sidebar .prayer-time table tr.prayer-time-row.next {
-    background-color: #76C8E2;
-    color: #006c8d;
+    background-color: var(--color-prayer-next-bg);
+    color: var(--color-prayer-next-text);
 }
 #sidebar .prayer-time table tr.prayer-time-row td {
     padding: 0px;
@@ -241,7 +323,7 @@ body.is-background-loading.is-safari-browser #background .content::before {
 }
 #sidebar .prayer-time table tr.prayer-time-row span.placeholder {
     font-weight: normal;
-    font-size: 12px;
+    font-size: var(--font-size-xs);
     text-transform: capitalize !important;
     display: block;
     position: absolute;
@@ -252,16 +334,20 @@ body.is-background-loading.is-safari-browser #background .content::before {
     display: none;
 }
 #sidebar .prayer-time table tr.remaining-time td {
-    background-color: rgba(255, 255, 255, 0.18);
+    background-color: var(--color-glass-row-hover);
 }
 #sidebar .prayer-time table tr.remaining-time td div {
     font-style: italic;
-    font-size: 12px;
+    font-size: var(--font-size-xs);
     padding-top: 4px;
     padding-bottom: 4px;
     text-align: center;
-    border-top: 1px solid rgba(255, 255, 255, 0.28);
+    border-top: 1px solid var(--color-glass-border);
 }
+
+/* ==========================================================================
+   Wise Word
+   ========================================================================== */
 
 #wise-word {
     height: 378px;
@@ -292,19 +378,19 @@ body.show-todo-list #wise-word {
     padding: 0px;
     margin: 0px;
     text-align: center;
-    color: white;
+    color: var(--color-white);
 }
 #wise-word .wrapper .vertical a {
     color: inherit;
     text-decoration: inherit;
 }
 #wise-word .wrapper .vertical .matan {
-    font-size: 40px;
+    font-size: var(--font-size-quote-arabic);
     font-family: "KFGQPC Uthman Taha Naskh", "Helvetica Neue", Helvetica, Arial, sans-serif;
     margin-bottom: 10px;
 }
 #wise-word .wrapper .vertical .translation {
-    font-size: 24px;
+    font-size: var(--font-size-quote-translation);
     font-style: italic;
     font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
@@ -320,7 +406,7 @@ body.show-todo-list #wise-word {
     display: none;
 }
 #wise-word[data-type="word of wisdom"] .wrapper .vertical .translation {
-    font-size: 32px;
+    font-size: var(--font-size-wisdom);
 }
 #wise-word[data-type="word of wisdom"] .wrapper .vertical .reference {
     margin-top: 20px;
@@ -372,18 +458,22 @@ body.show-todo-list #wise-word {
     }
 }
 
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+
 #footer {
     position: absolute;
     bottom: 10px;
     left: 0px;
     right: 0px;
     height: 40px;
-    color: white;
+    color: var(--color-white);
     padding-left: 30px;
     padding-right: 30px;
     padding-bottom: 3px;
     z-index: 4;
-    font-size: 12px;
+    font-size: var(--font-size-xs);
 }
 #footer .wrapper {
     position: relative;
@@ -396,8 +486,8 @@ body.show-todo-list #wise-word {
     bottom: 10px;
     text-align: right;
     margin: 0px;
-    transition: opacity 100ms ease-in-out, transform 100ms ease-in-out;
-    opacity: 0.2;
+    transition: opacity var(--duration-fast) ease-in-out, transform var(--duration-fast) ease-in-out;
+    opacity: var(--opacity-subtle);
 }
 #footer p.dev a {
     color: inherit;
@@ -423,16 +513,21 @@ body.show-todo-list #wise-word {
     padding-bottom: 2px;
     border-bottom: 1px solid transparent;
 }
+/* ==========================================================================
+   Todo List
+   ========================================================================== */
+
 #todo-list {
     overflow: hidden;
     position: absolute;
-    width: 240px;
+    width: auto;
+    min-width: 180px;
     right: 30px;
     bottom: 16px;
-    background-color: rgba(255, 255, 255, 0.92);
-    border-radius: 10px;
+    background-color: var(--color-glass-panel);
+    border-radius: var(--radius-standard);
     z-index: 5;
-    transition: ease-in-out bottom 300ms;
+    transition: ease-in-out bottom var(--duration-normal);
     transition-property: bottom, background-color;
     height: 37px;
 }
@@ -443,21 +538,27 @@ body.show-todo-list #todo-list {
     height: auto;
 }
 #todo-list:hover {
-    background-color: white;
+    background-color: var(--color-white);
 }
 /* #todo-list.search-active {
     bottom: 30px;
 } */
 #todo-list .wrapper .toggler {
-    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 37px;
+    padding: 0 12px;
     text-transform: uppercase;
     cursor: pointer;
-    color: #404040;
-    font-size: 12px;
+    color: var(--color-text);
+    font-size: var(--font-size-xs);
+    white-space: nowrap;
 }
 body.show-todo-list #todo-list .wrapper .toggler {
+    justify-content: flex-start;
     height: 40px;
-    padding: 11px 10px;
+    padding: 0 10px;
 }
 #todo-list .wrapper .toggler .true {
     display: inline;
@@ -472,7 +573,7 @@ body.show-todo-list #todo-list .wrapper .toggler .false {
     display: inline;
 }
 #todo-list .wrapper .toggler .fa {
-    margin-right: 5px;
+    margin-right: 6px;
 }
 #todo-list .wrapper .items {
     overflow-y: auto;
@@ -486,29 +587,29 @@ body.show-todo-list #todo-list .wrapper .toggler .false {
     width: 40px;
     height: 40px;
     text-align: center;
-    color: white;
-    border-radius: 50%;
-    font-size: 18px;
-    box-shadow: 0 1px 6px 0 rgba(32,33,36,0.28);
+    color: var(--color-white);
+    border-radius: var(--radius-round);
+    font-size: var(--font-size-lg);
+    box-shadow: var(--shadow-control);
     position: absolute;
     top: 10px;
     right: 10px;
     display: none;
     z-index: 6;
-    opacity: 0.9;
-    transition: opacity 100ms ease-in-out, transform 100ms ease-in-out;
+    opacity: var(--opacity-soft);
+    transition: opacity var(--duration-fast) ease-in-out, transform var(--duration-fast) ease-in-out;
 }
 #todo-list .wrapper .items .add {
     right: 106px;
-    background-color: #00b16a;
+    background-color: var(--color-primary);
 }
 #todo-list .wrapper .items .import {
     right: 58px;
-    background-color: #f39c12;
+    background-color: var(--color-warning);
 }
 #todo-list .wrapper .items .export {
     right: 10px;
-    background-color: #008c9e;
+    background-color: var(--color-info);
 }
 body.show-todo-list #todo-list .wrapper .items .add,
 body.show-todo-list #todo-list .wrapper .items .import,
@@ -518,104 +619,110 @@ body.show-todo-list #todo-list .wrapper .items .export {
 #todo-list .wrapper .items .add:hover,
 #todo-list .wrapper .items .import:hover,
 #todo-list .wrapper .items .export:hover {
-    opacity: 1;
-    transform: translateY(-1px);
+    opacity: var(--opacity-full);
+    transform: var(--motion-hover-lift);
 }
 #todo-list .wrapper .items .item {
-    padding: 16px;
-    border-bottom: 1px solid #dedede;
+    padding: 12px;
+    border-bottom: 1px solid var(--color-border);
     position: relative;
     cursor: pointer;
     display: none;
     width: 100%;
 }
 /* #todo-list .wrapper .items .item.checked {
-    background-color: #00b16a;
+    background-color: var(--color-primary);
 } */
 body.show-todo-list #todo-list .wrapper .items .item {
     display: block;
 }
 #todo-list .wrapper .items .item:hover {
-    background-color: #f9f9f9;
+    background-color: var(--color-surface-soft);
 }
 #todo-list .wrapper .items .item.draggable-source--is-dragging,
 #todo-list .wrapper .items .item.draggable-mirror {
     width: 100%;
-    background-color: #f1f1f1 !important; 
+    background-color: var(--color-surface-muted) !important;
 }
 #todo-list .wrapper .items .item.draggable-mirror {
-    opacity: 0.1;
+    opacity: var(--opacity-subtle);
 }
 #todo-list .wrapper .items .item input[type=checkbox] {
     position: absolute;
-    margin-top: -6px;
     top: 50%;
-    transform: scale(1.5);
-    width: 30px;
-    height: 30px;
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: var(--color-white);
+    color: var(--color-primary);
+    display: grid;
+    place-content: center;
+    width: 1.55rem;
+    height: 1.55rem;
+    margin: 0;
+    border: 1px solid var(--color-border-control);
+    border-radius: var(--radius-standard);
+    box-sizing: border-box;
     cursor: pointer;
-    font-size: 17px;
-    visibility: hidden;
+    transform: translateY(-50%);
 }
-#todo-list .wrapper .items .item input[type=checkbox]:after {
-    content: " ";
-    background-color: #fff;
-    display: block;
-    color: #00b16a;
-    width: 22px;
-    height: 23px;
-    visibility: visible;
-    border: 1px solid #e0e0e0;
-    padding-left: 3px;
-    border-radius: 5px;
-    margin-top: -3px;
+#todo-list .wrapper .items .item input[type=checkbox]::before {
+    content: "";
+    width: 0.75rem;
+    height: 0.75rem;
+    background-color: CanvasText;
+    box-shadow: inset 1rem 1rem currentColor;
+    clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+    transform: scale(0);
+    transform-origin: bottom left;
+    transition: transform var(--duration-fast) ease-in-out;
 }
-#todo-list .wrapper .items .item input[type=checkbox]:checked:after {
-    content: "\2714";
-    padding: -5px;
-    font-weight: bold;
+#todo-list .wrapper .items .item input[type=checkbox]:checked::before {
+    color: var(--color-white);
+    transform: scale(1);
 }
-@-moz-document url-prefix() {
-    #todo-list .wrapper .items .item input[type=checkbox] {
-        margin-top: -15px;
-        visibility: visible;
-    }
+#todo-list .wrapper .items .item input[type=checkbox]:checked {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+#todo-list .wrapper .items .item input[type=checkbox]:focus {
+    outline: max(2px, 0.15rem) solid currentColor;
+    outline-offset: max(2px, 0.15rem);
 }
 #todo-list .wrapper .items .item span[contentEditable=true] {
-    margin-left: 40px;
+    margin-left: 36px;
     display: block;
-    font-size: 16px;
+    font-size: var(--font-size-md);
     outline: none;
 }
 #todo-list .wrapper .items .item .item-textbox {
-    margin-left: 40px;
+    margin-left: 36px;
     display: block;
-    font-size: 16px;
-    min-height: 20px;
-    line-height: 1.35;
+    font-size: var(--font-size-md);
+    min-height: 18px;
+    line-height: 1.25;
 }
 #todo-list .wrapper .items .item .item-textbox.is-editing {
-    background-color: rgba(0, 177, 106, 0.08);
-    border: 1px solid rgba(0, 177, 106, 0.45);
-    border-radius: 6px;
-    padding: 8px 10px;
-    margin-left: 34px;
-    box-shadow: 0 0 0 3px rgba(0, 177, 106, 0.15);
-    transition: box-shadow 100ms ease-in-out, background-color 100ms ease-in-out, border-color 100ms ease-in-out;
+    background-color: var(--color-primary-subtle);
+    border: 1px solid var(--color-primary-border);
+    border-radius: var(--radius-standard);
+    padding: 6px 10px;
+    margin-left: 32px;
+    box-shadow: 0 0 0 3px var(--color-primary-focus);
+    transition: box-shadow var(--duration-fast) ease-in-out, background-color var(--duration-fast) ease-in-out, border-color var(--duration-fast) ease-in-out;
 }
 #todo-list .wrapper .items .item .item-textbox a {
-    color: #00b16a;
+    color: var(--color-primary);
     font-style: italic;
     text-decoration: none;
-    border-bottom: 1px solid rgba(0, 177, 106, 0.45);
+    border-bottom: 1px solid var(--color-primary-border);
     padding-bottom: 1px;
     word-break: break-word;
-    transition: color 100ms ease-in-out, border-color 100ms ease-in-out, background-color 100ms ease-in-out;
+    transition: color var(--duration-fast) ease-in-out, border-color var(--duration-fast) ease-in-out, background-color var(--duration-fast) ease-in-out;
 }
 #todo-list .wrapper .items .item .item-textbox a:hover {
-    color: #009955;
-    border-bottom-color: rgba(0, 153, 85, 0.85);
-    background-color: rgba(0, 177, 106, 0.08);
+    color: var(--color-primary-hover);
+    border-bottom-color: var(--color-primary-hover-border);
+    background-color: var(--color-primary-subtle);
 }
 #todo-list .wrapper .items .item .item-textbox.is-editing a {
     color: inherit;
@@ -624,11 +731,11 @@ body.show-todo-list #todo-list .wrapper .items .item {
 }
 #todo-list .wrapper .items .item span[contentEditable=true]:empty:not(:focus):before{
     content: attr(data-placeholder);
-    color: #b1b1b1;
+    color: var(--color-placeholder);
 }
 #todo-list .wrapper .items .item .item-textbox[contenteditable="false"]:empty:before {
     content: attr(data-placeholder);
-    color: #b1b1b1;
+    color: var(--color-placeholder);
 }
 #todo-list .wrapper .items .edit-hint {
     display: none;
@@ -640,13 +747,13 @@ body.show-todo-list #todo-list .wrapper .items .item {
     width: fit-content;
     max-width: calc(100% - 24px);
     padding: 8px 12px;
-    font-size: 12px;
-    color: #1b5e46;
+    font-size: var(--font-size-xs);
+    color: var(--color-hint-text);
     text-align: center;
-    background: rgba(0, 177, 106, 0.14);
-    border: 1px solid rgba(0, 177, 106, 0.35);
-    border-radius: 999px;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+    background: var(--color-hint-bg);
+    border: 1px solid var(--color-hint-border);
+    border-radius: var(--radius-pill);
+    box-shadow: var(--shadow-button);
     z-index: 5;
     pointer-events: none;
 }
@@ -661,25 +768,25 @@ body.show-todo-list #todo-list .wrapper .items .edit-hint {
     width: 25px;
     height: 25px;
     text-align: center;
-    color: white;
-    border-radius: 37%;
-    font-size: 15px;
-    box-shadow: 0 1px 6px 0 rgba(32,33,36,0.28);
+    color: var(--color-white);
+    border-radius: var(--radius-standard);
+    font-size: var(--font-size-md);
+    box-shadow: var(--shadow-control);
     position: absolute;
     top: 50%;
     margin-top: -12.5px;
     z-index: 7;
     display: none;
-    opacity: 0.9;
-    transition: opacity 100ms ease-in-out;
+    opacity: var(--opacity-soft);
+    transition: opacity var(--duration-fast) ease-in-out;
 }
 #todo-list .wrapper .items .item .delete {
     right: 14px;
-    background-color: #e74c3c;
+    background-color: var(--color-danger);
 }
 #todo-list .wrapper .items .item .move {
     right: 44px;
-    background-color: #3c53e7;
+    background-color: var(--color-action-move);
     cursor: move;
 }
 #todo-list .wrapper .items .item:hover .delete,
@@ -688,10 +795,11 @@ body.show-todo-list #todo-list .wrapper .items .edit-hint {
 }
 #todo-list .wrapper .items .item .delete:hover,
 #todo-list .wrapper .items .item .move:hover {
-    opacity: 1;
-    transform: translateY(-1px);
+    opacity: var(--opacity-full);
+    transform: var(--motion-hover-lift);
 }
 
+/* Footer links continue here to preserve the original cascade order. */
 #footer .menu a {
     color: inherit;
     text-decoration: inherit;
@@ -700,7 +808,7 @@ body.show-todo-list #todo-list .wrapper .items .edit-hint {
     cursor: pointer;
 }
 #footer .menu a:not(.just-text):hover {
-    border-bottom-color: #ddd;
+    border-bottom-color: var(--color-border);
 }
 #footer .menu a .connection-status {
     position: relative;
@@ -715,19 +823,23 @@ body.show-todo-list #todo-list .wrapper .items .edit-hint {
     height: 1px;
 }
 #footer .menu a .connection-status.happy:after {
-    background-color: #00b16a;
+    background-color: var(--color-primary);
 }
 #footer .menu a .connection-status.sad:after {
-    background-color: #EF4836;
+    background-color: var(--color-danger-strong);
 }
 #footer .menu a.photo-ownership {
-    color: white;
+    color: var(--color-white);
 }
+
+/* ==========================================================================
+   Modals
+   ========================================================================== */
 
 #swal2-html-container p,
 #swal2-html-container li,
 #swal2-html-container label {
-    font-size: 15px
+    font-size: var(--font-size-md);
 }
 #swal2-html-container ul {
     padding-left: 25px;
@@ -751,33 +863,58 @@ body.show-todo-list #todo-list .wrapper .items .edit-hint {
     margin-bottom: 0px;
 }
 .swal2-popup .swal2-actions .swal2-styled {
-    transition: transform 100ms ease-in-out, opacity 100ms ease-in-out, box-shadow 100ms ease-in-out;
+    transition: transform var(--duration-fast) ease-in-out, opacity var(--duration-fast) ease-in-out, box-shadow var(--duration-fast) ease-in-out;
 }
 .swal2-popup .swal2-actions .swal2-styled:hover {
-    transform: translateY(-1px);
+    transform: var(--motion-hover-lift);
 }
 #swal2-html-container hr.separator {
     border-top: none;
-    border-color: #ececec;
-    margin-top: 15px;
+    border-color: var(--color-border-soft);
+    margin: 15px 0 0;
     display: block;
+}
+#swal2-html-container .manual-location-search + hr.separator,
+#swal2-html-container .manual-location-validation + hr.separator {
+    margin: 10px 0 0;
+}
+#swal2-html-container .manual-location-validation {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    margin: 8px 0 0;
+    color: var(--color-danger);
+    font-size: var(--font-size-sm);
+    line-height: 1.4;
+}
+#swal2-html-container .manual-location-validation .fa {
+    flex: 0 0 auto;
+    margin-top: 2px;
+}
+#swal2-html-container .manual-location-validation[hidden] {
+    display: none;
+    margin: 0;
+}
+#swal2-html-container hr.separator + .prayer-calc-settings {
+    margin-top: 10px;
 }
 #swal2-html-container .modal-info .share-container .btn-share {
     text-decoration: none;
     display: inline-block;
-    color: #fff;
+    color: var(--color-white);
     width: 60px;
     padding: 13px 0px;
     margin: 0px 2px;
     font-size: 23px;
-    border-radius: 4px;
+    border-radius: var(--radius-standard);
     overflow: hidden;
     text-align: center;
-    opacity: 1;
-    transition: opacity 100ms ease-in-out;
+    opacity: var(--opacity-full);
+    transition: opacity var(--duration-fast) ease-in-out, transform var(--duration-fast) ease-in-out;
 }
 #swal2-html-container .modal-info .share-container .btn-share:hover {
-    opacity: 0.7;
+    opacity: var(--opacity-soft);
+    transform: var(--motion-hover-lift);
 }
 #swal2-html-container .modal-info .share-container .btn-share.facebook {
     background-color: #405D9B;
@@ -808,32 +945,32 @@ body.show-todo-list #todo-list .wrapper .items .edit-hint {
 #swal2-html-container .modal-change-language a {
     margin: 0px auto;
     display: block;
-    color: white;
-    border-radius: 6px;
+    color: var(--color-white);
+    border-radius: var(--radius-standard);
     padding: 12px 17px;
     text-decoration: none;
-    background-color: #00b16a;
+    background-color: var(--color-primary);
     width: 320px;
     font-weight: 600;
     text-align: center;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18);
-    transition: opacity 100ms ease-in-out, transform 100ms ease-in-out, box-shadow 100ms ease-in-out;
+    box-shadow: var(--shadow-button);
+    transition: opacity var(--duration-fast) ease-in-out, transform var(--duration-fast) ease-in-out, box-shadow var(--duration-fast) ease-in-out;
 }
 #swal2-html-container .modal-change-language hr {
     width: 199px;
     height: 1px;
-    background-color: #f1f1f1;
+    background-color: var(--color-surface-muted);
     border: none;
     margin-top: 5px;
     margin-bottom: 5px;
 }
 #swal2-html-container .modal-change-language a:hover {
-    opacity: 0.9;
-    transform: translateY(-1px);
-    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.22);
+    opacity: var(--opacity-soft);
+    transform: var(--motion-hover-lift);
+    box-shadow: var(--shadow-button-hover);
 }
 #swal2-html-container .modal-custom-background {
     text-align: left;
@@ -850,14 +987,14 @@ body.show-todo-list #todo-list .wrapper .items .edit-hint {
 }
 #swal2-html-container .modal-custom-background .storage-note,
 #swal2-html-container .modal-custom-background .upload-hint {
-    color: #666;
-    font-size: 13px;
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
 }
 #swal2-html-container .modal-custom-background .mode-group {
     margin: 14px 0 12px;
     padding: 12px;
-    border-radius: 8px;
-    background: #f8f8f8;
+    border-radius: var(--radius-standard);
+    background: var(--color-surface-soft);
 }
 #swal2-html-container .modal-custom-background .mode-group .mode-label {
     margin-bottom: 8px;
@@ -886,19 +1023,19 @@ body.show-todo-list #todo-list .wrapper .items .edit-hint {
 #swal2-html-container .modal-custom-background .custom-background-upload-trigger {
     appearance: none;
     border: none;
-    background-color: #00b16a;
-    color: #fff;
+    background-color: var(--color-primary);
+    color: var(--color-white);
     padding: 9px 13px;
-    border-radius: 6px;
+    border-radius: var(--radius-standard);
     font-weight: 700;
-    font-size: 13px;
+    font-size: var(--font-size-sm);
     cursor: pointer;
-    transition: opacity 100ms ease-in-out, transform 100ms ease-in-out, box-shadow 100ms ease-in-out;
+    transition: opacity var(--duration-fast) ease-in-out, transform var(--duration-fast) ease-in-out, box-shadow var(--duration-fast) ease-in-out;
 }
 #swal2-html-container .modal-custom-background .custom-background-upload-trigger:hover {
-    opacity: 0.92;
-    transform: translateY(-1px);
-    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.16);
+    opacity: var(--opacity-soft);
+    transform: var(--motion-hover-lift);
+    box-shadow: var(--shadow-button-hover);
 }
 #swal2-html-container .modal-custom-background .custom-background-list {
     display: grid;
@@ -913,21 +1050,21 @@ body.show-todo-list #todo-list .wrapper .items .edit-hint {
 #swal2-html-container .modal-custom-background .custom-background-empty {
     grid-column: 1 / -1;
     padding: 14px;
-    border-radius: 8px;
-    background-color: #f8f8f8;
-    color: #666;
+    border-radius: var(--radius-standard);
+    background-color: var(--color-surface-soft);
+    color: var(--color-text-muted);
     font-size: 14px;
 }
 #swal2-html-container .modal-custom-background .custom-background-empty .fallback-note {
     margin-top: 6px;
-    font-size: 13px;
-    color: #8a8a8a;
+    font-size: var(--font-size-sm);
+    color: var(--color-note-muted);
 }
 #swal2-html-container .modal-custom-background .custom-background-item {
-    border: 1px solid #e6e6e6;
-    border-radius: 10px;
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-standard);
     overflow: hidden;
-    background-color: #fff;
+    background-color: var(--color-white);
     position: relative;
     height: 188px;
 }
@@ -935,7 +1072,7 @@ body.show-todo-list #todo-list .wrapper .items .edit-hint {
     width: 100%;
     height: 140px;
     overflow: hidden;
-    background-color: #f2f2f2;
+    background-color: var(--color-surface-muted);
     flex: 0 0 auto;
 }
 #swal2-html-container .modal-custom-background .custom-background-item .thumb img {
@@ -952,14 +1089,14 @@ body.show-todo-list #todo-list .wrapper .items .edit-hint {
 }
 #swal2-html-container .modal-custom-background .custom-background-item .meta .name {
     font-weight: 700;
-    font-size: 12px;
+    font-size: var(--font-size-xs);
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
 }
 #swal2-html-container .modal-custom-background .custom-background-item .meta .size {
     font-size: 11px;
-    color: #777;
+    color: var(--color-text-soft);
     line-height: 1;
 }
 #swal2-html-container .modal-custom-background .custom-background-item .delete {
@@ -967,30 +1104,348 @@ body.show-todo-list #todo-list .wrapper .items .edit-hint {
     top: 8px;
     right: 8px;
     border: none;
-    background-color: rgba(231, 76, 60, 0.96);
-    color: #fff;
+    background-color: var(--color-danger-overlay);
+    color: var(--color-white);
     width: 28px;
     height: 28px;
     padding: 0;
-    border-radius: 37%;
+    border-radius: var(--radius-standard);
     cursor: pointer;
     font-weight: 700;
     line-height: 28px;
     text-align: center;
     font-size: 16px;
-    box-shadow: 0 1px 6px 0 rgba(32,33,36,0.28);
-    transition: opacity 100ms ease-in-out, transform 100ms ease-in-out;
+    box-shadow: var(--shadow-control);
+    transition: opacity var(--duration-fast) ease-in-out, transform var(--duration-fast) ease-in-out;
 }
 #swal2-html-container .modal-custom-background .custom-background-item .delete:hover {
-    opacity: 0.9;
-    transform: translateY(-1px);
+    opacity: var(--opacity-soft);
+    transform: var(--motion-hover-lift);
 }
 #swal2-html-container .manual-geolocation div.row {
     margin-bottom: 5px;
 }
 #swal2-html-container .manual-geolocation select {
     width: 300px;
-    font-size: 15px;
+    font-size: var(--font-size-md);
+}
+#swal2-html-container .manual-geolocation {
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+#swal2-html-container .manual-geolocation .location-search-input {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 10px 12px;
+    border: 1px solid var(--color-border-control);
+    border-radius: var(--radius-standard);
+    font-size: var(--font-size-md);
+    outline: none;
+}
+#swal2-html-container .manual-geolocation .location-search-input:focus {
+    border-color: var(--color-primary-border);
+    box-shadow: 0 0 0 3px var(--color-primary-focus);
+}
+#swal2-html-container .manual-geolocation .location-search-status {
+    margin: 8px 0 0;
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+    line-height: 1.4;
+}
+#swal2-html-container .manual-geolocation .location-search-status:empty {
+    display: none;
+    margin: 0;
+}
+#swal2-html-container .manual-geolocation .location-search-results:empty {
+    display: none;
+    margin: 0;
+    padding: 0;
+}
+#swal2-html-container .manual-geolocation .location-search-selected-hint {
+    display: none;
+    margin: 8px 0 0;
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+    line-height: 1.4;
+}
+#swal2-html-container .manual-geolocation .location-search-results {
+    display: grid;
+    gap: 8px;
+    margin-top: 8px;
+    max-height: 260px;
+    overflow-y: auto;
+}
+#swal2-html-container .manual-geolocation .location-search-result {
+    display: block;
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-standard);
+    background-color: var(--color-white);
+    color: var(--color-text);
+    font-size: var(--font-size-md);
+    text-align: left;
+    cursor: pointer;
+}
+#swal2-html-container .manual-geolocation .location-search-result:hover {
+    background-color: var(--color-surface-soft);
+}
+#swal2-html-container .manual-geolocation .location-search-result.is-selected {
+    border-color: var(--color-primary-border);
+    background-color: var(--color-primary-subtle);
+}
+#swal2-html-container .prayer-calc-settings {
+    margin-top: 12px;
+    max-width: 100%;
+    min-width: 0;
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-standard);
+    background-color: var(--color-white);
+    overflow: hidden;
+}
+#swal2-html-container .prayer-calc-settings > summary {
+    list-style: none;
+    font-weight: normal;
+}
+#swal2-html-container .prayer-calc-settings > summary::-webkit-details-marker {
+    display: none;
+}
+#swal2-html-container .prayer-calc-settings .prayer-calc-settings-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    cursor: pointer;
+    padding: 9px 10px;
+    user-select: none;
+}
+#swal2-html-container .prayer-calc-settings .prayer-calc-settings-toggle-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    text-align: left;
+}
+#swal2-html-container .prayer-calc-settings .prayer-calc-settings-title {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--color-text);
+    line-height: 1.3;
+    word-break: break-word;
+}
+#swal2-html-container .prayer-calc-settings .prayer-calc-settings-summary-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    min-width: 0;
+}
+#swal2-html-container .prayer-calc-settings .prayer-calc-settings-summary {
+    flex: 1;
+    min-width: 0;
+    font-size: var(--font-size-sm);
+    font-weight: normal;
+    color: var(--color-text-muted);
+    line-height: 1.35;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+#swal2-html-container .prayer-calc-settings .prayer-calc-reset[hidden] {
+    display: none;
+}
+#swal2-html-container .prayer-calc-settings .prayer-calc-reset {
+    flex: 0 0 auto;
+    margin: 0;
+    padding: 4px 8px;
+    border: none;
+    border-radius: var(--radius-standard);
+    background-color: var(--color-warning);
+    color: var(--color-white);
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    line-height: 1.2;
+    white-space: nowrap;
+    cursor: pointer;
+    box-shadow: var(--shadow-control);
+    opacity: var(--opacity-soft);
+    transition: opacity var(--duration-fast) ease-in-out, transform var(--duration-fast) ease-in-out;
+}
+#swal2-html-container .prayer-calc-settings .prayer-calc-reset:hover {
+    opacity: var(--opacity-full);
+    transform: var(--motion-hover-lift);
+}
+#swal2-html-container .prayer-calc-settings .prayer-calc-settings-chevron {
+    flex: 0 0 auto;
+    width: 8px;
+    height: 8px;
+    margin-top: 2px;
+    border-right: 2px solid var(--color-text-muted);
+    border-bottom: 2px solid var(--color-text-muted);
+    transform: rotate(45deg);
+    transition: transform var(--duration-fast) ease-in-out, border-color var(--duration-fast) ease-in-out;
+}
+#swal2-html-container .prayer-calc-settings.is-open .prayer-calc-settings-chevron {
+    margin-top: 6px;
+    transform: rotate(-135deg);
+    border-color: var(--color-primary-border);
+}
+#swal2-html-container .prayer-calc-settings .prayer-calc-settings-content {
+    border-top: 1px solid var(--color-border-soft);
+    padding: 8px 10px 10px;
+    background-color: var(--color-surface-soft);
+    max-width: 100%;
+    min-width: 0;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+#swal2-html-container .prayer-calc-settings .prayer-calc-settings-help {
+    margin: 0 0 10px;
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+    line-height: 1.45;
+}
+#swal2-html-container .prayer-calc-settings .prayer-calc-field {
+    margin-bottom: 8px;
+    max-width: 100%;
+    min-width: 0;
+}
+#swal2-html-container .prayer-calc-settings .prayer-calc-field-asr {
+    margin-bottom: 0;
+}
+#swal2-html-container .prayer-calc-settings .prayer-calc-settings-label {
+    display: block;
+    margin: 0 0 4px;
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--color-text);
+    text-align: left;
+    word-break: break-word;
+}
+#swal2-html-container .prayer-calc-picker {
+    position: relative;
+    max-width: 100%;
+    min-width: 0;
+}
+#swal2-html-container .prayer-calc-picker-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    min-height: 34px;
+    padding: 7px 10px;
+    border: 1px solid var(--color-border-control);
+    border-radius: var(--radius-standard);
+    background-color: var(--color-white);
+    color: var(--color-text);
+    font-size: var(--font-size-sm);
+    text-align: left;
+    cursor: pointer;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color var(--duration-fast) ease-in-out, box-shadow var(--duration-fast) ease-in-out;
+}
+#swal2-html-container .prayer-calc-picker-trigger:hover {
+    border-color: var(--color-primary-border);
+}
+#swal2-html-container .prayer-calc-picker.is-open .prayer-calc-picker-trigger,
+#swal2-html-container .prayer-calc-picker-trigger:focus-visible {
+    border-color: var(--color-primary-border);
+    box-shadow: 0 0 0 3px var(--color-primary-focus);
+}
+#swal2-html-container .prayer-calc-picker-value {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 1.35;
+    text-align: left;
+}
+#swal2-html-container .prayer-calc-picker-chevron {
+    flex: 0 0 auto;
+    width: 8px;
+    height: 8px;
+    border-right: 2px solid var(--color-text-muted);
+    border-bottom: 2px solid var(--color-text-muted);
+    transform: rotate(45deg);
+    transition: transform var(--duration-fast) ease-in-out, border-color var(--duration-fast) ease-in-out;
+}
+#swal2-html-container .prayer-calc-picker.is-open .prayer-calc-picker-chevron {
+    margin-top: 4px;
+    transform: rotate(-135deg);
+    border-color: var(--color-primary-border);
+}
+#swal2-html-container .prayer-calc-picker-panel {
+    display: none;
+    margin-top: 6px;
+    padding: 6px;
+    max-width: 100%;
+    min-width: 0;
+    max-height: 180px;
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-standard);
+    background-color: var(--color-white);
+    box-shadow: var(--shadow-control);
+    box-sizing: border-box;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+#swal2-html-container .prayer-calc-picker.is-open .prayer-calc-picker-panel {
+    display: block;
+}
+#swal2-html-container .prayer-calc-picker-group + .prayer-calc-picker-group {
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px solid var(--color-border-soft);
+}
+#swal2-html-container .prayer-calc-picker-group-label {
+    margin-bottom: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    text-align: left;
+}
+#swal2-html-container .prayer-calc-picker-options {
+    display: grid;
+    gap: 4px;
+}
+#swal2-html-container .prayer-calc-option {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    width: 100%;
+    max-width: 100%;
+    padding: 6px 8px;
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-standard);
+    background-color: var(--color-white);
+    color: var(--color-text);
+    font-size: var(--font-size-xs);
+    line-height: 1.3;
+    text-align: left;
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    box-sizing: border-box;
+    cursor: pointer;
+    transition: background-color var(--duration-fast) ease-in-out, border-color var(--duration-fast) ease-in-out;
+}
+#swal2-html-container .prayer-calc-option:hover {
+    background-color: var(--color-surface-soft);
+}
+#swal2-html-container .prayer-calc-option.is-selected {
+    border-color: var(--color-primary-border);
+    background-color: var(--color-primary-subtle);
+    font-weight: 600;
 }
 #swal2-html-container .manual-geolocation label {
     width: 100px;
@@ -1005,10 +1460,13 @@ body.show-todo-list #todo-list .wrapper .items .edit-hint {
 }
 .swal2-container.swal2-backdrop-show,
 .swal2-container.swal2-noanimation {
-    background: rgba(0, 0, 0, 0.6) !important;
+    background: var(--color-overlay-modal) !important;
 }
 
-/* background blur shadow */
+/* ==========================================================================
+   Ambient Shadows
+   ========================================================================== */
+
 #sidebar .date-time:before,
 #sidebar .prayer-time:before,
 #wise-word .wrapper .vertical > p > div:before,
@@ -1017,7 +1475,7 @@ body.show-todo-list #todo-list .wrapper .items .edit-hint {
     display: block;
     position: absolute;
     z-index: -1;
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: var(--color-shadow-backdrop);
     -webkit-filter: blur(40px);
     -moz-filter: blur(40px);
     -ms-filter: blur(40px);

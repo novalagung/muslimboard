@@ -50,7 +50,7 @@ func GetShalatScheduleByCoordinate(ctx context.Context, method string, latitude,
 			"month":     month,
 			"year":      year,
 		}).
-		Get("http://api.aladhan.com/v1/calendar")
+		Get("https://api.aladhan.com/v1/calendar")
 	if err != nil {
 		logger.Log.Errorln(namespace, "resty.Get", err.Error())
 		return nil, err

@@ -57,14 +57,14 @@ const I18n = {
         monthHijr12: { ar: 'ذو الحجة', en: 'Dhū al-Ḥijjah', ru: 'Зу-ль-хиджа', bn: 'জিলহজ্জ', hi: 'ज़िल हिज्जा', id: 'Dzulhijjah', 'zh-tw': '都爾黑哲月', 'zh-cn': '都尔黑哲月' },
 
         prayerTimeTodaySchedule: {
-            ar: 'مواعيد صلوات اليوم:',
-            en: 'Today prayer times:',
-            ru: 'Время молитв сегодня:',
-            bn: 'আজকের সালাতের সময়সূচী:', 
-            hi: 'आज की प्रार्थना का समय:',
-            id: 'Jadwal sholat untuk hari ini:',
-            'zh-tw': '今日祈禱時間：',
-            'zh-cn': '今日祈祷时间：'
+            ar: 'تقدير مواعيد صلوات اليوم:',
+            en: 'Estimated prayer times for today:',
+            ru: 'Ориентировочное время молитв на сегодня:',
+            bn: 'আজকের আনুমানিক সালাতের সময়সূচি:',
+            hi: 'आज के अनुमानित नमाज़ के समय:',
+            id: 'Estimasi jadwal sholat untuk hari ini:',
+            'zh-tw': '今日預估禮拜時間：',
+            'zh-cn': '今日预估礼拜时间：'
         },
 
         prayerTimeFajr:    { ar:'الفجر', en: 'Fajr', ru: 'Фаджр', bn: 'ফযর', hi: 'फजर', id: 'Subuh', 'zh-tw': '晨禮', 'zh-cn': '黎明' },
@@ -247,24 +247,24 @@ const I18n = {
         },
 
         footerMenuAutomaticLocationDetection: {
-            ar: 'تحديد المكان تلقائياً (حول العالم)',
-            en: 'Auto-detect location (Worldwide)',
+            ar: 'تحديد المكان تلقائياً',
+            en: 'Auto-detect location',
             ru: 'Автоматически определить местоположение',
-            bn: 'স্বয়ংক্রিয়ভাবে অবস্থান সনাক্তকরণ (বিশ্বব্যাপী)', 
-            hi: 'स्वचालित स्थान का पता लगाना (दुनिया भर में)',
+            bn: 'স্বয়ংক্রিয়ভাবে অবস্থান সনাক্তকরণ',
+            hi: 'स्वचालित स्थान का पता लगाना',
             id: 'Deteksi lokasi otomatis',
             'zh-tw': '自動偵測位置',
             'zh-cn': '自动检测位置'
         },
         footerMenuManualLocationSelection: {
-            ar: 'حدد مكان بعينه (إندونيسيا)',
-            en: 'Choose specific location (Indonesia only)',
-            ru: 'Выберите конкретное местоположение (только в Индонезии)',
-            bn: 'একটি নির্দিষ্ট অবস্থান নির্বাচন করুন (শুধুমাত্র ইন্দোনেশিয়ার জন্য)', 
-            hi: 'एक विशिष्ट स्थान चुनें (केवल इंडोनेशिया के लिए)',
-            id: 'Atur manual pilihan lokasi (Indonesia)',
-            'zh-tw': '手動選擇位置',
-            'zh-cn': '手动选择位置'
+            ar: 'تحديد الموقع يدوياً',
+            en: 'Set location manually',
+            ru: 'Указать местоположение вручную',
+            bn: 'ম্যানুয়ালি অবস্থান সেট করুন',
+            hi: 'स्थान मैन्युअल रूप से सेट करें',
+            id: 'Atur lokasi manual',
+            'zh-tw': '手動設定位置',
+            'zh-cn': '手动设置位置'
         },
         footerMenuInternetAvailability: {
             ar: 'انترنت',
@@ -580,6 +580,16 @@ const I18n = {
             'zh-tw': '儲存',
             'zh-cn': '保存'
         },
+        promptConfirmationActivateManualLocation: {
+            ar: 'نعم، استخدم هذا الموقع',
+            en: 'Yes, use this location',
+            ru: 'Да, использовать это местоположение',
+            bn: 'হ্যাঁ, এই অবস্থান ব্যবহার করুন',
+            hi: 'हां, इस स्थान का उपयोग करें',
+            id: 'Ya, gunakan lokasi ini',
+            'zh-tw': '是的，使用此位置',
+            'zh-cn': '是的，使用此位置'
+        },
         
         promptConfirmationMessageToActivateAutoDetectLocation: {
             ar: 'هل أنت متأكد من أنك تريد تمكين الكشف التلقائي عن الموقع للحصول على أوقات الصلاة؟',
@@ -587,19 +597,19 @@ const I18n = {
             ru: 'Вы уверены, что хотите включить автоматическое определение местоположения для получения информации о времени молитв?',
             bn: 'আপনি কি সালাতের সময়সূচী পাওয়ার জন্য স্বয়ংক্রিয়ভাবে অবস্থান সনাক্তকরণ চালু করতে চান?', 
             hi: 'क्या आप प्रार्थना कार्यक्रम जानने के लिए स्वचालित स्थान पहचान चालू करना चाहते हैं?', 
-            id: 'Anda yakin ingin mengaktifkan deteksi lokasi otomatis untuk pengambilan jadwal shalat?',
+            id: 'Anda yakin ingin mengaktifkan deteksi lokasi otomatis untuk pengambilan jadwal sholat?',
             'zh-tw': '您確定要啟用自動偵測位置以取得祈禱時間嗎？',
             'zh-cn': '您确定要启用自动检测位置以获取祈祷时间吗？'
         },
         promptConfirmationYesToActivateAutoDetectLocation: {
-            ar: 'نعم، فعّلها',
-            en: 'Yes, enable it',
-            ru: 'Да, включить',
-            bn: 'হ্যাঁ, চালু করুন', 
-            hi: 'हां, इसे चालू करें',
-            id: 'Ya, aktifkan',
-            'zh-tw': '是的，啟用它',
-            'zh-cn': '是的，启用它'
+            ar: 'نعم، فعّل اكتشاف الموقع التلقائي',
+            en: 'Yes, enable automatic location detection',
+            ru: 'Да, включить автоопределение местоположения',
+            bn: 'হ্যাঁ, স্বয়ংক্রিয় অবস্থান সনাক্তকরণ চালু করুন',
+            hi: 'हां, स्वचालित स्थान पहचान चालू करें',
+            id: 'Ya, aktifkan deteksi lokasi otomatis',
+            'zh-tw': '是的，啟用自動偵測位置',
+            'zh-cn': '是的，启用自动检测位置'
         },
         promptConfirmationMessageToRefreshAutoDetectLocation: {
             ar: 'تحديد الموقع التلقائي مفعّل، هل تريد تحديث الموقع؟',
@@ -631,6 +641,196 @@ const I18n = {
             id: 'Silakan pilih nama provinsi dan kabupaten/kota tempat anda sekarang berada',
             'zh-tw': '請選擇您想要使用的省份和城市，以取得祈禱時間',
             'zh-cn': '请选择您想要用于获取祈祷时间的省份和城市'
+        },
+        prayerCalculationAdvancedSettingsTitle: {
+            ar: 'اختر طريقة حساب وقت الصلاة',
+            en: 'Choose prayer time calculation method',
+            ru: 'Выберите метод расчёта времени намаза',
+            bn: 'নামাজের সময় গণনার পদ্ধতি বেছে নিন',
+            hi: 'नमाज़ समय गणना विधि चुनें',
+            id: 'Pilih metode perhitungan waktu sholat',
+            'zh-tw': '選擇禱告時間計算方式',
+            'zh-cn': '选择礼拜时间计算方式'
+        },
+        prayerCalculationAdvancedSettingsHelp: {
+            ar: 'اختياري. الإعداد الافتراضي مناسب لمعظم المستخدمين.',
+            en: 'Optional. The default works well for most people.',
+            ru: 'Необязательно. Для большинства подходит значение по умолчанию.',
+            bn: 'ঐচ্ছিক। বেশিরভাগ ব্যবহারকারীর জন্য ডিফল্টই যথেষ্ট।',
+            hi: 'वैकल्पिक। अधिकांश उपयोगकर्ताओं के लिए डिफ़ॉल्ट पर्याप्त है।',
+            id: 'Opsional. Kebanyakan pengguna cukup pakai default.',
+            'zh-tw': '選用。多數使用者使用預設值即可。',
+            'zh-cn': '可选。大多数用户使用默认值即可。'
+        },
+        prayerCalculationSummaryDefault: {
+            ar: 'الطريقة الافتراضية ($1 · $2 · $3)',
+            en: 'Default method ($1 · $2 · $3)',
+            ru: 'Метод по умолчанию ($1 · $2 · $3)',
+            bn: 'ডিফল্ট পদ্ধতি ($1 · $2 · $3)',
+            hi: 'डिफ़ॉल्ट विधि ($1 · $2 · $3)',
+            id: 'Metode default ($1 · $2 · $3)',
+            'zh-tw': '預設方法（$1 · $2 · $3）',
+            'zh-cn': '默认方法（$1 · $2 · $3）'
+        },
+        prayerCalculationSummaryCustom: {
+            ar: '$1 · $2 · $3',
+            en: '$1 · $2 · $3',
+            ru: '$1 · $2 · $3',
+            bn: '$1 · $2 · $3',
+            hi: '$1 · $2 · $3',
+            id: '$1 · $2 · $3',
+            'zh-tw': '$1 · $2 · $3',
+            'zh-cn': '$1 · $2 · $3'
+        },
+        prayerCalculationCommonGroup: {
+            ar: 'شائع الاستخدام',
+            en: 'Commonly used',
+            ru: 'Часто используемые',
+            bn: 'সাধারণত ব্যবহৃত',
+            hi: 'आमतौर पर उपयोग',
+            id: 'Umum dipakai',
+            'zh-tw': '常用',
+            'zh-cn': '常用'
+        },
+        prayerCalculationOtherGroup: {
+            ar: 'طرق أخرى',
+            en: 'More methods',
+            ru: 'Другие методы',
+            bn: 'অন্যান্য পদ্ধতি',
+            hi: 'अन्य विधियाँ',
+            id: 'Metode lainnya',
+            'zh-tw': '其他方式',
+            'zh-cn': '其他方式'
+        },
+        prayerCalculationPrimaryLabel: {
+            ar: 'طريقة الحساب الأساسية (AlAdhan API)',
+            en: 'Primary calculation method (AlAdhan API)',
+            ru: 'Основной метод расчёта (AlAdhan API)',
+            bn: 'প্রাথমিক গণনা পদ্ধতি (AlAdhan API)',
+            hi: 'प्राथमिक गणना विधि (AlAdhan API)',
+            id: 'Metode perhitungan utama (AlAdhan API)',
+            'zh-tw': '主要計算方式（AlAdhan API）',
+            'zh-cn': '主要计算方式（AlAdhan API）'
+        },
+        prayerCalculationFallbackLabel: {
+            ar: 'طريقة الحساب الاحتياطية (حساب يدوي)',
+            en: 'Fallback calculation method (manual calculation)',
+            ru: 'Резервный метод расчёта (ручной расчёт)',
+            bn: 'ব্যাকআপ গণনা পদ্ধতি (ম্যানুয়াল গণনা)',
+            hi: 'फ़ॉलबैक गणना विधि (मैन्युअल गणना)',
+            id: 'Metode perhitungan cadangan (kalkulasi manual)',
+            'zh-tw': '備援計算方式（手動計算）',
+            'zh-cn': '后备计算方式（手动计算）'
+        },
+        prayerCalculationAsrLabel: {
+            ar: 'طريقة حساب وقت العصر',
+            en: 'Asr calculation method',
+            ru: 'Метод расчёта времени Асра',
+            bn: 'আসরের সময় গণনার পদ্ধতি',
+            hi: 'असर समय गणना विधि',
+            id: 'Metode perhitungan waktu ashar',
+            'zh-tw': '晡禮時間計算方式',
+            'zh-cn': '晡礼时间计算方式'
+        },
+        prayerCalculationReset: {
+            ar: 'إعادة ضبط الطريقة',
+            en: 'Reset method to default',
+            ru: 'Сбросить метод',
+            bn: 'মেথড রিসেট করুন',
+            hi: 'विधि रीसेट करें',
+            id: 'Reset metode ke default',
+            'zh-tw': '重設方式為預設',
+            'zh-cn': '重置方式为默认'
+        },
+        prayerCalculationMethodAutoResetToastTitle: {
+            ar: 'معلومة',
+            en: 'Info',
+            ru: 'Информация',
+            bn: 'তথ্য',
+            hi: 'जानकारी',
+            id: 'Info',
+            'zh-tw': '資訊',
+            'zh-cn': '信息'
+        },
+        prayerCalculationMethodAutoResetToast: {
+            ar: 'تمت إعادة بعض إعدادات الحساب إلى الوضع الافتراضي.',
+            en: 'Some calculation settings were reset to default.',
+            ru: 'Некоторые настройки расчёта были сброшены по умолчанию.',
+            bn: 'কিছু গণনা সেটিংস ডিফল্টে রিসেট করা হয়েছে।',
+            hi: 'कुछ गणना सेटिंग्स को डिफ़ॉल्ट पर रीसेट किया गया।',
+            id: 'Beberapa pengaturan perhitungan direset ke default.',
+            'zh-tw': '部分計算設定已重設為預設值。',
+            'zh-cn': '部分计算设置已重置为默认值。'
+        },
+        promptManualLocationSearchTitle: {
+            ar: 'هل أنت متأكد من أنك تريد تفعيل الموقع اليدوي للحصول على أوقات الصلاة؟ ابحث عن المدينة أو المحافظة أو الرمز البريدي لتحديد موقع مواقيت الصلاة.',
+            en: 'Are you sure want to enable manual location for getting prayer times? Search the city, province, or postal code to set your prayer time location.',
+            ru: 'Вы уверены, что хотите включить ручное определение местоположения для получения времени намаза? Найдите город, область или почтовый индекс, чтобы указать место для расчёта времени намаза.',
+            bn: 'আপনি কি সালাতের সময় পাওয়ার জন্য ম্যানুয়াল অবস্থান চালু করতে চান? সালাতের সময় নির্ধারণের জন্য শহর, প্রদেশ বা পোস্টাল কোড খুঁজুন।',
+            hi: 'क्या आप नमाज़ का समय पाने के लिए मैन्युअल स्थान सक्षम करना चाहते हैं? नमाज़ के समय के लिए शहर, प्रांत या पिन कोड खोजकर अपना स्थान चुनें।',
+            id: 'Anda yakin ingin mengaktifkan lokasi manual untuk pengambilan jadwal sholat? Cari kota, provinsi, atau kode pos untuk menentukan lokasi jadwal sholat.',
+            'zh-tw': '您確定要啟用手動設定位置以取得祈禱時間嗎？請搜尋城市、省或郵遞區號以設定禮拜時間的位置。',
+            'zh-cn': '您确定要启用手动设置位置以获取礼拜时间吗？请搜索城市、省或邮政编码以设置礼拜时间的位置。'
+        },
+        promptManualLocationSearchPlaceholder: {
+            ar: 'اكتب 3 أحرف على الأقل للبحث عن العنوان.',
+            en: 'Type at least 3 characters to search for an address.',
+            ru: 'Введите минимум 3 символа для поиска адреса.',
+            bn: 'ঠিকানা খুঁজতে কমপক্ষে ৩টি অক্ষর লিখুন।',
+            hi: 'पता खोजने के लिए कम से कम 3 अक्षर लिखें।',
+            id: 'Ketik minimal 3 karakter untuk mencari alamat.',
+            'zh-tw': '至少輸入 3 個字元以搜尋地址。',
+            'zh-cn': '至少输入 3 个字符搜索地址。'
+        },
+        promptManualLocationSearchLoadingText: {
+            ar: 'جاري البحث...',
+            en: 'Searching...',
+            ru: 'Поиск...',
+            bn: 'অনুসন্ধান হচ্ছে...',
+            hi: 'खोज रहे हैं...',
+            id: 'Mencari...',
+            'zh-tw': '搜尋中...',
+            'zh-cn': '搜索中...'
+        },
+        promptManualLocationSearchNoResultText: {
+            ar: 'لم يتم العثور على موقع.',
+            en: 'No location found.',
+            ru: 'Местоположение не найдено.',
+            bn: 'কোনো অবস্থান পাওয়া যায়নি।',
+            hi: 'कोई स्थान नहीं मिला।',
+            id: 'Lokasi tidak ditemukan.',
+            'zh-tw': '找不到位置。',
+            'zh-cn': '未找到位置。'
+        },
+        promptManualLocationSearchResultText: {
+            ar: 'تم العثور على $1 موقع.',
+            en: '$1 locations found.',
+            ru: 'Найдено местоположений: $1.',
+            bn: '$1টি অবস্থান পাওয়া গেছে।',
+            hi: '$1 स्थान मिले।',
+            id: '$1 lokasi ditemukan.',
+            'zh-tw': '找到 $1 個位置。',
+            'zh-cn': '找到 $1 个位置。'
+        },
+        promptManualLocationSearchSelectedText: {
+            ar: 'تم اختيار الموقع ✅',
+            en: 'Location selected ✅',
+            ru: 'Место выбрано ✅',
+            bn: 'অবস্থান নির্বাচন হয়েছে ✅',
+            hi: 'स्थान चुन लिया गया ✅',
+            id: 'Lokasi sudah dipilih ✅',
+            'zh-tw': '已選擇位置 ✅',
+            'zh-cn': '已选择位置 ✅'
+        },
+        promptManualLocationSearchError: {
+            ar: 'تعذر البحث عن الموقع الآن.',
+            en: 'Unable to search locations right now.',
+            ru: 'Не удалось выполнить поиск местоположений.',
+            bn: 'এখন অবস্থান অনুসন্ধান করা যাচ্ছে না।',
+            hi: 'अभी स्थान खोजा नहीं जा सका।',
+            id: 'Tidak bisa mencari lokasi saat ini.',
+            'zh-tw': '目前無法搜尋位置。',
+            'zh-cn': '目前无法搜索位置。'
         },
         promptManualLocationProvinceTitle: {
             ar: 'مقاطعة',
@@ -693,14 +893,14 @@ const I18n = {
             'zh-cn': '由于未选择省份，无法保存更改'
         },
         promptErrorUnableToSaveDueToEmptyCity: {
-            ar: 'تعذر حفظ التغييرات بسبب عدم اختيار مدينة',
-            en: 'Unable to save changes due to no city selected',
-            ru: 'Невозможно сохранить изменения, поскольку не выбран город',
-            bn: 'কোনো শহর নির্বাচন না করার কারণে পরিবর্তনগুলি সংরক্ষণ করতে অক্ষম', 
-            hi: 'कोई शहर चयनित न होने के कारण परिवर्तन सहेजने में असमर्थ',
-            id: 'Tidak bisa menyimpan perubahan karena kabupaten/kota kosong',
-            'zh-tw': '無法儲存變更，因為沒有選擇城市',
-            'zh-cn': '由于未选择城市，无法保存更改'
+            ar: 'تعذر حفظ التغييرات لأنه لم يتم اختيار موقع بعد.',
+            en: 'Unable to save changes because no location has been selected yet.',
+            ru: 'Не удалось сохранить изменения: местоположение ещё не выбрано.',
+            bn: 'অবস্থান এখনও নির্বাচন না হওয়ায় পরিবর্তন সংরক্ষণ করা যাচ্ছে না।',
+            hi: 'स्थान अभी चुना नहीं गया है, इसलिए परिवर्तन सहेजे नहीं जा सके।',
+            id: 'Tidak bisa menyimpan perubahan karena belum memilih lokasi.',
+            'zh-tw': '尚未選擇位置，無法儲存變更。',
+            'zh-cn': '尚未选择位置，无法保存更改。'
         },
         
         modalAboutUsText1: {
@@ -732,6 +932,16 @@ const I18n = {
             id: 'Untuk pertanyaan, kritik & saran, maupun jika ingin berkontribusi foto atau quote, silakan kirim email ke $1 atau via submit PR di $2.',
             'zh-tw': '如有任何意見或建議，或想要貢獻照片或名言，請發送電子郵件至 $1 或提交 PR 到 $2。',
             'zh-cn': '如有任何意见或建议，或想要贡献照片或名言，请发送电子邮件至 $1 或提交 PR 到 $2。'
+        },
+        modalAboutUsGeoNamesAttribution: {
+            ar: 'بيانات البحث عن الموقع من $1، مرخصة بموجب CC BY 4.0.',
+            en: 'Location search data by $1, licensed under CC BY 4.0.',
+            ru: 'Данные поиска местоположений предоставлены $1 по лицензии CC BY 4.0.',
+            bn: 'অবস্থান অনুসন্ধানের ডেটা $1 থেকে, CC BY 4.0 লাইসেন্সের অধীনে।',
+            hi: 'स्थान खोज डेटा $1 द्वारा, CC BY 4.0 लाइसेंस के अंतर्गत।',
+            id: 'Data pencarian lokasi dari $1, berlisensi CC BY 4.0.',
+            'zh-tw': '位置搜尋資料由 $1 提供，採用 CC BY 4.0 授權。',
+            'zh-cn': '位置搜索数据由 $1 提供，采用 CC BY 4.0 授权。'
         },
         
         modalShareHeader: {

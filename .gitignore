@@ -1,4 +1,6 @@
 .DS_Store
 .idea
 webservice/.env
+webservice/utility/scripts/data
+webservice/data
 release

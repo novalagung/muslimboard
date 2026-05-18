@@ -61,6 +61,10 @@ func DoRoute(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 			logger.Log.Infoln(namespace, "incoming request", "op="+op, r.URL.String())
 			controller.HandleImage(ctx, w, r)
 
+		case "location-search":
+			logger.Log.Infoln(namespace, "incoming request", "op="+op, r.URL.String())
+			controller.HandleLocationSearch(ctx, w, r)
+
 		case "shalat-schedule-by-coordinate":
 			logger.Log.Infoln(namespace, "incoming request", "op="+op, r.URL.String())
 			controller.HandleShalatScheduleByCoordinate(ctx, w, r)
