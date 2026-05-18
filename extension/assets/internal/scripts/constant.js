@@ -14,8 +14,8 @@ const Constant = {
         feedbackOrBugReportUrl: 'https://forms.gle/ZDATLmKNntdXBBt58',
         debug: (() => !('update_url' in chrome.runtime.getManifest()))(),
         timeoutDuration: Utility.seconds(5),
-        backgroundPreloadTimeoutDuration: Utility.seconds(20),
         updateBackgroundDelayDuration: Utility.seconds(40),
+        backgroundPreloadTimeoutDuration: Utility.seconds(10),
         updateContentDelayDuration: Utility.seconds(60),
         changelogs: [
             'Search and set prayer location worldwide by city, province, or postal code',
