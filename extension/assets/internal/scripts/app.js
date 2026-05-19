@@ -772,6 +772,11 @@
         //     Utility.removeLocalStorageItemsByPrefix((d) => d.indexOf('data-prayer-time') > -1)
         // },
 
+        geolocationRefreshTimer: null,
+        lastGeolocationCoords: null,
+        geolocationMinDistanceKm: 1,
+        geolocationRefreshDelayMs: Utility.seconds(60),
+
         // render prayer time to screen
         renderPrayerTimeInterval: undefined,
         renderPrayerTime(schedule) {
@@ -828,17 +833,17 @@
                 const ishaYMDHM = ymdhmFormatter(schedule.Isha)
 
                 const nowYYYYMMDD = Date.now()
-                
+
                 $('.prayer-time tbody tr').removeClass('active')
 
                 const createAlarm = (time, text) => {
-                    if (!(!isAlarmEverSet || Utility.now().seconds() % 10  == 0)) {
+                    if (!(!isAlarmEverSet || Utility.now().seconds() % 10 == 0)) {
                         return
                     }
 
                     if (chrome.alarms) {
                         chrome.alarms.clear()
-    
+
                         const exactTime = time
                         if (exactTime >= nowYYYYMMDD) {
                             const exactMessage = I18n.getText('alarmExactPrayerTimeMessageTemplate')
@@ -846,7 +851,7 @@
                                 .replace('$2', $('.location .text').text())
                             chrome.alarms.create(exactMessage, { when: exactTime })
                         }
-    
+
                         const almostTime = moment(time).add(-1 * this.activePrayerTimeDurationInMinute, 'minutes').toDate().getTime()
                         if (almostTime >= nowYYYYMMDD) {
                             const almostMessage = I18n.getText('alarmAlmostPrayerTimeMessageTemplate')
@@ -854,7 +859,7 @@
                                 .replace('$2', $('.location .text').text())
                             chrome.alarms.create(almostMessage, { when: almostTime })
                         }
-    
+
                         isAlarmEverSet = true
                     }
                 }
@@ -871,7 +876,7 @@
                     const $tr = $('.prayer-time tbody tr.prayer-time-row:eq(4)')
                     $tr.addClass('active')
                     createAlarm(maghribYMDHM, $tr.find('td:eq(0)').text())
-                    
+
                 } else if (nowHM >= dhuhrHM) {
                     const $tr = $('.prayer-time tbody tr.prayer-time-row:eq(3)')
                     $tr.addClass('active')
@@ -1337,6 +1342,7 @@
         // get background image data then render it to screen.
         // if background image data ever been loaded once, then the cache will be used on next call
         async getDataBackgroundThenRender() {
+            let didStartBackgroundUpdate = false
 
             // load data from remote url
             try {
@@ -1356,6 +1362,7 @@
                 if (backgroundPayload.content.length > 0) {
                     await this.refreshCustomBackgroundImages.call(this)
                     this.updateBackground.call(this, backgroundPayload)
+                    didStartBackgroundUpdate = true
                     return
                 }
             } catch (err) {
@@ -1372,8 +1379,13 @@
                 }
                 await this.refreshCustomBackgroundImages.call(this)
                 this.updateBackground.call(this, Utility.normalizeBackgroundDataFile(data))
+                didStartBackgroundUpdate = true
             } catch (err) {
                 Utility.error(err)
+            }
+
+            if (!didStartBackgroundUpdate) {
+                $('body').removeClass('is-background-loading')
             }
         },
 
@@ -1402,11 +1414,11 @@
                         .removeAttr('target')
                         .attr('data-custom-image', '1')
                 } else if (background.hasOwnProperty('author')) {
-                    $('.photographer').html(background.author.name)
+                    $('.photographer').text(background.author.name)
                     $photoOwnership.removeAttr('data-custom-image')
                     $photoOwnership.attr('target', '_blank')
                 } else {
-                    $('.photographer').html(Utility.formatSourceLabel(background.source))
+                    $('.photographer').text(Utility.formatSourceLabel(background.source))
                     $photoOwnership.removeAttr('data-custom-image')
                     $photoOwnership.attr('target', '_blank')
                 }
@@ -1477,6 +1489,10 @@
                     updateBackgroundAthorName(this.selectedBackground)
                 })
             } else {
+                const finishBackgroundLoading = () => {
+                    $('body').removeClass('is-background-loading')
+                }
+
                 const doUpdateBackgroundForTheFirstTime = (delayBeforeTransitionMs = 0) => {
                     $('#background .content').css('background-image', `url("${doGetBackgroundURL(this.selectedBackground)}")`)
         
@@ -1487,7 +1503,7 @@
                         $('#background .content').css('background-position', '')
                     }
 
-                    $('body').removeClass('is-background-loading')
+                    finishBackgroundLoading()
 
                     doUpdateBackgroundAndPreloadNextImage(delayBeforeTransitionMs)
                     updateBackgroundAthorName(this.selectedBackground)
@@ -1495,6 +1511,7 @@
 
                 this.selectedBackground = doPickBackground()
                 if (!this.selectedBackground) {
+                    finishBackgroundLoading()
                     return
                 }
                 this.nextSelectedBackground = doPickBackground(this.selectedBackground) || this.selectedBackground
@@ -1517,6 +1534,7 @@
                             this.selectedBackground
                         )
                         if (!this.selectedBackground) {
+                            finishBackgroundLoading()
                             return
                         }
                         this.nextSelectedBackground = doPickBackground(this.selectedBackground) || this.selectedBackground
@@ -1590,20 +1608,32 @@
             const author = data.author[content.author]
     
             $('#wise-word').attr('data-type', content.type)
-            $('#wise-word').find('p.matan').html(`<div>${content.matan}</div>`)
-            $('#wise-word').find('p.translation').html(`<div>${content.translation}</div>`)
+            Utility.setTextInContainer($('#wise-word').find('p.matan'), content.matan)
+            Utility.setTextInContainer($('#wise-word').find('p.translation'), content.translation)
     
             if (content.type.indexOf('verse') > -1) {
-                $('#wise-word').find('p.reference').html(`<div>${content.reference}</div>`)
+                Utility.setTextInContainer($('#wise-word').find('p.reference'), content.reference)
             } else if (author) {
-                const text = content.reference
-                    ? `<a href='${content.reference}' target='_blank'>${author.name}</a>`
-                    : `<span>${author.name}</span>`
-                    
-                $('#wise-word').find('p.reference').html(`<div>${text}</div>`)
-                $('#wise-word').find('p.reference *:first')
+                const $reference = $('#wise-word').find('p.reference')
+                $reference.empty()
+                const $wrapper = $(document.createElement('div'))
+                const referenceUrl = Utility.sanitizeHttpUrl(content.reference)
+
+                if (referenceUrl) {
+                    $('<a>', {
+                        href: referenceUrl,
+                        target: '_blank',
+                        rel: 'noopener noreferrer',
+                        text: author.name,
+                    }).appendTo($wrapper)
+                } else {
+                    $wrapper.text(author.name)
+                }
+
+                $reference.append($wrapper)
+                $reference.find('a, span').first()
                     .addClass('tooltipster')
-                    .attr('title', author.bio)
+                    .attr('title', Utility.escapeHtml(author.bio || ''))
                     .tooltipster({
                         theme: 'tooltipster-custom-theme',
                         animation: 'grow',
@@ -1613,11 +1643,23 @@
                         position: 'bottom'
                     })
             } else if (content.reference) {
-                const text = content.reference.indexOf('http') > -1
-                    ? `<a href='${content.reference}' target='_blank'>${content.reference}</a>`
-                    : `<span>${content.reference}</span>`
+                const $reference = $('#wise-word').find('p.reference')
+                $reference.empty()
+                const $wrapper = $(document.createElement('div'))
+                const referenceUrl = Utility.sanitizeHttpUrl(content.reference)
 
-                $('#wise-word').find('p.reference').html(`<div>${text}</div>`)
+                if (referenceUrl) {
+                    $('<a>', {
+                        href: referenceUrl,
+                        target: '_blank',
+                        rel: 'noopener noreferrer',
+                        text: content.reference,
+                    }).appendTo($wrapper)
+                } else {
+                    $wrapper.text(content.reference)
+                }
+
+                $reference.append($wrapper)
             }
     
             setTimeout(() => {
@@ -1659,6 +1701,7 @@
                     // on automatic mode, first get the current coordinate
                     const location = await Utility.getCurrentLocationCoordinate()
                     const { latitude, longitude } = location.coords
+                    this.lastGeolocationCoords = { latitude, longitude }
 
                     // and then proceed with getting the prayer times
                     await getPrayerTimesByCoordinateThenRender.call(this, latitude, longitude)
@@ -1678,13 +1721,35 @@
 
                         const updatedLatitude = position.coords.latitude
                         const updatedLongitude = position.coords.longitude
-                        
-                        // refresh prayer time on movement
-                        const distance = Utility.distanceBetween(latitude, longitude, updatedLatitude, updatedLongitude)
-                        if (distance > 0) {
-                            Utility.log('detecting geolocation change!', distance, position)
-                            getPrayerTimesByCoordinateThenRender.call(this, updatedLatitude, updatedLongitude, true)
+
+                        if (!this.lastGeolocationCoords) {
+                            this.lastGeolocationCoords = {
+                                latitude: updatedLatitude,
+                                longitude: updatedLongitude,
+                            }
+                            return
                         }
+
+                        const distance = Utility.distanceBetween(
+                            this.lastGeolocationCoords.latitude,
+                            this.lastGeolocationCoords.longitude,
+                            updatedLatitude,
+                            updatedLongitude
+                        )
+                        const distanceKm = distance > 1 ? distance : distance / 1000
+                        if (distanceKm < this.geolocationMinDistanceKm) {
+                            return
+                        }
+
+                        clearTimeout(this.geolocationRefreshTimer)
+                        this.geolocationRefreshTimer = setTimeout(() => {
+                            this.lastGeolocationCoords = {
+                                latitude: updatedLatitude,
+                                longitude: updatedLongitude,
+                            }
+                            Utility.log('detecting geolocation change!', distanceKm, position)
+                            getPrayerTimesByCoordinateThenRender.call(this, updatedLatitude, updatedLongitude, true)
+                        }, this.geolocationRefreshDelayMs)
                     }, (error) => {
                         Utility.log(error)
                     })

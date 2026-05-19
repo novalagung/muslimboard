@@ -57,10 +57,6 @@ func DoRoute(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 		case "ping":
 			pkg_http.WriteRespose(ctx, w, r, http.StatusOK, true, nil)
 
-		case "image":
-			logger.Log.Infoln(namespace, "incoming request", "op="+op, r.URL.String())
-			controller.HandleImage(ctx, w, r)
-
 		case "location-search":
 			logger.Log.Infoln(namespace, "incoming request", "op="+op, r.URL.String())
 			controller.HandleLocationSearch(ctx, w, r)

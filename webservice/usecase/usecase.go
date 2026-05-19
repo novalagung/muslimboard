@@ -3,7 +3,6 @@ package usecase
 import (
 	"context"
 	"fmt"
-	"io"
 	"os"
 	"strconv"
 	"strings"
@@ -22,15 +21,10 @@ import (
 	"muslimboard-api.novalagung.com/repositories/geonames"
 	goprayer "muslimboard-api.novalagung.com/repositories/go-prayer"
 	"muslimboard-api.novalagung.com/repositories/openstreetmap"
-	"muslimboard-api.novalagung.com/repositories/unsplash"
 )
 
 // Cache manager instance (could be injected via dependency injection in a more complex setup)
 var cacheManager = cache.NewCacheManager()
-
-func GetImage(ctx context.Context, imageUrl string) (string, io.ReadCloser, error) {
-	return unsplash.GetImage(ctx, imageUrl)
-}
 
 func SearchLocations(ctx context.Context, query string, limit int) ([]geonames.Location, error) {
 	return geonames.SearchLocations(ctx, query, limit)

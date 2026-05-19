@@ -503,6 +503,23 @@ const Utility = {
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#39;'),
+    sanitizeHttpUrl: (rawUrl) => {
+        try {
+            const url = new URL(String(rawUrl || '').trim())
+            if (url.protocol === 'http:' || url.protocol === 'https:') {
+                return url.href
+            }
+        } catch (err) {
+            Utility.log('sanitizeHttpUrl rejected url', rawUrl, err)
+        }
+        return null
+    },
+    sanitizeAlarmField: (text = '') => String(text).replace(/\|/g, '-').trim(),
+    setTextInContainer: ($container, text) => {
+        const $wrapper = $(document.createElement('div'))
+        $wrapper.text(String(text || ''))
+        $container.empty().append($wrapper)
+    },
     getCurrentTimezoneAbbreviation: (countryCode) => {
         const tzAbbr = moment.tz(moment.tz.guess()).zoneAbbr()
         return Utility.getFormattedTzAbbr(tzAbbr)

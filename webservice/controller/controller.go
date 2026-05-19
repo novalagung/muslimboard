@@ -3,9 +3,7 @@ package controller
 import (
 	"context"
 	"fmt"
-	"io"
 	"net/http"
-	"net/url"
 	"strconv"
 	"strings"
 	"time"
@@ -17,43 +15,6 @@ import (
 	"muslimboard-api.novalagung.com/repositories/geonames"
 	"muslimboard-api.novalagung.com/usecase"
 )
-
-func HandleImage(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	namespace := "controller.HandleImage"
-	span := sentry.StartSpan(ctx, namespace)
-	span.Data = map[string]any{
-		"image": r.URL.Query().Get("image"),
-	}
-	defer span.Finish()
-
-	imageUrl, _ := url.QueryUnescape(r.URL.Query().Get("image"))
-	if imageUrl == "" {
-		err := fmt.Errorf("missing image url")
-		logger.Log.Errorln(namespace, "queryUnescape", err)
-		pkg_http.WriteRespose(ctx, w, r, http.StatusBadRequest, nil, err)
-		return
-	}
-
-	contentType, body, err := usecase.GetImage(ctx, imageUrl)
-	if body != nil {
-		defer body.Close()
-	}
-	if err != nil {
-		logger.Log.Errorln(namespace, "getImage", err)
-		pkg_http.WriteRespose(ctx, w, r, http.StatusBadRequest, nil, err)
-		return
-	}
-
-	pkg_http.RenderCacheHeader(ctx, w, r)
-	w.Header().Set("Content-type", contentType)
-
-	_, err = io.Copy(w, body)
-	if err != nil {
-		logger.Log.Errorln(namespace, "io.Copy", err)
-		pkg_http.WriteRespose(ctx, w, r, http.StatusBadRequest, nil, err)
-		return
-	}
-}
 
 func HandleLocationSearch(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	namespace := "controller.HandleLocationSearch"
