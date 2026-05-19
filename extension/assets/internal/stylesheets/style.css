@@ -38,7 +38,7 @@ html, body {
     --color-note-muted: #8a8a8a;
 
     --color-overlay-modal: rgba(0, 0, 0, 0.6);
-    --color-shadow-backdrop: rgba(0, 0, 0, 0.3);
+    --color-shadow-backdrop: rgba(0, 0, 0, 0.25);
     --color-glass-panel: rgba(255, 255, 255, 0.92);
     --color-glass-row-hover: rgba(255, 255, 255, 0.2);
     --color-glass-border: rgba(255, 255, 255, 0.28);
