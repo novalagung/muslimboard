@@ -18,13 +18,10 @@ const Constant = {
         backgroundPreloadTimeoutDuration: Utility.seconds(10),
         updateContentDelayDuration: Utility.seconds(60),
         changelogs: [
-            'Search and set prayer location worldwide by city, province, or postal code',
-            'Optional prayer calculation methods for primary API, fallback, and Asr madhab',
-            'Clearer auto-detect and manual location setup with improved confirmations',
-            'Postal codes in location search results when available',
-            'Prayer times from cached monthly schedules when offline, with refresh when back online',
-            'More reliable background images on slow or offline connections',
-            'Refined modal copy, labels, and UI details across languages'
+            'Support for 26 new languages, bringing the total to 34',
+            'Right-to-left layout for Arabic, Persian, Urdu, and Pashto',
+            'Redesigned language picker with flags, alphabetical order, and the current language marked',
+            'Bug fixes'
         ]
     },
 }
