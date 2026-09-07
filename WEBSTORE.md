@@ -8,42 +8,6 @@ Muslim Board is a personal dashboard for Muslims anywhere in the world, availabl
 
 Muslim Board provides several useful features to improve productivity, such as prayer schedule, islamic quotes, TODO list, and custom background images stored locally in the browser.
 
-Supported languages:
-- English language
-- Bahasa Indonesia
-- Russian
-- Arabic
-- Traditional Chinese
-- Simplified Chinese
-- Hindi
-- Bengali
-- Turkish
-- Persian (Farsi)
-- Urdu
-- French
-- Malay
-- Hausa
-- Swahili
-- Pashto
-- Uzbek
-- Kurdish
-- Somali
-- Kazakh
-- Azerbaijani
-- German
-- Filipino
-- Thai
-- Albanian
-- Italian
-- Bosnian
-- Spanish
-- Dutch
-- Bulgarian
-- Swedish
-- Greek
-- Korean
-- Japanese
-
 Usage:
 - To use Muslim Board, simply open a new tab on any browser, just that! the extension will automatically appear on the newly created tab.
 - Ensure to allow the location permission for Muslim Board, without that the plugin can only get the prayer time via set manual location.
@@ -57,6 +21,42 @@ Features:
 - Internet availability info is displayed in the bottom section. You will be notified when the internet is offline.
 - Popup notification will appear whenever prayer time is near.
 - Multi language support.
+
+Supported languages:
+- English language
+- Bahasa Indonesia
+- Albanian
+- Arabic
+- Azerbaijani
+- Bengali
+- Bosnian
+- Bulgarian
+- Dutch
+- Filipino
+- French
+- German
+- Greek
+- Hausa
+- Hindi
+- Italian
+- Japanese
+- Kazakh
+- Korean
+- Kurdish
+- Malay
+- Pashto
+- Persian (Farsi)
+- Russian
+- Simplified Chinese
+- Somali
+- Spanish
+- Swahili
+- Swedish
+- Thai
+- Traditional Chinese
+- Turkish
+- Urdu
+- Uzbek
 
 ---
 
