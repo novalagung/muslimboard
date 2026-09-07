@@ -1986,6 +1986,19 @@
             });
         },
 
+        getLanguagePickerItems() {
+            return Object.keys(I18n.mapping.languageName)
+                .filter((d) => d !== 'en' && d !== 'id')
+                .map((d) => {
+                    const lang = I18n.mapping.languageName[d]
+                    return {
+                        locale: d,
+                        label: lang.native ? `${lang.english} - ${lang.native}` : lang.english
+                    }
+                })
+                .sort((a, b) => a.label.localeCompare(b.label, undefined, { sensitivity: 'base' }))
+        },
+
         // apply event handler for language
         registerEventForChangeLanguageButton() {
 
@@ -1995,21 +2008,25 @@
             $('.change-language').on('click', (e) => {
                 e.preventDefault();
 
-                const items = Object.keys(I18n.mapping.languageName).filter((d) => d !== 'en' && d !== 'id').map((d) => {
-                    const lang = I18n.mapping.languageName[d]
-                    if (lang.native) {
-                        return `<li><a href='#' data-locale='${d}'><span>${lang.english} - ${lang.native}</span></a></li>`
-                    } else {
-                        return `<li><a href='#' data-locale='${d}'><span>${lang.english}</span></a></li>`
-                    }
-                })
+                const selectedLocale = I18n.getSelectedLocale()
+
+                const showFlags = !Utility.isWindowsPlatform()
+
+                const renderItem = (locale, label) => {
+                    const isActive = (locale === selectedLocale)
+                    const classAttr = isActive ? ` class='is-active'` : ''
+                    const flag = (showFlags && !isActive) ? I18n.getLocaleFlag(locale) : ''
+                    return `<li${classAttr}><a href='#' data-locale='${locale}'><span class='flag'>${flag}</span><span class='label'>${label}</span></a></li>`
+                }
+
+                const items = this.getLanguagePickerItems.call(this)
+                    .map((each) => renderItem(each.locale, each.label))
 
                 const text = `
-                    <div class='modal-change-language'>
+                    <div class='modal-change-language' tabindex='-1' autofocus>
                         <ul>
-                            <li><a href='#' data-locale='en'>English Language</a></li>
-                            <li><hr /></li>
-                            <li><a href='#' data-locale='id'>Bahasa Indonesia</a></li>
+                            ${renderItem('en', 'English Language')}
+                            ${renderItem('id', 'Bahasa Indonesia')}
                             ${items.join('')}
                         </ul>
                     </div>
@@ -2023,6 +2040,7 @@
                     icon: 'info',
                     title: modalTitle,
                     html: text,
+                    width: '54em',
                     showConfirmButton: false,
                     allowOutsideClick: false
                 });
@@ -2689,7 +2707,14 @@
             // handle sortable
             const sortable = new Draggable.Sortable(document.querySelectorAll('#todo-list .items'), {
                 draggable: '.item',
-                handle: '.move'
+                handle: '.move',
+                mirror: { constrainDimensions: true }
+            });
+            sortable.on('drag:start', () => {
+                if (!$.tooltipster) {
+                    return
+                }
+                $.tooltipster.instances().forEach((each) => each.close())
             });
             sortable.on('sortable:stop', () => {
                 // add delay to ensure DOM completelly finished it's process before updating the local storage

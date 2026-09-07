@@ -934,43 +934,60 @@ body.show-todo-list #todo-list .wrapper .items .edit-hint {
 #swal2-html-container .modal-change-language {
     padding-top: 10px;
     padding-bottom: 0px;
+    outline: none;
 }
 #swal2-html-container .modal-change-language ul {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 2px;
     list-style-type: none;
+    margin: 0;
     padding-left: 0;
-}
-#swal2-html-container .modal-change-language ul li {
-    margin-top: 10px;
+    padding-right: 6px;
+    max-height: 70vh;
+    overflow-y: auto;
+    scrollbar-gutter: stable;
 }
 #swal2-html-container .modal-change-language a {
-    margin: 0px auto;
-    display: block;
-    color: var(--color-white);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--color-text);
     border-radius: var(--radius-standard);
-    padding: 12px 17px;
+    padding: 9px 12px;
     text-decoration: none;
-    background-color: var(--color-primary);
-    width: 320px;
-    font-weight: 600;
+    font-size: var(--font-size-sm);
+    outline: none;
+    transition: background-color var(--duration-fast) ease-in-out, color var(--duration-fast) ease-in-out;
+}
+#swal2-html-container .modal-change-language a .flag {
+    flex: 0 0 auto;
+    width: 20px;
+    font-size: var(--font-size-md);
+    line-height: 1.2;
     text-align: center;
+}
+#swal2-html-container .modal-change-language a .label {
+    flex: 1 1 auto;
+    min-width: 0;
+    text-align: left;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    box-shadow: var(--shadow-button);
-    transition: opacity var(--duration-fast) ease-in-out, transform var(--duration-fast) ease-in-out, box-shadow var(--duration-fast) ease-in-out;
 }
-#swal2-html-container .modal-change-language hr {
-    width: 199px;
-    height: 1px;
-    background-color: var(--color-surface-muted);
-    border: none;
-    margin-top: 5px;
-    margin-bottom: 5px;
+#swal2-html-container .modal-change-language li.is-active a {
+    background-color: var(--color-primary-subtle);
+    color: var(--color-primary-hover);
+    font-weight: 600;
+}
+#swal2-html-container .modal-change-language li.is-active a .flag:before {
+    content: "\2713";
 }
 #swal2-html-container .modal-change-language a:hover {
-    opacity: var(--opacity-soft);
-    transform: var(--motion-hover-lift);
-    box-shadow: var(--shadow-button-hover);
+    background-color: var(--color-surface-muted);
+}
+#swal2-html-container .modal-change-language a:focus-visible {
+    box-shadow: 0 0 0 3px var(--color-primary-focus);
 }
 #swal2-html-container .modal-custom-background {
     text-align: left;
@@ -1500,3 +1517,193 @@ body.show-todo-list #todo-list .wrapper .items .edit-hint {
 #sidebar .prayer-time:before                   { left: -15px; top: -15px; right: 40px;  bottom: -20px; }
 #wise-word .wrapper .vertical > p > div:before { left: -15px; top: -15px; right: -15px; bottom: -15px; }
 #footer .menu.left > div:before                { left: 0;     top: -5px;  right: 0;     bottom: -7px; }
+
+/* ==========================================================================
+   RTL
+   ========================================================================== */
+
+body.is-rtl #sidebar {
+    left: auto;
+    right: 0;
+}
+body.is-rtl #sidebar .date-time .time {
+    direction: ltr;
+    text-align: right;
+    margin-left: 0;
+    margin-right: -2px;
+}
+body.is-rtl #sidebar .date-time .location .fa {
+    left: auto;
+    right: 0px;
+}
+body.is-rtl #sidebar .date-time .location span {
+    left: 0px;
+    right: 19px;
+}
+body.is-rtl #sidebar .prayer-time p.title {
+    margin-right: 0;
+    margin-left: -10px;
+}
+body.is-rtl #sidebar .prayer-time table {
+    margin-left: 0;
+    margin-right: -5px;
+}
+body.is-rtl #sidebar .prayer-time table tr.prayer-time-row td:nth-child(3) {
+    padding-right: 0;
+    padding-left: 5px;
+    text-align: left;
+}
+body.is-rtl #sidebar .prayer-time table tr.prayer-time-row td:nth-child(4) {
+    text-align: right;
+}
+body.is-rtl #sidebar .prayer-time table tr.prayer-time-row span.placeholder {
+    margin-left: 0;
+    margin-right: -3px;
+}
+body.is-rtl #sidebar .prayer-time:before {
+    left: 40px;
+    right: -15px;
+}
+
+body.is-rtl #wise-word {
+    right: 400px;
+    left: 60px;
+}
+body.is-rtl.show-todo-list #wise-word {
+    right: 400px;
+    left: 510px;
+}
+@media (min-width: 1600px) {
+    body.is-rtl #wise-word {
+        right: 440px;
+        left: 120px;
+    }
+    body.is-rtl.show-todo-list #wise-word {
+        right: 440px;
+        left: 570px;
+    }
+}
+@media (min-width: 2000px) {
+    body.is-rtl #wise-word {
+        right: 560px;
+        left: 200px;
+    }
+    body.is-rtl.show-todo-list #wise-word {
+        right: 560px;
+        left: 650px;
+    }
+}
+@media (min-width: 2400px) {
+    body.is-rtl #wise-word {
+        right: 740px;
+        left: 400px;
+    }
+    body.is-rtl.show-todo-list #wise-word {
+        right: 740px;
+        left: 850px;
+    }
+}
+@media (min-width: 2800px) {
+    body.is-rtl #wise-word {
+        right: 830px;
+        left: 550px;
+    }
+    body.is-rtl.show-todo-list #wise-word {
+        right: 830px;
+        left: 1000px;
+    }
+}
+@media (min-width: 3200px) {
+    body.is-rtl #wise-word {
+        right: 1000px;
+        left: 750px;
+    }
+    body.is-rtl.show-todo-list #wise-word {
+        right: 1000px;
+        left: 1200px;
+    }
+}
+
+body.is-rtl #footer p.dev {
+    right: auto;
+    left: 0px;
+    text-align: left;
+}
+body.is-rtl #footer .menu.left {
+    left: auto;
+    right: 0px;
+}
+body.is-rtl #footer .menu.left a {
+    margin-right: 0;
+    margin-left: 15px;
+}
+
+body.is-rtl #todo-list {
+    right: auto;
+    left: 30px;
+}
+body.is-rtl #todo-list .wrapper .toggler .fa {
+    margin-right: 0;
+    margin-left: 6px;
+}
+body.is-rtl #todo-list .wrapper .items .add {
+    right: auto;
+    left: 106px;
+}
+body.is-rtl #todo-list .wrapper .items .import {
+    right: auto;
+    left: 58px;
+}
+body.is-rtl #todo-list .wrapper .items .export {
+    right: auto;
+    left: 10px;
+}
+body.is-rtl #todo-list .wrapper .items .item span[contentEditable=true],
+body.is-rtl #todo-list .wrapper .items .item .item-textbox {
+    margin-left: 0;
+    margin-right: 36px;
+}
+body.is-rtl #todo-list .wrapper .items .item .item-textbox.is-editing {
+    margin-left: 0;
+    margin-right: 32px;
+}
+body.is-rtl #todo-list .wrapper .items .item .delete {
+    right: auto;
+    left: 14px;
+}
+body.is-rtl #todo-list .wrapper .items .item .move {
+    right: auto;
+    left: 44px;
+}
+
+body.is-rtl #swal2-html-container ul {
+    padding-left: 0;
+    padding-right: 25px;
+}
+body.is-rtl #swal2-html-container .modal-info *,
+body.is-rtl #swal2-html-container .modal-custom-background,
+body.is-rtl #swal2-html-container .manual-geolocation .location-search-result,
+body.is-rtl #swal2-html-container .prayer-calc-settings .prayer-calc-settings-toggle-text,
+body.is-rtl #swal2-html-container .prayer-calc-settings .prayer-calc-settings-label,
+body.is-rtl #swal2-html-container .prayer-calc-picker-trigger,
+body.is-rtl #swal2-html-container .prayer-calc-picker-value,
+body.is-rtl #swal2-html-container .prayer-calc-picker-group-label,
+body.is-rtl #swal2-html-container .prayer-calc-option {
+    text-align: right;
+}
+body.is-rtl #swal2-html-container .modal-custom-background .custom-background-list {
+    padding-right: 0;
+    padding-left: 6px;
+}
+body.is-rtl #swal2-html-container .modal-custom-background .custom-background-item .delete {
+    right: auto;
+    left: 8px;
+}
+body.is-rtl #swal2-html-container .modal-change-language a .label {
+    text-align: right;
+}
+body.is-rtl #swal2-html-container .manual-geolocation label {
+    text-align: left;
+    padding-right: 0;
+    padding-left: 5px;
+}

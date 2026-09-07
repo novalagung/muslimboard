@@ -12,6 +12,32 @@ Personal Dashboard for Muslims anywhere in the world, available on many language
 - Simplified Chinese
 - Hindi
 - Bengali
+- Turkish
+- Persian (Farsi)
+- Urdu
+- French
+- Malay
+- Hausa
+- Swahili
+- Pashto
+- Uzbek
+- Kurdish
+- Somali
+- Kazakh
+- Azerbaijani
+- German
+- Filipino
+- Thai
+- Albanian
+- Italian
+- Bosnian
+- Spanish
+- Dutch
+- Bulgarian
+- Swedish
+- Greek
+- Korean
+- Japanese
 
 ## Preview
 
