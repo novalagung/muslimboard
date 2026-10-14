@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Muslim Board",
   "short_name": "muslimboard",
-  "version": "2.16.0",
+  "version": "2.16.1",
   "description": "Personal Dashboard for Muslim",
   "chrome_url_overrides": {
     "newtab": "index.html"
@@ -14,6 +14,19 @@
     "16": "assets/internal/images/logo-16.jpg",
     "48": "assets/internal/images/logo-48.jpg",
     "128": "assets/internal/images/logo-128.jpg"
+  },
+  "background": {
+    "scripts": [
+      "assets/internal/scripts/background.js"
+    ],
+    "persistent": false
+  },
+  "browser_action": {
+    "default_title": "Muslim Board",
+    "default_icon": {
+      "16": "assets/internal/images/logo-16.jpg",
+      "48": "assets/internal/images/logo-48.jpg"
+    }
   },
   "permissions": [
     "geolocation",
