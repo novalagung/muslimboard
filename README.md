@@ -19,40 +19,7 @@ Personal Dashboard for Muslims anywhere in the world, available on many language
 
 ## Supported languages
 
-- English language
-- Bahasa Indonesia
-- Albanian
-- Arabic
-- Azerbaijani
-- Bengali
-- Bosnian
-- Bulgarian
-- Dutch
-- Filipino
-- French
-- German
-- Greek
-- Hausa
-- Hindi
-- Italian
-- Japanese
-- Kazakh
-- Korean
-- Kurdish
-- Malay
-- Pashto
-- Persian (Farsi)
-- Russian
-- Simplified Chinese
-- Somali
-- Spanish
-- Swahili
-- Swedish
-- Thai
-- Traditional Chinese
-- Turkish
-- Urdu
-- Uzbek
+English language • Bahasa Indonesia • Albanian • Arabic • Azerbaijani • Bengali • Bosnian • Bulgarian • Dutch • Filipino • French • German • Greek • Hausa • Hindi • Italian • Japanese • Kazakh • Korean • Kurdish • Malay • Pashto • Persian (Farsi) • Russian • Simplified Chinese • Somali • Spanish • Swahili • Swedish • Thai • Traditional Chinese • Turkish • Urdu • Uzbek
 
 ## Installation via Official Page
 
