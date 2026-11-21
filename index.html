@@ -1,23 +1,52 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-	<title>Muslim Board - Browser Extension</title>
-
 	<meta charset="utf-8">
-	<meta name="description" content="Muslim Board is a personal dashboard for Muslims, available in 34 languages including English, Bahasa Indonesia, Arabic, Urdu, Turkish, French, German, and Japanese.">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<meta property="og:title" content="Muslim Board - Browser Extension">
-	<meta property="og:url" content="https://muslimboard.novalagung.com">
+	<title>Muslim Board: New Tab Dashboard with Prayer Times &amp; Quotes</title>
+	<meta name="description" content="Free browser extension that turns your new tab into a dashboard for Muslims: prayer times for your location, Islamic quotes, and a TODO list. In 34 languages.">
+	<link rel="canonical" href="https://muslimboard.novalagung.com/">
+	<meta name="theme-color" content="#5f4f93">
+
+	<meta property="og:type" content="website">
+	<meta property="og:site_name" content="Muslim Board">
+	<meta property="og:title" content="Muslim Board: New Tab Dashboard with Prayer Times &amp; Quotes">
+	<meta property="og:description" content="Free browser extension that turns your new tab into a dashboard for Muslims: prayer times for your location, Islamic quotes, and a TODO list. In 34 languages.">
+	<meta property="og:url" content="https://muslimboard.novalagung.com/">
 	<meta property="og:image" content="https://muslimboard.novalagung.com/website/assets/images/social-image.jpg">
 	<meta property="fb:app_id" content="677847472391255">
+	<meta name="twitter:card" content="summary_large_image">
 
 	<meta name="google-site-verification" content="UZnxS2Dk3fm2_Elms3a__56Q_oQ3sQ1h0SVXXlHSmbE">
 
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="icon" href="https://muslimboard.novalagung.com/website/assets/images/favicon-16.jpg" sizes="16x16" type="image/jpeg">
+	<link rel="icon" href="https://muslimboard.novalagung.com/website/assets/images/favicon-32.jpg" sizes="32x32" type="image/jpeg">
 
-	<link rel="icon" href="https://muslimboard.novalagung.com/website/assets/images/favicon-16.jpg" size="16x16" type="image/jpg">
-	<link rel="icon" href="https://muslimboard.novalagung.com/website/assets/images/favicon-32.jpg" size="32x32" type="image/jpg">
+	<script type="application/ld+json">
+	{
+		"@context": "https://schema.org",
+		"@type": "SoftwareApplication",
+		"name": "Muslim Board",
+		"url": "https://muslimboard.novalagung.com/",
+		"description": "Free browser extension that turns your new tab into a dashboard for Muslims: prayer times for your location, Islamic quotes, and a TODO list.",
+		"image": "https://muslimboard.novalagung.com/website/assets/images/social-image.jpg",
+		"applicationCategory": "BrowserApplication",
+		"operatingSystem": "Brave, Chrome, Edge, Firefox, Safari, Opera",
+		"isAccessibleForFree": true,
+		"offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+		"inLanguage": ["en", "id", "sq", "ar", "az", "bn", "bs", "bg", "nl", "tl", "fr", "de", "el", "ha", "hi", "it", "ja", "kk", "ko", "ku", "ms", "ps", "fa", "ru", "zh-CN", "so", "es", "sw", "sv", "th", "zh-TW", "tr", "ur", "uz"],
+		"installUrl": [
+			"https://chrome.google.com/webstore/detail/lmnhjilamobdmdihfkofgiejgokabfad",
+			"https://microsoftedge.microsoft.com/addons/detail/muslim-board/dfmgmbngjpmbbpgibmdfegilbfckkgli",
+			"https://addons.mozilla.org/en-US/firefox/addon/muslimboard",
+			"https://apps.apple.com/us/app/muslim-board/id1659445206"
+		],
+		"author": { "@type": "Person", "name": "Noval Agung", "url": "http://novalagung.com/" },
+		"sameAs": "https://github.com/novalagung/muslimboard"
+	}
+	</script>
 
 	<!--[if lte IE 8]><script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script><![endif]-->
 	<!--[if lte IE 8]><script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script><![endif]-->
@@ -46,6 +75,12 @@
 
 	<!-- Wrapper -->
 	<div id="wrapper">
+
+		<div id="github-button-container">
+			<a class="github-button" href="https://github.com/sponsors/novalagung" data-color-scheme="no-preference: light; light: light; dark: dark;" data-icon="octicon-heart" data-size="large" aria-label="Sponsor @novalagung on GitHub">Sponsor</a>
+			<a class="github-button" href="https://github.com/novalagung/muslimboard" data-size="large" data-icon="octicon-star" data-show-count="true" aria-label="Star novalagung/muslimboard on GitHub">Star</a>
+			<a class="github-button" href="https://github.com/novalagung" data-size="large" aria-label="Follow @novalagung on GitHub">Follow @novalagung</a>
+		</div>
 
 		<!-- Header -->
 		<header id="header" class="alt">
@@ -79,94 +114,92 @@
 							<h2>Muslim Board</h2>
 						</header>
 						<p>
-							Muslim Board is personal dashboard for muslim, available on all modern browsers for free via the official addon marketplace.
-							This browser extension is available for the following languages:
+							Muslim Board is a personal dashboard for Muslims, available for free on all modern browsers through their official add-on stores.
 						</p>
-						<ul>
-							<li>English language <b>(en)</b> </li>
-							<li>Bahasa Indonesia <b>(id)</b> </li>
-							<li>Albanian <b>(sq)</b> </li>
-							<li>Arabic <b>(ar)</b> </li>
-							<li>Azerbaijani <b>(az)</b> </li>
-							<li>Bengali <b>(bn)</b> </li>
-							<li>Bosnian <b>(bs)</b> </li>
-							<li>Bulgarian <b>(bg)</b> </li>
-							<li>Dutch <b>(nl)</b> </li>
-							<li>Filipino <b>(tl)</b> </li>
-							<li>French <b>(fr)</b> </li>
-							<li>German <b>(de)</b> </li>
-							<li>Greek <b>(el)</b> </li>
-							<li>Hausa <b>(ha)</b> </li>
-							<li>Hindi <b>(hi)</b> </li>
-							<li>Italian <b>(it)</b> </li>
-							<li>Japanese <b>(ja)</b> </li>
-							<li>Kazakh <b>(kk)</b> </li>
-							<li>Korean <b>(ko)</b> </li>
-							<li>Kurdish <b>(ku)</b> </li>
-							<li>Malay <b>(ms)</b> </li>
-							<li>Pashto <b>(ps)</b> </li>
-							<li>Persian (Farsi) <b>(fa)</b> </li>
-							<li>Russian <b>(ru)</b> </li>
-							<li>Simplified Chinese <b>(zh-CN)</b> </li>
-							<li>Somali <b>(so)</b> </li>
-							<li>Spanish <b>(es)</b> </li>
-							<li>Swahili <b>(sw)</b> </li>
-							<li>Swedish <b>(sv)</b> </li>
-							<li>Thai <b>(th)</b> </li>
-							<li>Traditional Chinese <b>(zh-TW)</b> </li>
-							<li>Turkish <b>(tr)</b> </li>
-							<li>Urdu <b>(ur)</b> </li>
-							<li>Uzbek <b>(uz)</b> </li>
+						<div class="actions">
+							<div>
+								<a href="https://chrome.google.com/webstore/detail/lmnhjilamobdmdihfkofgiejgokabfad"
+									class="button special" target="_blank">
+									Brave &nbsp; <i class="fa-brands fa-brave"></i>
+								</a>
+							</div>
+							<div>
+								<a href="https://chrome.google.com/webstore/detail/lmnhjilamobdmdihfkofgiejgokabfad"
+									class="button special" target="_blank">
+									Chrome &nbsp; <i class="fa fa-chrome"></i>
+								</a>
+							</div>
+							<div>
+								<a href="https://microsoftedge.microsoft.com/addons/detail/muslim-board/dfmgmbngjpmbbpgibmdfegilbfckkgli"
+									class="button special" target="_blank">
+									Edge &nbsp; <i class="fa fa-edge"></i>
+								</a>
+							</div>
+							<div>
+								<a href="https://addons.mozilla.org/en-US/firefox/addon/muslimboard"
+									class="button special" target="_blank">
+									Firefox &nbsp; <i class="fa fa-firefox"></i>
+								</a>
+							</div>
+							<div>
+								<a href="https://apps.apple.com/us/app/muslim-board/id1659445206"
+									class="button special" target="_blank">
+									Safari &nbsp; <i class="fa fa-safari"></i>
+								</a>
+							</div>
+							<div>
+								<a href="https://chrome.google.com/webstore/detail/lmnhjilamobdmdihfkofgiejgokabfad"
+									class="button special" target="_blank" title="via Chrome WebStore">
+									Opera &nbsp; <i class="fa fa-opera"></i>
+								</a>
+							</div>
+						</div>
+						<h3 class="languages-title">Available in 34 languages</h3>
+						<ul class="languages" role="list">
+							<li>English <b>(en)</b></li>
+							<li>Bahasa Indonesia <b>(id)</b></li>
+							<li>Albanian <b>(sq)</b></li>
+							<li>Arabic <b>(ar)</b></li>
+							<li>Azerbaijani <b>(az)</b></li>
+							<li>Bengali <b>(bn)</b></li>
+							<li>Bosnian <b>(bs)</b></li>
+							<li>Bulgarian <b>(bg)</b></li>
+							<li>Dutch <b>(nl)</b></li>
+							<li>Filipino <b>(tl)</b></li>
+							<li>French <b>(fr)</b></li>
+							<li>German <b>(de)</b></li>
+							<li>Greek <b>(el)</b></li>
+							<li>Hausa <b>(ha)</b></li>
+							<li>Hindi <b>(hi)</b></li>
+							<li>Italian <b>(it)</b></li>
+							<li>Japanese <b>(ja)</b></li>
+							<li>Kazakh <b>(kk)</b></li>
+							<li>Korean <b>(ko)</b></li>
+							<li>Kurdish <b>(ku)</b></li>
+							<li>Malay <b>(ms)</b></li>
+							<li>Pashto <b>(ps)</b></li>
+							<li>Persian (Farsi) <b>(fa)</b></li>
+							<li>Russian <b>(ru)</b></li>
+							<li>Simplified Chinese <b>(zh-CN)</b></li>
+							<li>Somali <b>(so)</b></li>
+							<li>Spanish <b>(es)</b></li>
+							<li>Swahili <b>(sw)</b></li>
+							<li>Swedish <b>(sv)</b></li>
+							<li>Thai <b>(th)</b></li>
+							<li>Traditional Chinese <b>(zh-TW)</b></li>
+							<li>Turkish <b>(tr)</b></li>
+							<li>Urdu <b>(ur)</b></li>
+							<li>Uzbek <b>(uz)</b></li>
 						</ul>
-						<p>Get the Muslim board extension via these links:</p>
 					</div>
 					<span class="image">
-						<img src="website/assets/images/preview.png" alt="Muslim Board" />
+						<img src="website/assets/images/preview.png" alt="Muslim Board new tab showing the clock, today's prayer times, and a quote" />
 					</span>
 				</div>
-				<div class="actions">
-					<div>
-						<a href="https://chrome.google.com/webstore/detail/lmnhjilamobdmdihfkofgiejgokabfad"
-							class="button special" target="_blank">
-							Brave &nbsp; <i class="fa-brands fa-brave"></i>
-						</a>
-					</div>
-					<div>
-						<a href="https://chrome.google.com/webstore/detail/lmnhjilamobdmdihfkofgiejgokabfad"
-							class="button special" target="_blank">
-							Chrome &nbsp; <i class="fa fa-chrome"></i>
-						</a>
-					</div>
-					<div>
-						<a href="https://microsoftedge.microsoft.com/addons/detail/muslim-board/dfmgmbngjpmbbpgibmdfegilbfckkgli"
-							class="button special" target="_blank">
-							Edge &nbsp; <i class="fa fa-edge"></i>
-						</a>
-					</div>
-					<div>
-						<a href="https://addons.mozilla.org/en-US/firefox/addon/muslimboard"
-							class="button special" target="_blank">
-							Firefox &nbsp; <i class="fa fa-firefox"></i>
-						</a>
-					</div>
-					<div>
-						<a href="https://apps.apple.com/us/app/muslim-board/id1659445206"
-							class="button special" target="_blank">
-							Safari &nbsp; <i class="fa fa-safari"></i>
-						</a>
-					</div>
-					<div>
-						<a href="https://chrome.google.com/webstore/detail/lmnhjilamobdmdihfkofgiejgokabfad"
-							class="button special" target="_blank" title="via Chrome WebStore">
-							Opera &nbsp; <i class="fa fa-opera"></i>
-						</a>
-					</div>
-				</div>
 
-				<div style="margin-top: 2em; text-align: center;">
-				    <p style="margin-bottom: 0.5em;">Also join our substack newsletter ↓</p>
-				    <iframe src="https://novalagung.substack.com/embed" width="500px" height="320" class="substack-embed" frameborder="0" scrolling="no" style="
-				    border: 1px solid #f7f7f7;"></iframe>
+				<div class="newsletter">
+					<p>Also join our substack newsletter ↓</p>
+					<iframe src="https://novalagung.substack.com/embed" width="500" height="320" class="substack-embed" title="Subscribe to the novalagung newsletter on Substack" loading="lazy" frameborder="0" scrolling="no"></iframe>
 				</div>
 			</section>
 
@@ -205,8 +238,8 @@
 						</p>
 					</div>
 					<span class="image">
-						<img src="website/assets/images/location-time.png"
-							alt="Muslim Board - deteksi lokasi otomatis dan manual">
+						<img src="website/assets/images/location-time.png" loading="lazy"
+							alt="Muslim Board prayer times for the detected location">
 					</span>
 				</div>
 			</section>
@@ -242,22 +275,22 @@
 				</p>
 				<div class="row uniform">
 					<div class="4u">
-						<span class="image fit"><img src="website/assets/images/list-1.png" alt="Muslim Board - preview 1"></span>
+						<span class="image fit"><img src="website/assets/images/list-1.png" loading="lazy" alt="Muslim Board - preview 1"></span>
 					</div>
 					<div class="4u">
-						<span class="image fit"><img src="website/assets/images/list-2.png" alt="Muslim Board - preview 2"></span>
+						<span class="image fit"><img src="website/assets/images/list-2.png" loading="lazy" alt="Muslim Board - preview 2"></span>
 					</div>
 					<div class="4u">
-						<span class="image fit"><img src="website/assets/images/list-3.png" alt="Muslim Board - preview 3"></span>
+						<span class="image fit"><img src="website/assets/images/list-3.png" loading="lazy" alt="Muslim Board - preview 3"></span>
 					</div>
 					<div class="4u">
-						<span class="image fit"><img src="website/assets/images/list-4.png" alt="Muslim Board - preview 4"></span>
+						<span class="image fit"><img src="website/assets/images/list-4.png" loading="lazy" alt="Muslim Board - preview 4"></span>
 					</div>
 					<div class="4u">
-						<span class="image fit"><img src="website/assets/images/list-5.png" alt="Muslim Board - preview 5"></span>
+						<span class="image fit"><img src="website/assets/images/list-5.png" loading="lazy" alt="Muslim Board - preview 5"></span>
 					</div>
 					<div class="4u">
-						<span class="image fit"><img src="website/assets/images/list-6.png" alt="Muslim Board - preview 6"></span>
+						<span class="image fit"><img src="website/assets/images/list-6.png" loading="lazy" alt="Muslim Board - preview 6"></span>
 					</div>
 				</div>
 				<p class="align-center" style="margin-top: 2em;">
@@ -270,8 +303,8 @@
 			<section id="todo-list" class="main">
 				<div class="spotlight">
 					<span class="image">
-						<img src="website/assets/images/todo-list.png"
-							alt="Muslim Board - deteksi lokasi otomatis dan manual">
+						<img src="website/assets/images/todo-list.png" loading="lazy"
+							alt="Muslim Board TODO list on the new tab">
 					</span>
 					<div class="content">
 						<header class="major">
@@ -327,7 +360,7 @@
 					<h2>Privacy & Policy</h2>
 				</header>
 				<p>
-					See <a href="https://muslimboard.novalagung.com/SECURITY.md">https://muslimboard.novalagung.com/SECURITY.md</a> page.
+					Read the <a href="https://muslimboard.novalagung.com/SECURITY.md">Muslim Board privacy &amp; security policy</a>.
 				</p>
 			</section>
 
@@ -343,12 +376,6 @@
 			</p>
 		</footer>
 
-		<div id="github-button-container">
-			<a class="github-button" href="https://github.com/sponsors/novalagung" data-color-scheme="no-preference: light; light: light; dark: dark;" data-icon="octicon-heart" data-size="large" aria-label="Sponsor @novalagung on GitHub">Sponsor</a>
-			<a class="github-button" href="https://github.com/novalagung/muslimboard" data-size="large" data-icon="octicon-star" data-show-count="true" aria-label="Star novalagung/muslimboard on GitHub">Star</a>
-			<a class="github-button" href="https://github.com/novalagung" data-size="large" aria-label="Follow @novalagung on GitHub">Follow @novalagung</a>
-		</div>
-		
 	</div>
 
 	<!-- Scripts -->

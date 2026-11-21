@@ -12,10 +12,15 @@ body {
 .align-center {
   text-align: center;
 }
+#main p,
+#main li {
+  overflow-wrap: break-word;
+}
 #main > #intro .spotlight .image {
   border-radius: 0;
   border: none;
   margin-left: 2em;
+  max-width: 100%;
 }
 @media screen and (max-width: 980px) {
   #main > #intro .spotlight .image {
@@ -24,19 +29,21 @@ body {
 }
 #main > #intro .spotlight .image img {
   width: 370px;
+  max-width: 100%;
   border-radius: 0;
   border: none;
 }
 #main > #intro .actions {
-  text-align: center;
-  margin-left: -50px;
-  margin-right: -50px;
-}
-#main > #intro .actions div {
-  display: inline-block;
-  margin-bottom: 5px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.6em;
+  max-width: 30em;
+  margin: 0 0 2em 0;
 }
 #main > #intro .actions div a {
+  display: block;
+  min-width: 0;
+  padding: 0 0.5em;
   background-color: #5f4f93;
   font-weight: 400;
   box-shadow: -1px 2px 2px rgba(0, 0, 0, 0.18), 0 2px 3px rgba(0, 0, 0, 0.12);
@@ -49,14 +56,53 @@ body {
 #main > #intro .actions div a:not(.in-progress):hover {
   opacity: 0.8;
 }
-@media screen and (max-width: 736px) {
+#main > #intro .languages-title {
+  font-size: 1em;
+  margin: 0 0 0.75em 0;
+}
+#main > #intro .languages {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4em;
+  list-style: none;
+  padding: 0;
+  font-size: 0.85em;
+}
+#main > #intro .languages li {
+  padding: 0.15em 0.6em;
+  border-radius: 4px;
+  background-color: rgba(95, 79, 147, 0.08);
+}
+#main > #intro .newsletter {
+  margin-top: 2em;
+  text-align: center;
+}
+#main > #intro .newsletter p {
+  margin-bottom: 0.5em;
+}
+#main > #intro .substack-embed {
+  display: block;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  border: 1px solid #f7f7f7;
+}
+@media screen and (max-width: 980px) {
   #main > #intro .actions {
-    margin-left: 0;
-    margin-right: 0;
+    margin-left: auto;
+    margin-right: auto;
   }
-  #main > #intro .actions div {
-    width: calc(50% - 0.8em);
-    margin: 0 0.4em 0.8em;
+  #main > #intro .languages {
+    justify-content: center;
+  }
+}
+@media screen and (max-width: 480px) {
+  #main > #intro .actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  #main > #intro .actions div a {
+    height: 3em;
+    line-height: 3em;
   }
 }
 #main > #preview {
@@ -125,6 +171,7 @@ body {
   border: none;
   margin-right: 2em;
   margin-left: 0;
+  max-width: 100%;
 }
 @media screen and (max-width: 980px) {
   #main > #location-time .spotlight {
@@ -143,6 +190,7 @@ body {
 }
 #main > #todo-list .spotlight .image img {
   width: 370px;
+  max-width: 100%;
   border-radius: 12px;
   border: none;
 }
@@ -183,11 +231,21 @@ body {
   }
 }
 #github-button-container {
-  position: fixed;
+  position: absolute;
   top: 10px;
   right: 30px;
   padding: 10px;
-  z-index: 99999;
+  z-index: 1;
+}
+@media screen and (max-width: 736px) {
+  #github-button-container {
+    position: static;
+    padding: 1em 0 0;
+    text-align: center;
+  }
+  #github-button-container + #header.alt {
+    padding-top: 2em;
+  }
 }
 
 /* Extension background thumbnails (data-background.json) — 3 horizontal scroll rows */
